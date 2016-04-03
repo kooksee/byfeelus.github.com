@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
-        <title>读书笔记 on CoderZh Blog</title>
+        <title>读书笔记 on Hugo PacMan Theme Demo</title>
         <link>http://kooksee.github.io/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/</link>
         <language>zh-CN</language>
         <author>CoderZh</author>
@@ -437,10 +437,10 @@
         
         <item>
             <title>最近读的几本书</title>
-            <link>http://kooksee.github.io/2015/08/16/Books/</link>
+            <link>http://kooksee.github.io/2015/08/16/books/</link>
             <pubDate>Sun, 16 Aug 2015 00:00:00 UTC</pubDate>
             <author>CoderZh</author>
-            <guid>http://kooksee.github.io/2015/08/16/Books/</guid>
+            <guid>http://kooksee.github.io/2015/08/16/books/</guid>
             <description>
 
 &lt;p&gt;由于我住的比较远，每天上下班单程需要1个半小时左右。因此，车上和地铁的时间成了我每天阅读的时间。&lt;/p&gt;
@@ -498,10 +498,10 @@
         
         <item>
             <title>读《程序员的思维训练》</title>
-            <link>http://kooksee.github.io/2015/05/16/ThinkingAndLearning/</link>
+            <link>http://kooksee.github.io/2015/05/16/thinkingandlearning/</link>
             <pubDate>Sat, 16 May 2015 00:00:00 UTC</pubDate>
             <author>CoderZh</author>
-            <guid>http://kooksee.github.io/2015/05/16/ThinkingAndLearning/</guid>
+            <guid>http://kooksee.github.io/2015/05/16/thinkingandlearning/</guid>
             <description>&lt;p&gt;《程序员的思维修炼:开发认知潜能的九堂课》 从程序员的角度去认清自己，思考问题，了解我们的大脑，进而发掘潜能。&lt;/p&gt;
 
 &lt;p&gt;作者是亨特(Andy Hunt)，他曾经写过《程序员修炼之道——从小工到专家》，《高效程序员的45个习惯:敏捷开发修炼之道》，《Programming Ruby》，《单元测试之道C#版——使用NUnit 》、《单元测试之道Java版——使用JUnit》、《版本控制之道——使用CVS 》等等。&lt;/p&gt;
@@ -652,10 +652,10 @@
         
         <item>
             <title>成大事者不纠结</title>
-            <link>http://kooksee.github.io/2015/04/26/Category/</link>
+            <link>http://kooksee.github.io/2015/04/26/category/</link>
             <pubDate>Sun, 26 Apr 2015 00:00:00 UTC</pubDate>
             <author>CoderZh</author>
-            <guid>http://kooksee.github.io/2015/04/26/Category/</guid>
+            <guid>http://kooksee.github.io/2015/04/26/category/</guid>
             <description>&lt;p&gt;最近在看罗振宇的《成大事者不纠结》，想想自己平时有什么纠结的事情，当我打开为知笔记看着长长的文件夹分类时，我明白了，其实我一直纠结着“分类”。我有一定的分类整理的习惯，当然也不是特别强迫的那种。比如，记录技术文章时，我会分出：C++，Python，Cocos2d-x，GameServer，Linux，……等等，甚至还会分出若干的二级分类。&lt;/p&gt;
 
 &lt;p&gt;这样分类的结果，就是自从被分入某个子类之后，我再也没有打开过它。甚至平时连看都不曾看见过它，好像它从未存在过。&lt;/p&gt;
@@ -682,10 +682,10 @@
         
         <item>
             <title>读《从0到1》</title>
-            <link>http://kooksee.github.io/2015/04/20/ZeroToOne/</link>
+            <link>http://kooksee.github.io/2015/04/20/zerotoone/</link>
             <pubDate>Mon, 20 Apr 2015 00:00:00 UTC</pubDate>
             <author>CoderZh</author>
-            <guid>http://kooksee.github.io/2015/04/20/ZeroToOne/</guid>
+            <guid>http://kooksee.github.io/2015/04/20/zerotoone/</guid>
             <description>
 
 &lt;p&gt;自从入手了Kindle Paper White，现在已经习惯了在Kindle上购买图书了，已经买了好几本了。在Kindle上读书体验就是好啊，自己也变得越来越爱读书了。呵呵。&lt;/p&gt;
@@ -730,10 +730,10 @@
         
         <item>
             <title>《黑客与画家》杂想</title>
-            <link>http://kooksee.github.io/2015/03/01/HackerAndPainter/</link>
+            <link>http://kooksee.github.io/2015/03/01/hackerandpainter/</link>
             <pubDate>Sun, 01 Mar 2015 00:00:00 UTC</pubDate>
             <author>CoderZh</author>
-            <guid>http://kooksee.github.io/2015/03/01/HackerAndPainter/</guid>
+            <guid>http://kooksee.github.io/2015/03/01/hackerandpainter/</guid>
             <description>&lt;p&gt;&lt;img src=&#34;http://7xlx3k.com1.z0.glb.clouddn.com/hackerspainters.jpg&#34; alt=&#34;HackersAndPainters&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;春节前，入手了个Kindle PaperWhite。之前一直担心Pad看书已经够用了，实际用下来，发现看书还是用Kindle好。因为Kindle能让你专心看书，不易伤眼，而且续航时间很长。&lt;/p&gt;
@@ -763,10 +763,10 @@
         
         <item>
             <title>《xUnit Test Patterns》学习笔记7(完) - 总结</title>
-            <link>http://kooksee.github.io/2010/02/07/xUnit-Test-Patterns7-End/</link>
+            <link>http://kooksee.github.io/2010/02/07/xunit-test-patterns7-end/</link>
             <pubDate>Sun, 07 Feb 2010 00:00:00 UTC</pubDate>
             <author>CoderZh</author>
-            <guid>http://kooksee.github.io/2010/02/07/xUnit-Test-Patterns7-End/</guid>
+            <guid>http://kooksee.github.io/2010/02/07/xunit-test-patterns7-end/</guid>
             <description>
 
 &lt;p&gt;总体来说，这本书是不错的。后面的第二部分和第三部分，主要针对Test Smells和Test Patterns进行了更加具体的描述，主要的内容和第一部分还是基本一致的。因此，我主要的精力都花在了第一部分，对于后面的第二部分和第三部分，我是跳着看完的。后面的内容当作字典来查询会比较好，因为写的比较详细。&lt;/p&gt;
@@ -819,10 +819,10 @@
         
         <item>
             <title>《xUnit Test Patterns》学习笔记6 - Test Double</title>
-            <link>http://kooksee.github.io/2010/01/31/xUnit-Test-Patterns6-Test-Double/</link>
+            <link>http://kooksee.github.io/2010/01/31/xunit-test-patterns6-test-double/</link>
             <pubDate>Sun, 31 Jan 2010 00:00:00 UTC</pubDate>
             <author>CoderZh</author>
-            <guid>http://kooksee.github.io/2010/01/31/xUnit-Test-Patterns6-Test-Double/</guid>
+            <guid>http://kooksee.github.io/2010/01/31/xunit-test-patterns6-test-double/</guid>
             <description>
 
 &lt;p&gt;我不知道Test Double翻译成中文是什么，测试替身？Test Double就像是陈龙大哥电影里的替身，起到以假乱真的作用。在单元测试时，使用Test Double减少对被测对象的依赖，使得测试更加单一，同时，让测试案例执行的时间更短，运行更加稳定，同时能对SUT内部的输入输出进行验证，让测试更加彻底深入。但是，Test Double也不是万能的，Test Double不能被过度使用，因为实际交付的产品是使用实际对象的，过度使用Test Double会让测试变得越来越脱离实际。&lt;/p&gt;
@@ -1009,10 +1009,10 @@
         
         <item>
             <title>《xUnit Test Patterns》学习笔记5 - xUnit基础</title>
-            <link>http://kooksee.github.io/2010/01/24/xUnit-Test-Patterns-5/</link>
+            <link>http://kooksee.github.io/2010/01/24/xunit-test-patterns-5/</link>
             <pubDate>Sun, 24 Jan 2010 00:00:00 UTC</pubDate>
             <author>CoderZh</author>
-            <guid>http://kooksee.github.io/2010/01/24/xUnit-Test-Patterns-5/</guid>
+            <guid>http://kooksee.github.io/2010/01/24/xunit-test-patterns-5/</guid>
             <description>
 
 &lt;p&gt;这几节我看的比较快一些，因为内容之间其实是有联系的，所以合在一起做一个笔记。6-10节主要介绍了什么是Fixture，如何保证一个Fresh Fixture，如何使用Setup，Tearndown，如何进行验证(Verify)，等等。&lt;/p&gt;
@@ -1280,10 +1280,10 @@ assertEquals(&lt;/span&gt;&lt;span style=&#34;color: #000000;&#34;&gt;&amp;ldquo
         
         <item>
             <title>《xUnit Test Patterns》学习笔记4 - Principles of Test Automation</title>
-            <link>http://kooksee.github.io/2010/01/23/xUnit-Test-Patterns-4/</link>
+            <link>http://kooksee.github.io/2010/01/23/xunit-test-patterns-4/</link>
             <pubDate>Sat, 23 Jan 2010 00:00:00 UTC</pubDate>
             <author>CoderZh</author>
-            <guid>http://kooksee.github.io/2010/01/23/xUnit-Test-Patterns-4/</guid>
+            <guid>http://kooksee.github.io/2010/01/23/xunit-test-patterns-4/</guid>
             <description>&lt;p&gt;自动化测试过程中，有一些基本的原则，就如同宣言(Manifesto)。由于大部分的原则在前面其实都提到的，因此，有的不做太多说明了。&lt;/p&gt;
 
 &lt;p&gt;原则：&lt;strong&gt;Write the Tests First&lt;/strong&gt;&lt;/p&gt;
@@ -1342,10 +1342,10 @@ assertEquals(&lt;/span&gt;&lt;span style=&#34;color: #000000;&#34;&gt;&amp;ldquo
         
         <item>
             <title>《xUnit Test Patterns》学习笔记系列</title>
-            <link>http://kooksee.github.io/2010/01/23/xUnit-Test-Patterns/</link>
+            <link>http://kooksee.github.io/2010/01/23/xunit-test-patterns/</link>
             <pubDate>Sat, 23 Jan 2010 00:00:00 UTC</pubDate>
             <author>CoderZh</author>
-            <guid>http://kooksee.github.io/2010/01/23/xUnit-Test-Patterns/</guid>
+            <guid>http://kooksee.github.io/2010/01/23/xunit-test-patterns/</guid>
             <description>&lt;ol&gt;
 &lt;li&gt;&lt;a href=&#34;http://www.cnblogs.com/coderzh/archive/2010/01/17/xUnit-Test-Patterns-1.html&#34;&gt;《xUnit Test Patterns》学习笔记1 - Test Smell&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;http://www.cnblogs.com/coderzh/archive/2010/01/18/xUnit-Test-Patterns-2.html&#34;&gt;《xUnit Test Patterns》学习笔记2 - Goal Of Test Automation&lt;/a&gt;&lt;/li&gt;
@@ -1364,10 +1364,10 @@ assertEquals(&lt;/span&gt;&lt;span style=&#34;color: #000000;&#34;&gt;&amp;ldquo
         
         <item>
             <title>《xUnit Test Patterns》学习笔记3 - Philosophy of Test Automation</title>
-            <link>http://kooksee.github.io/2010/01/21/xUnit-Test-Patterns-3/</link>
+            <link>http://kooksee.github.io/2010/01/21/xunit-test-patterns-3/</link>
             <pubDate>Thu, 21 Jan 2010 00:00:00 UTC</pubDate>
             <author>CoderZh</author>
-            <guid>http://kooksee.github.io/2010/01/21/xUnit-Test-Patterns-3/</guid>
+            <guid>http://kooksee.github.io/2010/01/21/xunit-test-patterns-3/</guid>
             <description>
 
 &lt;p&gt;这一章主要讲自动化测试的原则。前面的章节介绍了很多测试的思想，而思想的东西难免有点虚，这一章就是告诉你，遇到了具体的什么问题时，应该怎么办。作者咨询了很多的开发人员和测试人员，同时也和Martin Fowler就自动化测试的一些原则问题进行了交流，有些是显而易见的，有些又是让人把握不定。因此，这章主要讨论了以下几个问题：&lt;/p&gt;
@@ -1438,10 +1438,10 @@ assertEquals(&lt;/span&gt;&lt;span style=&#34;color: #000000;&#34;&gt;&amp;ldquo
         
         <item>
             <title>《xUnit Test Patterns》学习笔记2 - Goal Of Test Automation</title>
-            <link>http://kooksee.github.io/2010/01/18/xUnit-Test-Patterns-2/</link>
+            <link>http://kooksee.github.io/2010/01/18/xunit-test-patterns-2/</link>
             <pubDate>Mon, 18 Jan 2010 00:00:00 UTC</pubDate>
             <author>CoderZh</author>
-            <guid>http://kooksee.github.io/2010/01/18/xUnit-Test-Patterns-2/</guid>
+            <guid>http://kooksee.github.io/2010/01/18/xunit-test-patterns-2/</guid>
             <description>
 
 &lt;p&gt;或许有人觉得单元测试可有可无，因为觉得需要付出太多的精力，而客户并不需要它。这就涉及到投资回报率的问题，其实所付出的用于测试的投资，往往会收获到更多回报。它让我们减少了Bug的数量，减少了调试代码寻找Bug的时间。看下图，有效的自动化测试投资下，测试和开发付出的努力的时间图：&lt;/p&gt;
