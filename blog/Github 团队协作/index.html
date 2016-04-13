@@ -1,0 +1,955 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <base href="http://kooksee.github.io/">
+  <title>Github 团队协作 - 百里求一的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+  
+  <meta name="description" content="Github 团队协作 Git 再次将 Unix 设计哲学发挥到极致，尤其是 KISS 原则（Keep It Simple and Stupid）。 使用它的人（不仅是编程人员）对它的认识，可能是这样：与其">
+  <meta name="author" content="kooksee">
+  <meta itemprop="name" content="Github 团队协作 - 百里求一的博客">
+  <meta itemprop="description" content="Github 团队协作 Git 再次将 Unix 设计哲学发挥到极致，尤其是 KISS 原则（Keep It Simple and Stupid）。 使用它的人（不仅是编程人员）对它的认识，可能是这样：与其">
+  <meta itemprop="image" content="http://kooksee.github.io/img/author.jpg">
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@kooksee" />
+  <meta name="twitter:title" content="Github 团队协作 - 百里求一的博客" />
+  
+  <meta name="twitter:description" content="dfgffcfcffcfgvhbjgfdcgv">
+  
+  <link rel="shortcut icon" href="img/favicon.ico"/>
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+  <link rel="apple-touch-icon-precomposed" href="apple-touch-icon.png" />
+  <link rel="stylesheet" href="highlight/styles/github.css">
+  <script src="highlight/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <link rel="stylesheet" href="font/hack/css/hack.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+  <header>
+    <div>
+  
+  <div id="imglogo">
+    <a href="http://kooksee.github.io/"><img src="http://kooksee.github.io/img/logo.svg" alt="百里求一的博客" title="百里求一的博客"/></a>
+  </div>
+  
+  <div id="textlogo">
+    <h1 class="site-name"><a href="http://kooksee.github.io/" title="百里求一的博客">百里求一的博客</a></h1>
+    <h2 class="blog-motto">观察，思考，学习</h2>
+  </div>
+  <div class="navbar"><a class="navbutton navmobile" href="#" title="menu"></a></div>
+  <nav class="animated">
+    <ul>
+      
+      <li><a href="/">首页</a></li>
+      
+      <li><a href="/about/">关于</a></li>
+      
+      <li><a href="/tags/">标签</a></li>
+      
+      <li>
+        <form class="search" method="get" action="https://www.google.com/search">
+          <div>
+            <input type="text" id="search" name="q" placeholder="搜索">
+          </div>
+        </form>
+      </li>
+    </ul>
+  </nav>
+</div>
+
+  </header>
+  <div id="container">
+    <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody">
+    <header class="article-info clearfix">
+  <h1 itemprop="name">
+      <a href="http://kooksee.github.io/blog/Github%20%E5%9B%A2%E9%98%9F%E5%8D%8F%E4%BD%9C/" title="Github 团队协作" itemprop="url">Github 团队协作</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://kooksee.github.io" title="kooksee">kooksee</a>
+    
+  </p>
+  <p class="article-time">
+    <time datetime="0001-01-01 00:00:00 &#43;0000 UTC" itemprop="datePublished">0001年01月01日</time>
+  </p>
+</header>
+
+	<div class="article-content">
+    
+    
+
+<h1 id="github-团队协作:4a8ac693e47e69c7b976131245779879">Github 团队协作</h1>
+
+<p>Git 再次将 Unix 设计哲学发挥到极致，尤其是 KISS 原则（Keep It Simple and Stupid）。</p>
+
+<p>使用它的人（不仅是编程人员）对它的认识，可能是这样：与其说 Git 是一个分布式版本控制工具，不如说 Git 是一个分布式文件系统。正式这样看似简单粗暴的设计让 Git 从众多版本控制工具中脱颖而出。</p>
+
+<p>Git 相比其他版本控制工具有众多优势。如分布式，任何一个仓库都是一各完整的镜像。又如创建删除分支，Git 以很低的代价让使用它的人可以随意地快速创建删除分支。</p>
+
+<p>本文就 Git 的分布式和分支特性，结合 Github 强大的源码分享贡献平台，探讨一种简单有效的 Github 团队协作流程，实现多环境发布、Pull Request 的流程化。</p>
+
+<p>这个流程有如下两个原则：</p>
+
+<ol>
+<li>任何程序都可以追踪到对应的源码；</li>
+<li>所有代码都必须经过严格代码走查。</li>
+</ol>
+
+<h2 id="每个环境对应一个源码分支:4a8ac693e47e69c7b976131245779879">每个环境对应一个源码分支</h2>
+
+<p>通常 Git 仓库会有一个 master 分支，这个分支的代码应该 <strong>一直</strong> 是最新稳定版的， <strong>永远</strong> 对着应生产环境发布的版本，所有生产环境应用都要从这个分支上发布，所以我们不应该在这个分支上做开发。</p>
+
+<pre><code>Source branch  ===&gt;   Deploy environment
+master                Production
+</code></pre>
+
+<p>我们可以创建一个 develop 分支，所有开发工作都在这个分支上进行。本地开发好，单元测试通过后，发布到开发环境和其他系统（或服务，或模块，或应用)联调测试。</p>
+
+<p>（至于为什么不简写成 dev，答案是约定和对齐。大多数项目 develop 分支名都不缩写成 dev，所以我们也不应该缩写。对齐就是说 dev/master，一个缩写一个不缩写，很别扭，develop/master 看起来舒服点儿。）</p>
+
+<pre><code>Source branch  ===&gt;   Deploy environment
+develop               Development
+master                Production
+</code></pre>
+
+<p>开发环境只是开发人员自己的环境，开发人员可以自由发布，所以经常会有各种变化，无法稳定，这对测试人员来说，是个灾难，所以说必须搭建属于测试人员自己的测试环境。这个环境相对稳定，只会定期发布，也可以做一些压力测试等。</p>
+
+<p>既然有了测试环境，那么测试环境对应的源码就必须被标记，我们可以建一个 testing 分支（名字为什么这么长，不再解释了）。同 master 一样，testing 分支最新代码永远对应着测试环境。</p>
+
+<p>有了 testing 分支，那么我们开发环境联调通过的代码就可以从 develop 分支定期合并到 testing 分支了，合并完成后，从 testing 分支上编译并打包，发布到测试环境，测试，联调。</p>
+
+<pre><code>Source branch  ===&gt;   Deploy environment
+develop               Development
+testing               Testing
+master                Production
+</code></pre>
+
+<p>注意，所有测试环境发布工作都要在 testing 这个分支上进行，坚决不能从 develop 上发布，这个可以在发布脚本上做严格控制。同样，生产环境发布工作也不能从 develop/testing 分支上进行。</p>
+
+<p>测试环境积累一定的功能点，测试和联调通过后，就可以把 testing 分支的代码合并到 master 分支。这时 master 分支上的代码就是最新稳定版的，可以发布到生产环境了。但是发布前，必须更新 changelog，然后打 tag，以说明本次发布更新了哪些功能。打完 tag，才能发布，发布时只能从 master 分支编译大包，发布到生产环境。</p>
+
+<pre><code>develop ...................................
+             \   \   \       \        \
+testing ------o---o---o-------o--------o
+                       \       \
+master  ----------------o-------o
+                        |       |
+Tags                  1.0.1   1.0.2
+</code></pre>
+
+<p>这样说来，我们至少会有 3 个分支：develop/testing/master，一般项目基本够用，如果需要 UAT（Stage）环境，可以再添加其他分支。</p>
+
+<p>这里只考虑到所有开发人员都工作在 develop 分支上这种情况，如果有需要，可以从 develop 分支上创建特性分支，开发完成后，合并到 develop 分支。</p>
+
+<h2 id="所有代码都必须经过代码走查:4a8ac693e47e69c7b976131245779879">所有代码都必须经过代码走查</h2>
+
+<p>Github 提供了 Fork 和 Pull request 功能，可以方便地分享代码，也可以贡献代码。</p>
+
+<p>利用这些功能，团队可以很方便地完成代码审查，而不会影响效率和协作，而且 Github 的文件比较和批注非常强大，大大提高了代码审查和沟通效率。</p>
+
+<p>具体流程如下：</p>
+
+<ol>
+<li><p>在 Github 组织（如 gotips）下创建项目仓库（如 test-git），此时项目地应该是  <code>https://github.com/gotips/test-git</code>；</p></li>
+
+<li><p>参与该项目的组织成员把这个项目 fork 到自己的账号下，此时项目地址是 <code>https://github.com/omigo/test-git</code>（如果仓库是私有的，fork 后，在自己的账号下依然是私有的，不会泄露）；</p></li>
+
+<li><p>然后在本机创建组织目录（如 go 语言需要创建 $GOPATH/src/github.com/gotips）；</p></li>
+
+<li><p>把自己 Github 账号下的项目 clone 到刚创建的组织目录下 <code>git clone git@github.com:omigo/test-git.git</code>（为什么不放到自己的目录下？代码是组织的，包路径也是组织的，不是自己的）；</p></li>
+
+<li><p>此时本地项目只有一个远程仓库快捷方式 <code>origin =&gt; git@github.com:omigo/test-git.git</code>，再添加一个组织快捷方式，执行 <code>git remote add gotips git@github.com:gotips/test-git.git</code>；</p></li>
+
+<li><p>前面所有工作都是准备环境，现在可以编码了。写完一个独立逻辑，单元测试通过后，提交一次到本地仓库。同时，不定期地推送到自己的 Github 仓库；</p></li>
+
+<li><p>直到独立的功能点完成，所有代码都在自己的 Github 仓库后，就可以提交 Pull request，请其他伙伴帮忙审查代码了。到自己的 Github 账号下，点击【New pull request】，选择分支，点击【Create pull request】，填写清晰明确的注释，再次点击【Create pull request】。提交 Pull Request 时可以选择 Labels、Assignee 等给定标记、指定由谁来做 Code Review；</p></li>
+
+<li><p>当被人邀请做 Code Review 时，我们会得到一个 Pull Request 链接，如 <code>https://github.com/gotips/test-git/pull/1</code>。进入后，可以看到提交人的注释和每次的提交日志，【Files changed】页面详细列出了所有的文件变更，并和修改前对比，发现问题，可以点击代码，在该行下写注释，提交人会收到通知，修改，然后再提交。如果审查没问题，就可以点击【Merge pull request】，完成合并。这样代码才到算回到组织仓库中，开发才算完成，可以测试了。</p></li>
+</ol>
+
+<pre><code>Github workflow:
+
+                +------------+             +------------+                     +--------------+
+                |   Local    |  git push   |   Github   |    pull request     |    Github    |
+Developer       | Repository |  --------&gt;  | Repository |     ---------&gt;      |  Repository  |
+  1..n          |   1..n     |             |    1..n    |                     | Organization |
+                +------------+             +------------+                     +--------------+
+                      ^                                                              |
+                      |                       git pull                               |
+                      +--------------------------------------------------------------+
+
+</code></pre>
+
+<p>注意：</p>
+
+<ol>
+<li>只能 Push 到 Github 个人仓库，不能 Push 到组织仓库，可以从组织仓库 Pull 代码<code>git pull gotips develop</code>（如果觉得不安全，可以使用 <code>git fetch</code>）；</li>
+<li>提交 Pull Request 之前，需要先从 <strong>组织</strong> 仓库上拉取代码，保证代码时最新的，避免 Pull Request 代码合并时发生冲突，造成合并困难；</li>
+<li>如果发生了冲突，最好是让提交人先更新代码，自己解决冲突，然后提交，再次 Code Review，轻松合并；</li>
+<li>一个 Pull Request 修改的代码，最好不要超过 200 行，差不多是一天的工作量，太多，Code Review 看不过来，大多情况下草草了事，质量无法保证；</li>
+<li>代码要符合规范，统一格式，避免琐碎问题影响 Code Review 心情；</li>
+<li>Code Review 是一个学习的机会，但更多是监督与合作，提交人和合并人共同对代码负责，代码有问题，两人共同承担；</li>
+<li>最好不要强制谁走查谁的代码，应该由提交人邀请，这样才能合作更友好。</li>
+</ol>
+
+<h2 id="分支管理与-pull-request-的结合:4a8ac693e47e69c7b976131245779879">分支管理与 Pull Request 的结合</h2>
+
+<p>上面分别探讨了分支管理和 Pull Request，下面再说说，如何把两者结合起来。</p>
+
+<p>我们的原则依然不变：只能在 develop 分支做开发（可能也有其他特性分支），每次提交必须经过严格审查，每个分支对应一个发布环境。</p>
+
+<p>为了方便，一般我们团队协作中，会把 develop 分支设置为默认分支。</p>
+
+<p>在组织下创建仓库后，建好 3 个分支 master/testing/develop，然后到 Settings -&gt; Branches 下面 选择 develop 为默认分支。这样所有人 fork 的项目也会默认 develop 分支，clone 也是 develop 分支，避免分支切换和忘记切换分支带来的麻烦。开发都在 develop 分支，Pull Request 也在 develop 分支，merge 也是。</p>
+
+<p>然后就是测试环境发布了，测试环境对应 testing 分支，应该指定一人专门管理测试环境发布。所有开发人员先从组织仓库 develop 分支拉取最新（需要发布到测试环境的版本），和本地代码 develop 分支合并后，再把 develop 分支合并到 testing 分支，然后提交代码到 Github 个人仓库 testing 分支下，提交 pull request 给测试发布管理者。测试发布管理者合并后，从组织仓库更新 testing 代码，并从 testing 分支发布到测试环境。</p>
+
+<p>如果分支不多，并且团队协作良好，合并分支的工作也可以由测试发布管理者一个人完成，以简化流程。</p>
+
+<p>同样指定一位生产发布管理者，测试通过后，测试发布管理者就可以把 testing 分支合并到 master 分支，提交到 Github 个人仓库 master 分支，提交 Pull Request 给生产发布管理者。生产发布管理者合并代码，打 tag，完成生产环境发布。</p>
+
+<p>ChangeLog 问题，什么时候更新 ChangeLog 呢？</p>
+
+<p>我们如果开发时就已经知道版本号，那么开发时就可以更新，如果发布时才知道版本号，那么发布管理者可以通过 git log 了解本次发布有哪些更新，编写 ChangeLog。当然不排除有更好的 ChangeLog 更新办法，或者有更好的 Git 协作流程。</p>
+
+<p>注意：无论是分支管理，还是 Pull Request，还是编写 ChangeLog，都需要 git log 清晰明确，粒度要细，至少不能丢掉功能点，不能把两个功能点一次 commit，log   上只写一个功能点，更加不能出现无效 log，比如 优化、修复 bug、更新了一些文档、调整算法等等。</p>
+
+	</div>
+  <footer class="article-footer clearfix">
+  
+  
+    <div class="article-tags">
+      <span></span>
+      
+      <a href="/tags/%E5%9B%A2%E9%98%9F%E5%90%88%E4%BD%9C">团队合作</a>
+      
+    </div>
+  
+
+
+
+
+  <div class="article-share" id="share">
+    <div data-url="http://kooksee.github.io/blog/Github%20%E5%9B%A2%E9%98%9F%E5%8D%8F%E4%BD%9C/" data-title="Github 团队协作" data-tsina="1816308191" class="share clearfix">
+    </div>
+  </div>
+</footer>
+
+	</article>
+  
+<section class="comment">
+  <div class="ds-thread" data-thread-key="http://kooksee.github.io/blog/Github%20%E5%9B%A2%E9%98%9F%E5%8D%8F%E4%BD%9C/"
+   data-title="Github 团队协作" data-url="http://kooksee.github.io/blog/Github%20%E5%9B%A2%E9%98%9F%E5%8D%8F%E4%BD%9C/"></div>
+</section>
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"kooksee"};
+(function() {
+  var ds = document.createElement('script');
+  ds.type = 'text/javascript';ds.async = true;
+  ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+  ds.charset = 'UTF-8';
+  (document.getElementsByTagName('head')[0]
+  || document.getElementsByTagName('body')[0]).appendChild(ds);
+})();
+</script>
+
+
+
+
+</div>
+
+    <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+  
+
+<div class="categorieslist">
+  <p class="asidetitle">分类</p>
+  <ul>
+    
+    <li><a href="http://kooksee.github.io/categories/%e6%8a%80%e6%9c%af%e6%96%87%e7%ab%a0" title="技术文章">技术文章<sup>2</sup></a></li>
+    
+  </ul>
+</div>
+
+
+
+  
+
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+      
+			<li><a href="http://kooksee.github.io/tags/api" title="api">api<sup>2</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/api%e8%ae%be%e8%ae%a1%e8%bd%af%e4%bb%b6" title="api设计软件">api设计软件<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/bhnhbhbh" title="bhnhbhbh">bhnhbhbh<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/bools.py" title="bools.py">bools.py<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/ceo" title="ceo">ceo<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/cmd" title="cmd">cmd<sup>2</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/cmd%e6%a8%a1%e5%9d%97" title="cmd模块">cmd模块<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/consul" title="consul">consul<sup>3</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/ddd" title="ddd">ddd<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/docker" title="docker">docker<sup>13</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/docker-machine" title="docker-machine">docker-machine<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/dockerfile" title="dockerfile">dockerfile<sup>2</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/error" title="error">error<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/fish" title="fish">fish<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/flask" title="flask">flask<sup>3</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/gbk" title="gbk">gbk<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/groovy" title="groovy">groovy<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/hashlib" title="hashlib">hashlib<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/ipc" title="ipc">ipc<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/itertools" title="itertools">itertools<sup>2</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/javascript" title="javascript">javascript<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/jquery" title="jquery">jquery<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/json" title="json">json<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/knn" title="knn">knn<sup>2</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/linux" title="linux">linux<sup>2</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/lpc" title="lpc">lpc<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/makefile" title="makefile">makefile<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/mesos" title="mesos">mesos<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/mht" title="mht">mht<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/mongodb" title="mongodb">mongodb<sup>5</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/nodejs" title="nodejs">nodejs<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/openvpn" title="openvpn">openvpn<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/pipetools" title="pipetools">pipetools<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/plan_morning" title="plan_morning">plan_morning<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/postgresql" title="postgresql">postgresql<sup>2</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/pyshell" title="pyshell">pyshell<sup>2</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/python" title="python">python<sup>36</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/python%e6%a8%a1%e5%9d%97" title="python模块">python模块<sup>8</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/pyv8" title="pyv8">pyv8<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/rpc" title="rpc">rpc<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/shell" title="shell">shell<sup>2</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/shutil" title="shutil">shutil<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/simplejson" title="simplejson">simplejson<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/smb" title="smb">smb<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/software" title="software">software<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/sphinx" title="sphinx">sphinx<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/spyder" title="spyder">spyder<sup>2</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/sql" title="sql">sql<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/sqlalchemy" title="sqlalchemy">sqlalchemy<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/ssh" title="ssh">ssh<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/stringio" title="stringio">stringio<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/sublime" title="sublime">sublime<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/subprocess" title="subprocess">subprocess<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/ubuntu" title="ubuntu">ubuntu<sup>4</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/utf-8" title="utf-8">utf-8<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/webpack" title="webpack">webpack<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/wiki" title="wiki">wiki<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/wtf" title="wtf">wtf<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/zipfile" title="zipfile">zipfile<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/zmq" title="zmq">zmq<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e4%b8%89%e5%85%83%e8%a1%a8%e8%be%be%e5%bc%8f" title="三元表达式">三元表达式<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e4%b8%8b%e8%bd%bd%e5%99%a8" title="下载器">下载器<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e4%b8%ad%e7%bc%80%e8%af%ad%e6%b3%95" title="中缀语法">中缀语法<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e4%b9%a6%e7%b1%8d%e6%8e%a8%e8%8d%90" title="书籍推荐">书籍推荐<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e4%bb%a3%e7%90%86" title="代理">代理<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e4%bb%a3%e7%a0%81%e5%88%86%e6%9e%90" title="代码分析">代码分析<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e4%bb%bb%e5%8a%a1%e5%8f%91%e5%b8%83%e5%b9%b3%e5%8f%b0" title="任务发布平台">任务发布平台<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%85%bb%e7%94%9f" title="养生">养生<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%86%85%e6%a0%b8%e5%8d%87%e7%ba%a7" title="内核升级">内核升级<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%8d%9a%e5%ae%a2" title="博客">博客<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%90%8d%e8%af%8d%e5%ae%9a%e4%b9%89" title="名词定义">名词定义<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%91%bd%e4%bb%a4" title="命令">命令<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%9b%a2%e9%98%9f%e5%90%88%e4%bd%9c" title="团队合作">团队合作<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%a4%87%e5%bf%98%e5%bd%95" title="备忘录">备忘录<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%a4%9a%e8%bf%9b%e7%a8%8b%e4%b8%8b%e8%bd%bd%e5%99%a8" title="多进程下载器">多进程下载器<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%ad%a6%e4%b9%a0%e7%ac%94%e8%ae%b0" title="学习笔记">学习笔记<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%ae%9e%e4%b9%a0" title="实习">实习<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%b7%a5%e5%85%b7" title="工具">工具<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%b8%b8%e7%94%a8%e6%a8%a1%e5%9d%97" title="常用模块">常用模块<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%b9%bf%e5%91%8a" title="广告">广告<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%be%ae%e6%9c%8d%e5%8a%a1" title="微服务">微服务<sup>2</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%bf%83%e7%90%86%e5%ad%a6" title="心理学">心理学<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%bf%ab%e9%80%9f%e5%8e%9f%e5%9e%8b" title="快速原型">快速原型<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%bf%ab%e9%80%9f%e5%bc%80%e5%8f%91" title="快速开发">快速开发<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%bf%ab%e9%80%9f%e6%8e%92%e5%ba%8f" title="快速排序">快速排序<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%80%bb%e8%a3%81" title="总裁">总裁<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%8a%80%e6%9c%af" title="技术">技术<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%8f%92%e4%bb%b6" title="插件">插件<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%95%b0%e6%8d%ae%e5%ba%93" title="数据库">数据库<sup>2</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%95%b0%e6%8d%ae%e5%ba%93%e8%ae%a4%e8%af%81" title="数据库认证">数据库认证<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%96%87%e6%a1%a3%e8%a7%84%e8%8c%83" title="文档规范">文档规范<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%96%87%e6%a1%a3%e9%a9%b1%e5%8a%a8%e5%bc%80%e5%8f%91" title="文档驱动开发">文档驱动开发<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%96%b0%e6%a6%82%e5%bf%b5" title="新概念">新概念<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%96%b9%e4%be%bf" title="方便">方便<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%97%a5%e8%ae%b0" title="日记">日记<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%98%be%e7%a4%ba%e6%9c%8d%e5%8a%a1%e5%99%a8%e9%94%99%e8%af%af%e4%bf%a1%e6%81%af" title="显示服务器错误信息">显示服务器错误信息<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%9c%80%e4%bd%b3%e6%93%8d%e4%bd%9c" title="最佳操作">最佳操作<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%9c%ba%e6%a2%b0%e5%ad%a6%e4%b9%a0" title="机械学习">机械学习<sup>2</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%9d%83%e9%99%90" title="权限">权限<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%af%95%e4%b8%9a%e8%ae%be%e8%ae%a1" title="毕业设计">毕业设计<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%b4%bb%e5%8a%a8" title="活动">活动<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%b7%b7%e8%9b%8b%e9%80%bb%e8%be%91" title="混蛋逻辑">混蛋逻辑<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e7%83%ad%e7%82%b9%e9%97%ae%e9%a2%98" title="热点问题">热点问题<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e7%88%ac%e8%99%ab" title="爬虫">爬虫<sup>4</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e7%ae%97%e6%b3%95" title="算法">算法<sup>4</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e7%ae%a1%e9%81%93" title="管道">管道<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e7%b1%bb%e5%ba%93%e6%8e%a8%e8%8d%90" title="类库推荐">类库推荐<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e7%b3%bb%e7%bb%9f%e5%91%bd%e4%bb%a4" title="系统命令">系统命令<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e7%bc%96%e7%a0%81" title="编码">编码<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e7%bc%96%e7%a8%8b%e8%a7%84%e8%8c%83" title="编程规范">编程规范<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e7%bc%96%e7%a8%8b%e9%a3%8e%e6%a0%bc" title="编程风格">编程风格<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e7%bd%91%e7%bb%9c%e9%93%be%e6%8e%a5" title="网络链接">网络链接<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e8%81%8a%e5%a4%a9%e5%ae%a4" title="聊天室">聊天室<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e8%85%b9%e5%bc%8f%e5%91%bc%e5%90%b8" title="腹式呼吸">腹式呼吸<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e8%91%a3%e4%ba%8b%e9%95%bf" title="董事长">董事长<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e8%a1%a8%e5%8d%95%e9%aa%8c%e8%af%81" title="表单验证">表单验证<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e8%af%b7%e6%b1%82%e9%94%99%e8%af%af" title="请求错误">请求错误<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e8%bf%9b%e7%a8%8b%e9%80%9a%e4%bf%a1" title="进程通信">进程通信<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e9%82%bb%e9%87%8c%e9%97%ae%e9%a2%98" title="邻里问题">邻里问题<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e9%94%99%e8%af%af%e9%9b%86%e9%94%a6" title="错误集锦">错误集锦<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e9%97%ad%e5%8c%85" title="闭包">闭包<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e9%9c%80%e6%b1%82%e5%88%86%e6%9e%90" title="需求分析">需求分析<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e9%9d%a2%e8%af%95" title="面试">面试<sup>1</sup></a></li>
+      
+		</ul>
+</div>
+
+
+
+  
+  <div class="archiveslist">
+    <p class="asidetitle">归档</p>
+    <ul class="archive-list">
+      
+      
+      <li class="archive-list-item">
+        <a class="archive-list-link" href="http://kooksee.github.io/post/#2015-01">2015年01月</a><span class="archive-list-count">1</span>
+      </li>
+      
+      
+      <li class="archive-list-item">
+        <a class="archive-list-link" href="http://kooksee.github.io/post/#0001-01">0001年01月</a><span class="archive-list-count">108</span>
+      </li>
+      
+    </ul>
+
+  </div>
+
+
+  
+
+<div class="tagcloudlist">
+  <p class="asidetitle">标签云</p>
+  <div class="tagcloudlist clearfix">
+    
+    <a href="http://kooksee.github.io/tags/api" style="font-size: 12px;">api</a>
+    
+    <a href="http://kooksee.github.io/tags/api%e8%ae%be%e8%ae%a1%e8%bd%af%e4%bb%b6" style="font-size: 12px;">api设计软件</a>
+    
+    <a href="http://kooksee.github.io/tags/bhnhbhbh" style="font-size: 12px;">bhnhbhbh</a>
+    
+    <a href="http://kooksee.github.io/tags/bools.py" style="font-size: 12px;">bools.py</a>
+    
+    <a href="http://kooksee.github.io/tags/ceo" style="font-size: 12px;">ceo</a>
+    
+    <a href="http://kooksee.github.io/tags/cmd" style="font-size: 12px;">cmd</a>
+    
+    <a href="http://kooksee.github.io/tags/cmd%e6%a8%a1%e5%9d%97" style="font-size: 12px;">cmd模块</a>
+    
+    <a href="http://kooksee.github.io/tags/consul" style="font-size: 12px;">consul</a>
+    
+    <a href="http://kooksee.github.io/tags/ddd" style="font-size: 12px;">ddd</a>
+    
+    <a href="http://kooksee.github.io/tags/docker" style="font-size: 12px;">docker</a>
+    
+    <a href="http://kooksee.github.io/tags/docker-machine" style="font-size: 12px;">docker-machine</a>
+    
+    <a href="http://kooksee.github.io/tags/dockerfile" style="font-size: 12px;">dockerfile</a>
+    
+    <a href="http://kooksee.github.io/tags/error" style="font-size: 12px;">error</a>
+    
+    <a href="http://kooksee.github.io/tags/fish" style="font-size: 12px;">fish</a>
+    
+    <a href="http://kooksee.github.io/tags/flask" style="font-size: 12px;">flask</a>
+    
+    <a href="http://kooksee.github.io/tags/gbk" style="font-size: 12px;">gbk</a>
+    
+    <a href="http://kooksee.github.io/tags/groovy" style="font-size: 12px;">groovy</a>
+    
+    <a href="http://kooksee.github.io/tags/hashlib" style="font-size: 12px;">hashlib</a>
+    
+    <a href="http://kooksee.github.io/tags/ipc" style="font-size: 12px;">ipc</a>
+    
+    <a href="http://kooksee.github.io/tags/itertools" style="font-size: 12px;">itertools</a>
+    
+    <a href="http://kooksee.github.io/tags/javascript" style="font-size: 12px;">javascript</a>
+    
+    <a href="http://kooksee.github.io/tags/jquery" style="font-size: 12px;">jquery</a>
+    
+    <a href="http://kooksee.github.io/tags/json" style="font-size: 12px;">json</a>
+    
+    <a href="http://kooksee.github.io/tags/knn" style="font-size: 12px;">knn</a>
+    
+    <a href="http://kooksee.github.io/tags/linux" style="font-size: 12px;">linux</a>
+    
+    <a href="http://kooksee.github.io/tags/lpc" style="font-size: 12px;">lpc</a>
+    
+    <a href="http://kooksee.github.io/tags/makefile" style="font-size: 12px;">makefile</a>
+    
+    <a href="http://kooksee.github.io/tags/mesos" style="font-size: 12px;">mesos</a>
+    
+    <a href="http://kooksee.github.io/tags/mht" style="font-size: 12px;">mht</a>
+    
+    <a href="http://kooksee.github.io/tags/mongodb" style="font-size: 12px;">mongodb</a>
+    
+    <a href="http://kooksee.github.io/tags/nodejs" style="font-size: 12px;">nodejs</a>
+    
+    <a href="http://kooksee.github.io/tags/openvpn" style="font-size: 12px;">openvpn</a>
+    
+    <a href="http://kooksee.github.io/tags/pipetools" style="font-size: 12px;">pipetools</a>
+    
+    <a href="http://kooksee.github.io/tags/plan_morning" style="font-size: 12px;">plan_morning</a>
+    
+    <a href="http://kooksee.github.io/tags/postgresql" style="font-size: 12px;">postgresql</a>
+    
+    <a href="http://kooksee.github.io/tags/pyshell" style="font-size: 12px;">pyshell</a>
+    
+    <a href="http://kooksee.github.io/tags/python" style="font-size: 12px;">python</a>
+    
+    <a href="http://kooksee.github.io/tags/python%e6%a8%a1%e5%9d%97" style="font-size: 12px;">python模块</a>
+    
+    <a href="http://kooksee.github.io/tags/pyv8" style="font-size: 12px;">pyv8</a>
+    
+    <a href="http://kooksee.github.io/tags/rpc" style="font-size: 12px;">rpc</a>
+    
+    <a href="http://kooksee.github.io/tags/shell" style="font-size: 12px;">shell</a>
+    
+    <a href="http://kooksee.github.io/tags/shutil" style="font-size: 12px;">shutil</a>
+    
+    <a href="http://kooksee.github.io/tags/simplejson" style="font-size: 12px;">simplejson</a>
+    
+    <a href="http://kooksee.github.io/tags/smb" style="font-size: 12px;">smb</a>
+    
+    <a href="http://kooksee.github.io/tags/software" style="font-size: 12px;">software</a>
+    
+    <a href="http://kooksee.github.io/tags/sphinx" style="font-size: 12px;">sphinx</a>
+    
+    <a href="http://kooksee.github.io/tags/spyder" style="font-size: 12px;">spyder</a>
+    
+    <a href="http://kooksee.github.io/tags/sql" style="font-size: 12px;">sql</a>
+    
+    <a href="http://kooksee.github.io/tags/sqlalchemy" style="font-size: 12px;">sqlalchemy</a>
+    
+    <a href="http://kooksee.github.io/tags/ssh" style="font-size: 12px;">ssh</a>
+    
+    <a href="http://kooksee.github.io/tags/stringio" style="font-size: 12px;">stringio</a>
+    
+    <a href="http://kooksee.github.io/tags/sublime" style="font-size: 12px;">sublime</a>
+    
+    <a href="http://kooksee.github.io/tags/subprocess" style="font-size: 12px;">subprocess</a>
+    
+    <a href="http://kooksee.github.io/tags/ubuntu" style="font-size: 12px;">ubuntu</a>
+    
+    <a href="http://kooksee.github.io/tags/utf-8" style="font-size: 12px;">utf-8</a>
+    
+    <a href="http://kooksee.github.io/tags/webpack" style="font-size: 12px;">webpack</a>
+    
+    <a href="http://kooksee.github.io/tags/wiki" style="font-size: 12px;">wiki</a>
+    
+    <a href="http://kooksee.github.io/tags/wtf" style="font-size: 12px;">wtf</a>
+    
+    <a href="http://kooksee.github.io/tags/zipfile" style="font-size: 12px;">zipfile</a>
+    
+    <a href="http://kooksee.github.io/tags/zmq" style="font-size: 12px;">zmq</a>
+    
+    <a href="http://kooksee.github.io/tags/%e4%b8%89%e5%85%83%e8%a1%a8%e8%be%be%e5%bc%8f" style="font-size: 12px;">三元表达式</a>
+    
+    <a href="http://kooksee.github.io/tags/%e4%b8%8b%e8%bd%bd%e5%99%a8" style="font-size: 12px;">下载器</a>
+    
+    <a href="http://kooksee.github.io/tags/%e4%b8%ad%e7%bc%80%e8%af%ad%e6%b3%95" style="font-size: 12px;">中缀语法</a>
+    
+    <a href="http://kooksee.github.io/tags/%e4%b9%a6%e7%b1%8d%e6%8e%a8%e8%8d%90" style="font-size: 12px;">书籍推荐</a>
+    
+    <a href="http://kooksee.github.io/tags/%e4%bb%a3%e7%90%86" style="font-size: 12px;">代理</a>
+    
+    <a href="http://kooksee.github.io/tags/%e4%bb%a3%e7%a0%81%e5%88%86%e6%9e%90" style="font-size: 12px;">代码分析</a>
+    
+    <a href="http://kooksee.github.io/tags/%e4%bb%bb%e5%8a%a1%e5%8f%91%e5%b8%83%e5%b9%b3%e5%8f%b0" style="font-size: 12px;">任务发布平台</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%85%bb%e7%94%9f" style="font-size: 12px;">养生</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%86%85%e6%a0%b8%e5%8d%87%e7%ba%a7" style="font-size: 12px;">内核升级</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%8d%9a%e5%ae%a2" style="font-size: 12px;">博客</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%90%8d%e8%af%8d%e5%ae%9a%e4%b9%89" style="font-size: 12px;">名词定义</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%91%bd%e4%bb%a4" style="font-size: 12px;">命令</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%9b%a2%e9%98%9f%e5%90%88%e4%bd%9c" style="font-size: 12px;">团队合作</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%a4%87%e5%bf%98%e5%bd%95" style="font-size: 12px;">备忘录</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%a4%9a%e8%bf%9b%e7%a8%8b%e4%b8%8b%e8%bd%bd%e5%99%a8" style="font-size: 12px;">多进程下载器</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%ad%a6%e4%b9%a0%e7%ac%94%e8%ae%b0" style="font-size: 12px;">学习笔记</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%ae%9e%e4%b9%a0" style="font-size: 12px;">实习</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%b7%a5%e5%85%b7" style="font-size: 12px;">工具</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%b8%b8%e7%94%a8%e6%a8%a1%e5%9d%97" style="font-size: 12px;">常用模块</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%b9%bf%e5%91%8a" style="font-size: 12px;">广告</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%be%ae%e6%9c%8d%e5%8a%a1" style="font-size: 12px;">微服务</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%bf%83%e7%90%86%e5%ad%a6" style="font-size: 12px;">心理学</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%bf%ab%e9%80%9f%e5%8e%9f%e5%9e%8b" style="font-size: 12px;">快速原型</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%bf%ab%e9%80%9f%e5%bc%80%e5%8f%91" style="font-size: 12px;">快速开发</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%bf%ab%e9%80%9f%e6%8e%92%e5%ba%8f" style="font-size: 12px;">快速排序</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%80%bb%e8%a3%81" style="font-size: 12px;">总裁</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%8a%80%e6%9c%af" style="font-size: 12px;">技术</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%8f%92%e4%bb%b6" style="font-size: 12px;">插件</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%95%b0%e6%8d%ae%e5%ba%93" style="font-size: 12px;">数据库</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%95%b0%e6%8d%ae%e5%ba%93%e8%ae%a4%e8%af%81" style="font-size: 12px;">数据库认证</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%96%87%e6%a1%a3%e8%a7%84%e8%8c%83" style="font-size: 12px;">文档规范</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%96%87%e6%a1%a3%e9%a9%b1%e5%8a%a8%e5%bc%80%e5%8f%91" style="font-size: 12px;">文档驱动开发</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%96%b0%e6%a6%82%e5%bf%b5" style="font-size: 12px;">新概念</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%96%b9%e4%be%bf" style="font-size: 12px;">方便</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%97%a5%e8%ae%b0" style="font-size: 12px;">日记</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%98%be%e7%a4%ba%e6%9c%8d%e5%8a%a1%e5%99%a8%e9%94%99%e8%af%af%e4%bf%a1%e6%81%af" style="font-size: 12px;">显示服务器错误信息</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%9c%80%e4%bd%b3%e6%93%8d%e4%bd%9c" style="font-size: 12px;">最佳操作</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%9c%ba%e6%a2%b0%e5%ad%a6%e4%b9%a0" style="font-size: 12px;">机械学习</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%9d%83%e9%99%90" style="font-size: 12px;">权限</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%af%95%e4%b8%9a%e8%ae%be%e8%ae%a1" style="font-size: 12px;">毕业设计</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%b4%bb%e5%8a%a8" style="font-size: 12px;">活动</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%b7%b7%e8%9b%8b%e9%80%bb%e8%be%91" style="font-size: 12px;">混蛋逻辑</a>
+    
+    <a href="http://kooksee.github.io/tags/%e7%83%ad%e7%82%b9%e9%97%ae%e9%a2%98" style="font-size: 12px;">热点问题</a>
+    
+    <a href="http://kooksee.github.io/tags/%e7%88%ac%e8%99%ab" style="font-size: 12px;">爬虫</a>
+    
+    <a href="http://kooksee.github.io/tags/%e7%ae%97%e6%b3%95" style="font-size: 12px;">算法</a>
+    
+    <a href="http://kooksee.github.io/tags/%e7%ae%a1%e9%81%93" style="font-size: 12px;">管道</a>
+    
+    <a href="http://kooksee.github.io/tags/%e7%b1%bb%e5%ba%93%e6%8e%a8%e8%8d%90" style="font-size: 12px;">类库推荐</a>
+    
+    <a href="http://kooksee.github.io/tags/%e7%b3%bb%e7%bb%9f%e5%91%bd%e4%bb%a4" style="font-size: 12px;">系统命令</a>
+    
+    <a href="http://kooksee.github.io/tags/%e7%bc%96%e7%a0%81" style="font-size: 12px;">编码</a>
+    
+    <a href="http://kooksee.github.io/tags/%e7%bc%96%e7%a8%8b%e8%a7%84%e8%8c%83" style="font-size: 12px;">编程规范</a>
+    
+    <a href="http://kooksee.github.io/tags/%e7%bc%96%e7%a8%8b%e9%a3%8e%e6%a0%bc" style="font-size: 12px;">编程风格</a>
+    
+    <a href="http://kooksee.github.io/tags/%e7%bd%91%e7%bb%9c%e9%93%be%e6%8e%a5" style="font-size: 12px;">网络链接</a>
+    
+    <a href="http://kooksee.github.io/tags/%e8%81%8a%e5%a4%a9%e5%ae%a4" style="font-size: 12px;">聊天室</a>
+    
+    <a href="http://kooksee.github.io/tags/%e8%85%b9%e5%bc%8f%e5%91%bc%e5%90%b8" style="font-size: 12px;">腹式呼吸</a>
+    
+    <a href="http://kooksee.github.io/tags/%e8%91%a3%e4%ba%8b%e9%95%bf" style="font-size: 12px;">董事长</a>
+    
+    <a href="http://kooksee.github.io/tags/%e8%a1%a8%e5%8d%95%e9%aa%8c%e8%af%81" style="font-size: 12px;">表单验证</a>
+    
+    <a href="http://kooksee.github.io/tags/%e8%af%b7%e6%b1%82%e9%94%99%e8%af%af" style="font-size: 12px;">请求错误</a>
+    
+    <a href="http://kooksee.github.io/tags/%e8%bf%9b%e7%a8%8b%e9%80%9a%e4%bf%a1" style="font-size: 12px;">进程通信</a>
+    
+    <a href="http://kooksee.github.io/tags/%e9%82%bb%e9%87%8c%e9%97%ae%e9%a2%98" style="font-size: 12px;">邻里问题</a>
+    
+    <a href="http://kooksee.github.io/tags/%e9%94%99%e8%af%af%e9%9b%86%e9%94%a6" style="font-size: 12px;">错误集锦</a>
+    
+    <a href="http://kooksee.github.io/tags/%e9%97%ad%e5%8c%85" style="font-size: 12px;">闭包</a>
+    
+    <a href="http://kooksee.github.io/tags/%e9%9c%80%e6%b1%82%e5%88%86%e6%9e%90" style="font-size: 12px;">需求分析</a>
+    
+    <a href="http://kooksee.github.io/tags/%e9%9d%a2%e8%af%95" style="font-size: 12px;">面试</a>
+    
+  </div>
+</div>
+
+
+
+  
+
+</aside>
+</div>
+
+  </div>
+  <footer>
+<div id="footer" >
+
+  
+  <div class="line">
+    <span></span>
+    <div style='background:no-repeat url("http://kooksee.github.io/img/author.jpg") left top;-webkit-background-size:6.875em 6.875em;-moz-background-size:6.875em 6.875em;background-size:6.875em 6.875em;' class="author" ></div>
+  </div>
+  
+
+
+  <div class="social-font clearfix">
+    
+    <a href="http://weibo.com/kooksee" target="_blank" title="weibo"></a>
+    
+    
+    <a href="https://twitter.com/kooksee" target="_blank" title="twitter"></a>
+    
+    
+    <a href="https://github.com/kooksee" target="_blank" title="github"></a>
+    
+    
+    <a href="https://www.facebook.com/kooksee" target="_blank" title="facebook"></a>
+    
+    
+    <a href="https://www.linkedin.com/kooksee" target="_blank" title="linkedin"></a>
+    
+  </div>
+  <p class="copyright">Powered by <a href="http://gohugo.io" target="_blank" title="hugo">hugo</a> and Theme by <a href="https://github.com/coderzh/hugo-pacman-theme" target="_blank" title="hugo-pacman-theme">hugo-pacman-theme</a> © 2016
+    
+    <a href="http://kooksee.github.io/" target="_blank" title="kooksee">kooksee</a>
+    
+  </p>
+</div>
+</footer>
+  <script src="http://kooksee.github.io/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+done = false;
+$(document).ready(function(){
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize();
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  $('form.search').on('submit', function (event) {
+    if (false === done) {
+      event.preventDefault();
+      var orgVal = $(this).find('#search').val();
+      $(this).find('#search').val('site:http:\/\/kooksee.github.io\/} ' + orgVal);
+      done = true;
+      $(this).submit();
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});
+</script>
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-10147768-2', 'auto');
+  ga('send', 'pageview');
+  $('#messagesbsb').remove();
+</script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Pyv8 on 百里求一的博客</title>
+        <link>http://kooksee.github.io/tags/pyv8/</link>
+        <language>zh-CN</language>
+        <author>CoderZh</author>
+        <rights>Copyright (c) 2015, CoderZh; all rights reserved.</rights>
+        <updated>Mon, 01 Jan 0001 00:00:00 UTC</updated>
+        
+        <item>
+            <title>Ubuntu下安装PyV8</title>
+            <link>http://kooksee.github.io/blog/Ubuntu%E4%B8%8B%E5%AE%89%E8%A3%85PyV8/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/Ubuntu%E4%B8%8B%E5%AE%89%E8%A3%85PyV8/</guid>
+            <description>&lt;blockquote&gt;
+&lt;p&gt;折腾一下午终于弄好PyV8引擎,解析JS方便多了.
+关键: PyV8依赖于Boost,所以安装前先确定你的Linux有没有Boost(就因为这个折腾一下午,官方首页也没说,找了好久)&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;Ubuntu下安装
+sudo apt-get install libboost-all-dev
+sudo apt-get install aptitude
+接着安装PyV8
+用pip安装
+$sudo pip install -v pyv8
+或:
+sudo apt-get install scons libboost-python-dev
+svn checkout http://v8.googlecode.com/svn/trunk/ v8
+svn checkout http://pyv8.googlecode.com/svn/trunk/ pyv8
+cd v8
+export V8_HOME=`/home/buffer/v8`
+cd ../pyv8
+sudo python setup.py build
+sudo python setup.py install
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;接着就可以快乐的使用PyV8了&amp;hellip;.附使用代码&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import PyV8
+
+class v8Doc(PyV8.JSClass):
+    def write(self, s):
+        print s.decode(&#39;utf-8&#39;)
+
+class Global(PyV8.JSClass):
+    def __init__(self):
+        self.document = v8Doc()
+
+glob = Global()
+ctxt = PyV8.JSContext(glob)
+ctxt.enter()
+ctxt.eval(&amp;quot;var ant=8257+4341;var calf=5749+403^ant;var goat=1986+4175^calf;var fish=6422+7944^goat;var worm=7920+3648^fish;&amp;quot;)
+ctxt.eval(&amp;quot;document.write(((10502^calf)+24).toString());&amp;quot;)
+jss = &amp;quot;document.write((10502^calf)+24);&amp;quot;
+jss = &amp;quot;var thisvalue = &amp;quot; + jss.strip().replace(&amp;quot;document.write(&amp;quot;,&amp;quot;&amp;quot;).replace(&amp;quot;);&amp;quot;,&amp;quot;;&amp;quot;)
+print jss
+ctxt.eval(jss)
+vars = ctxt.locals.thisvalue
+print &amp;quot;vars = &amp;quot; + str(vars)
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

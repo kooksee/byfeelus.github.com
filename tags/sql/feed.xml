@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Sql on 百里求一的博客</title>
+        <link>http://kooksee.github.io/tags/sql/</link>
+        <language>zh-CN</language>
+        <author>CoderZh</author>
+        <rights>Copyright (c) 2015, CoderZh; all rights reserved.</rights>
+        <updated>Mon, 01 Jan 0001 00:00:00 UTC</updated>
+        
+        <item>
+            <title>postgresql sql</title>
+            <link>http://kooksee.github.io/blog/postgresql%20sql/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/postgresql%20sql/</guid>
+            <description>&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;INSERT INTO activity_enrolls(id,user_id,activity_id,is_shared,attrs,extras)
+VALUES (&#39;7f8a6ae0-9a4b-4724-ae96-9a71e687455e&#39;,
+    &#39;97de7729-1d26-42e2-9ef8-5bcae8342045&#39;,
+    &#39;4eb3a4ff-ad0c-4a03-963c-1a9e4290863e&#39;,
+    false,
+    &#39;{&amp;quot;nickname&amp;quot;:&amp;quot;bylee&amp;quot;,&amp;quot;gender&amp;quot;:&amp;quot;female&amp;quot;,&amp;quot;birthday&amp;quot;:&amp;quot;1990-02-03&amp;quot;,&amp;quot;mobile&amp;quot;:&amp;quot;86-12315779666&amp;quot;,&amp;quot;job&amp;quot;:&amp;quot;医生&amp;quot;}&#39;,
+    &#39;{&amp;quot;invitation_code&amp;quot;:&amp;quot;need mei_id&amp;quot;,&amp;quot;apply_reason&amp;quot;:&amp;quot;申请理由,提出意见&amp;quot;,&amp;quot;front_photos&amp;quot;:[&amp;quot;http://d.3987.com/wxybiji_150708/001.jpg&amp;quot;,&amp;quot;http://d.3987.com/wxybiji_150708/001.jpg&amp;quot;],&amp;quot;profile_photos&amp;quot;:[&amp;quot;http://d.3987.com/wxybiji_150708/001.jpg&amp;quot;,&amp;quot;http://d.3987.com/wxybiji_150708/001.jpg&amp;quot;]}&#39;
+);
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

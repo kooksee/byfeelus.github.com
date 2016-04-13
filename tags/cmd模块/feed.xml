@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Cmd模块 on 百里求一的博客</title>
+        <link>http://kooksee.github.io/tags/cmd%E6%A8%A1%E5%9D%97/</link>
+        <language>zh-CN</language>
+        <author>CoderZh</author>
+        <rights>Copyright (c) 2015, CoderZh; all rights reserved.</rights>
+        <updated>Mon, 01 Jan 0001 00:00:00 UTC</updated>
+        
+        <item>
+            <title>python cmd模块练习</title>
+            <link>http://kooksee.github.io/blog/python%20cmd%E6%A8%A1%E5%9D%97%E7%BB%83%E4%B9%A0/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/python%20cmd%E6%A8%A1%E5%9D%97%E7%BB%83%E4%B9%A0/</guid>
+            <description>&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;  # encoding=utf-8
+  import cmd
+  import sys
+
+
+  # cmd模块练习
+
+  class Client(cmd.Cmd):
+
+     &#39;&#39;&#39;
+     1）cmdloop()：类似与Tkinter的mainloop，运行Cmd解析器；
+     2）onecmd(str)：读取输入，并进行处理，通常不需要重载该函数，而是使用更加具体的do_command来执行特定的命名；
+     3）emptyline()：当输入空行时调用该方法；
+     4）default(line)：当无法识别输入的command时调用该方法；
+     5）completedefault(text,line,begidx,endidx):如果不存在针对的complete_*()方法，那么会调用该函数
+     6）precmd(line)：命令line解析之前被调用该方法；
+     7）postcmd(stop，line)：命令line解析之后被调用该方法；
+     8）preloop()：cmdloop()运行之前调用该方法；
+     9）postloop()：cmdloop()退出之后调用该方法；
+
+     &#39;&#39;&#39;
+
+     def __init__(self):
+         cmd.Cmd.__init__(self)
+         self.prompt = &#39;&amp;gt;&#39;
+
+     def do_hello(self, arg):
+         print &amp;quot;hello again&amp;quot;, arg, &amp;quot;!&amp;quot;
+
+     def help_hello(self):
+         print &amp;quot;syntax: hello [message]&amp;quot;,
+         print &amp;quot;-- prints a hello message&amp;quot;
+
+     def do_quit(self, arg):
+         sys.exit(1)
+
+     def help_quit(self):
+         print &amp;quot;syntax: quit&amp;quot;,
+         print &amp;quot;-- terminates the application&amp;quot;
+         # shortcuts
+     do_q = do_quit
+     do_EOF = do_quit
+
+ if __name__ == &#39;__main__&#39;:
+     client = Client()
+     client.cmdloop()  # cmdloop()：类似与Tkinter的mainloop，运行Cmd解析器；
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>中缀语法 on 百里求一的博客</title>
+        <link>http://kooksee.github.io/tags/%E4%B8%AD%E7%BC%80%E8%AF%AD%E6%B3%95/</link>
+        <language>zh-CN</language>
+        <author>CoderZh</author>
+        <rights>Copyright (c) 2015, CoderZh; all rights reserved.</rights>
+        <updated>Mon, 01 Jan 0001 00:00:00 UTC</updated>
+        
+        <item>
+            <title>python笔记之中缀语法和管道实现</title>
+            <link>http://kooksee.github.io/blog/python%E7%AC%94%E8%AE%B0%E4%B9%8B%E4%B8%AD%E7%BC%80%E8%AF%AD%E6%B3%95%E5%92%8C%E7%AE%A1%E9%81%93%E5%AE%9E%E7%8E%B0/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/python%E7%AC%94%E8%AE%B0%E4%B9%8B%E4%B8%AD%E7%BC%80%E8%AF%AD%E6%B3%95%E5%92%8C%E7%AE%A1%E9%81%93%E5%AE%9E%E7%8E%B0/</guid>
+            <description>&lt;blockquote&gt;
+&lt;p&gt;你知道什么是中缀语法吗？你知道python中的中缀操作是什么吗？那你知道操作python也是可以像unix的管道符一样方便吗？那么，废话不说了，直接上代码。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Pipe(object):
+	def __init__(self, function):
+        self.function = function
+
+    def __ror__(self, other):
+        return self.function(other)
+
+    def __call__(self, *args, **kwargs):
+        return Pipe(lambda x: self.function(x, *args, **kwargs))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;    Julien Palard 大神十分的抱歉，直接附上了您的代码，希望您不要介意。
+    在上面的代码中__ror__就是我们python中看到的或操作符，在这里代码重载了或操作符，然后把它变成我们梦寐以求的管道操作符，十分的犀利，我很喜欢。我实在是忍不住想发表一下我的见解，谈谈我对这段代码的认识，如有错误，请扔鸡蛋。
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;###一个例子&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;@Pipe
+def take(iterable, qte):
+    &amp;quot;Yield qte of elements in the given iterable.&amp;quot;
+    for item in iterable:
+        if qte &amp;gt; 0:
+            qte -= 1
+            yield item
+        else:
+            return
+
+@Pipe
+def add(x):
+    return sum(x)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;这是大神代码中一个take函数的实现，意思是得到一个序列的前qte个值的迭代器，add函数我就不废话了。然后我们来运行一个栗子吧。
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;###一个参数的情况&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;print [1,2,3,4] | add  #10,答案是毫无疑问. 但是，为什么呢？Pipe作为add的装饰器，被装饰过add实际上返回的是Pipe的对象，只不过是对象中拥有了这个add方法。那么，列表在执行管道操作的时候，实际上是Pipe对象调用了__ror__方法，列表参数传给了__ror__.返回值也就是__ror__函数的返回值.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;###那么请看多参数情况是怎样的吧？&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;[1,2,3,4] | take(2) #答案返回的是包含1,2的迭代器。那么，带参数和不带参数到底有什么不一样的呢？上面我说过，add函数实际上就是一个Pipe的实例，而在这里也不例外，take函数也是Pipe的一个实例，既然take是一个对象，那么它为什么可以在后面加上一个括号呢？哈哈，很简单，因为__call__函数重载了括号操作符，如果一个类中实现了这个方法，那么该类的对象可以像函数那样使用，然后调用__call__方法，所以take(2)实际上是调用了Pipe的__call__方法，然后又返回了一个新的Pipe实例，接下来就和上面的add一样了。
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;###最后附上Julien Palard大神的&lt;a href=&#34;https://github.com/JulienPalard/Pipe&#34;&gt;github&lt;/a&gt;吧&lt;/p&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

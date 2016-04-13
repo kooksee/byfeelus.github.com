@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Groovy on 百里求一的博客</title>
+        <link>http://kooksee.github.io/tags/groovy/</link>
+        <language>zh-CN</language>
+        <author>CoderZh</author>
+        <rights>Copyright (c) 2015, CoderZh; all rights reserved.</rights>
+        <updated>Mon, 01 Jan 0001 00:00:00 UTC</updated>
+        
+        <item>
+            <title>groovy 弹出菜单</title>
+            <link>http://kooksee.github.io/blog/groovy%20%E5%BC%B9%E5%87%BA%E8%8F%9C%E5%8D%95/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/groovy%20%E5%BC%B9%E5%87%BA%E8%8F%9C%E5%8D%95/</guid>
+            <description>&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;import groovy.swing.*
+import javax.swing.*
+import java.awt.*
+
+def swing = new SwingBuilder()
+swing.frame(title:&amp;quot;hello&amp;quot;,show:true){
+　　panel(){
+　　    def mm=swing.textField(text:&amp;quot;bcxhdbhd&amp;quot;)
+　　    mm.mousePressed={e-&amp;gt;
+            def popupMenu=swing.popupMenu(){
+　　           menuItem(text:&amp;quot;bhdfyhefyh&amp;quot;)
+            }
+　　         popupMenu.show(e.getComponent(),e.getX(),e.getY())
+            //这里的e.getComponent()换成mm也一样
+　    　    println(&amp;quot;jjjj&amp;quot;)
+　    　    mm.setText(&amp;quot;kkkkkk&amp;quot;)
+        }
+
+    }
+}         
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

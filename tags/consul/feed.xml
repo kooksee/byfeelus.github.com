@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Consul on 百里求一的博客</title>
+        <link>http://kooksee.github.io/tags/consul/</link>
+        <language>zh-CN</language>
+        <author>CoderZh</author>
+        <rights>Copyright (c) 2015, CoderZh; all rights reserved.</rights>
+        <updated>Mon, 01 Jan 0001 00:00:00 UTC</updated>
+        
+        <item>
+            <title>17mei Docker Consul 运行 服务注册 查看所有当前服务配置</title>
+            <link>http://kooksee.github.io/blog/17mei%20Docker%20Consul%20%E8%BF%90%E8%A1%8C%20%E6%9C%8D%E5%8A%A1%E6%B3%A8%E5%86%8C%20%E6%9F%A5%E7%9C%8B%E6%89%80%E6%9C%89%E5%BD%93%E5%89%8D%E6%9C%8D%E5%8A%A1%E9%85%8D%E7%BD%AE/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/17mei%20Docker%20Consul%20%E8%BF%90%E8%A1%8C%20%E6%9C%8D%E5%8A%A1%E6%B3%A8%E5%86%8C%20%E6%9F%A5%E7%9C%8B%E6%89%80%E6%9C%89%E5%BD%93%E5%89%8D%E6%9C%8D%E5%8A%A1%E9%85%8D%E7%BD%AE/</guid>
+            <description>
+
+&lt;h2 id=&#34;注册服务容器的运行:d04551f912163f99d3b2993cc8f18aae&#34;&gt;注册服务容器的运行&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;docker run -it -d --name consul -v /bin/consul:/bin/consul --net=prod -p 8500:8500 ubuntu:14.04 /bin/consul agent -bind=0.0.0.0 -dev -ui -client=0.0.0.0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;服务注册:d04551f912163f99d3b2993cc8f18aae&#34;&gt;服务注册&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;curl -X PUT -d &#39;{&amp;quot;Name&amp;quot;:&amp;quot;user&amp;quot;,&amp;quot;Address&amp;quot;:&amp;quot;prod-user.prod&amp;quot;,&amp;quot;Port&amp;quot;:13001,&amp;quot;tags&amp;quot;:[&amp;quot;user prod-user.prod 13001&amp;quot;]}&#39; -i http://localhost:8500/v1/agent/service/register
+
+curl -X PUT -d &#39;{&amp;quot;Name&amp;quot;:&amp;quot;diary&amp;quot;, &amp;quot;Port&amp;quot;: 13006, &amp;quot;Address&amp;quot;:&amp;quot;prod-diary.prod&amp;quot;, &amp;quot;tags&amp;quot;:[&amp;quot;diary prod-diary.prod 13006&amp;quot;] }&#39; -i http://localhost:8500/v1/agent/service/register
+
+curl -X PUT -d &#39;{&amp;quot;Name&amp;quot;:&amp;quot;mediastore&amp;quot;, &amp;quot;Port&amp;quot;: 13004, &amp;quot;Address&amp;quot;:&amp;quot;prod-mediastore.prod&amp;quot;, &amp;quot;tags&amp;quot;:[&amp;quot;mediastore prod-mediastore.prod 13004&amp;quot;] }&#39; -i http://localhost:8500/v1/agent/service/register
+
+curl -X PUT -d &#39;{&amp;quot;Name&amp;quot;:&amp;quot;other&amp;quot;, &amp;quot;Port&amp;quot;: 13003, &amp;quot;Address&amp;quot;:&amp;quot;prod-other.prod&amp;quot;, &amp;quot;tags&amp;quot;:[&amp;quot;other prod-other.prod 13003&amp;quot;] }&#39; -i http://localhost:8500/v1/agent/service/register
+
+curl -X PUT -d &#39;{&amp;quot;Name&amp;quot;:&amp;quot;verification&amp;quot;, &amp;quot;Port&amp;quot;: 13002, &amp;quot;Address&amp;quot;:&amp;quot;prod-verification.prod&amp;quot;, &amp;quot;tags&amp;quot;:[&amp;quot;verification prod-verification.prod 13002&amp;quot;] }&#39; -i http://localhost:8500/v1/agent/service/register
+
+curl -X PUT -d &#39;{&amp;quot;Name&amp;quot;:&amp;quot;activity&amp;quot;, &amp;quot;Port&amp;quot;: 13005, &amp;quot;Address&amp;quot;:&amp;quot;prod-verification.prod&amp;quot;, &amp;quot;tags&amp;quot;:[&amp;quot;verification prod-verification.prod 13005&amp;quot;] }&#39; -i http://localhost:8500/v1/agent/service/register
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;查看完整consul-当前配置:d04551f912163f99d3b2993cc8f18aae&#34;&gt;查看完整Consul 当前配置&lt;/h2&gt;
+
+&lt;p&gt;curl &lt;a href=&#34;http://127.0.0.1:8500/v1/agent/services&#34;&gt;http://127.0.0.1:8500/v1/agent/services&lt;/a&gt;&lt;/p&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>consul 简单教程</title>
+            <link>http://kooksee.github.io/blog/consul%20%E7%AE%80%E5%8D%95%E6%95%99%E7%A8%8B/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/consul%20%E7%AE%80%E5%8D%95%E6%95%99%E7%A8%8B/</guid>
+            <description>
+
+&lt;h2 id=&#34;依赖命令-consul-curl-我们的app:459462647d6ec9092887f48fdb4e13d7&#34;&gt;依赖命令： consul curl 我们的app&lt;/h2&gt;
+
+&lt;h2 id=&#34;consul-运行:459462647d6ec9092887f48fdb4e13d7&#34;&gt;consul 运行&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;nohup consul agent -dev &amp;gt;&amp;gt; consul.log &amp;amp;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;本地服务注册:459462647d6ec9092887f48fdb4e13d7&#34;&gt;本地服务注册&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;curl -X PUT -d &#39;{&amp;quot;Name&amp;quot;:&amp;quot;user&amp;quot;,&amp;quot;Address&amp;quot;:&amp;quot;127.0.0.1&amp;quot;,&amp;quot;Port&amp;quot;:13001,&amp;quot;tags&amp;quot;:[&amp;quot;user prod-user.prod 13001&amp;quot;]}&#39; -i http://localhost:8500/v1/agent/service/register
+curl -X PUT -d &#39;{&amp;quot;Name&amp;quot;:&amp;quot;diary&amp;quot;, &amp;quot;Port&amp;quot;: 13006, &amp;quot;Address&amp;quot;:&amp;quot;127.0.0.1&amp;quot;, &amp;quot;tags&amp;quot;:[&amp;quot;diary prod-diary.prod 13006&amp;quot;] }&#39; -i http://localhost:8500/v1/agent/service/register
+curl -X PUT -d &#39;{&amp;quot;Name&amp;quot;:&amp;quot;mediastore&amp;quot;, &amp;quot;Port&amp;quot;: 13004, &amp;quot;Address&amp;quot;:&amp;quot;127.0.0.1&amp;quot;, &amp;quot;tags&amp;quot;:[&amp;quot;mediastore prod-mediastore.prod 13004&amp;quot;] }&#39; -i http://localhost:8500/v1/agent/service/register
+curl -X PUT -d &#39;{&amp;quot;Name&amp;quot;:&amp;quot;other&amp;quot;, &amp;quot;Port&amp;quot;: 13003, &amp;quot;Address&amp;quot;:&amp;quot;127.0.0.1&amp;quot;, &amp;quot;tags&amp;quot;:[&amp;quot;other prod-other.prod 13003&amp;quot;] }&#39; -i http://localhost:8500/v1/agent/service/register
+curl -X PUT -d &#39;{&amp;quot;Name&amp;quot;:&amp;quot;verification&amp;quot;, &amp;quot;Port&amp;quot;: 13002, &amp;quot;Address&amp;quot;:&amp;quot;127.0.0.1&amp;quot;, &amp;quot;tags&amp;quot;:[&amp;quot;verification prod-verification.prod 13002&amp;quot;] }&#39; -i http://localhost:8500/v1/agent/service/register
+curl -X PUT -d &#39;{&amp;quot;Name&amp;quot;:&amp;quot;activity&amp;quot;, &amp;quot;Port&amp;quot;: 13005, &amp;quot;Address&amp;quot;:&amp;quot;127.0.0.1&amp;quot;, &amp;quot;tags&amp;quot;:[&amp;quot;verification prod-verification.prod 13005&amp;quot;] }&#39; -i http://localhost:8500/v1/agent/service/register
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;本地服务运行并记录日志:459462647d6ec9092887f48fdb4e13d7&#34;&gt;本地服务运行并记录日志&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;nohup /app/other.exe -dh prod-postgres.prod -du postgres -dpwd wothing -dn wothing &amp;gt;&amp;gt; other.log &amp;amp;
+cat other.log
+nohup /app/diary.exe -dh prod-postgres.prod -du postgres -dpwd wothing -dn wothing &amp;gt;&amp;gt; diary.log &amp;amp;
+nohup /app/mediastore.exe -p 13004 &amp;gt;&amp;gt; mediastore.log &amp;amp;
+nohup /app/user.exe -dh prod-postgres.prod -du postgres -dpwd wothing -dn wothing &amp;gt;&amp;gt; user.log &amp;amp;
+ls
+nohup /app/verification.exe -rh prod-redis.prod &amp;gt;&amp;gt; verification.log &amp;amp;
+nohup /app/activity.exe -dh prod-postgres.prod -du postgres -dpwd wothing -dn wothing &amp;gt;&amp;gt; activity.log &amp;amp;
+nohup /app/gw.exe &amp;gt;&amp;gt; gw.log &amp;amp;
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>测试环境使用方案</title>
+            <link>http://kooksee.github.io/blog/%E6%B5%8B%E8%AF%95%E7%8E%AF%E5%A2%83%E4%BD%BF%E7%94%A8%E6%96%B9%E6%A1%88/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/%E6%B5%8B%E8%AF%95%E7%8E%AF%E5%A2%83%E4%BD%BF%E7%94%A8%E6%96%B9%E6%A1%88/</guid>
+            <description>
+
+&lt;h1 id=&#34;测试环境使用方案:9599f5b770b13383e233ef1438d5bf2a&#34;&gt;测试环境使用方案&lt;/h1&gt;
+
+&lt;h2 id=&#34;1-方案总体解释:9599f5b770b13383e233ef1438d5bf2a&#34;&gt;1. 方案总体解释&lt;/h2&gt;
+
+&lt;p&gt;我们整个运行方案使用Linux操作系统来执行。底层操作系统为&lt;a href=&#34;http://www.ubuntu.com/&#34;&gt;ubuntu:14.04&lt;/a&gt;。如果您不熟悉Linux操作系统推荐阅读&lt;a href=&#34;http://vbird.dic.ksu.edu.tw/&#34;&gt;鸟哥Linux教程&lt;/a&gt;。您需要重点掌握如下知识： 远程登录Linux服务器的方法。查看文件系统文件的方法，运行可执行文件的方法，文件重定向的方法。&lt;/p&gt;
+
+&lt;h3 id=&#34;1-1-命令执行的方法:9599f5b770b13383e233ef1438d5bf2a&#34;&gt;1.1 命令执行的方法&lt;/h3&gt;
+
+&lt;p&gt;首先您需要一个Terminal 可以在gnome-terminal中打开。也可以在Mac下使用Iterm2也可以在windows下使用putty登录您的Linux。&lt;/p&gt;
+
+&lt;p&gt;复制文档中的命令之后请您键入回车（return）键执行命令。&lt;/p&gt;
+
+&lt;h2 id=&#34;2-环境导读:9599f5b770b13383e233ef1438d5bf2a&#34;&gt;2. 环境导读&lt;/h2&gt;
+
+&lt;p&gt;在本章节中您会查看到所有环境提供的内容的大体解释在以后的章节中会详细解释所有服务的操作。&lt;/p&gt;
+
+&lt;h3 id=&#34;2-1-环境提供内容:9599f5b770b13383e233ef1438d5bf2a&#34;&gt;2.1 环境提供内容：&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;consul 本地实例。&lt;/li&gt;
+&lt;li&gt;所有微服务的运行&lt;/li&gt;
+&lt;li&gt;环境变量自动管理&lt;/li&gt;
+&lt;li&gt;redis-server&lt;/li&gt;
+&lt;li&gt;从外部容器提供postgres&lt;/li&gt;
+&lt;li&gt;psql客户端（其实服务端也提供了）&lt;/li&gt;
+&lt;li&gt;环境为大家&lt;code&gt;公有&lt;/code&gt;环境请请不要随意修改配置。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&#34;2-2-环境登录方法:9599f5b770b13383e233ef1438d5bf2a&#34;&gt;2.2 环境登录方法&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;ssh root@dev.17mei.cn -p 550&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;2-3-查看所有微服务:9599f5b770b13383e233ef1438d5bf2a&#34;&gt;2.3 查看所有微服务&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;ps -aux&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;2-4-约定日志位置:9599f5b770b13383e233ef1438d5bf2a&#34;&gt;2.4 约定日志位置&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;/var/log/&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;2-5-环境变量管理:9599f5b770b13383e233ef1438d5bf2a&#34;&gt;2.5 环境变量管理&lt;/h3&gt;
+
+&lt;p&gt;位置：&lt;code&gt;~/.bashrc&lt;/code&gt;
+默认运行脚本：&lt;code&gt;~/runsample.sh&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;2-6-binary更新方法:9599f5b770b13383e233ef1438d5bf2a&#34;&gt;2.6 binary更新方法&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;scp&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;2-7-pgsql远程登录方法:9599f5b770b13383e233ef1438d5bf2a&#34;&gt;2.7 pgsql远程登录方法&lt;/h3&gt;
+
+&lt;p&gt;PORT: 16433
+User: postgres
+DB: wothing
+pwd: wothing&lt;/p&gt;
+
+&lt;h3 id=&#34;2-8-redis查看方法:9599f5b770b13383e233ef1438d5bf2a&#34;&gt;2.8 redis查看方法&lt;/h3&gt;
+
+&lt;p&gt;登录后 &lt;code&gt;redis-cli&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;2-9-自动化测试脚本运行:9599f5b770b13383e233ef1438d5bf2a&#34;&gt;2.9 自动化测试脚本运行&lt;/h3&gt;
+
+&lt;p&gt;从您开发的计算机上直接运行&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;go test -v * -dh dev.17mei.cn -dp 16433 -du postgres -dpwd wothing -dn wothing -host http://dev.17mei.cn -cert /cert/public.pem -key /cert/mykey.pem&lt;/code&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;3-consul:9599f5b770b13383e233ef1438d5bf2a&#34;&gt;3. Consul&lt;/h2&gt;
+
+&lt;h3 id=&#34;3-1-什么是consul:9599f5b770b13383e233ef1438d5bf2a&#34;&gt;3.1 什么是Consul&lt;/h3&gt;
+
+&lt;p&gt;服务发现，KV存储工具。有三个操作接口： RPC（内部自己调用），HTTP REST ， DNS（服务查询用）&lt;a href=&#34;https://github.com/wothing/17mei-design/wiki/Consul&#34;&gt;详细&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;3-2-如何注册服务:9599f5b770b13383e233ef1438d5bf2a&#34;&gt;3.2 如何注册服务&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;curl -X PUT -d &#39;{&amp;quot;Name&amp;quot;:&amp;quot;authority&amp;quot;,&amp;quot;Port&amp;quot;:13009}&#39; -i http://localhost:8500/v1/agent/service/register&lt;/code&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;curl 为Linux常用的发送http数据的命令&lt;/li&gt;
+&lt;li&gt;curl -X 为http报文发送的方法详情查看&lt;a href=&#34;http://www.cnblogs.com/shanyou/archive/2012/05/12/2496959.html&#34;&gt;REST&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;-d 为发送报文的内容 ，报文的格式为&lt;a href=&#34;http://baike.baidu.com/view/136475.htm&#34;&gt;JSON&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;-i 显示所有返回状态码，因此您可以在返回的详细信息&lt;/li&gt;
+&lt;li&gt;最后一个是目标访问地址。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;4-微服务的运行:9599f5b770b13383e233ef1438d5bf2a&#34;&gt;4. 微服务的运行&lt;/h2&gt;
+
+&lt;p&gt;需求说明： 首先我们需要一个不间断能够运行的程序，其次是我们可以指定微服务的版本，然后是我们需要能够指定微服务运行的参数，最后是日志的管理。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;不间断运行： nohup ， 此命令后面跟上所需执行的命令参数加上日志重定向到&lt;/li&gt;
+&lt;li&gt;执行不同的Linux命令可以指定不同的运行版本。&lt;/li&gt;
+&lt;li&gt;参数管理是通过环境变量管理来实现的，具体的环境变量的位置为：&lt;code&gt;/root/.bashrc&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;在nohup执行过程中有一个重定向的位置为日志的位置，无论您是添加新的微服务还是更新您的微服务都可以随时随地指定日志的位置，或者append到一个旧的日志。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;基于此我们有了如下的命令
+&lt;code&gt;nohup /app/gw.exe -ch $CH -cp $CP -ss $SS &amp;gt;&amp;gt; /var/log/gw.log &amp;amp;&lt;/code&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;5-环境变量的管理:9599f5b770b13383e233ef1438d5bf2a&#34;&gt;5. 环境变量的管理&lt;/h2&gt;
+
+&lt;p&gt;环境变量为Linux shell 下的变量。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;设置方法： 按照格式修改&lt;code&gt;/root/.bashrc&lt;/code&gt; , 变量名=value 注意等号前面不要有空格。 变量需要export 为全局变量。&lt;/li&gt;
+&lt;li&gt;例子： &lt;code&gt;export DU=postgres&lt;/code&gt; 全局设置DU变量为postgres&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;6-redis-server:9599f5b770b13383e233ef1438d5bf2a&#34;&gt;6. REDIS server&lt;/h2&gt;
+
+&lt;p&gt;redis 安装为服务器本地安装运行&lt;a href=&#34;http://www.yiibai.com/redis/redis_quick_guide.html&#34;&gt;教程&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;7-postgresql:9599f5b770b13383e233ef1438d5bf2a&#34;&gt;7. Postgresql&lt;/h2&gt;
+
+&lt;p&gt;从服务端连接postgresql： &lt;code&gt;psql -U postgres -h pgaaa.aaa  -d wothing&lt;/code&gt; 无需密码自动登录。&lt;/p&gt;
+
+&lt;h2 id=&#34;8-更新服务流程:9599f5b770b13383e233ef1438d5bf2a&#34;&gt;8. 更新服务流程&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;上传可执行文件
+
+&lt;ul&gt;
+&lt;li&gt;参考命令： &lt;code&gt;scp gw.exe root@dev.17mei.cn:/app/gw.exe -P 550&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;运行可执行文件
+
+&lt;ul&gt;
+&lt;li&gt;参考命令&lt;code&gt;nohup /app/gw.exe -ch $CH -cp $CP -ss $SS &amp;gt;&amp;gt; /var/log/gw.log &amp;amp;&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;当然在文件&lt;code&gt;/root/runsample.sh&lt;/code&gt;中有所有的参考执行命令。&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;查看日志
+
+&lt;ul&gt;
+&lt;li&gt;参考方法：&lt;code&gt;tail -F /var/log/gw.log&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&#34;9-注意事项:9599f5b770b13383e233ef1438d5bf2a&#34;&gt;9. 注意事项&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;consul运行在登陆服务本地。在localhost:8500 需要修改什么curl到本地即可&lt;/li&gt;
+&lt;li&gt;调试结束后不要忘记查看进程运行状态。&lt;code&gt;ps -uax&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;我在这里提供的是最简单的nohup进程管理方式需要手动kill进程，其实还有 systemd systemv screen tmux supervisor docker等等进程管理方式，大家可以根据自己的口味来解决进程管理的问题。&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

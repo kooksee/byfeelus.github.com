@@ -1,0 +1,1785 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Python on 百里求一的博客</title>
+        <link>http://kooksee.github.io/tags/python/</link>
+        <language>zh-CN</language>
+        <author>CoderZh</author>
+        <rights>Copyright (c) 2015, CoderZh; all rights reserved.</rights>
+        <updated>Mon, 01 Jan 0001 00:00:00 UTC</updated>
+        
+        <item>
+            <title>Python处理JSON</title>
+            <link>http://kooksee.github.io/blog/Python%E5%A4%84%E7%90%86JSON/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/Python%E5%A4%84%E7%90%86JSON/</guid>
+            <description>&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;什么是json：
+
+JSON(JavaScript Object Notation)
+
+是一种轻量级的数据交换格式。易于人阅读和编写。同时也易于机器解析和生成。它基于JavaScript Programming Language,
+
+Standard ECMA-262 3rd Edition - December
+
+1999的一个子集。JSON采用完全独立于语言的文本格式，但是也使用了类似于C语言家族的习惯（包括C, C++, C#, Java,
+
+JavaScript, Perl, Python等）。这些特性使JSON成为理想的数据交换语言。
+
+JSON建构于两种结构：
+
+“名称/值”对的集合（A collection of name/value pairs）。不同的语言中，它被理解为对象（object），纪录（record），结构（struct），字典（dictionary），哈希表（hash table），有键列表（keyed list），或者关联数组 （associative array）。
+
+值的有序列表（An ordered list of values）。在大部分语言中，它被理解为数组（array）。
+
+这些都是常见的数据结构。事实上大部分现代计算机语言都以某种形式支持它们。这使得一种数据格式在同样基于这些结构的编程语言之间交换成为可能。
+
+jso官方说明参见：http://json.org/
+
+Python操作json的标准api库参考：http://docs.python.org/library/json.html
+
+对简单数据类型的encoding 和 decoding：
+
+使用简单的json.dumps方法对简单数据类型进行编码，例如：
+
+import json
+
+obj=[[1,2,3],123,123.123,&#39;abc&#39;,{&#39;key1&#39;:(1,2,3),&#39;key2&#39;:(4,5,6)}]
+
+encodedjson=json.dumps(obj)
+
+printrepr(obj)
+
+printencodedjson
+
+输出：
+
+[[1, 2, 3], 123, 123.123, &#39;abc&#39;, {&#39;key2&#39;: (4, 5, 6), &#39;key1&#39;: (1, 2, 3)}]
+
+[[1, 2, 3], 123, 123.123, &amp;quot;abc&amp;quot;, {&amp;quot;key2&amp;quot;: [4, 5, 6], &amp;quot;key1&amp;quot;: [1, 2, 3]}]
+
+通过输出的结果可以看出，简单类型通过encode之后跟其原始的repr()输出结果非常相似，但是有些数据类型进行了改变，例如上例中的元组则转换为了列表。在json的编码过程中，会存在从python原始类型向json类型的转化过程，具体的转化对照如下：
+
+
+json.dumps()方法返回了一个str对象encodedjson，我们接下来在对encodedjson进行decode，得到原始数据，需要使用的json.loads()函数：
+decodejson=json.loads(encodedjson)
+
+printtype(decodejson)
+
+printdecodejson[4][&#39;key1&#39;]
+
+printdecodejson
+
+输出：
+
+[1, 2, 3]
+
+[[1, 2, 3], 123, 123.123, u&#39;abc&#39;, {u&#39;key2&#39;: [4, 5, 6], u&#39;key1&#39;: [1, 2, 3]}]
+
+loads方法返回了原始的对象，但是仍然发生了一些数据类型的转化。比如，上例中‘abc’转化为了unicode类型。从json到python的类型转化对照如下：
+
+
+json.dumps方法提供了很多好用的参数可供选择，比较常用的有sort_keys（对dict对象进行排序，我们知道默认dict是无序存放的），separators，indent等参数。
+
+排序功能使得存储的数据更加有利于观察，也使得对json输出的对象进行比较，例如：
+
+data1={&#39;b&#39;:789,&#39;c&#39;:456,&#39;a&#39;:123}
+
+data2={&#39;a&#39;:123,&#39;b&#39;:789,&#39;c&#39;:456}
+
+d1=json.dumps(data1,sort_keys=True)
+
+d2=json.dumps(data2)
+
+d3=json.dumps(data2,sort_keys=True)
+
+printd1
+
+printd2
+
+printd3
+
+printd1==d2
+
+printd1==d3
+
+输出：
+
+{&amp;quot;a&amp;quot;: 123, &amp;quot;b&amp;quot;: 789, &amp;quot;c&amp;quot;: 456}
+
+{&amp;quot;a&amp;quot;: 123, &amp;quot;c&amp;quot;: 456, &amp;quot;b&amp;quot;: 789}
+
+{&amp;quot;a&amp;quot;: 123, &amp;quot;b&amp;quot;: 789, &amp;quot;c&amp;quot;: 456}
+
+False
+
+True
+
+上例中，本来data1和data2数据应该是一样的，但是由于dict存储的无序特性，造成两者无法比较。因此两者可以通过排序后的结果进行存储
+
+就避免了数据比较不一致的情况发生，但是排序后再进行存储，系统必定要多做一些事情，也一定会因此造成一定的性能消耗，所以适当排序是很重要的。
+
+indent参数是缩进的意思，它可以使得数据存储的格式变得更加优雅。
+
+data1={&#39;b&#39;:789,&#39;c&#39;:456,&#39;a&#39;:123}
+
+d1=json.dumps(data1,sort_keys=True,indent=4)
+
+printd1
+
+输出：
+
+{
+
+&amp;quot;a&amp;quot;: 123,
+
+&amp;quot;b&amp;quot;: 789,
+
+&amp;quot;c&amp;quot;: 456
+
+}
+
+输出的数据被格式化之后，变得可读性更强，但是却是通过增加一些冗余的空白格来进行填充的。json主要是作为一种数据通信的格式存在的，而网络通
+
+信是很在乎数据的大小的，无用的空格会占据很多通信带宽，所以适当时候也要对数据进行压缩。separator参数可以起到这样的作用，该参数传递是一个
+
+元组，包含分割对象的字符串。
+
+print&#39;DATA:&#39;,repr(data)
+
+print&#39;repr(data)             :&#39;,len(repr(data))
+
+print&#39;dumps(data)            :&#39;,len(json.dumps(data))
+
+print&#39;dumps(data, indent=2)  :&#39;,len(json.dumps(data, indent=4))
+
+print&#39;dumps(data, separators):&#39;,len(json.dumps(data, separators=(&#39;,&#39;,&#39;:&#39;)))
+
+输出：
+
+DATA: {&#39;a&#39;: 123, &#39;c&#39;: 456, &#39;b&#39;: 789}
+
+repr(data)             : 30
+
+dumps(data)            : 30
+
+dumps(data, indent=2)  : 46
+
+dumps(data, separators): 25
+
+通过移除多余的空白符，达到了压缩数据的目的，而且效果还是比较明显的。
+
+另一个比较有用的dumps参数是skipkeys，默认为False。 dumps方法存储dict对象时，key必须是str类型，如果出现了其他类型的话，那么会产生TypeError异常，如果开启该参数，设为True的话，则会比较优雅的过度。
+
+data={&#39;b&#39;:789,&#39;c&#39;:456,(1,2):123}
+
+printjson.dumps(data,skipkeys=True)
+
+输出：
+
+{&amp;quot;c&amp;quot;: 456, &amp;quot;b&amp;quot;: 789}
+
+处理自己的数据类型
+
+json模块不仅可以处理普通的python内置类型，也可以处理我们自定义的数据类型，而往往处理自定义的对象是很常用的。
+
+首先，我们定义一个类Person。
+
+classPerson(object):
+
+def__init__(self,name,age):
+
+self.name=name
+
+self.age=age
+
+def__repr__(self):
+
+return&#39;Person Object name : %s , age : %d&#39;%(self.name,self.age)
+
+if__name__==&#39;__main__&#39;:
+
+p=Person(&#39;Peter&#39;,22)
+
+printp
+
+如果直接通过json.dumps方法对Person的实例进行处理的话，会报错，因为json无法支持这样的自动转化。通过上面所提到的json
+
+和python的类型转化对照表，可以发现，object类型是和dict相关联的，所以我们需要把我们自定义的类型转化为dict，然后再进行处理。这
+
+里，有两种方法可以使用。
+
+方法一：自己写转化函数
+
+&#39;&#39;&#39;
+
+Created on 2011-12-14
+
+@author: Peter
+
+&#39;&#39;&#39;
+
+importPerson
+
+importjson
+
+p=Person.Person(&#39;Peter&#39;,22)
+
+defobject2dict(obj):
+
+#convert object to a dict
+
+d={}
+
+d[&#39;__class__&#39;]=obj.__class__.__name__
+
+d[&#39;__module__&#39;]=obj.__module__
+
+d.update(obj.__dict__)
+
+returnd
+
+defdict2object(d):
+
+#convert dict to object
+
+if&#39;__class__&#39;ind:
+
+class_name=d.pop(&#39;__class__&#39;)
+
+module_name=d.pop(&#39;__module__&#39;)
+
+module=__import__(module_name)
+
+class_=getattr(module,class_name)
+
+args=dict((key.encode(&#39;ascii&#39;), value)forkey, valueind.items())#get args
+
+inst=class_(**args)#create new instance
+
+else:
+
+inst=d
+
+returninst
+
+d=object2dict(p)
+
+printd
+
+#{&#39;age&#39;: 22, &#39;__module__&#39;: &#39;Person&#39;, &#39;__class__&#39;: &#39;Person&#39;, &#39;name&#39;: &#39;Peter&#39;}
+
+o=dict2object(d)
+
+printtype(o),o
+
+# Person Object name : Peter , age : 22
+
+dump=json.dumps(p,default=object2dict)
+
+printdump
+
+#{&amp;quot;age&amp;quot;: 22, &amp;quot;__module__&amp;quot;: &amp;quot;Person&amp;quot;, &amp;quot;__class__&amp;quot;: &amp;quot;Person&amp;quot;, &amp;quot;name&amp;quot;: &amp;quot;Peter&amp;quot;}
+
+load=json.loads(dump,object_hook=dict2object)
+
+printload
+
+#Person Object name : Peter , age : 22
+
+上面代码已经写的很清楚了，实质就是自定义object类型和dict类型进行转化。object2dict函数将对象模块名、类名以及
+
+__dict__存储在dict对象里，并返回。dict2object函数则是反解出模块名、类名、参数，创建新的对象并返回。在json.dumps
+
+方法中增加default参数，该参数表示在转化过程中调用指定的函数，同样在decode过程中json.loads方法增加object_hook,
+
+指定转化函数。
+
+方法二：继承JSONEncoder和JSONDecoder类，覆写相关方法
+
+JSONEncoder类负责编码，主要是通过其default函数进行转化，我们可以override该方法。同理对于JSONDecoder。
+
+&#39;&#39;&#39;
+
+Created on 2011-12-14
+
+@author: Peter
+
+&#39;&#39;&#39;
+
+importPerson
+
+importjson
+
+p=Person.Person(&#39;Peter&#39;,22)
+
+classMyEncoder(json.JSONEncoder):
+
+defdefault(self,obj):
+
+#convert object to a dict
+
+d={}
+
+d[&#39;__class__&#39;]=obj.__class__.__name__
+
+d[&#39;__module__&#39;]=obj.__module__
+
+d.update(obj.__dict__)
+
+returnd
+
+classMyDecoder(json.JSONDecoder):
+
+def__init__(self):
+
+json.JSONDecoder.__init__(self,object_hook=self.dict2object)
+
+defdict2object(self,d):
+
+#convert dict to object
+
+if&#39;__class__&#39;ind:
+
+class_name=d.pop(&#39;__class__&#39;)
+
+module_name=d.pop(&#39;__module__&#39;)
+
+module=__import__(module_name)
+
+class_=getattr(module,class_name)
+
+args=dict((key.encode(&#39;ascii&#39;), value)forkey, valueind.items())#get args
+
+inst=class_(**args)#create new instance
+
+else:
+
+inst=d
+
+returninst
+
+d=MyEncoder().encode(p)
+
+o=MyDecoder().decode(d)
+
+printd
+
+printtype(o), o
+
+对于JSONDecoder类方法，稍微有点不同，但是改写起来也不是很麻烦。看代码应该就比较清楚了。
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>Ubuntu下安装PyV8</title>
+            <link>http://kooksee.github.io/blog/Ubuntu%E4%B8%8B%E5%AE%89%E8%A3%85PyV8/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/Ubuntu%E4%B8%8B%E5%AE%89%E8%A3%85PyV8/</guid>
+            <description>&lt;blockquote&gt;
+&lt;p&gt;折腾一下午终于弄好PyV8引擎,解析JS方便多了.
+关键: PyV8依赖于Boost,所以安装前先确定你的Linux有没有Boost(就因为这个折腾一下午,官方首页也没说,找了好久)&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;Ubuntu下安装
+sudo apt-get install libboost-all-dev
+sudo apt-get install aptitude
+接着安装PyV8
+用pip安装
+$sudo pip install -v pyv8
+或:
+sudo apt-get install scons libboost-python-dev
+svn checkout http://v8.googlecode.com/svn/trunk/ v8
+svn checkout http://pyv8.googlecode.com/svn/trunk/ pyv8
+cd v8
+export V8_HOME=`/home/buffer/v8`
+cd ../pyv8
+sudo python setup.py build
+sudo python setup.py install
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;接着就可以快乐的使用PyV8了&amp;hellip;.附使用代码&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import PyV8
+
+class v8Doc(PyV8.JSClass):
+    def write(self, s):
+        print s.decode(&#39;utf-8&#39;)
+
+class Global(PyV8.JSClass):
+    def __init__(self):
+        self.document = v8Doc()
+
+glob = Global()
+ctxt = PyV8.JSContext(glob)
+ctxt.enter()
+ctxt.eval(&amp;quot;var ant=8257+4341;var calf=5749+403^ant;var goat=1986+4175^calf;var fish=6422+7944^goat;var worm=7920+3648^fish;&amp;quot;)
+ctxt.eval(&amp;quot;document.write(((10502^calf)+24).toString());&amp;quot;)
+jss = &amp;quot;document.write((10502^calf)+24);&amp;quot;
+jss = &amp;quot;var thisvalue = &amp;quot; + jss.strip().replace(&amp;quot;document.write(&amp;quot;,&amp;quot;&amp;quot;).replace(&amp;quot;);&amp;quot;,&amp;quot;;&amp;quot;)
+print jss
+ctxt.eval(jss)
+vars = ctxt.locals.thisvalue
+print &amp;quot;vars = &amp;quot; + str(vars)
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>flask 后台表单验证模块</title>
+            <link>http://kooksee.github.io/blog/encoding=utf-8/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/encoding=utf-8/</guid>
+            <description>&lt;blockquote&gt;
+&lt;p&gt;我不想直接用flask的wtf模块，太大，功能太多，用不了。但后台也不能不做验证吧，我比较懒，不想一行一行写代码验证，所以就写了一个验证模块，对于小项目也够用了&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# encoding=utf-8
+
+# 这是一个简单的后台验证框架,因为前台的话要用ajax处理,那么后台就不需要复杂的表单处理了
+
+
+# 基础表单类,具体验证表单继承它
+from flask import session
+
+
+class BaseForm(object):
+    def __init__(self,form=None):
+
+        self.form = form
+        self.fields = []
+        self.errors = []  # 错误信息存放的地方
+        self.init()
+
+    def init(self):
+        if not self.form:
+            return False
+
+        # 给表单赋值
+        for field_name in dir(self):
+            field = self.__getattribute__(field_name)
+            if isinstance(field,Field):
+                if field_name in self.form:
+                    field.data = self.form[field_name]
+                    self.fields.append((field_name,field.validate))
+
+        # 验证自定义的以validate_开头的方法
+        for validate_method in dir(self):
+            if validate_method.startswith(&#39;validate_&#39;):
+                self.fields.append((validate_method,self.__getattribute__(validate_method)))
+
+
+    # 验证入口
+    def validate(self):
+        status = True
+        for field_name,validate_method in self.fields:
+            status = validate_method() and status
+            if not status:
+                print field_name,status
+                return False
+        return status
+
+# 字段类,主要提供字段的各种验证和约束
+class Field(object):
+    def __init__(self,label=None,type=&#39;text&#39;,validators={},description=None,data=&#39;&#39;):
+        self.data = data
+        self.label = label
+        self.type = type
+        self.validators = validators
+        self.description = description
+
+    # 验证入口,验证该字段所有的约束条件
+    def validate(self):
+        status = True
+        for method_name,param in self.validators.items():
+            status = self.__getattribute__(method_name)(param) and status
+            if not status:
+                print method_name,status
+                return True
+        return status
+
+    # 验证数据是否复合正则表达式
+    def __rule(self,re_str):
+        import re
+
+        pattern = re.compile(re_str)
+        match = pattern.match(self.data)
+        if match:
+            return True
+        return False
+
+    # 对开提供的正则表达式模块
+    def regex(self,re_str):
+        return self.__rule(re_str)
+
+    # 是否为数字
+    def digits(self,status=True):
+        return self.__rule(r&amp;quot;\d+&amp;quot;)
+
+    # 是否是链接
+    def url(self,status=True):
+        re_str = r&amp;quot;^(https?|s?ftp):\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&amp;amp;&#39;\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&amp;amp;&#39;\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&amp;amp;&#39;\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&amp;amp;&#39;\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&amp;amp;&#39;\(\)\*\+,;=]|:|@)|\/|\?)*)?$&amp;quot;
+        return self.__rule(re_str)
+
+    # 是否是邮箱
+    def email(self,status=True):
+        re_str = r&amp;quot;^[a-zA-Z0-9.!#$%&amp;amp;&#39;*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$&amp;quot;
+        return self.__rule(re_str)
+
+    # 是否为空
+    def not_null(self,status):
+        if not status:
+            return True
+        if not self.data:
+            return False
+        if hasattr(self.data,&#39;replace&#39;) and len(self.data.replace(&#39; &#39;,&#39;&#39;)) &amp;lt; 0:
+            return False
+        if len(self.data) == 0:
+            return False
+        return True
+
+    # 最小长度
+    def min_length(self,min=-1):
+        return self.not_null(True) and len(self.data) &amp;gt;= min
+
+    # 长度范围
+    def length_range(self,range=[]):
+        if self.not_null(True) and len(range) == 2:
+            data_length = len(self.data)
+            return data_length &amp;gt;= range[0] and data_length &amp;lt;= range[1]
+        return False
+
+    # 最大长度
+    def max_length(self,max):
+        return self.not_null(True) and len(self.data) &amp;lt;= max
+
+    # 最小值
+    def min(self,min):
+        try:
+            return int(self.data) &amp;gt;= min
+        except Exception,e:
+            print e
+            return False
+
+    # 最大值
+    def max(self,max):
+        try:
+            return int(self.data) &amp;lt;= max
+        except Exception,e:
+            print e
+            return False
+
+    # 值范围
+    def data_range(self,range=[]):
+        try:
+            data = int(self.data)
+            if len(range) == 2:
+                return data &amp;gt;= range[0] and data &amp;lt;= range[1]
+            return False
+        except Exception,e:
+            print e
+            return False
+
+    # 是否等于field
+    def equal_to(self,field):
+        return self.data == field.data
+
+    # 是否为规定的值
+    def choices(self,args=[]):
+        return self.data in args
+
+    # 检查多选框
+    def checked(self,status=True):
+        if not status:
+            return True
+        return self.data in [1,&#39;y&#39;,&#39;yes&#39;,&#39;true&#39;]
+if __name__ == &#39;__main__&#39;:
+    class Test(BaseForm):
+        name = Field()
+        password = Field()
+        email = Field()
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>flask-sqlalchemy 关系表简单操作</title>
+            <link>http://kooksee.github.io/blog/flask-sqlalchemy%20%E5%85%B3%E7%B3%BB%E8%A1%A8%E7%AE%80%E5%8D%95%E6%93%8D%E4%BD%9C/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/flask-sqlalchemy%20%E5%85%B3%E7%B3%BB%E8%A1%A8%E7%AE%80%E5%8D%95%E6%93%8D%E4%BD%9C/</guid>
+            <description>&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;from flask import Flask
+from flask.ext.sqlalchemy import SQLAlchemy
+from flask.ext.migrate import Migrate, MigrateCommand
+from flask.ext.script import Manager
+
+
+app = Flask(__name__)
+app.config[&#39;SQLALCHEMY_DATABASE_URI&#39;] = &#39;sqlite:///test.db&#39;
+db = SQLAlchemy(app)
+
+migrate = Migrate(app, db)
+
+manager = Manager(app)
+manager.add_command(&#39;db&#39;, MigrateCommand)
+
+
+class Post(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(80))
+
+    category_id = db.Column(db.Integer, db.ForeignKey(&#39;category.id&#39;))
+    category = db.relationship(&#39;Category&#39;,
+                               backref=db.backref(&#39;posts&#39;, lazy=&#39;dynamic&#39;))
+
+
+class Category(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    password = db.Column(db.String(50))
+
+
+@manager.command
+def run():
+    app.debug = True
+    app.run()
+
+
+if __name__ == &#39;__main__&#39;:
+    manager.run()
+
+# test
+# c1 = Category(password = &#39;pass1&#39;)
+# p1 = Post(name=&#39;name1&#39;,category=c1)
+# db.session.add(p1)
+# db.session.commit()
+#
+# p1 = db.session.query(Category).one()
+# print p1.id == 1
+# print p1.posts.one().name == &#39;name1&#39;
+# print p1.posts.all()[0].name ==&#39;name1&#39;
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>pjson</title>
+            <link>http://kooksee.github.io/blog/pjson/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/pjson/</guid>
+            <description>&lt;blockquote&gt;
+&lt;p&gt;我喜欢json这种数据格式，我觉得凡是xml能做的事情，json也同样能做，可能有时候可扩展性不如xml，但也同样能够达到相同的效果，而且json表现能力更强，书写更加简单，所以我很喜欢它&lt;/p&gt;
+
+&lt;p&gt;就像喜欢json一样，我也很喜欢python，因为简单，简便，我能随意的按照自己的想法去做事。那么，我知道json 是用来存储数据的，而在python中有很多的文件都可以存储数据，最常用的就是ini了，可视我不喜欢,我就是喜欢json，所以我想用json存储一切数据,就像操作python对象一样操作json，虽然已经有很多的类库可以帮助我们操作json，但我觉得还不够，所以我就继续重复造轮子吧&lt;/p&gt;
+&lt;/blockquote&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>plan_morning</title>
+            <link>http://kooksee.github.io/blog/plan_morning/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/plan_morning/</guid>
+            <description>&lt;p&gt;&lt;a href=&#34;https://github.com/uber/Python-Sample-Application&#34;&gt;https://github.com/uber/Python-Sample-Application&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://developer.uber.com/dashboard/app/wVdgLDhHReP6zgTyBus0GqzwnGlXBfT1&#34;&gt;https://developer.uber.com/dashboard/app/wVdgLDhHReP6zgTyBus0GqzwnGlXBfT1&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://login.uber.com/oauth/authorize?scope=profile+history+history_lite&amp;amp;state=nafFNPGeRW8ND3sxBgCdJWezCmHp8mbx&amp;amp;redirect_uri=http%3A%2F%2Flocalhost%3A7000%2Fsubmit&amp;amp;response_type=code&amp;amp;client_id=wVdgLDhHReP6zgTyBus0GqzwnGlXBfT1&#34;&gt;https://login.uber.com/oauth/authorize?scope=profile+history+history_lite&amp;amp;state=nafFNPGeRW8ND3sxBgCdJWezCmHp8mbx&amp;amp;redirect_uri=http%3A%2F%2Flocalhost%3A7000%2Fsubmit&amp;amp;response_type=code&amp;amp;client_id=wVdgLDhHReP6zgTyBus0GqzwnGlXBfT1&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;client Id
+wVdgLDhHReP6zgTyBus0GqzwnGlXBfT1
+client secret
+P7MTdtXK13opLb_OkCmG38mGK11-3nIBcHBDscqo
+Server token
+S3FGHZNcmccc0o80aJWJYrDNZqaQ55RmnR_3kOMD
+&lt;a href=&#34;http://localhost:7000/submit&#34;&gt;http://localhost:7000/submit&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;export UBER_CLIENT_ID=&amp;ldquo;wVdgLDhHReP6zgTyBus0GqzwnGlXBfT1&amp;rdquo;
+export UBER_CLIENT_SECRET=&amp;ldquo;P7MTdtXK13opLb_OkCmG38mGK11-3nIBcHBDscqo&amp;rdquo;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://login.uber.com/oauth/authorize?scopes=profile%2Chistory&amp;amp;redirect_uri=http%3A%2F%2Flocalhost%3A7000%2Fsubmit&amp;amp;response_type=code&amp;amp;client_id=wVdgLDhHReP6zgTyBus0GqzwnGlXBfT1&#34;&gt;https://login.uber.com/oauth/authorize?scopes=profile%2Chistory&amp;amp;redirect_uri=http%3A%2F%2Flocalhost%3A7000%2Fsubmit&amp;amp;response_type=code&amp;amp;client_id=wVdgLDhHReP6zgTyBus0GqzwnGlXBfT1&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://localhost:7000/submit?code=F7lbqfP0glY57jBqroWKqrE4NlN4VC&#34;&gt;http://localhost:7000/submit?code=F7lbqfP0glY57jBqroWKqrE4NlN4VC&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://developer.uber.com/dashboard/app/wVdgLDhHReP6zgTyBus0GqzwnGlXBfT1&#34;&gt;https://developer.uber.com/dashboard/app/wVdgLDhHReP6zgTyBus0GqzwnGlXBfT1&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Congratulations! you have successfully authenticated and your token is: is1f9TQmMIcoE4gGMirojUx63SXDoN&lt;/p&gt;
+
+&lt;p&gt;{u&amp;rsquo;last_authenticated&amp;rsquo;: 1452881151, u&amp;rsquo;access_token&amp;rsquo;: u&amp;rsquo;wOZ9etTkoiH3pAclqoF4U83Vxme3dw&amp;rsquo;, u&amp;rsquo;expires_in&amp;rsquo;: 2592000, u&amp;rsquo;token_type&amp;rsquo;: u&amp;rsquo;Bearer&amp;rsquo;, u&amp;rsquo;scope&amp;rsquo;: u&amp;rsquo;profile history&amp;rsquo;, u&amp;rsquo;refresh_token&amp;rsquo;: u&amp;rsquo;YLywdJDsZGKawBV4gcq98QVVLtE5Er&amp;rsquo;}&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://api.uber.com/v1.1/history?limit=5&amp;amp;offset=0&#34;&gt;https://api.uber.com/v1.1/history?limit=5&amp;amp;offset=0&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;{&amp;lsquo;content-length&amp;rsquo;: &amp;lsquo;75&amp;rsquo;, &amp;lsquo;x-xss-protection&amp;rsquo;: &amp;lsquo;1; mode=block&amp;rsquo;, &amp;lsquo;strict-transport-security&amp;rsquo;: &amp;lsquo;max-age=0&amp;rsquo;, &amp;lsquo;server&amp;rsquo;: &amp;lsquo;nginx&amp;rsquo;, &amp;lsquo;connection&amp;rsquo;: &amp;lsquo;keep-alive&amp;rsquo;, &amp;lsquo;date&amp;rsquo;: &amp;lsquo;Fri, 15 Jan 2016 19:06:20 GMT&amp;rsquo;, &amp;lsquo;x-uber-app&amp;rsquo;: &amp;lsquo;uberex-nonsandbox&amp;rsquo;, &amp;lsquo;content-type&amp;rsquo;: &amp;lsquo;application/json&amp;rsquo;}&lt;/p&gt;
+
+&lt;p&gt;{&amp;lsquo;Content-Type&amp;rsquo;: &amp;lsquo;application/json&amp;rsquo;, &amp;lsquo;Authorization&amp;rsquo;: u&amp;rsquo;bearer 6kRvT5VPYjagfynXnIRuJ1m0tEwCqV&amp;rsquo;}&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://localhost:7000/submit?code=fjYLJQG4XURvfT4BRUxBmK0OErwZ0J&#34;&gt;http://localhost:7000/submit?code=fjYLJQG4XURvfT4BRUxBmK0OErwZ0J&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;{&amp;lsquo;Content-Type&amp;rsquo;: &amp;lsquo;application/json&amp;rsquo;, &amp;lsquo;Authorization&amp;rsquo;: u&amp;rsquo;bearer Pw4wlRb9S0LB9WKKW9ZKTsaPatVwaN&amp;rsquo;}
+&lt;a href=&#34;https://api.uber.com/v1/products?latitude=37.781955&amp;amp;longitude=-122.402367&#34;&gt;https://api.uber.com/v1/products?latitude=37.781955&amp;amp;longitude=-122.402367&lt;/a&gt;&lt;/p&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>pyshell</title>
+            <link>http://kooksee.github.io/blog/pyshell/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/pyshell/</guid>
+            <description>&lt;blockquote&gt;
+&lt;p&gt;pyshell 调用外部命令，让你像执行bash一样方便&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;#!/usr/bin/env python
+# -*- coding:utf-8 -*-
+from subprocess import Popen
+from subprocess import PIPE
+
+
+def py_ver():
+    &#39;&#39;&#39;
+    得到python的版本
+    &#39;&#39;&#39;
+    import sys
+    return sys.version_info[0]
+_ver = py_ver()
+
+if _ver == 2:
+    builtin_str = str
+    bytes = str
+    str = unicode
+    basestring = basestring
+    numeric_types = (int, long, float)
+
+elif _ver == 3:
+    builtin_str = str
+    str = str
+    bytes = bytes
+    basestring = (str, bytes)
+    numeric_types = (int, float)
+else:
+    raise ValueError(u&#39;python 版本不正确&#39;)
+del _ver
+
+# 解析字符串中的环境变量
+
+
+def parse_shell_token(t):
+    import os
+    # 将～等用用户的家目录进行替换
+    t = os.path.expanduser(t)
+    # path中可以使用环境变量,&#39;$PATH&#39;...
+    t = os.path.expandvars(t)
+    return t
+
+
+class cmd(object):
+
+    def __init__(self, *args, **kwargs):
+        self.stdout = None
+        self.cmd(*args, **kwargs)
+
+    def cmd(self, cmd, env=None, stdout=PIPE):
+        p = Popen(parse_shell_token(cmd), shell=True,
+                  stdout=stdout, stdin=PIPE, stderr=PIPE, env=env)
+        self.stdout, self.stderr = p.communicate(input=self.stdout)
+        self.code = p.returncode
+        return self
+
+    def __repr__(self):
+        return self.value()
+
+    def __unicode__(self):
+        return self.value()
+
+    def __str__(self):
+        return self.value()
+
+    def __nonzero__(self):
+        return self.__bool__()
+
+    def __bool__(self):
+        return bool(self.value())
+
+    def value(self):
+        if not self.stdout:
+            return &#39;&#39;
+        return self.stdout.strip()
+if __name__ == &#39;__main__&#39;:
+    print cmd(&#39;ls -al&#39;)
+    print cmd(&amp;quot;ls | grep &#39;LICENSE&#39;&amp;quot;)
+    print cmd(&amp;quot;konsole --hold -e &#39;konsole --help&#39;&amp;quot;)
+    print cmd(&#39;ls $HOME&#39;)
+    print cmd(&#39;ls ~&#39;)
+
+    dd = cmd(&#39;ls ~&#39;).value().split(&#39;\n&#39;)
+    print dd
+    cmd(&amp;quot;gnome-terminal -x bash -c &#39;python -h;read&#39; &amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/blockquote&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>python Cmd实例之网络爬虫应用</title>
+            <link>http://kooksee.github.io/blog/python%20Cmd%E5%AE%9E%E4%BE%8B%E4%B9%8B%E7%BD%91%E7%BB%9C%E7%88%AC%E8%99%AB%E5%BA%94%E7%94%A8/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/python%20Cmd%E5%AE%9E%E4%BE%8B%E4%B9%8B%E7%BD%91%E7%BB%9C%E7%88%AC%E8%99%AB%E5%BA%94%E7%94%A8/</guid>
+            <description>&lt;blockquote&gt;
+&lt;p&gt;废话少说，直接上代码&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# encoding=utf-8
+import os
+import multiprocessing
+from cmd import Cmd
+import commands
+from mycrawler.dbUtil import DbUtil
+import signal
+
+
+# 下载监控
+def run_download_watch():
+    os.system(&amp;quot;gnome-terminal -x bash -c &#39;python ./download_process.py&#39; &amp;quot;)
+
+
+# 下载文件
+def run_download():
+    os.system(&amp;quot;gnome-terminal -x bash -c &#39;python ./download.py&#39; &amp;quot;)
+
+
+# 爬虫
+def run_spider(arg):
+    for i in range(len(arg)):
+        os.system(&amp;quot;gnome-terminal -x bash -c &#39;scrapy crawl %s&#39;&amp;quot; % arg[i])
+
+
+class CLI(Cmd):
+
+    def __init__(self):
+        Cmd.__init__(self)
+        # 设置命令提示符
+        self.prompt = &amp;quot;&amp;gt;&amp;gt;&amp;gt; &amp;quot;
+        self.intro = &#39;&#39;&#39;
+        欢迎进入爬虫控制台
+        输入0:查看帮助&#39;&#39;&#39;
+        self.doc_header = &#39;&#39;
+        self.undoc_header = &#39;&#39;
+        self.nohelp = &amp;quot;*** 命令%s没有帮助文档&amp;quot;
+
+    def do_download(self, arg):
+        &#39;&#39;&#39;    下载文件&#39;&#39;&#39;
+
+        p2 = multiprocessing.Process(target=run_download)
+        p2.start()
+
+    def do_0(self, arg):
+        self.do_help(1)
+
+    def do_help(self, arg):
+
+        def ddoc(ss, arg):
+            try:
+                doc = getattr(ss, &#39;do_&#39; + arg).__doc__
+                if doc:
+                    print arg + &amp;quot;:&amp;quot;
+                    print doc
+                    return
+            except AttributeError:
+                ss.stdout.write(&amp;quot;%s\n&amp;quot; % str(ss.nohelp % (arg,)))
+
+        cmds_doc = []
+        for name in self.get_names():
+            if name[:3] == &#39;do_&#39;:
+                cmds_doc.append(name[3:])
+
+        print self.doc_header
+        for c in cmds_doc:
+            ddoc(self, c)
+
+    # 添加新的爬虫连接
+    def do_add(self, args):
+        &amp;quot;&amp;quot;&amp;quot;    新增链接(厂商网址)到数据库中
+    输入格式为:add name abb;start_urls www.baidu.com www.baidu.com www.baidu.com
+    add是添加命令，后面的是参数。start_urls后面可以跟随多条数据，空格分开&amp;quot;&amp;quot;&amp;quot;
+
+        if not args:
+            print &amp;quot;输入内容为空，请查看帮助：help add&amp;quot;
+            return
+
+        print args
+        data = dict([(bb.split(&#39; &#39;)[0], len(bb.split(&#39; &#39;)[1:]) == 1 and bb.split(
+            &#39; &#39;)[1] or bb.split(&#39; &#39;)[1:]) for bb in args.split(&#39;;&#39;)])
+        print data
+        DbUtil().conn().collection(&#39;url_items&#39;).insert(data)
+
+    # 列出所有的爬虫
+    def do_list_spider(self, args):
+        &#39;&#39;&#39;     列出所有的爬虫&#39;&#39;&#39;
+
+        print commands.getoutput(&amp;quot;scrapy list&amp;quot;)
+
+    # 运行一个爬虫
+    def do_run_spider(self, arg):
+        &#39;&#39;&#39;     运行一个爬虫，例如run_spider abb&#39;&#39;&#39;
+
+        p3 = multiprocessing.Process(
+            target=run_spider, args=(arg,))
+        p3.start()
+        # os.system(&#39;scrapy crawl &#39; + arg)
+
+    def do_run(self, args):
+        &#39;&#39;&#39;    运行所有的程序&#39;&#39;&#39;
+
+        # 运行爬虫
+        self.do_run_all_spiders(1)
+
+        # 运行下载
+        p2 = multiprocessing.Process(target=run_download)
+        p2.start()
+
+        # 运行下载监控
+        p3 = multiprocessing.Process(target=run_download_watch)
+        p3.start()
+
+    # 运行所有的爬虫
+    def do_run_all_spiders(self, arg):
+        &#39;&#39;&#39;    运行所有的爬虫&#39;&#39;&#39;
+
+        s = cmd(&#39;scrapy list&#39;).value().split(&#39;\n&#39;)
+        if not s:
+            print &amp;quot;没有爬虫，请检验代码是否正确&amp;quot;
+            return
+
+        p = multiprocessing.Process(
+            target=run_spider, args=(s,))
+        p.start()
+        # os.system(&#39;./run_spider.sh &#39; + spider)
+
+    def do_q(self, arg):
+        &#39;&#39;&#39;    退出系统&#39;&#39;&#39;
+        return True
+
+    # emptyline
+    def emptyline(self):
+        os.system(&#39;clear&#39;)
+        print &#39;回车清屏，help帮助,tab补全&#39;
+
+    # 当无法识别输入的command时调用该方法
+    def default(self, line):
+        print &#39;输入的命令&#39; + repr(line) + &#39;错误，请输入help查看命令帮助&#39;
+
+    # 退出之后调用该方法
+    def postloop(self):
+        print &#39;谢谢使用&#39;
+
+    def completedefault(self, *ignored):
+        return [&#39;add&#39;, &#39;run_spider&#39;, &#39;run_all_spiders&#39;, &#39;list_spider&#39;]
+
+if __name__ == &amp;quot;__main__&amp;quot;:
+    cli = CLI()
+    cli.cmdloop()
+
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>python cmd模块练习</title>
+            <link>http://kooksee.github.io/blog/python%20cmd%E6%A8%A1%E5%9D%97%E7%BB%83%E4%B9%A0/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/python%20cmd%E6%A8%A1%E5%9D%97%E7%BB%83%E4%B9%A0/</guid>
+            <description>&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;  # encoding=utf-8
+  import cmd
+  import sys
+
+
+  # cmd模块练习
+
+  class Client(cmd.Cmd):
+
+     &#39;&#39;&#39;
+     1）cmdloop()：类似与Tkinter的mainloop，运行Cmd解析器；
+     2）onecmd(str)：读取输入，并进行处理，通常不需要重载该函数，而是使用更加具体的do_command来执行特定的命名；
+     3）emptyline()：当输入空行时调用该方法；
+     4）default(line)：当无法识别输入的command时调用该方法；
+     5）completedefault(text,line,begidx,endidx):如果不存在针对的complete_*()方法，那么会调用该函数
+     6）precmd(line)：命令line解析之前被调用该方法；
+     7）postcmd(stop，line)：命令line解析之后被调用该方法；
+     8）preloop()：cmdloop()运行之前调用该方法；
+     9）postloop()：cmdloop()退出之后调用该方法；
+
+     &#39;&#39;&#39;
+
+     def __init__(self):
+         cmd.Cmd.__init__(self)
+         self.prompt = &#39;&amp;gt;&#39;
+
+     def do_hello(self, arg):
+         print &amp;quot;hello again&amp;quot;, arg, &amp;quot;!&amp;quot;
+
+     def help_hello(self):
+         print &amp;quot;syntax: hello [message]&amp;quot;,
+         print &amp;quot;-- prints a hello message&amp;quot;
+
+     def do_quit(self, arg):
+         sys.exit(1)
+
+     def help_quit(self):
+         print &amp;quot;syntax: quit&amp;quot;,
+         print &amp;quot;-- terminates the application&amp;quot;
+         # shortcuts
+     do_q = do_quit
+     do_EOF = do_quit
+
+ if __name__ == &#39;__main__&#39;:
+     client = Client()
+     client.cmdloop()  # cmdloop()：类似与Tkinter的mainloop，运行Cmd解析器；
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>python shutil模块</title>
+            <link>http://kooksee.github.io/blog/python%20shutil%E6%A8%A1%E5%9D%97/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/python%20shutil%E6%A8%A1%E5%9D%97/</guid>
+            <description>&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# encoding=utf-8
+
+# /home/bergus/tongbu/360共享/编程语言
+# /home/bergus/桌面
+#     /home/bergus/test/hh
+
+import os
+import shutil
+
+
+# 把文件src_file移动到目录dest_file
+def move(src_file, dest_file):
+    for src in src_file:
+        for dest in dest_file:
+            try:
+                shutil.move(src, dest)
+            except Exception, e:
+                print e
+
+
+# 得到关键字的路径
+def get_keyworld_paths(key_word, path):
+    dest_dirs = []
+    if os.path.exists(path):
+        for f in os.listdir(path):
+            # print f
+            if key_word in f.lower():
+                dest_dirs.append(os.path.join(path, f).replace(&#39;\\&#39;, &#39;/&#39;))
+        return dest_dirs
+
+
+def my_move():
+    src_dir = &#39;/home/bergus/桌面&#39;
+    dest_dir = &#39;/home/bergus/tongbu/360共享/编程语言&#39;
+    key_word = [&#39;python&#39;, &#39;flask&#39;, &#39;sqlalchemy&#39;]
+
+    for key in key_word:
+        try:
+            a1 = get_keyworld_paths(key, src_dir)
+            a2 = get_keyworld_paths(key, dest_dir)
+            move(a1, a2)
+            print &amp;quot;移动完成&amp;quot;
+        except Exception, e:
+            print e
+
+if __name__ == &#39;__main__&#39;:
+    my_move()
+
+
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>python三元表达式</title>
+            <link>http://kooksee.github.io/blog/python%E4%B8%89%E5%85%83%E8%A1%A8%E8%BE%BE%E5%BC%8F/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/python%E4%B8%89%E5%85%83%E8%A1%A8%E8%BE%BE%E5%BC%8F/</guid>
+            <description>&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# encoding=utf-8
+
+def t(func, arg1, arg2):
+    &amp;quot;&amp;quot;&amp;quot;
+    苦于python的三元表达式，远没有其他语言的方便，所以就自己创造了一个
+    &amp;gt;&amp;gt;&amp;gt; t(lambda x: x &amp;gt; 4, &#39;ok&#39;, &#39;no&#39;)(2)
+    &#39;no&#39;
+
+    &amp;gt;&amp;gt;&amp;gt; t(3 &amp;gt; 4, &#39;ok&#39;, &#39;no&#39;)
+    &#39;no&#39;
+
+    &amp;gt;&amp;gt;&amp;gt; t(lambda x: x &amp;gt; 4, lambda x:x*3, &#39;no&#39;)(6)(3)
+    9
+
+    &amp;gt;&amp;gt;&amp;gt; t(lambda x: x &amp;gt; 4,t(lambda x: x &amp;gt; 6,&#39;yes&#39;,&#39;no2&#39;),&#39;no1&#39;)(5)(1)
+    &#39;no2&#39;
+
+    :param func:
+    :param arg1:
+    :param arg2:
+    :return:
+    &amp;quot;&amp;quot;&amp;quot;
+    if not callable(func):
+        if func:
+            return arg1
+        else:
+            return arg2
+    else:
+        def _t(*args, **argks):
+            if func(*args, **argks):
+                return arg1
+            else:
+                return arg2
+        return _t
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>python中的StringIO模块</title>
+            <link>http://kooksee.github.io/blog/python%E4%B8%AD%E7%9A%84StringIO%E6%A8%A1%E5%9D%97/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/python%E4%B8%AD%E7%9A%84StringIO%E6%A8%A1%E5%9D%97/</guid>
+            <description>&lt;blockquote&gt;
+&lt;p&gt;此模块主要用于在内存缓冲区中读写数据。模块是用类编写的，只有一个StringIO类，所以它的可用方法都在类中。此类中的大部分函数都与对文件的操作方法类似。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;#coding=gbk
+
+import StringIO, cStringIO, sys
+
+s = StringIO.StringIO(&amp;quot;JGood is a handsome boy&amp;quot;)
+s.write(&amp;quot;JGood is a handsome boy \r\n&amp;quot;)
+s.write(&#39;okkkk中国&#39;)
+s.seek(0)
+print s.read()
+
+#最后4个字节
+s.seek(-4, 2)
+print s.read()
+
+#---- 结果 ----
+#JGood is a handsome boy
+#okkkk中国
+#中国
+
+s=StringIO.StrngIO([buf])
+
+#此实例类似于open方法，不同的是它并不会在硬盘中生成文件，而只寄存在缓冲区；可选参数buf是一个str或unicode类型。它将会与其他后续写入的数据存放在一起。
+StringIO类中的方法：
+
+....● read
+
+....● readline
+
+....● readlines
+
+....● write
+
+....● writelines
+
+....● getvalue
+
+....● truncate
+
+....● tell
+
+....● seek
+
+....● close
+
+....● isatty
+
+....● flush
+
+----------------------
+
+s.read([n])
+
+参数n限定读取长度，int类型；缺省状态为从当前读写位置读取对象s中存储的所有数据。读取结束后，读写位置被移动。
+
+----------------------
+
+s.readline([length])
+
+参数length限定读取的结束位置，int类型，缺省状态为None：从当前读写位置读取至下一个以“\n”为结束符的当前行。读写位置被移动。
+
+----------------------
+
+s.readlines([sizehint])
+
+参数sizehint为int类型，缺省状态为读取所有行并作为列表返回，除此之外从当前读写位置读取至下一个以“\n”为结束符的当前行。读写位置被移动。
+
+----------------------
+
+s.write(s)
+
+从读写位置将参数s写入给对象s。参数s为str或unicode类型。读写位置被移动。
+
+----------------------
+
+s.writelines(list)
+
+从读写位置将list写入给对象s。参数list为一个列表，列表的成员为str或unicode类型。读写位置被移动。
+
+----------------------
+
+s.getvalue()
+
+此函数没有参数，返回对象s中的所有数据。
+
+----------------------
+
+s.truncate([size])
+
+从读写位置起切断数据，参数size限定裁剪长度，缺省值为None。
+
+----------------------
+
+s.tell()
+
+返回当前读写位置。
+
+----------------------
+
+s.seek(pos[,mode])
+
+移动当前读写位置至pos处，可选参数mode为0时将读写位置移动至pos处，为1时将读写位置从当前位置起向后移动pos个长度，为2时将读写位置置于末尾处再向后移动pos个长度；默认为0。
+
+----------------------
+
+s.close()
+
+释放缓冲区，执行此函数后，数据将被释放，也不可再进行操作。
+
+----------------------
+
+s.isatty()
+
+此函数总是返回0。不论StringIO对象是否已被close()。
+
+----------------------
+
+s.flush()
+
+刷新内部缓冲区。
+
+----------------------
+
+dir(StringIO.StringIO)的返回值中还包含有一个test函数，不过不用理睬它，它没有任何意义
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>python多进程断点续传分片下载器</title>
+            <link>http://kooksee.github.io/blog/python%E5%A4%9A%E8%BF%9B%E7%A8%8B%E6%96%AD%E7%82%B9%E7%BB%AD%E4%BC%A0%E5%88%86%E7%89%87%E4%B8%8B%E8%BD%BD%E5%99%A8/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/python%E5%A4%9A%E8%BF%9B%E7%A8%8B%E6%96%AD%E7%82%B9%E7%BB%AD%E4%BC%A0%E5%88%86%E7%89%87%E4%B8%8B%E8%BD%BD%E5%99%A8/</guid>
+            <description>&lt;p&gt;因为爬虫要用到下载器，但是直接用urllib下载很慢，所以找了很久终于找到一个让我欣喜的下载器。他能够断点续传分片下载，极大提高下载速度。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;#! /usr/bin/env python
+# encoding=utf-8
+
+from __future__ import unicode_literals
+
+from multiprocessing.dummy import Pool as ThreadPool
+import threading
+
+import os
+import sys
+import cPickle
+from collections import namedtuple
+import urllib2
+from urlparse import urlsplit
+
+import time
+
+
+# global lock
+lock = threading.Lock()
+
+
+# default parameters
+defaults = dict(
+    thread_count=10,
+    buffer_size=500 * 1024,
+    block_size=1000 * 1024)
+
+
+def progress(percent, width=50):
+    print &amp;quot;%s %d%%\r&amp;quot; % ((&#39;%%-%ds&#39; % width) % (width * percent / 100 * &#39;=&#39;), percent),
+    if percent &amp;gt;= 100:
+        print
+        sys.stdout.flush()
+
+
+def write_data(filepath, data):
+    with open(filepath, &#39;wb&#39;) as output:
+        cPickle.dump(data, output)
+
+
+def read_data(filepath):
+    with open(filepath, &#39;rb&#39;) as output:
+        return cPickle.load(output)
+
+
+FileInfo = namedtuple(&#39;FileInfo&#39;, &#39;url name size lastmodified&#39;)
+
+
+def get_file_info(url):
+    class HeadRequest(urllib2.Request):
+
+        def get_method(self):
+            return &amp;quot;HEAD&amp;quot;
+    res = urllib2.urlopen(HeadRequest(url))
+    res.read()
+    headers = dict(res.headers)
+    size = int(headers.get(&#39;content-length&#39;, 0))
+    lastmodified = headers.get(&#39;last-modified&#39;, &#39;&#39;)
+    name = None
+    if headers.has_key(&#39;content-disposition&#39;):
+        name = headers[&#39;content-disposition&#39;].split(&#39;filename=&#39;)[1]
+        if name[0] == &#39;&amp;quot;&#39; or name[0] == &amp;quot;&#39;&amp;quot;:
+            name = name[1:-1]
+    else:
+        name = os.path.basename(urlsplit(url)[2])
+
+    return FileInfo(url, name, size, lastmodified)
+
+
+def download(url, output,
+             thread_count=defaults[&#39;thread_count&#39;],
+             buffer_size=defaults[&#39;buffer_size&#39;],
+             block_size=defaults[&#39;block_size&#39;]):
+    # get latest file info
+    file_info = get_file_info(url)
+
+    # init path
+    if output is None:
+        output = file_info.name
+    workpath = &#39;%s.ing&#39; % output
+    infopath = &#39;%s.inf&#39; % output
+
+    # split file to blocks. every block is a array [start, offset, end],
+    # then each greenlet download filepart according to a block, and
+    # update the block&#39; offset.
+    blocks = []
+
+    if os.path.exists(infopath):
+        # load blocks
+        _x, blocks = read_data(infopath)
+        if (_x.url != url or
+                _x.name != file_info.name or
+                _x.lastmodified != file_info.lastmodified):
+            blocks = []
+
+    if len(blocks) == 0:
+        # set blocks
+        if block_size &amp;gt; file_info.size:
+            blocks = [[0, 0, file_info.size]]
+        else:
+            block_count, remain = divmod(file_info.size, block_size)
+            blocks = [[i * block_size, i * block_size,
+                       (i + 1) * block_size - 1] for i in range(block_count)]
+            blocks[-1][-1] += remain
+        # create new blank workpath
+        with open(workpath, &#39;wb&#39;) as fobj:
+            fobj.write(&#39;&#39;)
+
+    print &#39;Downloading %s&#39; % url
+    # start monitor
+    threading.Thread(target=_monitor, args=(
+        infopath, file_info, blocks)).start()
+
+    # start downloading
+    with open(workpath, &#39;rb+&#39;) as fobj:
+        args = [(url, blocks[i], fobj, buffer_size)
+                for i in range(len(blocks)) if blocks[i][1] &amp;lt; blocks[i][2]]
+
+        if thread_count &amp;gt; len(args):
+            thread_count = len(args)
+
+        pool = ThreadPool(thread_count)
+        pool.map(_worker, args)
+        pool.close()
+        pool.join()
+
+    # rename workpath to output
+    if os.path.exists(output):
+        os.remove(output)
+    os.rename(workpath, output)
+
+    # delete infopath
+    if os.path.exists(infopath):
+        os.remove(infopath)
+
+    assert all([block[1] &amp;gt;= block[2] for block in blocks]) is True
+
+
+def _worker((url, block, fobj, buffer_size)):
+    req = urllib2.Request(url)
+    req.headers[&#39;Range&#39;] = &#39;bytes=%s-%s&#39; % (block[1], block[2])
+    res = urllib2.urlopen(req)
+
+    while 1:
+        chunk = res.read(buffer_size)
+        if not chunk:
+            break
+        with lock:
+            fobj.seek(block[1])
+            fobj.write(chunk)
+            block[1] += len(chunk)
+
+
+def _monitor(infopath, file_info, blocks):
+    while 1:
+        with lock:
+            percent = sum([block[1] - block[0]
+                           for block in blocks]) * 100 / file_info.size
+            progress(percent)
+            if percent &amp;gt;= 100:
+                break
+            write_data(infopath, (file_info, blocks))
+        time.sleep(2)
+
+
+if __name__ == &#39;__main__&#39;:
+    import argparse
+    parser = argparse.ArgumentParser(description=&#39;多线程文件下载器.&#39;)
+    parser.add_argument(&#39;url&#39;, type=str, help=&#39;下载连接&#39;)
+    parser.add_argument(&#39;-o&#39;, type=str, default=None,
+                        dest=&amp;quot;output&amp;quot;, help=&#39;输出文件&#39;)
+    parser.add_argument(
+        &#39;-t&#39;, type=int, default=defaults[&#39;thread_count&#39;], dest=&amp;quot;thread_count&amp;quot;, help=&#39;下载的线程数量&#39;)
+    parser.add_argument(
+        &#39;-b&#39;, type=int, default=defaults[&#39;buffer_size&#39;], dest=&amp;quot;buffer_size&amp;quot;, help=&#39;缓存大小&#39;)
+    parser.add_argument(
+        &#39;-s&#39;, type=int, default=defaults[&#39;block_size&#39;], dest=&amp;quot;block_size&amp;quot;, help=&#39;字区大小&#39;)
+
+    argv = sys.argv[1:]
+
+    if len(argv) == 0:
+        argv = [&#39;https://eyes.nasa.gov/eyesproduct/EYES/os/win&#39;]
+
+    args = parser.parse_args(argv)
+
+    start_time = time.time()
+    download(args.url, args.output, args.thread_count,
+             args.buffer_size, args.block_size)
+    print &#39;下载时间: %ds&#39; % int(time.time() - start_time)
+
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>python快速排序</title>
+            <link>http://kooksee.github.io/blog/python%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/python%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F/</guid>
+            <description>&lt;blockquote&gt;
+&lt;p&gt;快速排序采用的思想是分治思想。
+快速排序是找出一个元素（理论上可以随便找一个）作为基准(pivot),然后对数组进行分区操作,使基准左边元素的值都不大于基准值,基准右边的元素值 都不小于基准值，如此作为基准的元素调整到排序后的正确位置。递归快速排序，将其他n-1个元素也调整到排序后的正确位置。最后每个元素都是在排序后的正 确位置，排序完成。所以快速排序算法的核心算法是分区操作，即如何调整基准的位置以及调整返回基准的最终位置以便分治递归。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;def quickSort(L, low, high):
+    i = low
+    j = high
+
+    if i &amp;gt;= j:
+        return L
+
+    key = L[low]
+    while i &amp;lt; j:
+        while i &amp;lt; j and L[j] &amp;gt;= key:
+            j = j - 1
+        L[i] = L[j]
+        while i &amp;lt; j and L[i] &amp;lt;= key:
+            i = i + 1
+        L[j] = L[i]
+    L[i] = key
+    quickSort(L, low, i - 1)
+    quickSort(L, j + 1, high)
+    return L
+
+L = [1, 2, 5, 1, 3, 6, 2, 8, 11, 33, 22]
+print quickSort(L, 0, len(L) - 1)
+
+--------------------
+#下面的算法多做了一步交换大小,所以没有上面的算法好
+def sub_sort(array,low,high):
+    key = array[low]
+    while low &amp;lt; high:
+        while low &amp;lt; high and array[high] &amp;gt;= key:
+            high -= 1
+        while low &amp;lt; high and array[high] &amp;lt; key:
+            array[low] = array[high]
+            low += 1
+            array[high] = array[low]
+    array[low] = key
+    return low
+
+def quick_sort(array,low,high):
+     if low &amp;lt; high:
+        key_index = sub_sort(array,low,high)
+        quick_sort(array,low,key_index)
+        quick_sort(array,key_index+1,high)
+---------------------
+import sys
+def partion(array, p, r):
+    x = array[r]
+    i = p - 1
+    for j in range(p, r):
+        if (array[j] &amp;lt; x):
+            i+=1
+            array[j], array[i] = array[i], array[j]
+    i+=1
+    array[i], array[r] = array[r], array[i]
+    return i
+def quick_sort(array, p, r):
+    if p &amp;lt; r:
+        q = partion(array, p, r)
+        quick_sort(array, p, q - 1)
+        quick_sort(array, q + 1, r)
+---------------
+#下面的算法只用了一行代码就搞定了,真是极客
+
+def quick_sort(ls):
+    return [] if ls == [] else quick_sort([y for y in ls[1:] if y &amp;lt; ls[0]]) + [ls[0]] + quick_sort([y for y in ls[1:] if y &amp;gt;= ls[0]])
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;分析
+快速排序的时间主要耗费在划分操作上，对长度为k的区间进行划分，共需k-1次关键字的比较。
+最坏情况是每次划分选取的基准都是当前无序区中关键字最小(或最大)的记录，划分的结果是基准左边的子区间为空(或右边的子区间为空)，而划分所得的另一个非空的子区间中记录数目，仅仅比划分前的无序区中记录个数减少一个。时间复杂度为O(n*n)
+在最好情况下，每次划分所取的基准都是当前无序区的&amp;rdquo;中值&amp;rdquo;记录，划分的结果是基准的左、右两个无序子区间的长度大致相等。总的关键字比较次数：O(nlgn)
+尽管快速排序的最坏时间为O(n2)，但就平均性能而言，它是基于关键字比较的内部排序算法中速度最快者，快速排序亦因此而得名。它的平均时间复杂度为O(nlgn)。&lt;/p&gt;
+&lt;/blockquote&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>python执行外部程序模块pyshell</title>
+            <link>http://kooksee.github.io/blog/python%E6%89%A7%E8%A1%8C%E5%A4%96%E9%83%A8%E7%A8%8B%E5%BA%8F%E6%A8%A1%E5%9D%97pyshell/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/python%E6%89%A7%E8%A1%8C%E5%A4%96%E9%83%A8%E7%A8%8B%E5%BA%8F%E6%A8%A1%E5%9D%97pyshell/</guid>
+            <description>&lt;blockquote&gt;
+&lt;p&gt;写python程序的时候需要用到调用外部命令的模块，看了一下，还真不少，头疼，用着不顺手。根据官网推荐，我根据官网的subprocess模块定制了一个自己的shell，同时借鉴了github上面的shellpy模块，而且我觉得go语言的go-sh确实令人喜欢，所以我觉得基于流操作将会改变我们的很多工作。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;#!/usr/bin/env python
+# -*- coding:utf-8 -*-
+
+import shlex
+from subprocess import Popen
+from subprocess import PIPE
+
+
+def py_ver():
+    &#39;&#39;&#39;
+    判断python的版本
+    &#39;&#39;&#39;
+    import sys
+    return sys.version_info[0]
+
+if py_ver() == 2:
+    builtin_str = str
+    bytes = str
+    str = unicode
+    basestring = basestring
+    numeric_types = (int, long, float)
+
+elif py_ver() == 3:
+    builtin_str = str
+    str = str
+    bytes = bytes
+    basestring = (str, bytes)
+    numeric_types = (int, float)
+else:
+    raise ValueError(u&#39;python 版本不正确&#39;)
+
+
+def parse_shell_token(t):
+    import os
+    # handle &#39;~&#39;
+    t = os.path.expanduser(t)
+    # handle env var
+    t = os.path.expandvars(t)
+    return t
+
+
+def pipe_to_tmp(data):
+    &#39;&#39;&#39;
+    把管道或者内存中的数据缓存到临时文件
+    &#39;&#39;&#39;
+    if isinstance(data, (unicode, str)):
+        data = data.encode(&#39;utf-8&#39;)
+
+    import tempfile
+    stdin_tmp = tempfile.SpooledTemporaryFile()
+    stdin_tmp.write(data)
+    stdin_tmp.seek(0)
+    return stdin_tmp
+
+
+class Shell(object):
+
+    def __init__(self, cmd_str, input_pipe=None):
+        self.cmd_str = cmd_str
+        self.popen = None
+        self.input_pipe = input_pipe
+        self.std = {&#39;out&#39;: None, &#39;err&#39;: None}
+
+    def __getPopen(self):
+        if self.popen is None:
+            self.popen = Popen(
+                map(parse_shell_token, shlex.split(self.cmd_str, posix=False)),
+                stdin=self.input_pipe, stdout=PIPE, stderr=PIPE)
+        return self.popen
+
+    def pipe(self, cmd_str):
+        input_pipe = None
+        pp = self.__getPopen()
+        if pp.stdout.closed:
+            # 如果命令已经执行，那么就把标准输出的结果保存到临时文件
+            input_pipe = pipe_to_tmp(self.std[&#39;out&#39;])
+        else:
+            input_pipe = pp.stdout
+        # print input_pipe.read()
+        # pp.stdout.close() # allow pp to receive SIGPIPE?
+        return Shell(cmd_str, input_pipe=input_pipe)
+
+    def __communicate(self):
+        pp = self.__getPopen()
+        if pp.returncode is None:
+            self.std[&#39;out&#39;], self.std[&#39;err&#39;] = pp.communicate()
+
+    def run(self):
+        if self.std[&#39;out&#39;] is None:
+            self.__communicate()
+        print self.std[&#39;out&#39;]
+
+    def stdout(self):
+        if self.std[&#39;out&#39;] is None:
+            self.__communicate()
+        return self.std[&#39;out&#39;]
+
+    def stderr(self):
+        if self.std[&#39;err&#39;] is None:
+            self.__communicate()
+        return self.std[&#39;err&#39;]
+
+cmd = Shell
+if __name__ == &#39;__main__&#39;:
+
+    # cmd(&#39;ls -l&#39;).run()
+    # cmd(&#39;ls -l&#39;).pipe(&#39;grep Shell.py&#39;).run()
+    # cmd(&#39;cat&#39;).pipe(&#39;&amp;gt; hello;cat hello&#39;).run()
+
+    # cmd(&#39;ls ~&#39;).run()
+    cmd(&#39;echo dddd&#39;).run()
+
+
+#下面这个是改良版本，参考了python的bash类库的实现，仅用于学习
+
+
+#!/usr/bin/env python
+# -*- coding:utf-8 -*-
+from subprocess import Popen
+from subprocess import PIPE
+import shlex
+
+def py_ver():
+    &#39;&#39;&#39;
+    得到python的版本
+    &#39;&#39;&#39;
+    import sys
+    return sys.version_info[0]
+_ver = py_ver()
+
+if _ver == 2:
+    builtin_str = str
+    bytes = str
+    str = unicode
+    basestring = basestring
+    numeric_types = (int, long, float)
+
+elif _ver == 3:
+    builtin_str = str
+    str = str
+    bytes = bytes
+    basestring = (str, bytes)
+    numeric_types = (int, float)
+else:
+    raise ValueError(u&#39;python 版本不正确&#39;)
+del _ver
+
+#解析字符串中的环境变量
+def parse_shell_token(t):
+    import os
+    #将～等用用户的家目录进行替换
+    t = os.path.expanduser(t)
+    #path中可以使用环境变量,&#39;$PATH&#39;...
+    t = os.path.expandvars(t)
+    return t
+
+class cmd(object):
+    def __init__(self, *args, **kwargs):
+        self.stdout = None
+        self.cmd(*args, **kwargs)
+    def cmd(self, cmd, env=None, stdout=PIPE):
+        p = Popen(parse_shell_token(cmd), shell=True,
+                  stdout=stdout, stdin=PIPE, stderr=PIPE, env=env)
+        self.stdout, self.stderr = p.communicate(input=self.stdout)
+        self.code = p.returncode
+        return self
+    def __repr__(self):
+        return self.value()
+
+    def __unicode__(self):
+        return self.value()
+
+    def __str__(self):
+        return self.value()
+
+    def __nonzero__(self):
+        return self.__bool__()
+
+    def __bool__(self):
+        return bool(self.value())
+
+    def value(self):
+        if not self.stdout:
+            return &#39;&#39;
+        return self.stdout.strip()
+
+if __name__ == &#39;__main__&#39;:
+    #print cmd(&#39;ls -l&#39;)
+    print cmd(&amp;quot;ls . | grep &#39;pyc&#39;&amp;quot;)
+    #print cmd(&amp;quot;konsole --hold -e &#39;konsole --help&#39;&amp;quot;)
+    #print cmd(&#39;scrapy list&#39;)
+    print cmd(&#39;ls $HOME&#39;)
+     #print cmd(&#39;ls ~&#39;)
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

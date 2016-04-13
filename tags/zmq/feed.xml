@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Zmq on 百里求一的博客</title>
+        <link>http://kooksee.github.io/tags/zmq/</link>
+        <language>zh-CN</language>
+        <author>CoderZh</author>
+        <rights>Copyright (c) 2015, CoderZh; all rights reserved.</rights>
+        <updated>Mon, 01 Jan 0001 00:00:00 UTC</updated>
+        
+        <item>
+            <title>pyzmq简单的在线聊天室</title>
+            <link>http://kooksee.github.io/blog/pyzmq%E7%AE%80%E5%8D%95%E7%9A%84%E5%9C%A8%E7%BA%BF%E8%81%8A%E5%A4%A9%E5%AE%A4/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/pyzmq%E7%AE%80%E5%8D%95%E7%9A%84%E5%9C%A8%E7%BA%BF%E8%81%8A%E5%A4%A9%E5%AE%A4/</guid>
+            <description>&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;#encoding=utf-8
+#客户端
+
+import zmq
+c = zmq.Context()
+s = c.socket(zmq.REQ)
+s.connect(&#39;tcp://127.0.0.1:10001&#39;)
+
+while True:
+    s.send(raw_input(&#39;客户端输入:&#39;), copy=False)
+    msg2 = s.recv(copy=False)
+    print &amp;quot;服务器的数据:&amp;quot;,msg2
+
+#encoding=utf-8
+#服务器
+
+import zmq
+c = zmq.Context()
+s = c.socket(zmq.REP)
+s.bind(&#39;tcp://127.0.0.1:10001&#39;)
+
+while True:
+    msg = s.recv(copy=False)
+    print &amp;quot;客户端的数据:&amp;quot;,msg
+    s.send(raw_input(&amp;quot;服务器输入:&amp;quot;))
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

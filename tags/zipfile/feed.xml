@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Zipfile on 百里求一的博客</title>
+        <link>http://kooksee.github.io/tags/zipfile/</link>
+        <language>zh-CN</language>
+        <author>CoderZh</author>
+        <rights>Copyright (c) 2015, CoderZh; all rights reserved.</rights>
+        <updated>Mon, 01 Jan 0001 00:00:00 UTC</updated>
+        
+        <item>
+            <title>python笔记之ZipFile模块</title>
+            <link>http://kooksee.github.io/blog/python%E7%AC%94%E8%AE%B0%E4%B9%8BZipFile%E6%A8%A1%E5%9D%97/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/python%E7%AC%94%E8%AE%B0%E4%B9%8BZipFile%E6%A8%A1%E5%9D%97/</guid>
+            <description>&lt;blockquote&gt;
+&lt;p&gt;zipfile模块用来做zip格式编码的压缩和解压缩的，zipfile里有两个非常重要的class, 分别是ZipFile和ZipInfo, 在绝大多数的情况下，我们只需要使用这两个class就可以了。ZipFile是主要的类，用来创建和读取zip文件而ZipInfo是存储的zip文件的每个文件的信息的。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;pre&gt;&lt;code&gt;比如要读取一个Python zipfile 模块，这里假设filename是一个文件的路径:
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import zipfile  
+z = zipfile.ZipFile(filename, &#39;r&#39;)  
+for i in z.infolist():  
+	print i.file_size, i.header_offset
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;    这里使用了z.infolist(), 它返回的就是压缩包内所有文件的信息，就是一个ZipInfo的列表。一个ZipInfo对象中包含了压缩包内一个文件的信息，其中比较常用的是 filename, file_size, header_offset, 分别为文件名，文件大小，文件数据在压缩包中的偏移。其实之前的z.namelist()就是读取的ZipInfo中的filename，组成一个 list返回的。
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;#从压缩包里解压缩出一个文件的方法是使用ZipFile的read方法
+import zipfile  
+z = zipfile.ZipFile(filename, &#39;r&#39;)  
+print z.read(z.namelist()[0])
+#这样就读取出z.namelist()中的第一个文件，并且输出到屏幕，当然也可以把它存储到文件。
+
+#下面是创建zip压缩包的方法，与读取的方法其实很类似的：
+import zipfile, os  
+z = zipfile.ZipFile(filename, &#39;w&#39;)
+# 注意这里的第二个参数是w，这里的filename是压缩包的名字
+
+#假设要把一个叫testdir中的文件全部添加到压缩包里（这里只添加一级子目录中的文件）
+if os.path.isdir(testdir):  
+     for d in os.listdir(testdir):  
+         z.write(testdir+os.sep+d)  
+         # close() 是必须调用的！  
+         z.close()
+#面的代码非常的简单。想想还有一个问题，如果我把一个test/111.txt 添加到压缩包里之后我希望在包里它放到test22/111.txt怎么办呢？
+#其实这个就是Python ZipFile模块的write方法中第二个参数的作用了。只需要这样调用：
+z.write(&amp;quot;test/111.txt&amp;quot;, &amp;quot;test22/111.txt&amp;quot;)  
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

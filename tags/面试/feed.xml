@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>面试 on 百里求一的博客</title>
+        <link>http://kooksee.github.io/tags/%E9%9D%A2%E8%AF%95/</link>
+        <language>zh-CN</language>
+        <author>CoderZh</author>
+        <rights>Copyright (c) 2015, CoderZh; all rights reserved.</rights>
+        <updated>Mon, 01 Jan 0001 00:00:00 UTC</updated>
+        
+        <item>
+            <title>面试总结</title>
+            <link>http://kooksee.github.io/blog/%E9%9D%A2%E8%AF%95%E6%80%BB%E7%BB%93/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/%E9%9D%A2%E8%AF%95%E6%80%BB%E7%BB%93/</guid>
+            <description>&lt;blockquote&gt;
+&lt;p&gt;昨天下午进行了两场面试，在这里我做一些总结&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ol&gt;
+&lt;li&gt;面试要自带简历以示尊重，越是大点的的公司就越是注重这些&lt;/li&gt;
+&lt;li&gt;基本概念要熟记，基本的数据结构要牢记，基本算法要常记&lt;/li&gt;
+&lt;li&gt;自己做过的项目一定要牢记于心，不然时间长了就忘记了里面的细节实现了&lt;/li&gt;
+&lt;li&gt;对以前的代码进行优化，达到精益求精&lt;/li&gt;
+&lt;li&gt;对用过的框架要理解其原理，要明白怎么去优化&lt;/li&gt;
+&lt;li&gt;不要太紧张了&lt;/li&gt;
+&lt;li&gt;提前去，但不要提前太久，半个小时就好&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

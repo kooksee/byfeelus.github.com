@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Plan_morning on 百里求一的博客</title>
+        <link>http://kooksee.github.io/tags/plan_morning/</link>
+        <language>zh-CN</language>
+        <author>CoderZh</author>
+        <rights>Copyright (c) 2015, CoderZh; all rights reserved.</rights>
+        <updated>Mon, 01 Jan 0001 00:00:00 UTC</updated>
+        
+        <item>
+            <title>plan_morning</title>
+            <link>http://kooksee.github.io/blog/plan_morning/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/plan_morning/</guid>
+            <description>&lt;p&gt;&lt;a href=&#34;https://github.com/uber/Python-Sample-Application&#34;&gt;https://github.com/uber/Python-Sample-Application&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://developer.uber.com/dashboard/app/wVdgLDhHReP6zgTyBus0GqzwnGlXBfT1&#34;&gt;https://developer.uber.com/dashboard/app/wVdgLDhHReP6zgTyBus0GqzwnGlXBfT1&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://login.uber.com/oauth/authorize?scope=profile+history+history_lite&amp;amp;state=nafFNPGeRW8ND3sxBgCdJWezCmHp8mbx&amp;amp;redirect_uri=http%3A%2F%2Flocalhost%3A7000%2Fsubmit&amp;amp;response_type=code&amp;amp;client_id=wVdgLDhHReP6zgTyBus0GqzwnGlXBfT1&#34;&gt;https://login.uber.com/oauth/authorize?scope=profile+history+history_lite&amp;amp;state=nafFNPGeRW8ND3sxBgCdJWezCmHp8mbx&amp;amp;redirect_uri=http%3A%2F%2Flocalhost%3A7000%2Fsubmit&amp;amp;response_type=code&amp;amp;client_id=wVdgLDhHReP6zgTyBus0GqzwnGlXBfT1&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;client Id
+wVdgLDhHReP6zgTyBus0GqzwnGlXBfT1
+client secret
+P7MTdtXK13opLb_OkCmG38mGK11-3nIBcHBDscqo
+Server token
+S3FGHZNcmccc0o80aJWJYrDNZqaQ55RmnR_3kOMD
+&lt;a href=&#34;http://localhost:7000/submit&#34;&gt;http://localhost:7000/submit&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;export UBER_CLIENT_ID=&amp;ldquo;wVdgLDhHReP6zgTyBus0GqzwnGlXBfT1&amp;rdquo;
+export UBER_CLIENT_SECRET=&amp;ldquo;P7MTdtXK13opLb_OkCmG38mGK11-3nIBcHBDscqo&amp;rdquo;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://login.uber.com/oauth/authorize?scopes=profile%2Chistory&amp;amp;redirect_uri=http%3A%2F%2Flocalhost%3A7000%2Fsubmit&amp;amp;response_type=code&amp;amp;client_id=wVdgLDhHReP6zgTyBus0GqzwnGlXBfT1&#34;&gt;https://login.uber.com/oauth/authorize?scopes=profile%2Chistory&amp;amp;redirect_uri=http%3A%2F%2Flocalhost%3A7000%2Fsubmit&amp;amp;response_type=code&amp;amp;client_id=wVdgLDhHReP6zgTyBus0GqzwnGlXBfT1&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://localhost:7000/submit?code=F7lbqfP0glY57jBqroWKqrE4NlN4VC&#34;&gt;http://localhost:7000/submit?code=F7lbqfP0glY57jBqroWKqrE4NlN4VC&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://developer.uber.com/dashboard/app/wVdgLDhHReP6zgTyBus0GqzwnGlXBfT1&#34;&gt;https://developer.uber.com/dashboard/app/wVdgLDhHReP6zgTyBus0GqzwnGlXBfT1&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Congratulations! you have successfully authenticated and your token is: is1f9TQmMIcoE4gGMirojUx63SXDoN&lt;/p&gt;
+
+&lt;p&gt;{u&amp;rsquo;last_authenticated&amp;rsquo;: 1452881151, u&amp;rsquo;access_token&amp;rsquo;: u&amp;rsquo;wOZ9etTkoiH3pAclqoF4U83Vxme3dw&amp;rsquo;, u&amp;rsquo;expires_in&amp;rsquo;: 2592000, u&amp;rsquo;token_type&amp;rsquo;: u&amp;rsquo;Bearer&amp;rsquo;, u&amp;rsquo;scope&amp;rsquo;: u&amp;rsquo;profile history&amp;rsquo;, u&amp;rsquo;refresh_token&amp;rsquo;: u&amp;rsquo;YLywdJDsZGKawBV4gcq98QVVLtE5Er&amp;rsquo;}&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://api.uber.com/v1.1/history?limit=5&amp;amp;offset=0&#34;&gt;https://api.uber.com/v1.1/history?limit=5&amp;amp;offset=0&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;{&amp;lsquo;content-length&amp;rsquo;: &amp;lsquo;75&amp;rsquo;, &amp;lsquo;x-xss-protection&amp;rsquo;: &amp;lsquo;1; mode=block&amp;rsquo;, &amp;lsquo;strict-transport-security&amp;rsquo;: &amp;lsquo;max-age=0&amp;rsquo;, &amp;lsquo;server&amp;rsquo;: &amp;lsquo;nginx&amp;rsquo;, &amp;lsquo;connection&amp;rsquo;: &amp;lsquo;keep-alive&amp;rsquo;, &amp;lsquo;date&amp;rsquo;: &amp;lsquo;Fri, 15 Jan 2016 19:06:20 GMT&amp;rsquo;, &amp;lsquo;x-uber-app&amp;rsquo;: &amp;lsquo;uberex-nonsandbox&amp;rsquo;, &amp;lsquo;content-type&amp;rsquo;: &amp;lsquo;application/json&amp;rsquo;}&lt;/p&gt;
+
+&lt;p&gt;{&amp;lsquo;Content-Type&amp;rsquo;: &amp;lsquo;application/json&amp;rsquo;, &amp;lsquo;Authorization&amp;rsquo;: u&amp;rsquo;bearer 6kRvT5VPYjagfynXnIRuJ1m0tEwCqV&amp;rsquo;}&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://localhost:7000/submit?code=fjYLJQG4XURvfT4BRUxBmK0OErwZ0J&#34;&gt;http://localhost:7000/submit?code=fjYLJQG4XURvfT4BRUxBmK0OErwZ0J&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;{&amp;lsquo;Content-Type&amp;rsquo;: &amp;lsquo;application/json&amp;rsquo;, &amp;lsquo;Authorization&amp;rsquo;: u&amp;rsquo;bearer Pw4wlRb9S0LB9WKKW9ZKTsaPatVwaN&amp;rsquo;}
+&lt;a href=&#34;https://api.uber.com/v1/products?latitude=37.781955&amp;amp;longitude=-122.402367&#34;&gt;https://api.uber.com/v1/products?latitude=37.781955&amp;amp;longitude=-122.402367&lt;/a&gt;&lt;/p&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

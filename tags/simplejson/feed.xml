@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Simplejson on 百里求一的博客</title>
+        <link>http://kooksee.github.io/tags/simplejson/</link>
+        <language>zh-CN</language>
+        <author>CoderZh</author>
+        <rights>Copyright (c) 2015, CoderZh; all rights reserved.</rights>
+        <updated>Mon, 01 Jan 0001 00:00:00 UTC</updated>
+        
+        <item>
+            <title>pjson</title>
+            <link>http://kooksee.github.io/blog/pjson/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/pjson/</guid>
+            <description>&lt;blockquote&gt;
+&lt;p&gt;我喜欢json这种数据格式，我觉得凡是xml能做的事情，json也同样能做，可能有时候可扩展性不如xml，但也同样能够达到相同的效果，而且json表现能力更强，书写更加简单，所以我很喜欢它&lt;/p&gt;
+
+&lt;p&gt;就像喜欢json一样，我也很喜欢python，因为简单，简便，我能随意的按照自己的想法去做事。那么，我知道json 是用来存储数据的，而在python中有很多的文件都可以存储数据，最常用的就是ini了，可视我不喜欢,我就是喜欢json，所以我想用json存储一切数据,就像操作python对象一样操作json，虽然已经有很多的类库可以帮助我们操作json，但我觉得还不够，所以我就继续重复造轮子吧&lt;/p&gt;
+&lt;/blockquote&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

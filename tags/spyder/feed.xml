@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Spyder on 百里求一的博客</title>
+        <link>http://kooksee.github.io/tags/spyder/</link>
+        <language>zh-CN</language>
+        <author>CoderZh</author>
+        <rights>Copyright (c) 2015, CoderZh; all rights reserved.</rights>
+        <updated>Mon, 01 Jan 0001 00:00:00 UTC</updated>
+        
+        <item>
+            <title>大众点评spyder</title>
+            <link>http://kooksee.github.io/blog/spyder/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/spyder/</guid>
+            <description>&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# encoding=utf-8
+import re
+import urllib2
+from math import *
+from bs4 import BeautifulSoup
+
+# 请求头部信息
+header = {&#39;User-Agent&#39;:&#39;Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)&#39;}
+# {&amp;quot;User-Agent&amp;quot;: &amp;quot;Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:39.0) Gecko/20100101 Firefox/39.0&amp;quot;}
+
+#测试brand_name
+brand_name=[&amp;quot;星巴克&amp;quot;,&amp;quot;麦当劳&amp;quot;,&amp;quot;肯德基&amp;quot;,&amp;quot;小南国&amp;quot;,&amp;quot;真功夫&amp;quot;,&amp;quot;汉拿山&amp;quot;,&amp;quot;新辣道&amp;quot;,&amp;quot;新疆火宴山&amp;quot;,&amp;quot;味千拉面&amp;quot;]
+
+print city_code.split(&amp;quot;\n&amp;quot;)
+
+class ShopBindHandle(object):
+
+    def __init__(self,base_page_url=&amp;quot;http://www.dianping.com/search/keyword/{}/0_{}/p{}&amp;quot;,city=u&amp;quot;北京&amp;quot;,wifi_id=None,brand_name=None):
+        self.base_page_url = base_page_url
+        self.city=city
+        self.wifi_id = wifi_id
+        self.city_code = self.get_city_code()
+        self.brand_name=brand_name
+
+    #参数为两个字典，比如：{&amp;quot;longitude&amp;quot;:111,&amp;quot;latitude&amp;quot;:322},{&amp;quot;longitude&amp;quot;:115551,&amp;quot;latitude&amp;quot;:322333}
+    def calc_distance(self,geo1,geo2):
+        Lat_A, Lng_A, Lat_B, Lng_B = geo1.get(&amp;quot;latitude&amp;quot;),geo1.get(&amp;quot;latitude&amp;quot;), geo2.get(&amp;quot;latitude&amp;quot;),geo2.get(&amp;quot;latitude&amp;quot;)
+        ra = 6378.140  # 赤道半径 (km)
+        rb = 6356.755  # 极半径 (km)
+        flatten = (ra - rb) / ra  # 地球扁率
+        rad_lat_A = radians(Lat_A)
+        rad_lng_A = radians(Lng_A)
+        rad_lat_B = radians(Lat_B)
+        rad_lng_B = radians(Lng_B)
+        pA = atan(rb / ra * tan(rad_lat_A))
+        pB = atan(rb / ra * tan(rad_lat_B))
+        xx = acos(sin(pA) * sin(pB) + cos(pA) * cos(pB) * cos(rad_lng_A - rad_lng_B))
+        c1 = (sin(xx) - xx) * (sin(pA) + sin(pB)) ** 2 / cos(xx / 2) ** 2
+        c2 = (sin(xx) + xx) * (sin(pA) - sin(pB)) ** 2 / sin(xx / 2) ** 2
+        dr = flatten / 8 * (c1 - c2)
+        distance = ra * (xx + dr)
+        return distance
+
+
+    #得到城市对应的编号，如：(上海,1)
+    def get_city_code(self):
+        pass
+
+
+    # 得到所有大众点评上面所有的brand_name相关的连接
+    def get_brand_urls(self,brand_name):
+        try:
+            for i in xrange(1,1000):
+                res = urllib2.urlopen(urllib2.Request(self.base_page_url.format(self.city_code,brand_name,i), None, header), timeout=10)
+                for brand_shop_url in BeautifulSoup(res).findAll(&amp;quot;a&amp;quot;, attrs={&amp;quot;data-hippo-type&amp;quot;: &amp;quot;shop&amp;quot;}):
+                    if brand_name in brand_shop_url.get_text():
+                        yield &amp;quot;http://www.dianping.com&amp;quot;+brand_shop_url.get(&amp;quot;href&amp;quot;)
+        except:
+            return
+
+    # 得到大众点评上面对应的商店的id和geo
+    def get_shop_id(self,shop_url):
+        soup = BeautifulSoup(urllib2.urlopen(shop_url))
+        _geo_text = soup.select_one(&amp;quot;#aside script&amp;quot;).get_text()
+        _p = re.compile(r&amp;quot;(lng:.*,lat:.*)}&amp;quot;).findall(_geo_text)[0]#[u&#39;lng:121.47835,lat:31.22062&#39;]
+        return {&amp;quot;shop_id&amp;quot;:shop_url.split(&amp;quot;/&amp;quot;)[-1],
+                &amp;quot;geo&amp;quot;:{&amp;quot;longitude&amp;quot;:_p.split(&amp;quot;,&amp;quot;)[0].split(&amp;quot;:&amp;quot;)[-1],&amp;quot;latitude&amp;quot;:_p.split(&amp;quot;,&amp;quot;)[1].split(&amp;quot;:&amp;quot;)[-1]}
+               }
+    # print get_shop_id(&amp;quot;http://www.dianping.com/shop/22680632&amp;quot;)
+
+    def get_all_shops(brand_name):
+        for brand_url in get_brand_urls(brand_name):
+            if not brand_url:
+                continue
+            yield get_shop_id(brand_url)
+
+    # 得到唯一的shop_id
+    def get_bind(self,brand_name,geo):
+        dis0=-1
+        shop0=None
+        for shop in self.get_all_shops(brand_name):
+            dis = self.calc_distance(shop.geo,geo)
+            if dis &amp;gt; dis0:
+                shop0=shop
+                dis0 = dis
+        return shop0.shop_id,self.wifi_id
+
+def get_shop_info(shop_url):
+    res = urllib2.urlopen(shop_url)
+    soup = BeautifulSoup(res.read())
+#     basic_info = soup.find(id=&amp;quot;basic-info&amp;quot;)
+
+#     brand_name = basic_info.h1.get_text().strip().split(&amp;quot;\n&amp;quot;)[0]
+#     print brand_name
+
+#     brief_info = basic_info.select(&amp;quot;.brief-info span&amp;quot;)
+
+#     star = brief_info[0].attrs.get(&amp;quot;title&amp;quot;)
+#     print star
+
+#     judge =  brief_info[1].get_text()
+#     print judge
+
+#     avg = brief_info[2].get_text()
+#     print avg
+
+#     taste = brief_info[3].get_text()
+#     print taste
+
+#     env = brief_info[4].get_text()
+#     print env
+
+#     serve = brief_info[5].get_text()
+#     print serve
+
+#     address = basic_info.select(&amp;quot;.expand-info.address&amp;quot;)[0].get_text().replace(&amp;quot;\n&amp;quot;,&amp;quot;&amp;quot;).replace(&amp;quot; &amp;quot;,&amp;quot;&amp;quot;)
+#     print address
+
+#     tel = basic_info.select(&amp;quot;.expand-info.tel&amp;quot;)[0].get_text().replace(&amp;quot;\n&amp;quot;,&amp;quot;&amp;quot;)
+#     print tel
+
+#     &amp;quot;other J-other Hide&amp;quot;
+#     other = basic_info.select(&amp;quot;.other .info&amp;quot;)
+
+#     brand_alias = other[0].get_text().replace(&amp;quot;\n&amp;quot;,&amp;quot;&amp;quot;)
+#     print brand_alias
+
+#     working_time = &amp;quot;&amp;quot;.join(other[1].get_text().strip().split(&amp;quot;\n&amp;quot;)[0:-1]).replace(&amp;quot; &amp;quot;,&amp;quot;&amp;quot;)
+#     print working_time
+
+#     geo_text = soup.find(id=&amp;quot;aside&amp;quot;).find(&amp;quot;script&amp;quot;).get_text()
+#     import re
+#     p = re.compile(r&amp;quot;(lng:.*,lat:.*)}&amp;quot;).findall(geo_text)#[u&#39;lng:121.47835,lat:31.22062&#39;]
+#     p = dict([(x.split(&amp;quot;:&amp;quot;)[0],x.split(&amp;quot;:&amp;quot;)[-1])for x in p[0].split(&amp;quot;,&amp;quot;)]) #{u&#39;lat&#39;: u&#39;31.22062&#39;, u&#39;lng&#39;: u&#39;121.47835&#39;}
+#     print p
+    speciality = soup.select_one(&amp;quot;#shop-tabs script&amp;quot;)#.get_text()
+#     speciality = BeautifulSoup(speciality).find_all(&amp;quot;a&amp;quot;)
+#     print speciality.contents[3]
+    print speciality
+    print &amp;quot;ok&amp;quot;
+
+# get_shop_info(&amp;quot;http://www.dianping.com/shop/24730133&amp;quot;)
+
+
+
+
+
+
+
+
+
+
+def get_url():
+    test_url=&amp;quot;http://www.dianping.com/search/keyword/1/0_星巴克/p100&amp;quot;
+    res = urllib2.urlopen(test_url)
+    soup = BeautifulSoup(res.read())
+    soup = soup.findAll(&amp;quot;a&amp;quot;, attrs={&amp;quot;data-hippo-type&amp;quot;: &amp;quot;shop&amp;quot;})
+
+    print soup
+# print get_url()
+# test_url=&amp;quot;http://www.dianping.com/shop/24730133&amp;quot;
+# res = urllib2.urlopen(urllib2.Request(test_url, None, header))
+# print res.read()
+# print res.read()
+# soup = BeautifulSoup(res.read())
+# soup = soup.find_all(&amp;quot;a&amp;quot;)[4]
+# print soup.attrs.get(&amp;quot;href&amp;quot;)
+# print soup.get_text()
+# print res.headers
+# print res.header
+
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>大众点评spyder</title>
+            <link>http://kooksee.github.io/blog/u/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/u/</guid>
+            <description>&lt;p&gt;&lt;a href=&#34;https://get.uber.com.cn&#34;&gt;https://get.uber.com.cn&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;kooksee@163.com
+zhao512jie&lt;/p&gt;
+
+&lt;p&gt;riders.uber.com.
+&lt;a href=&#34;https://developer.uber.com.cn/dashboard/app/ph_TdMfoLVHIY6CN5YlY34kC6WELt87_&#34;&gt;https://developer.uber.com.cn/dashboard/app/ph_TdMfoLVHIY6CN5YlY34kC6WELt87_&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;plan_morning
+&lt;a href=&#34;https://developer.uber.com.cn/dashboard/app/77O2eqvtKczbN0e62FKF1bL5nnGIvJhv&#34;&gt;https://developer.uber.com.cn/dashboard/app/77O2eqvtKczbN0e62FKF1bL5nnGIvJhv&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;client Id
+77O2eqvtKczbN0e62FKF1bL5nnGIvJhv
+client secret
+nZlj3QjON7bZ5nJF6m_wksi0NzQ7ArLLXodN3flq&lt;/p&gt;
+
+&lt;p&gt;Server token
+itVNo6pV8CYfxNqHLEqtHJO55oBdwNrsRLLjPfTD&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/uber&#34;&gt;https://github.com/uber&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;ss.newb.xyz 8388&lt;/p&gt;
+
+&lt;p&gt;export UBER_CLIENT_ID=&amp;ldquo;77O2eqvtKczbN0e62FKF1bL5nnGIvJhv&amp;rdquo;
+ export UBER_CLIENT_SECRET=&amp;ldquo;nZlj3QjON7bZ5nJF6m_wksi0NzQ7ArLLXodN3flq&amp;rdquo;&lt;/p&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Error on 百里求一的博客</title>
+        <link>http://kooksee.github.io/tags/error/</link>
+        <language>zh-CN</language>
+        <author>CoderZh</author>
+        <rights>Copyright (c) 2015, CoderZh; all rights reserved.</rights>
+        <updated>Mon, 01 Jan 0001 00:00:00 UTC</updated>
+        
+        <item>
+            <title>错误收集</title>
+            <link>http://kooksee.github.io/blog/%E9%94%99%E8%AF%AF%E6%94%B6%E9%9B%86/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/%E9%94%99%E8%AF%AF%E6%94%B6%E9%9B%86/</guid>
+            <description>&lt;p&gt;##error: command &amp;lsquo;x86_64-linux-gnu-gcc&amp;rsquo; failed with exit status 1
+&lt;a href=&#34;http://blog.csdn.net/wang1144/article/details/42277179&#34;&gt;http://blog.csdn.net/wang1144/article/details/42277179&lt;/a&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;sudo apt-get install libxml2-dev libxslt1-dev python-dev
+sudo apt-get install zlib1g-dev
+sudo apt-get install libevent-dev
+sudo pip install lxml
+or
+sudo apt-get install python-twisted-web python2.7-de
+sudo apt-get build-dep python-lxml
+sudo pip install lxml --upgr
+
+wget https://bootstrap.pypa.io/get-pip.py
+sudo python get-pip.py insta
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

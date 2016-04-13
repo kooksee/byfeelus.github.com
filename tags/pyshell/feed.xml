@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Pyshell on 百里求一的博客</title>
+        <link>http://kooksee.github.io/tags/pyshell/</link>
+        <language>zh-CN</language>
+        <author>CoderZh</author>
+        <rights>Copyright (c) 2015, CoderZh; all rights reserved.</rights>
+        <updated>Mon, 01 Jan 0001 00:00:00 UTC</updated>
+        
+        <item>
+            <title>pyshell</title>
+            <link>http://kooksee.github.io/blog/pyshell/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/pyshell/</guid>
+            <description>&lt;blockquote&gt;
+&lt;p&gt;pyshell 调用外部命令，让你像执行bash一样方便&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;#!/usr/bin/env python
+# -*- coding:utf-8 -*-
+from subprocess import Popen
+from subprocess import PIPE
+
+
+def py_ver():
+    &#39;&#39;&#39;
+    得到python的版本
+    &#39;&#39;&#39;
+    import sys
+    return sys.version_info[0]
+_ver = py_ver()
+
+if _ver == 2:
+    builtin_str = str
+    bytes = str
+    str = unicode
+    basestring = basestring
+    numeric_types = (int, long, float)
+
+elif _ver == 3:
+    builtin_str = str
+    str = str
+    bytes = bytes
+    basestring = (str, bytes)
+    numeric_types = (int, float)
+else:
+    raise ValueError(u&#39;python 版本不正确&#39;)
+del _ver
+
+# 解析字符串中的环境变量
+
+
+def parse_shell_token(t):
+    import os
+    # 将～等用用户的家目录进行替换
+    t = os.path.expanduser(t)
+    # path中可以使用环境变量,&#39;$PATH&#39;...
+    t = os.path.expandvars(t)
+    return t
+
+
+class cmd(object):
+
+    def __init__(self, *args, **kwargs):
+        self.stdout = None
+        self.cmd(*args, **kwargs)
+
+    def cmd(self, cmd, env=None, stdout=PIPE):
+        p = Popen(parse_shell_token(cmd), shell=True,
+                  stdout=stdout, stdin=PIPE, stderr=PIPE, env=env)
+        self.stdout, self.stderr = p.communicate(input=self.stdout)
+        self.code = p.returncode
+        return self
+
+    def __repr__(self):
+        return self.value()
+
+    def __unicode__(self):
+        return self.value()
+
+    def __str__(self):
+        return self.value()
+
+    def __nonzero__(self):
+        return self.__bool__()
+
+    def __bool__(self):
+        return bool(self.value())
+
+    def value(self):
+        if not self.stdout:
+            return &#39;&#39;
+        return self.stdout.strip()
+if __name__ == &#39;__main__&#39;:
+    print cmd(&#39;ls -al&#39;)
+    print cmd(&amp;quot;ls | grep &#39;LICENSE&#39;&amp;quot;)
+    print cmd(&amp;quot;konsole --hold -e &#39;konsole --help&#39;&amp;quot;)
+    print cmd(&#39;ls $HOME&#39;)
+    print cmd(&#39;ls ~&#39;)
+
+    dd = cmd(&#39;ls ~&#39;).value().split(&#39;\n&#39;)
+    print dd
+    cmd(&amp;quot;gnome-terminal -x bash -c &#39;python -h;read&#39; &amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/blockquote&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>python执行外部程序模块pyshell</title>
+            <link>http://kooksee.github.io/blog/python%E6%89%A7%E8%A1%8C%E5%A4%96%E9%83%A8%E7%A8%8B%E5%BA%8F%E6%A8%A1%E5%9D%97pyshell/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/python%E6%89%A7%E8%A1%8C%E5%A4%96%E9%83%A8%E7%A8%8B%E5%BA%8F%E6%A8%A1%E5%9D%97pyshell/</guid>
+            <description>&lt;blockquote&gt;
+&lt;p&gt;写python程序的时候需要用到调用外部命令的模块，看了一下，还真不少，头疼，用着不顺手。根据官网推荐，我根据官网的subprocess模块定制了一个自己的shell，同时借鉴了github上面的shellpy模块，而且我觉得go语言的go-sh确实令人喜欢，所以我觉得基于流操作将会改变我们的很多工作。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;#!/usr/bin/env python
+# -*- coding:utf-8 -*-
+
+import shlex
+from subprocess import Popen
+from subprocess import PIPE
+
+
+def py_ver():
+    &#39;&#39;&#39;
+    判断python的版本
+    &#39;&#39;&#39;
+    import sys
+    return sys.version_info[0]
+
+if py_ver() == 2:
+    builtin_str = str
+    bytes = str
+    str = unicode
+    basestring = basestring
+    numeric_types = (int, long, float)
+
+elif py_ver() == 3:
+    builtin_str = str
+    str = str
+    bytes = bytes
+    basestring = (str, bytes)
+    numeric_types = (int, float)
+else:
+    raise ValueError(u&#39;python 版本不正确&#39;)
+
+
+def parse_shell_token(t):
+    import os
+    # handle &#39;~&#39;
+    t = os.path.expanduser(t)
+    # handle env var
+    t = os.path.expandvars(t)
+    return t
+
+
+def pipe_to_tmp(data):
+    &#39;&#39;&#39;
+    把管道或者内存中的数据缓存到临时文件
+    &#39;&#39;&#39;
+    if isinstance(data, (unicode, str)):
+        data = data.encode(&#39;utf-8&#39;)
+
+    import tempfile
+    stdin_tmp = tempfile.SpooledTemporaryFile()
+    stdin_tmp.write(data)
+    stdin_tmp.seek(0)
+    return stdin_tmp
+
+
+class Shell(object):
+
+    def __init__(self, cmd_str, input_pipe=None):
+        self.cmd_str = cmd_str
+        self.popen = None
+        self.input_pipe = input_pipe
+        self.std = {&#39;out&#39;: None, &#39;err&#39;: None}
+
+    def __getPopen(self):
+        if self.popen is None:
+            self.popen = Popen(
+                map(parse_shell_token, shlex.split(self.cmd_str, posix=False)),
+                stdin=self.input_pipe, stdout=PIPE, stderr=PIPE)
+        return self.popen
+
+    def pipe(self, cmd_str):
+        input_pipe = None
+        pp = self.__getPopen()
+        if pp.stdout.closed:
+            # 如果命令已经执行，那么就把标准输出的结果保存到临时文件
+            input_pipe = pipe_to_tmp(self.std[&#39;out&#39;])
+        else:
+            input_pipe = pp.stdout
+        # print input_pipe.read()
+        # pp.stdout.close() # allow pp to receive SIGPIPE?
+        return Shell(cmd_str, input_pipe=input_pipe)
+
+    def __communicate(self):
+        pp = self.__getPopen()
+        if pp.returncode is None:
+            self.std[&#39;out&#39;], self.std[&#39;err&#39;] = pp.communicate()
+
+    def run(self):
+        if self.std[&#39;out&#39;] is None:
+            self.__communicate()
+        print self.std[&#39;out&#39;]
+
+    def stdout(self):
+        if self.std[&#39;out&#39;] is None:
+            self.__communicate()
+        return self.std[&#39;out&#39;]
+
+    def stderr(self):
+        if self.std[&#39;err&#39;] is None:
+            self.__communicate()
+        return self.std[&#39;err&#39;]
+
+cmd = Shell
+if __name__ == &#39;__main__&#39;:
+
+    # cmd(&#39;ls -l&#39;).run()
+    # cmd(&#39;ls -l&#39;).pipe(&#39;grep Shell.py&#39;).run()
+    # cmd(&#39;cat&#39;).pipe(&#39;&amp;gt; hello;cat hello&#39;).run()
+
+    # cmd(&#39;ls ~&#39;).run()
+    cmd(&#39;echo dddd&#39;).run()
+
+
+#下面这个是改良版本，参考了python的bash类库的实现，仅用于学习
+
+
+#!/usr/bin/env python
+# -*- coding:utf-8 -*-
+from subprocess import Popen
+from subprocess import PIPE
+import shlex
+
+def py_ver():
+    &#39;&#39;&#39;
+    得到python的版本
+    &#39;&#39;&#39;
+    import sys
+    return sys.version_info[0]
+_ver = py_ver()
+
+if _ver == 2:
+    builtin_str = str
+    bytes = str
+    str = unicode
+    basestring = basestring
+    numeric_types = (int, long, float)
+
+elif _ver == 3:
+    builtin_str = str
+    str = str
+    bytes = bytes
+    basestring = (str, bytes)
+    numeric_types = (int, float)
+else:
+    raise ValueError(u&#39;python 版本不正确&#39;)
+del _ver
+
+#解析字符串中的环境变量
+def parse_shell_token(t):
+    import os
+    #将～等用用户的家目录进行替换
+    t = os.path.expanduser(t)
+    #path中可以使用环境变量,&#39;$PATH&#39;...
+    t = os.path.expandvars(t)
+    return t
+
+class cmd(object):
+    def __init__(self, *args, **kwargs):
+        self.stdout = None
+        self.cmd(*args, **kwargs)
+    def cmd(self, cmd, env=None, stdout=PIPE):
+        p = Popen(parse_shell_token(cmd), shell=True,
+                  stdout=stdout, stdin=PIPE, stderr=PIPE, env=env)
+        self.stdout, self.stderr = p.communicate(input=self.stdout)
+        self.code = p.returncode
+        return self
+    def __repr__(self):
+        return self.value()
+
+    def __unicode__(self):
+        return self.value()
+
+    def __str__(self):
+        return self.value()
+
+    def __nonzero__(self):
+        return self.__bool__()
+
+    def __bool__(self):
+        return bool(self.value())
+
+    def value(self):
+        if not self.stdout:
+            return &#39;&#39;
+        return self.stdout.strip()
+
+if __name__ == &#39;__main__&#39;:
+    #print cmd(&#39;ls -l&#39;)
+    print cmd(&amp;quot;ls . | grep &#39;pyc&#39;&amp;quot;)
+    #print cmd(&amp;quot;konsole --hold -e &#39;konsole --help&#39;&amp;quot;)
+    #print cmd(&#39;scrapy list&#39;)
+    print cmd(&#39;ls $HOME&#39;)
+     #print cmd(&#39;ls ~&#39;)
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

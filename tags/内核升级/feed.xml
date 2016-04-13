@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>内核升级 on 百里求一的博客</title>
+        <link>http://kooksee.github.io/tags/%E5%86%85%E6%A0%B8%E5%8D%87%E7%BA%A7/</link>
+        <language>zh-CN</language>
+        <author>CoderZh</author>
+        <rights>Copyright (c) 2015, CoderZh; all rights reserved.</rights>
+        <updated>Mon, 01 Jan 0001 00:00:00 UTC</updated>
+        
+        <item>
+            <title>ubuntu内核升级</title>
+            <link>http://kooksee.github.io/blog/ubuntu%E5%86%85%E6%A0%B8%E5%8D%87%E7%BA%A7/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/ubuntu%E5%86%85%E6%A0%B8%E5%8D%87%E7%BA%A7/</guid>
+            <description>&lt;blockquote&gt;
+&lt;p&gt;本来想学习docker，可是人家对内核有要求，所以就查些资料升级一下ubuntu内核&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ol&gt;
+&lt;li&gt;内核下载
+下载地址：&lt;a href=&#34;http://kernel.ubuntu.com/~kernel-ppa/mainline/v4.1-rc2-vivid/&#34;&gt;http://kernel.ubuntu.com/~kernel-ppa/mainline/v4.1-rc2-vivid/&lt;/a&gt;
+下载文件名：
+linux-headers-4.1.0-040100rc2_4.1.0-040100rc2.201505032335_all.deb；
+linux-headers-4.1.0-040100rc2-generic_4.1.0-040100rc2.201505032335_amd64.deb；
+linux-image-4.1.0-040100rc2-generic_4.1.0-040100rc2.201505032335_amd64.deb&lt;/li&gt;
+&lt;li&gt;安装内核
+在ubuntu下面，一切都很方便
+按照上面下载的文件顺序依次安装即可&lt;/li&gt;
+&lt;li&gt;重启电脑选择内核
+reboot你的ubuntu，然后进入选择界面选择高级选项，选择内核为高版本即可&lt;/li&gt;
+&lt;li&gt;用命令查看内核
+uname -a
+&amp;gt; Linux byfeelus 4.1.0-040100rc2-generic #201505032335 SMP Mon May 4 03:36:35 UTC 2015 x86_64 x86_64 x86_64 GNU/Linux&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

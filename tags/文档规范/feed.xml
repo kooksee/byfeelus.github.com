@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>文档规范 on 百里求一的博客</title>
+        <link>http://kooksee.github.io/tags/%E6%96%87%E6%A1%A3%E8%A7%84%E8%8C%83/</link>
+        <language>zh-CN</language>
+        <author>CoderZh</author>
+        <rights>Copyright (c) 2015, CoderZh; all rights reserved.</rights>
+        <updated>Mon, 01 Jan 0001 00:00:00 UTC</updated>
+        
+        <item>
+            <title>设计文档规范 v1</title>
+            <link>http://kooksee.github.io/blog/%E8%AE%BE%E8%AE%A1%E6%96%87%E6%A1%A3%E8%A7%84%E8%8C%83%20v1/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/%E8%AE%BE%E8%AE%A1%E6%96%87%E6%A1%A3%E8%A7%84%E8%8C%83%20v1/</guid>
+            <description>
+
+&lt;h1 id=&#34;设计文档规范-v1:9f47507bd1266c05e6a5c51007e65d91&#34;&gt;设计文档规范 v1&lt;/h1&gt;
+
+&lt;p&gt;每个帮助文档应该只包含一类业务的API，在标题中应该明确版本号，以防使用中版本错误。&lt;/p&gt;
+
+&lt;h2 id=&#34;功能1:9f47507bd1266c05e6a5c51007e65d91&#34;&gt;功能1&lt;/h2&gt;
+
+&lt;p&gt;POST /foo/bar&lt;/p&gt;
+
+&lt;h3 id=&#34;note:9f47507bd1266c05e6a5c51007e65d91&#34;&gt;NOTE&lt;/h3&gt;
+
+&lt;p&gt;对功能1的简要说明，必要时提供，不强求&lt;/p&gt;
+
+&lt;h3 id=&#34;token:9f47507bd1266c05e6a5c51007e65d91&#34;&gt;TOKEN&lt;/h3&gt;
+
+&lt;p&gt;明确该API是否需要提供token，可以有三种取值：required, not required, optional
+* required&lt;/p&gt;
+
+&lt;h3 id=&#34;input-output参数统一规范:9f47507bd1266c05e6a5c51007e65d91&#34;&gt;INPUT&amp;amp;OUTPUT参数统一规范&lt;/h3&gt;
+
+&lt;p&gt;&lt;em&gt;(本规范熟记遵守，不要出现在其他文档中)&lt;/em&gt;
+* 所有时间参数，都使用时间戳，杜绝字符串。其命名统一用“time”做后缀，不要出现“date”
+* 某个字段如果类型是对象或单个值，但由于特殊原因不存在，可以不传，杜绝以null形式返回
+* 某个字段数据列表，如果数据一个都没有，请依然返回空数组[],而不是没有值或null
+* 所有返回数据，必须以code+object并列反馈，切忌出现只返回object没有code的情况
+* 返回数据中，并列的几个字段，如果来自于同一个数据结构，应以object形式组织起来，便于以后拓展维护&lt;/p&gt;
+
+&lt;h3 id=&#34;input:9f47507bd1266c05e6a5c51007e65d91&#34;&gt;INPUT&lt;/h3&gt;
+
+&lt;p&gt;json格式的输入参数，通过http的POST数据传给服务端&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;{
+    &amp;quot;id&amp;quot;: &amp;quot;123456&amp;quot;,
+    &amp;quot;name&amp;quot;: &amp;quot;rod&amp;quot;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;output:9f47507bd1266c05e6a5c51007e65d91&#34;&gt;OUTPUT&lt;/h3&gt;
+
+&lt;p&gt;json格式的输出值&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;{
+    &amp;quot;id&amp;quot;: &amp;quot;123456&amp;quot;,
+    &amp;quot;name&amp;quot;: &amp;quot;rod&amp;quot;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;error:9f47507bd1266c05e6a5c51007e65d91&#34;&gt;ERROR&lt;/h3&gt;
+
+&lt;p&gt;可能的错误返回
+* ErrNoPassword
+* ErrWrongName&lt;/p&gt;
+
+&lt;h3 id=&#34;curl:9f47507bd1266c05e6a5c51007e65d91&#34;&gt;CURL&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;curl -X POST -d {&amp;quot;id&amp;quot;:&amp;quot;123456&amp;quot;} http://locahost/foo/bar&lt;/code&gt;&lt;/p&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

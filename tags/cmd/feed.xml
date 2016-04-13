@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Cmd on 百里求一的博客</title>
+        <link>http://kooksee.github.io/tags/cmd/</link>
+        <language>zh-CN</language>
+        <author>CoderZh</author>
+        <rights>Copyright (c) 2015, CoderZh; all rights reserved.</rights>
+        <updated>Mon, 01 Jan 0001 00:00:00 UTC</updated>
+        
+        <item>
+            <title>python Cmd实例之网络爬虫应用</title>
+            <link>http://kooksee.github.io/blog/python%20Cmd%E5%AE%9E%E4%BE%8B%E4%B9%8B%E7%BD%91%E7%BB%9C%E7%88%AC%E8%99%AB%E5%BA%94%E7%94%A8/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/python%20Cmd%E5%AE%9E%E4%BE%8B%E4%B9%8B%E7%BD%91%E7%BB%9C%E7%88%AC%E8%99%AB%E5%BA%94%E7%94%A8/</guid>
+            <description>&lt;blockquote&gt;
+&lt;p&gt;废话少说，直接上代码&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# encoding=utf-8
+import os
+import multiprocessing
+from cmd import Cmd
+import commands
+from mycrawler.dbUtil import DbUtil
+import signal
+
+
+# 下载监控
+def run_download_watch():
+    os.system(&amp;quot;gnome-terminal -x bash -c &#39;python ./download_process.py&#39; &amp;quot;)
+
+
+# 下载文件
+def run_download():
+    os.system(&amp;quot;gnome-terminal -x bash -c &#39;python ./download.py&#39; &amp;quot;)
+
+
+# 爬虫
+def run_spider(arg):
+    for i in range(len(arg)):
+        os.system(&amp;quot;gnome-terminal -x bash -c &#39;scrapy crawl %s&#39;&amp;quot; % arg[i])
+
+
+class CLI(Cmd):
+
+    def __init__(self):
+        Cmd.__init__(self)
+        # 设置命令提示符
+        self.prompt = &amp;quot;&amp;gt;&amp;gt;&amp;gt; &amp;quot;
+        self.intro = &#39;&#39;&#39;
+        欢迎进入爬虫控制台
+        输入0:查看帮助&#39;&#39;&#39;
+        self.doc_header = &#39;&#39;
+        self.undoc_header = &#39;&#39;
+        self.nohelp = &amp;quot;*** 命令%s没有帮助文档&amp;quot;
+
+    def do_download(self, arg):
+        &#39;&#39;&#39;    下载文件&#39;&#39;&#39;
+
+        p2 = multiprocessing.Process(target=run_download)
+        p2.start()
+
+    def do_0(self, arg):
+        self.do_help(1)
+
+    def do_help(self, arg):
+
+        def ddoc(ss, arg):
+            try:
+                doc = getattr(ss, &#39;do_&#39; + arg).__doc__
+                if doc:
+                    print arg + &amp;quot;:&amp;quot;
+                    print doc
+                    return
+            except AttributeError:
+                ss.stdout.write(&amp;quot;%s\n&amp;quot; % str(ss.nohelp % (arg,)))
+
+        cmds_doc = []
+        for name in self.get_names():
+            if name[:3] == &#39;do_&#39;:
+                cmds_doc.append(name[3:])
+
+        print self.doc_header
+        for c in cmds_doc:
+            ddoc(self, c)
+
+    # 添加新的爬虫连接
+    def do_add(self, args):
+        &amp;quot;&amp;quot;&amp;quot;    新增链接(厂商网址)到数据库中
+    输入格式为:add name abb;start_urls www.baidu.com www.baidu.com www.baidu.com
+    add是添加命令，后面的是参数。start_urls后面可以跟随多条数据，空格分开&amp;quot;&amp;quot;&amp;quot;
+
+        if not args:
+            print &amp;quot;输入内容为空，请查看帮助：help add&amp;quot;
+            return
+
+        print args
+        data = dict([(bb.split(&#39; &#39;)[0], len(bb.split(&#39; &#39;)[1:]) == 1 and bb.split(
+            &#39; &#39;)[1] or bb.split(&#39; &#39;)[1:]) for bb in args.split(&#39;;&#39;)])
+        print data
+        DbUtil().conn().collection(&#39;url_items&#39;).insert(data)
+
+    # 列出所有的爬虫
+    def do_list_spider(self, args):
+        &#39;&#39;&#39;     列出所有的爬虫&#39;&#39;&#39;
+
+        print commands.getoutput(&amp;quot;scrapy list&amp;quot;)
+
+    # 运行一个爬虫
+    def do_run_spider(self, arg):
+        &#39;&#39;&#39;     运行一个爬虫，例如run_spider abb&#39;&#39;&#39;
+
+        p3 = multiprocessing.Process(
+            target=run_spider, args=(arg,))
+        p3.start()
+        # os.system(&#39;scrapy crawl &#39; + arg)
+
+    def do_run(self, args):
+        &#39;&#39;&#39;    运行所有的程序&#39;&#39;&#39;
+
+        # 运行爬虫
+        self.do_run_all_spiders(1)
+
+        # 运行下载
+        p2 = multiprocessing.Process(target=run_download)
+        p2.start()
+
+        # 运行下载监控
+        p3 = multiprocessing.Process(target=run_download_watch)
+        p3.start()
+
+    # 运行所有的爬虫
+    def do_run_all_spiders(self, arg):
+        &#39;&#39;&#39;    运行所有的爬虫&#39;&#39;&#39;
+
+        s = cmd(&#39;scrapy list&#39;).value().split(&#39;\n&#39;)
+        if not s:
+            print &amp;quot;没有爬虫，请检验代码是否正确&amp;quot;
+            return
+
+        p = multiprocessing.Process(
+            target=run_spider, args=(s,))
+        p.start()
+        # os.system(&#39;./run_spider.sh &#39; + spider)
+
+    def do_q(self, arg):
+        &#39;&#39;&#39;    退出系统&#39;&#39;&#39;
+        return True
+
+    # emptyline
+    def emptyline(self):
+        os.system(&#39;clear&#39;)
+        print &#39;回车清屏，help帮助,tab补全&#39;
+
+    # 当无法识别输入的command时调用该方法
+    def default(self, line):
+        print &#39;输入的命令&#39; + repr(line) + &#39;错误，请输入help查看命令帮助&#39;
+
+    # 退出之后调用该方法
+    def postloop(self):
+        print &#39;谢谢使用&#39;
+
+    def completedefault(self, *ignored):
+        return [&#39;add&#39;, &#39;run_spider&#39;, &#39;run_all_spiders&#39;, &#39;list_spider&#39;]
+
+if __name__ == &amp;quot;__main__&amp;quot;:
+    cli = CLI()
+    cli.cmdloop()
+
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>python笔记之Cmd模块</title>
+            <link>http://kooksee.github.io/blog/python%E7%AC%94%E8%AE%B0%E4%B9%8BCmd%E6%A8%A1%E5%9D%97/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/python%E7%AC%94%E8%AE%B0%E4%B9%8BCmd%E6%A8%A1%E5%9D%97/</guid>
+            <description>&lt;p&gt;[TOC]&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Cmd类型提供了一个创建命令行解析器的框架,默认情况下，它使用readline来进行交互式操作、命令行编辑和命令完成.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;pre&gt;&lt;code&gt;    使用cmd创建的命令行解释器循环读取输入的所有行并且解析它们，然后发送命令给一个合适的命令处理器。输入行为解析成两个部分：命令和参数。如果用户输入cmd param，它解释成命令cmd和参数param，然后使用param作为参数调用do_cmd方法。如果do_cmd命令处理器返回真，那么程序会干净的退出，否则会继续等待下一个命令的输入。
+    简单的来说，可以继承Cmd来创建命令行界面，然后对所有想处理的命令command执行do_command方法。这个方法会接受命令行的其余部分作为自己的唯一参数。比如，如果在命令行中输入：
+    say hello
+    do_say方法会连同作为唯一参数的字符串&amp;quot;hello&amp;quot;一起调用。
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##Cmd一些常用的方法
+        cmdloop()：类似与Tkinter的mainloop，运行Cmd解析器；
+        onecmd(str)：读取输入，并进行处理，通常不需要重载该函数，而是使用更加具体的do&lt;em&gt;command来执行特定的命名；
+        emptyline()：当输入空行时调用该
+        default(line)：当无法识别输入的command时调用该方法；
+        completedefault(text,line,begidx,endidx):如果不存在针对的complete&lt;/em&gt;*()方法，那么会调用该函数
+        precmd(line)：命令line解析之前被调用该方法；
+        postcmd(stop，line)：命令line解析之后被调用该方法；
+        preloop()：cmdloop()运行之前调用该方法；
+        postloop()：cmdloop()退出之后调用该方法；&lt;/p&gt;
+
+&lt;p&gt;###例子&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import cmd
+import string, sys
+class CLI(cmd.Cmd):
+	def __init__(self):
+		cmd.Cmd.__init__(self)
+		self.prompt = &#39;&amp;gt; &#39;
+	def do_hello(self, arg):
+		print &amp;quot;hello again&amp;quot;, arg, &amp;quot;!&amp;quot;
+	def help_hello(self):
+		print &amp;quot;syntax: hello [message]&amp;quot;,
+		print &amp;quot;-- prints a hello message&amp;quot;
+	def do_quit(self, arg):
+		sys.exit(1)
+	def help_quit(self):
+		print &amp;quot;syntax: quit&amp;quot;,
+		print &amp;quot;-- terminates the application&amp;quot;
+
+	# shortcuts
+	do_q = do_quit
+
+# try it out
+cli = CLI()
+cli.cmdloop()
+
+&amp;gt;&amp;gt;&amp;gt; help
+Documented commands (type help &amp;lt;topic&amp;gt;):
+========================================
+hello
+quit
+Undocumented commands:
+======================
+help
+q
+&amp;gt;&amp;gt;&amp;gt; hello world
+hello again world !
+&amp;gt;&amp;gt;&amp;gt; q
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;###打印目录文件或目录的例子&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import cmd
+import os
+import sys
+
+classCLI(cmd.Cmd):
+    def __init__(self):
+        cmd.Cmd.__init__(self)
+        self.prompt = &amp;quot;&amp;gt; &amp;quot;    # define command prompt
+
+    def do_dir(self, arg):
+        if not arg:
+            self.help_dir()
+        elif os.path.exists(arg):
+            print&amp;quot;\n&amp;quot;.join(os.listdir(arg))
+        else:
+            print &amp;quot;No such pathexists.&amp;quot;
+
+    def help_dir(self):
+        print &amp;quot;syntax: dir path -- displaya list of files and directories&amp;quot;
+
+    def do_quit(self, arg):
+        return True
+
+    def help_quit(self):
+        print &amp;quot;syntax: quit -- terminatesthe application&amp;quot;
+
+    # define the shortcuts
+    do_q = do_quit
+
+if __name__ ==&amp;quot;__main__&amp;quot;:
+    cli = CLI()
+    cli.cmdloop()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;     上面的代码中self.prompt用于修改命令行的提示符。
+说明：在cmd.Cmd派生类中，以do_*开头为命令，以help_*开头的为帮助，成员函数的__doc__可以用作为帮助说明。
+
+     可以使用self.intro = “Welcomemessage”来输出欢迎信息。
+当打印帮助的时候，使用doc_header、misc_header、undoc_header可以用于格式化输出。
+
+     通过按下TAB可以实现自动完成，多个选项的情况下按下2个TAB键可以实现列出所有选项，自动完成的方法添加前缀complete_。
+defcomplete_dir(self, text, line, begidx, endidx):
+    if not text:
+        completions = [&amp;quot;aaa&amp;quot;,&amp;quot;bbb&amp;quot;, &amp;quot;ccc&amp;quot;]
+    else:
+        completions = [&amp;quot;ddd&amp;quot;,&amp;quot;eee&amp;quot;,]
+    #print completions
+    return completions
+
+注意：自动补全只在Linux下有效。
+
+    在cmd中几种可以重载的方法，可以用于显示动作或者改变基类的行为。一般而言由于preloop()和postloop()的存在，不需要也没有必要重载cmdloop()方法。每次迭代cmdloop()和onecmd()来分发命令给处理器时，实际输入行为使用parseline()来解析，创建一个元组包含命令和参数。如果改行为空会调用emptyline()方法。默认实现运行以前的命令，如果改行包含一个命令，首先调用precmd()，然后查找调用处理器的方法，不管有没有找到命令都会调用postcmd（）。
+
+    为了补充标准命令处理，cmd包含两个特殊命令的前缀，问号（？）相当于内置的帮助命令，感叹号（！）会映射到do_shell()，以运行其它的命令，感叹号需要有do_shell方法才会启用，需要自行添加。
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;def do_shell(self, arg):
+    &amp;quot;run a shell commad&amp;quot;
+    print &amp;quot;&amp;gt;&amp;quot;, arg
+    sub_cmd = subprocess.Popen(arg,shell=True, stdout=subprocess.PIPE)
+    print sub_cmd.communicate()[0]
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

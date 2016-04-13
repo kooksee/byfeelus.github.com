@@ -1,0 +1,2424 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Blogs on 百里求一的博客</title>
+        <link>http://kooksee.github.io/blog/</link>
+        <language>zh-CN</language>
+        <author>CoderZh</author>
+        <rights>Copyright (c) 2015, CoderZh; all rights reserved.</rights>
+        <updated>Mon, 01 Jan 0001 00:00:00 UTC</updated>
+        
+        <item>
+            <title>17mei Docker Consul 运行 服务注册 查看所有当前服务配置</title>
+            <link>http://kooksee.github.io/blog/17mei%20Docker%20Consul%20%E8%BF%90%E8%A1%8C%20%E6%9C%8D%E5%8A%A1%E6%B3%A8%E5%86%8C%20%E6%9F%A5%E7%9C%8B%E6%89%80%E6%9C%89%E5%BD%93%E5%89%8D%E6%9C%8D%E5%8A%A1%E9%85%8D%E7%BD%AE/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/17mei%20Docker%20Consul%20%E8%BF%90%E8%A1%8C%20%E6%9C%8D%E5%8A%A1%E6%B3%A8%E5%86%8C%20%E6%9F%A5%E7%9C%8B%E6%89%80%E6%9C%89%E5%BD%93%E5%89%8D%E6%9C%8D%E5%8A%A1%E9%85%8D%E7%BD%AE/</guid>
+            <description>
+
+&lt;h2 id=&#34;注册服务容器的运行:d04551f912163f99d3b2993cc8f18aae&#34;&gt;注册服务容器的运行&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;docker run -it -d --name consul -v /bin/consul:/bin/consul --net=prod -p 8500:8500 ubuntu:14.04 /bin/consul agent -bind=0.0.0.0 -dev -ui -client=0.0.0.0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;服务注册:d04551f912163f99d3b2993cc8f18aae&#34;&gt;服务注册&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;curl -X PUT -d &#39;{&amp;quot;Name&amp;quot;:&amp;quot;user&amp;quot;,&amp;quot;Address&amp;quot;:&amp;quot;prod-user.prod&amp;quot;,&amp;quot;Port&amp;quot;:13001,&amp;quot;tags&amp;quot;:[&amp;quot;user prod-user.prod 13001&amp;quot;]}&#39; -i http://localhost:8500/v1/agent/service/register
+
+curl -X PUT -d &#39;{&amp;quot;Name&amp;quot;:&amp;quot;diary&amp;quot;, &amp;quot;Port&amp;quot;: 13006, &amp;quot;Address&amp;quot;:&amp;quot;prod-diary.prod&amp;quot;, &amp;quot;tags&amp;quot;:[&amp;quot;diary prod-diary.prod 13006&amp;quot;] }&#39; -i http://localhost:8500/v1/agent/service/register
+
+curl -X PUT -d &#39;{&amp;quot;Name&amp;quot;:&amp;quot;mediastore&amp;quot;, &amp;quot;Port&amp;quot;: 13004, &amp;quot;Address&amp;quot;:&amp;quot;prod-mediastore.prod&amp;quot;, &amp;quot;tags&amp;quot;:[&amp;quot;mediastore prod-mediastore.prod 13004&amp;quot;] }&#39; -i http://localhost:8500/v1/agent/service/register
+
+curl -X PUT -d &#39;{&amp;quot;Name&amp;quot;:&amp;quot;other&amp;quot;, &amp;quot;Port&amp;quot;: 13003, &amp;quot;Address&amp;quot;:&amp;quot;prod-other.prod&amp;quot;, &amp;quot;tags&amp;quot;:[&amp;quot;other prod-other.prod 13003&amp;quot;] }&#39; -i http://localhost:8500/v1/agent/service/register
+
+curl -X PUT -d &#39;{&amp;quot;Name&amp;quot;:&amp;quot;verification&amp;quot;, &amp;quot;Port&amp;quot;: 13002, &amp;quot;Address&amp;quot;:&amp;quot;prod-verification.prod&amp;quot;, &amp;quot;tags&amp;quot;:[&amp;quot;verification prod-verification.prod 13002&amp;quot;] }&#39; -i http://localhost:8500/v1/agent/service/register
+
+curl -X PUT -d &#39;{&amp;quot;Name&amp;quot;:&amp;quot;activity&amp;quot;, &amp;quot;Port&amp;quot;: 13005, &amp;quot;Address&amp;quot;:&amp;quot;prod-verification.prod&amp;quot;, &amp;quot;tags&amp;quot;:[&amp;quot;verification prod-verification.prod 13005&amp;quot;] }&#39; -i http://localhost:8500/v1/agent/service/register
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;查看完整consul-当前配置:d04551f912163f99d3b2993cc8f18aae&#34;&gt;查看完整Consul 当前配置&lt;/h2&gt;
+
+&lt;p&gt;curl &lt;a href=&#34;http://127.0.0.1:8500/v1/agent/services&#34;&gt;http://127.0.0.1:8500/v1/agent/services&lt;/a&gt;&lt;/p&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>17mei 微服务的坑，检查点，以及一些操作细节</title>
+            <link>http://kooksee.github.io/blog/17mei%20%E5%BE%AE%E6%9C%8D%E5%8A%A1%E7%9A%84%E5%9D%91%EF%BC%8C%E6%A3%80%E6%9F%A5%E7%82%B9%EF%BC%8C%E4%BB%A5%E5%8F%8A%E4%B8%80%E4%BA%9B%E6%93%8D%E4%BD%9C%E7%BB%86%E8%8A%82/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/17mei%20%E5%BE%AE%E6%9C%8D%E5%8A%A1%E7%9A%84%E5%9D%91%EF%BC%8C%E6%A3%80%E6%9F%A5%E7%82%B9%EF%BC%8C%E4%BB%A5%E5%8F%8A%E4%B8%80%E4%BA%9B%E6%93%8D%E4%BD%9C%E7%BB%86%E8%8A%82/</guid>
+            <description>
+
+&lt;h1 id=&#34;坑:229a76c2071f7fa22b2d9c3a60de9699&#34;&gt;坑&lt;/h1&gt;
+
+&lt;h2 id=&#34;gateway-运行文件依赖pem文件:229a76c2071f7fa22b2d9c3a60de9699&#34;&gt;gateway 运行文件依赖pem文件&lt;/h2&gt;
+
+&lt;h2 id=&#34;verification里面需要根证书-不然没办法访问https-注意注意-apt-get-install-ca-certificates:229a76c2071f7fa22b2d9c3a60de9699&#34;&gt;verification里面需要根证书。不然没办法访问https 注意注意！ &lt;code&gt;apt-get install ca-certificates&lt;/code&gt;&lt;/h2&gt;
+
+&lt;h2 id=&#34;pgsql第一次运行注意事项:229a76c2071f7fa22b2d9c3a60de9699&#34;&gt;PGSQL第一次运行注意事项&lt;/h2&gt;
+
+&lt;h3 id=&#34;pgsql-docker-运行参数:229a76c2071f7fa22b2d9c3a60de9699&#34;&gt;PGSQL docker 运行参数：&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;docker run -it -d --name prod-postgres -e POSTGRES_PASSWORD=wothing --net=prod postgres:9.5.1&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;建库:229a76c2071f7fa22b2d9c3a60de9699&#34;&gt;建库&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;CREATE DATABASE wothing OWNER postgres;&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;引用extension:229a76c2071f7fa22b2d9c3a60de9699&#34;&gt;引用extension&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;CREATE EXTENSION &amp;quot;pgcrypto&amp;quot;;&lt;/code&gt;&lt;/p&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>API  设计文档</title>
+            <link>http://kooksee.github.io/blog/API%20%20%E8%AE%BE%E8%AE%A1%E6%96%87%E6%A1%A3/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/API%20%20%E8%AE%BE%E8%AE%A1%E6%96%87%E6%A1%A3/</guid>
+            <description>
+
+&lt;h1 id=&#34;活动报名-apis-v1:2baef82d8a5626322ee50f56601e46b3&#34;&gt;活动报名 APIs v1&lt;/h1&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;活动管理,活动体验以及活动报名的相关API&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&#34;活动报名:2baef82d8a5626322ee50f56601e46b3&#34;&gt;活动报名&lt;/h2&gt;
+
+&lt;h3 id=&#34;url:2baef82d8a5626322ee50f56601e46b3&#34;&gt;URL&lt;/h3&gt;
+
+&lt;p&gt;POST &lt;code&gt;/activity/enroll&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;token:2baef82d8a5626322ee50f56601e46b3&#34;&gt;TOKEN&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;required&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;input:2baef82d8a5626322ee50f56601e46b3&#34;&gt;INPUT&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;{
+    &amp;quot;activity_id&amp;quot;:        &amp;quot;4eb3a4ff-ad0c-4a03-963c-1a9e4290863e&amp;quot;         //string:required, 活动Id
+    &amp;quot;attrs&amp;quot;:{                                //基本属性
+        &amp;quot;nickname&amp;quot;:        &amp;quot;irons&amp;quot;,          //string:required, 昵称
+        &amp;quot;mobile&amp;quot;:          &amp;quot;86-18621936702&amp;quot;, //string:required, 电话号码
+        &amp;quot;gender&amp;quot;:          &amp;quot;female&amp;quot;,         //string:required, 性别
+        &amp;quot;birthday&amp;quot;:        &amp;quot;2015-12-24&amp;quot;,     //string:required, 生日
+        &amp;quot;job&amp;quot;:             &amp;quot;学生&amp;quot;,           //string:required, 职业[学生, 上班族, 自由职业者, 全职主妇, 网红, 其他 ]
+    },
+
+    &amp;quot;extras&amp;quot;:{                               //可扩展属性
+        &amp;quot;invitation_code&amp;quot;: &amp;quot;123456&amp;quot;,         //string:option,   邀请码,meiId
+        &amp;quot;front_photos&amp;quot;:     [&amp;quot;http://qiniu.com/1dasdf/asdf.jpg&amp;quot;,&amp;quot;http://qiniu.com/1dasdf/asdf.jpg&amp;quot;],//[]:required,正面照
+        &amp;quot;profile_photos&amp;quot;:   [&amp;quot;http://qiniu.com/1dasdf/asdf.jpg&amp;quot;,&amp;quot;http://qiniu.com/1dasdf/asdf.jpg&amp;quot;],//[]:required,侧面照
+        &amp;quot;apply_reason&amp;quot;:     &amp;quot;申请理由&amp;quot;       //string:required,参加活动的理由，改善
+    },
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;output:2baef82d8a5626322ee50f56601e46b3&#34;&gt;OUTPUT&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;{
+    &amp;quot;code&amp;quot;:&amp;quot;00000&amp;quot;
+    &amp;quot;data&amp;quot;:{
+        &amp;quot;message&amp;quot;:&amp;quot;附加信息，比如错误提醒以及，变更提醒&amp;quot;
+    }   
+}
+
+{
+    &amp;quot;code&amp;quot;:&amp;quot;11201&amp;quot;,
+    &amp;quot;message&amp;quot;:&amp;quot;用户已经注册该活动&amp;quot;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;error:2baef82d8a5626322ee50f56601e46b3&#34;&gt;ERROR&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;ErrEnrollExists //error code:11201&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;curl:2baef82d8a5626322ee50f56601e46b3&#34;&gt;CURL&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;curl\
+    -X POST\
+    -d &#39;{&amp;quot;activity_id&amp;quot;:&amp;quot;wefddw&amp;quot;,&amp;quot;mobile&amp;quot;:&amp;quot;86-18621936702&amp;quot;,&amp;quot;gender&amp;quot;:&amp;quot;female&amp;quot;,&amp;quot;birthday&amp;quot;:&amp;quot;2015-12-24&amp;quot;,&amp;quot;job&amp;quot;:&amp;quot;学生&amp;quot;,&amp;quot;invitation_code&amp;quot;:&amp;quot;221ss&amp;quot;,&amp;quot;front_photo&amp;quot;:[&amp;quot;http://qiniu.com/fefw/ddw.jpg&amp;quot;,&amp;quot;http://qiniu.com/dee/fefew.jpg&amp;quot;],&amp;quot;profile_photo&amp;quot;: [&amp;quot;http://qiniu.com/fefw/ddw.jpg&amp;quot;,&amp;quot;http://qiniu.com/dee/fefew.jpg&amp;quot;],&amp;quot;activity_id&amp;quot;:&amp;quot;dwfeww&amp;quot;,&amp;quot;apply_reason&amp;quot;:&amp;quot;申请理由&amp;quot;}&#39;\
+    -i http://localhost:3001/v1/activity/enroll\
+    -H &amp;quot;Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE0MzM0MjkwNjgsImlhdCI6MTQzMzE2OTg2OCwic3ViIjoiNTU2YzY0OTNkZjhlNTY2NDViM2NmYjdlIn0.WA3UlkU2gDH5UCZ_q4abUSBTMEuY21ytAWgyUfPInEaYlJaI1Iav23yHoSHLggloV4emHf6f2hJuV-3LQuGMQfO60yC4zkgeBvBjjXm6808K_ZsuWMtzco8sTjV-2y6VbHb-EnUItVNE-YJuRiP_i0A0H3gJb7IfsSubOz63G3bXvCFUFxPy9Y7DPmpocLXexltf_-EKbyMNHHob5Nll0XOnb3dMZnXU9QhXnx1kT-2uexzdDVsWEZC6UexmRS9b86_oZ4tfGCcNG-Tg9Bl1ole_Yp_9fUBvqA9o-5gsEzFcc0atdEyM1ytFXAaO5SVCqbOnvRKKOdCrduGLth2w&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;用户是否注册:2baef82d8a5626322ee50f56601e46b3&#34;&gt;用户是否注册&lt;/h2&gt;
+
+&lt;h3 id=&#34;url-1:2baef82d8a5626322ee50f56601e46b3&#34;&gt;URL&lt;/h3&gt;
+
+&lt;p&gt;POST &lt;code&gt;/activity/is_enrolled&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;token-1:2baef82d8a5626322ee50f56601e46b3&#34;&gt;TOKEN&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;required&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;input-1:2baef82d8a5626322ee50f56601e46b3&#34;&gt;INPUT&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;{
+    &amp;quot;activity_id&amp;quot;:&amp;quot;4eb3a4ff-ad0c-4a03-963c-1a9e4290863e&amp;quot;,
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;output-1:2baef82d8a5626322ee50f56601e46b3&#34;&gt;OUTPUT&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;{
+    &amp;quot;code&amp;quot;:&amp;quot;00000&amp;quot;,
+    &amp;quot;data&amp;quot;:{
+        &amp;quot;is_enrolled&amp;quot;:false,
+    },
+}
+
+{
+    &amp;quot;code&amp;quot;:&amp;quot;11203&amp;quot;,
+    &amp;quot;message&amp;quot;:&amp;quot;活动不存在!&amp;quot;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;error-1:2baef82d8a5626322ee50f56601e46b3&#34;&gt;ERROR&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;ErrActivityNotExists //error code:11203&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;curl-1:2baef82d8a5626322ee50f56601e46b3&#34;&gt;CURL&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;curl -i http://localhost:3001/v1/activity/is_enrolled\
+     -d &#39;{&amp;quot;activity_id&amp;quot;:&amp;quot;bhbdhbvdvfhfvbdfhd&amp;quot;}&#39;\
+     -H &amp;quot;Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE0MzM0MjkwNjgsImlhdCI6MTQzMzE2OTg2OCwic3ViIjoiNTU2YzY0OTNkZjhlNTY2NDViM2NmYjdlIn0.WA3UlkU2gDH5UCZ_q4abUSBTMEuY21ytAWgyUfPInEaYlJaI1Iav23yHoSHLggloV4emHf6f2hJuV-3LQuGMQfO60yC4zkgeBvBjjXm6808K_ZsuWMtzco8sTjV-2y6VbHb-EnUItVNE-YJuRiP_i0A0H3gJb7IfsSubOz63G3bXvCFUFxPy9Y7DPmpocLXexltf_-EKbyMNHHob5Nll0XOnb3dMZnXU9QhXnx1kT-2uexzdDVsWEZC6UexmRS9b86_oZ4tfGCcNG-Tg9Bl1ole_Yp_9fUBvqA9o-5gsEzFcc0atdEyM1ytFXAaO5SVCqbOnvRKKOdCrduGLth2w&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;创建活动:2baef82d8a5626322ee50f56601e46b3&#34;&gt;创建活动&lt;/h2&gt;
+
+&lt;h3 id=&#34;url-2:2baef82d8a5626322ee50f56601e46b3&#34;&gt;URL&lt;/h3&gt;
+
+&lt;p&gt;POST &lt;code&gt;/activity/create&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;token-2:2baef82d8a5626322ee50f56601e46b3&#34;&gt;TOKEN&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;not required&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;input-2:2baef82d8a5626322ee50f56601e46b3&#34;&gt;INPUT&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;{
+    &amp;quot;activity_id&amp;quot;:&amp;quot;cfgvhjbk&amp;quot;,
+    &amp;quot;attrs&amp;quot;:{
+         &amp;quot;name&amp;quot;:&amp;quot;美白&amp;quot;,
+         &amp;quot;title&amp;quot;:&amp;quot;第一季&amp;quot;,
+         &amp;quot;wechat&amp;quot;:&amp;quot;12321&amp;quot;,
+         &amp;quot;city&amp;quot;:&amp;quot;上海 北京&amp;quot;,
+         &amp;quot;start_at&amp;quot;:45678933,
+         &amp;quot;end_at&amp;quot;:3221426,
+    },
+    &amp;quot;extras&amp;quot;:{
+           &amp;quot;apply_reason_example&amp;quot;: &amp;quot;申请理由范例&amp;quot;,
+           &amp;quot;front_photo_examples&amp;quot;:[&amp;quot;http://www.baidu.com/123.jpg&amp;quot;,&amp;quot;http://www.baidu.com/123.jpg&amp;quot;],
+           &amp;quot;profile_photo_examples&amp;quot;:[&amp;quot;http://www.baidu.com/123.jpg&amp;quot;,&amp;quot;http://www.baidu.com/123.jpg&amp;quot;],
+           &amp;quot;banners&amp;quot;:[
+             {
+               &amp;quot;img&amp;quot;: &amp;quot;http://www.baidu.com/1122.jpg&amp;quot;,
+               &amp;quot;target_type&amp;quot;: &amp;quot;web&amp;quot;,
+               &amp;quot;target_id&amp;quot;: &amp;quot;12345&amp;quot;,
+             },
+             {
+               &amp;quot;img&amp;quot;: &amp;quot;http://www.baidu.com/1122.jpg&amp;quot;,
+               &amp;quot;target_type&amp;quot;: &amp;quot;web&amp;quot;,
+               &amp;quot;target_id&amp;quot;: &amp;quot;1234532&amp;quot;,
+             },
+           ],
+    },
+    &amp;quot;enroll_num&amp;quot;:123,
+    &amp;quot;fund_balance&amp;quot;:22233.53,
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;output-2:2baef82d8a5626322ee50f56601e46b3&#34;&gt;OUTPUT&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;{
+    &amp;quot;code&amp;quot;:&amp;quot;00000&amp;quot;,
+    &amp;quot;data&amp;quot;:{
+        &amp;quot;message&amp;quot;:&amp;quot;活动创建成功&amp;quot;,
+    },
+}
+
+{
+    &amp;quot;code&amp;quot;:&amp;quot;10002&amp;quot;,
+    &amp;quot;message&amp;quot;:&amp;quot;格式化转化错误!&amp;quot;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;error-2:2baef82d8a5626322ee50f56601e46b3&#34;&gt;ERROR&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;none&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;curl-2:2baef82d8a5626322ee50f56601e46b3&#34;&gt;CURL&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;curl\
+  -i http://localhost:3001/v1/activity/create\
+  -d &#39;{
+        &amp;quot;attrs&amp;quot;:{
+             &amp;quot;name&amp;quot;:&amp;quot;美白&amp;quot;,
+             &amp;quot;title&amp;quot;:&amp;quot;第一季&amp;quot;,
+             &amp;quot;wechat&amp;quot;:&amp;quot;12321&amp;quot;,
+             &amp;quot;city&amp;quot;:&amp;quot;上海 北京&amp;quot;,
+             &amp;quot;start_at&amp;quot;:45678933,
+             &amp;quot;end_at&amp;quot;:3221426,
+        },
+        &amp;quot;extras&amp;quot;:{
+               &amp;quot;apply_reason_example&amp;quot;: &amp;quot;申请理由范例&amp;quot;,
+               &amp;quot;front_photo_examples&amp;quot;:[&amp;quot;http://www.baidu.com/123.jpg&amp;quot;,&amp;quot;http://www.baidu.com/123.jpg&amp;quot;],
+               &amp;quot;profile_photo_examples&amp;quot;:[&amp;quot;http://www.baidu.com/123.jpg&amp;quot;,&amp;quot;http://www.baidu.com/123.jpg&amp;quot;],
+               &amp;quot;banners&amp;quot;:[
+                 {
+                   &amp;quot;img&amp;quot;: &amp;quot;http://www.baidu.com/1122.jpg&amp;quot;,
+                   &amp;quot;target_type&amp;quot;: &amp;quot;web&amp;quot;,
+                   &amp;quot;target_id&amp;quot;: &amp;quot;12345&amp;quot;,
+                 },
+                 {
+                   &amp;quot;img&amp;quot;: &amp;quot;http://www.baidu.com/1122.jpg&amp;quot;,
+                   &amp;quot;target_type&amp;quot;: &amp;quot;web&amp;quot;,
+                   &amp;quot;target_id&amp;quot;: &amp;quot;1234532&amp;quot;,
+                 },
+               ]
+        },
+        &amp;quot;enroll_num&amp;quot;:123,
+        &amp;quot;fund_balance&amp;quot;:22233.53,
+      }&#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;##活动信息&lt;/p&gt;
+
+&lt;h3 id=&#34;url-3:2baef82d8a5626322ee50f56601e46b3&#34;&gt;URL&lt;/h3&gt;
+
+&lt;p&gt;POST &lt;code&gt;/activity/get_info&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;token-3:2baef82d8a5626322ee50f56601e46b3&#34;&gt;TOKEN&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;not required&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;input-3:2baef82d8a5626322ee50f56601e46b3&#34;&gt;INPUT&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;{
+    &amp;quot;activity_id&amp;quot;:&amp;quot;test&amp;quot;, //string:required
+    &amp;quot;extras&amp;quot;:{},          //以后升级时需要的扩展属性
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;output-3:2baef82d8a5626322ee50f56601e46b3&#34;&gt;OUTPUT&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;{
+    &amp;quot;code&amp;quot;:&amp;quot;00000&amp;quot;
+    &amp;quot;data&amp;quot;:{
+        &amp;quot;attrs&amp;quot;:{
+            &amp;quot;title&amp;quot;:                 &amp;quot;第一季(仅限上海)&amp;quot;,                                               //string:required, 标题
+            &amp;quot;name&amp;quot;:                  &amp;quot;活动名字&amp;quot;,                                                       //string:required.活动名字
+            &amp;quot;city&amp;quot;:                  &amp;quot;上海&amp;quot;
+            &amp;quot;wechat&amp;quot;:                &amp;quot;wdwww&amp;quot;,                                                         //string:required, 微信公众号
+            &amp;quot;start_at&amp;quot;:              1456305724,                                                      //timestamp:required,活动开始时间
+            &amp;quot;end_at&amp;quot;:                1456305724,                                                       //timestamp:required,活动结束时间
+        },
+
+        &amp;quot;extras&amp;quot;:{
+          &amp;quot;banners&amp;quot;: [                                                                               //string:required, 标题页
+              {                                                                             
+                  &amp;quot;img&amp;quot;        : &amp;quot;http://qiniu.com/sdddww/dwe.jpg&amp;quot;,                           //string:required, 图片链接
+                  &amp;quot;target_type&amp;quot;: &amp;quot;web&amp;quot;,                                                       //string:required, 目标类型
+                  &amp;quot;target_id&amp;quot;  : &amp;quot;http://qiniu.com/sdddww/dwe.jpg&amp;quot;,                            //string:required, 目标链接
+              },
+              {
+                  &amp;quot;img&amp;quot;        : &amp;quot;http://qiniu.com/sdddww/dwe.jpg&amp;quot;,
+                  &amp;quot;target_type&amp;quot;: &amp;quot;web&amp;quot;,
+                  &amp;quot;target_id&amp;quot;  : &amp;quot;http://qiniu.com/sdddww/dwe.jpg&amp;quot;,
+              },
+          ],
+
+          &amp;quot;apply_reason_example&amp;quot;:  &amp;quot;申请理由范例&amp;quot;,                                                   //string:required,参加活动的理由，改善建议
+          &amp;quot;front_photo_examples&amp;quot;:   [&amp;quot;http://qiniu.com/1dasdf/asdf.jpg&amp;quot;,&amp;quot;http://qiniu.com/1dasdf/asdf.jpg&amp;quot;],//[]:required,正面照
+          &amp;quot;profile_photo_examples&amp;quot;: [&amp;quot;http://qiniu.com/1dasdf/asdf.jpg&amp;quot;,&amp;quot;http://qiniu.com/1dasdf/asdf.jpg&amp;quot;],//[]:required,侧面照
+        },
+
+        &amp;quot;enroll_num&amp;quot;:            1221,                                                          //报名人数
+        &amp;quot;fund_balance&amp;quot;:          12334223.43,                                                   //string:required, 剩余基金
+        &amp;quot;update_at&amp;quot;:             45673232,   //timestamp:required, 活动信息更新时间戳
+        &amp;quot;status&amp;quot;                 1,          // int:required,活动当前的状态,{-1:下线状态,1:上线状态}
+    }
+}
+
+{
+    &amp;quot;code&amp;quot;:&amp;quot;11203&amp;quot;,
+    &amp;quot;message&amp;quot;:&amp;quot;活动不存在!&amp;quot;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;error-3:2baef82d8a5626322ee50f56601e46b3&#34;&gt;ERROR&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;ErrActivityNotExists //error code:11203&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;curl-3:2baef82d8a5626322ee50f56601e46b3&#34;&gt;CURL&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;curl\
+  -X POST\
+  -i http://localhost:3001/v1/activity/get_info \
+  -d &#39;{&amp;quot;activity_id&amp;quot;:&amp;quot;test&amp;quot;}&#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;获得活动列表:2baef82d8a5626322ee50f56601e46b3&#34;&gt;获得活动列表&lt;/h2&gt;
+
+&lt;h3 id=&#34;url-4:2baef82d8a5626322ee50f56601e46b3&#34;&gt;URL&lt;/h3&gt;
+
+&lt;p&gt;POST &lt;code&gt;/activity/get_activities&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;token-4:2baef82d8a5626322ee50f56601e46b3&#34;&gt;TOKEN&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;not required&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;input-4:2baef82d8a5626322ee50f56601e46b3&#34;&gt;INPUT&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;{
+    &amp;quot;last&amp;quot;:&amp;quot;234&amp;quot;,// 上次的num数
+    &amp;quot;limit&amp;quot;:21,  // 需要获得至少limit条数据，limit不能小于1
+    &amp;quot;extras&amp;quot;:{}, // 以后扩展功能,&amp;quot;is_brief&amp;quot;:true, 代表是简略的还是全部的信息,默认简略内容
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;output-4:2baef82d8a5626322ee50f56601e46b3&#34;&gt;OUTPUT&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;{
+    &amp;quot;code&amp;quot;:&amp;quot;00000&amp;quot;
+    &amp;quot;data&amp;quot;:{
+        &amp;quot;activities&amp;quot;: [
+        {
+                &amp;quot;title&amp;quot;: &amp;quot;第一季(仅限上海)&amp;quot;, // 本季活动的标题
+                &amp;quot;status&amp;quot;: 1,                 //-1:活动已下线，下线不显示;1:活动上线
+                &amp;quot;num&amp;quot;:1,                     // 活动次数
+                &amp;quot;activity_id&amp;quot;:&amp;quot;56789567&amp;quot;     // 报名活动的Id
+                &amp;quot;update_at&amp;quot;:  23432112     // 活动更新时间戳
+            },
+        {
+                &amp;quot;title&amp;quot;: &amp;quot;第一季(仅限上海)&amp;quot;, // 本季活动的标题
+                &amp;quot;status&amp;quot;: 1,
+                &amp;quot;activity_id&amp;quot;:&amp;quot;56789567&amp;quot;
+                &amp;quot;num&amp;quot;:2
+                &amp;quot;update_at&amp;quot;:  23432112
+            }
+        ]  
+    }
+}
+
+{
+    &amp;quot;code&amp;quot;:&amp;quot;10002&amp;quot;,
+    &amp;quot;message&amp;quot;:&amp;quot;数据参数转化错误&amp;quot;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;error-4:2baef82d8a5626322ee50f56601e46b3&#34;&gt;ERROR&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;none&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;curl-4:2baef82d8a5626322ee50f56601e46b3&#34;&gt;CURL&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;curl\
+  -X POST\
+  -d &#39;{&amp;quot;last&amp;quot;:&amp;quot;2342&amp;quot;,&amp;quot;limit&amp;quot;:2}&#39;
+  -i http://localhost:3001/v1/activity/get_activities
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;获得活动体验:2baef82d8a5626322ee50f56601e46b3&#34;&gt;获得活动体验&lt;/h2&gt;
+
+&lt;h3 id=&#34;url-5:2baef82d8a5626322ee50f56601e46b3&#34;&gt;URL&lt;/h3&gt;
+
+&lt;p&gt;POST &lt;code&gt;/activity/get_experiences&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;token-5:2baef82d8a5626322ee50f56601e46b3&#34;&gt;TOKEN&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;not required&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;input-5:2baef82d8a5626322ee50f56601e46b3&#34;&gt;INPUT&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;{
+  &amp;quot;last&amp;quot;:&amp;quot;上次的体验ID&amp;quot;,
+  &amp;quot;limit&amp;quot;:1,
+  &amp;quot;extras&amp;quot;:{},
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;output-5:2baef82d8a5626322ee50f56601e46b3&#34;&gt;OUTPUT&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;{
+    &amp;quot;code&amp;quot;:&amp;quot;00000&amp;quot;,
+    &amp;quot;data&amp;quot;:{
+       &amp;quot;experiences&amp;quot;:[
+           {
+                &amp;quot;user_id&amp;quot;:&amp;quot;23432&amp;quot;,
+                &amp;quot;activity_name&amp;quot;:&amp;quot;美白&amp;quot;,
+                &amp;quot;activity_title&amp;quot;:&amp;quot;第一季&amp;quot;,
+                &amp;quot;activity_balance&amp;quot;:12321.12,
+                &amp;quot;extras&amp;quot;:{},
+            },
+            {
+                &amp;quot;user_id&amp;quot;:&amp;quot;23432&amp;quot;,
+                &amp;quot;activity_name&amp;quot;:&amp;quot;美白&amp;quot;,
+                &amp;quot;activity_title&amp;quot;:&amp;quot;第一季&amp;quot;,
+                &amp;quot;activity_balance&amp;quot;:12321.12,
+                &amp;quot;extras&amp;quot;:{},
+            },
+        ]
+    },
+}
+
+{
+    &amp;quot;code&amp;quot;:&amp;quot;10002&amp;quot;,
+    &amp;quot;message&amp;quot;:&amp;quot;数据参数转化错误&amp;quot;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;error-5:2baef82d8a5626322ee50f56601e46b3&#34;&gt;ERROR&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;none&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;curl-5:2baef82d8a5626322ee50f56601e46b3&#34;&gt;CURL&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;curl\
+  -X POST\
+  -i http://localhost:3001/v1/activity/get_experiences\
+  -d &#39;{&amp;quot;last&amp;quot;:&amp;quot;2342&amp;quot;,&amp;quot;limit&amp;quot;:2}&#39;
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>API BluePrint</title>
+            <link>http://kooksee.github.io/blog/API%20BluePrint/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/API%20BluePrint/</guid>
+            <description>
+
+&lt;h2 id=&#34;语法规范:8c28c4a64c18fe5a5d079ebc23d5493e&#34;&gt;语法规范&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;首先, 可以查看官方提供的&lt;a href=&#34;https://github.com/apiaryio/api-blueprint/tree/master/examples&#34;&gt;例子&lt;/a&gt; . 一共也就 10 多个, 想深究的童鞋可以看一下。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;然后是很大概率用不太到的&lt;a href=&#34;https://github.com/apiaryio/api-blueprint/blob/master/API%20Blueprint%20Specification.md&#34;&gt;语法规范&lt;/a&gt;。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;https://github.com/apiaryio/mson&#34;&gt;MSON&lt;/a&gt;语法规范，基本用不太到。&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;配套工具:8c28c4a64c18fe5a5d079ebc23d5493e&#34;&gt;配套工具&lt;/h2&gt;
+
+&lt;h3 id=&#34;编辑器插件:8c28c4a64c18fe5a5d079ebc23d5493e&#34;&gt;编辑器插件&lt;/h3&gt;
+
+&lt;p&gt;对于不熟悉语法的童鞋，建议安装预览插件，相当于即时检查。从👇选一个顺手的吧！
+* &lt;a href=&#34;https://github.com/apiaryio/api-blueprint-sublime-plugin&#34;&gt;sublime&lt;/a&gt; 
+* &lt;a href=&#34;https://atom.io/packages/language-api-blueprint&#34;&gt;atom-language&lt;/a&gt; 
+* &lt;a href=&#34;https://atom.io/packages/api-blueprint-preview&#34;&gt;atom-preview&lt;/a&gt; 
+* &lt;a href=&#34;https://github.com/kylef/apiblueprint.vim&#34;&gt;vim&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;mock-服务:8c28c4a64c18fe5a5d079ebc23d5493e&#34;&gt;Mock 服务&lt;/h3&gt;
+
+&lt;p&gt;这个是用来根据大家撰写的api.md来生成对应假数据的，理论上大家不需要安装，想体验一把的可以试试。
+* &lt;a href=&#34;https://github.com/localmed/api-mock&#34;&gt;api-mock&lt;/a&gt;
+* &lt;a href=&#34;https://github.com/Aconex/drakov&#34;&gt;drakov&lt;/a&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;npm install -g api-mock
+api-mock api.md --port 3000
+
+npm install -g drakov
+drakov -f api.md -p 3000
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;静态-html-生成:8c28c4a64c18fe5a5d079ebc23d5493e&#34;&gt;静态 HTML 生成&lt;/h3&gt;
+
+&lt;p&gt;写了一堆 markdown 文档，到了该出成果的时候了。使用&lt;a href=&#34;https://github.com/danielgtaylor/aglio&#34;&gt;aglio&lt;/a&gt;来生成我们需要的html页面吧。&lt;/p&gt;
+
+&lt;p&gt;安装与使用都非常简单，首先要确保本地装有 node 环境。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;npm install -g aglio
+
+aglio -i api.md -o api.html
+
+此时你可以选择打开api.html预览。但这个命令更多是给服务端生成页面用的。不太常用。
+
+可以直接：
+aglio -i api.md -s
+然后通过 http://127.0.0.1:3000就可以预览所生成的文件啦，这个这个页面在修改文档时是可以同步刷新的😄
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;生成html文件时可能会报错，blueprint有点类似于yaml语法，需要严格遵循语法定义（主要是空格的数量及换行约定）。错误会包含行号，请注意排查。😢，这么重要的东西，是不是应该放到顶部？&lt;/p&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>Building Microservices: Using an API Gateway</title>
+            <link>http://kooksee.github.io/blog/Building%20Microservices:%20Using%20an%20API%20Gateway/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/Building%20Microservices:%20Using%20an%20API%20Gateway/</guid>
+            <description>&lt;p&gt;Blog
+Tech
+Chris Richardson
+·
+June 15, 2015
+Building Microservices: Using an API Gateway
+API gateway, microservices&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;twitter
+linkedin
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The first article in this seven-part series about designing, building, and deploying microservices introduced the Microservices Architecture pattern. It discussed the benefits and drawbacks of using microservices and how, despite the complexity of microservices, they are usually the ideal choice for complex applications. This is the second article in the series and will discuss building microservices using an API Gateway.&lt;/p&gt;
+
+&lt;p&gt;When you choose to build your application as a set of microservices, you need to decide how your application’s clients will interact with the microservices. With a monolithic application there is just one set of (typically replicated, load-balanced) endpoints. In a microservices architecture, however, each microservice exposes a set of what are typically fine-grained endpoints. In this article, we examine how this impacts client-to-application communication and proposes an approach that uses an API Gateway.&lt;/p&gt;
+
+&lt;p&gt;Editor’s note – This seven-part series of articles is now complete:&lt;/p&gt;
+
+&lt;p&gt;Blog
+Tech
+Chris Richardson
+·
+June 15, 2015
+Building Microservices: Using an API Gateway
+API gateway, microservices&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;twitter
+linkedin
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The first article in this seven-part series about designing, building, and deploying microservices introduced the Microservices Architecture pattern. It discussed the benefits and drawbacks of using microservices and how, despite the complexity of microservices, they are usually the ideal choice for complex applications. This is the second article in the series and will discuss building microservices using an API Gateway.&lt;/p&gt;
+
+&lt;p&gt;When you choose to build your application as a set of microservices, you need to decide how your application’s clients will interact with the microservices. With a monolithic application there is just one set of (typically replicated, load-balanced) endpoints. In a microservices architecture, however, each microservice exposes a set of what are typically fine-grained endpoints. In this article, we examine how this impacts client-to-application communication and proposes an approach that uses an API Gateway.&lt;/p&gt;
+
+&lt;p&gt;Editor’s note – This seven-part series of articles is now complete:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;1，Introduction to Microservices
+2，Building Microservices: Using an API Gateway (this article)
+3，Building Microservices: Inter-Process Communication in a Microservices Architecture
+4，Service Discovery in a Microservices Architecture
+5，Event-Driven Data Management for Microservices
+6，Choosing a Microservices Deployment Strategy
+7，Refactoring a Monolith into Microservices
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Blog
+Tech
+Chris Richardson
+·
+June 15, 2015
+Building Microservices: Using an API Gateway
+API gateway, microservices&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;twitter
+linkedin
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The first article in this seven-part series about designing, building, and deploying microservices introduced the Microservices Architecture pattern. It discussed the benefits and drawbacks of using microservices and how, despite the complexity of microservices, they are usually the ideal choice for complex applications. This is the second article in the series and will discuss building microservices using an API Gateway.&lt;/p&gt;
+
+&lt;p&gt;When you choose to build your application as a set of microservices, you need to decide how your application’s clients will interact with the microservices. With a monolithic application there is just one set of (typically replicated, load-balanced) endpoints. In a microservices architecture, however, each microservice exposes a set of what are typically fine-grained endpoints. In this article, we examine how this impacts client-to-application communication and proposes an approach that uses an API Gateway.&lt;/p&gt;
+
+&lt;p&gt;Editor’s note – This seven-part series of articles is now complete:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Introduction to Microservices
+Building Microservices: Using an API Gateway (this article)
+Building Microservices: Inter-Process Communication in a Microservices Architecture
+Service Discovery in a Microservices Architecture
+Event-Driven Data Management for Microservices
+Choosing a Microservices Deployment Strategy
+Refactoring a Monolith into Microservices
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Introduction&lt;/p&gt;
+
+&lt;p&gt;Let’s imagine that you are developing a native mobile client for a shopping application. It’s likely that you need to implement a product details page, which displays information about any given product.&lt;/p&gt;
+
+&lt;p&gt;For example, the following diagram shows what you will see when scrolling through the product details in Amazon’s Android mobile application.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://www.nginx.com/blog/building-microservices-using-an-api-gateway/&#34;&gt;https://www.nginx.com/blog/building-microservices-using-an-api-gateway/&lt;/a&gt;&lt;/p&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>Docker 2 -- 关于Dockerfile</title>
+            <link>http://kooksee.github.io/blog/Docker%202%20--%20%E5%85%B3%E4%BA%8EDockerf/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/Docker%202%20--%20%E5%85%B3%E4%BA%8EDockerf/</guid>
+            <description>&lt;blockquote&gt;
+&lt;p&gt;Dockerfile是一个镜像的表示，可以通过Dockerfile来描述构建镜像的步骤，并自动构建一个容器&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;所有的 Dockerfile 命令格式都是:
+INSTRUCTION arguments&lt;/p&gt;
+
+&lt;p&gt;虽然指令忽略大小写，但是建议使用大写。&lt;/p&gt;
+
+&lt;p&gt;##FROM 命令
+FROM &lt;image&gt;
+或
+FROM &lt;image&gt;:&lt;tag&gt;&lt;/p&gt;
+
+&lt;p&gt;这个设置基本的镜像，为后续的命令使用，所以应该作为Dockerfile的第一条指令。&lt;/p&gt;
+
+&lt;p&gt;比如:
+FROM ubuntu
+如果没有指定 tag ，则默认tag是latest，如果都没有则会报错。&lt;/p&gt;
+
+&lt;p&gt;##RUN 命令&lt;/p&gt;
+
+&lt;p&gt;RUN命令会在上面FROM指定的镜像里执行任何命令，然后提交(commit)结果，提交的镜像会在后面继续用到。&lt;/p&gt;
+
+&lt;p&gt;两种格式:&lt;/p&gt;
+
+&lt;p&gt;RUN &lt;command&gt; (the command is run in a shell - &lt;code&gt;/bin/sh -c&lt;/code&gt;)&lt;/p&gt;
+
+&lt;p&gt;或:&lt;/p&gt;
+
+&lt;p&gt;RUN &lt;a href=&#34;exec form&#34;&gt;&amp;ldquo;executable&amp;rdquo;, &amp;ldquo;param1&amp;rdquo;, &amp;ldquo;param2&amp;rdquo; &amp;hellip; &lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;RUN命令等价于:&lt;/p&gt;
+
+&lt;p&gt;docker run image command
+docker commit container_id&lt;/p&gt;
+
+&lt;p&gt;##注释&lt;/p&gt;
+
+&lt;p&gt;使用 # 作为注释&lt;/p&gt;
+
+&lt;p&gt;如:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# VERSION       1.0
+
+# use the ubuntu base image provided by dotCloud
+FROM ubuntu
+
+# make sure the package repository is up to date
+RUN echo &amp;quot;deb http://archive.ubuntu.com/ubuntu precise main universe&amp;quot; &amp;gt; /etc/apt/sources.list
+RUN apt-get update
+
+# install memcached
+RUN apt-get install -y memcached
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##MAINTAINER 命令&lt;/p&gt;
+
+&lt;p&gt;MAINTAINER name&lt;/p&gt;
+
+&lt;p&gt;MAINTAINER命令用来指定维护者的姓名和联系方式&lt;/p&gt;
+
+&lt;p&gt;如:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;MAINTAINER Guillaume J. Charmes, guillaume@dotcloud.com
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##ENTRYPOINT 命令
+&lt;a href=&#34;http://cloud.51cto.com/art/201411/457338.htm&#34;&gt;http://cloud.51cto.com/art/201411/457338.htm&lt;/a&gt;
+有两种语法格式，一种就是上面的(shell方式):&lt;/p&gt;
+
+&lt;p&gt;ENTRYPOINT cmd param1 param2 &amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;第二种是 exec 格式:
+ENTRYPOINT [&amp;ldquo;cmd&amp;rdquo;, &amp;ldquo;param1&amp;rdquo;, &amp;ldquo;param2&amp;rdquo;..&lt;/p&gt;
+
+&lt;p&gt;如:&lt;/p&gt;
+
+&lt;p&gt;ENTRYPOINT [&amp;ldquo;echo&amp;rdquo;, &amp;ldquo;Whale you be my container&amp;rdquo;]&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;container启动时执行的命令，但是一个Dockerfile中只能有一条ENTRYPOINT命令，如果多条，则只执行最后一条
+ENTRYPOINT 命令设置在容器启动时执行命令&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;root@tankywoo-docker:~# cat Dockerfile
+FROM ubuntu
+ENTRYPOINT echo &amp;quot;Welcome!&amp;quot;
+
+root@tankywoo-docker:~# docker run 62fda5e450d5
+Welcome!
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##USER 命令&lt;/p&gt;
+
+&lt;p&gt;比如指定 memcached 的运行用户，可以使用上面的 ENTRYPOINT 来实现:&lt;/p&gt;
+
+&lt;p&gt;ENTRYPOINT [&amp;ldquo;memcached&amp;rdquo;, &amp;ldquo;-u&amp;rdquo;, &amp;ldquo;daemon&amp;rdquo;]&lt;/p&gt;
+
+&lt;p&gt;更好的方式是：&lt;/p&gt;
+
+&lt;p&gt;ENTRYPOINT [&amp;ldquo;memcached&amp;rdquo;]
+USER daemon&lt;/p&gt;
+
+&lt;p&gt;##EXPOSE 命令&lt;/p&gt;
+
+&lt;p&gt;EXPOSE 命令可以设置一个端口在运行的镜像中暴露在外&lt;/p&gt;
+
+&lt;p&gt;EXPOSE &lt;port&gt; [&lt;port&gt;&amp;hellip;]&lt;/p&gt;
+
+&lt;p&gt;比如memcached使用端口 11211，可以把这个端口暴露在外，这样容器外可以看到这个端口并与其通信。&lt;/p&gt;
+
+&lt;p&gt;EXPOSE 11211&lt;/p&gt;
+
+&lt;p&gt;container内部服务开启的端口。主机上要用还得在启动container时，做host-container的端口映射：&lt;/p&gt;
+
+&lt;p&gt;docker run -d -p 127.0.0.1:33301:22 centos6-ssh&lt;/p&gt;
+
+&lt;p&gt;container ssh服务的22端口被映射到主机的33301端口&lt;/p&gt;
+
+&lt;p&gt;一个完整的例子:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# Memcached
+#
+# VERSION       2.2
+
+# use the ubuntu base image provided by dotCloud
+FROM ubuntu
+
+MAINTAINER Victor Coisne victor.coisne@dotcloud.com
+
+# make sure the package repository is up to date
+RUN echo &amp;quot;deb http://archive.ubuntu.com/ubuntu precise main universe&amp;quot; &amp;gt; /etc/apt/sources.list
+RUN apt-get update
+
+# install memcached
+RUN apt-get install -y memcached
+
+# Launch memcached when launching the container
+ENTRYPOINT [&amp;quot;memcached&amp;quot;]
+
+# run memcached as the daemon user
+USER daemon
+
+# expose memcached port
+EXPOSE 11211
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;上面是官方例子，国内建议换成163或sohu的源，不然太慢了。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;root@tankywoo-docker:~# docker build -t tankywoo  - &amp;lt; dck                       [38/480]
+Uploading context  2.56 kB
+Uploading context
+Step 0 : FROM ubuntu
+ ---&amp;gt; 99ec81b80c55
+Step 1 : MAINTAINER Victor Coisne victor.coisne@dotcloud.com
+ ---&amp;gt; Using cache
+ ---&amp;gt; 2b58110877f6
+Step 2 : RUN echo &amp;quot;deb http://mirrors.163.com/ubuntu/ precise main restricted universe multiverse&amp;quot; &amp;gt; /etc/apt/sources.list
+ ---&amp;gt; Running in f55a4a8bb069
+ ---&amp;gt; d48c6a965398
+Step 3 : RUN apt-get update
+ ---&amp;gt; Running in da091a1dd6e7
+Ign http://mirrors.163.com precise InRelease
+Get:1 http://mirrors.163.com precise Release.gpg [198 B]
+
+....
+
+Processing triggers for libc-bin (2.19-0ubuntu6) ...
+Processing triggers for ureadahead (0.100.0-16) ...
+ ---&amp;gt; 2886671b5b86
+Step 5 : ENTRYPOINT [&amp;quot;memcached&amp;quot;]
+ ---&amp;gt; Running in e8aeeab92cb6
+ ---&amp;gt; 7148293a4053
+Step 6 : USER daemon
+ ---&amp;gt; Running in 288766b19606
+ ---&amp;gt; 235e7f630ffa
+Step 7 : EXPOSE 11211
+ ---&amp;gt; Running in c6f881b9d51f
+ ---&amp;gt; 666c5d65f396
+Successfully built 666c5d65f396
+Removing intermediate container f55a4a8bb069
+Removing intermediate container da091a1dd6e7
+Removing intermediate container f23631d3d45a
+Removing intermediate container e8aeeab92cb6
+Removing intermediate container 288766b19606
+Removing intermediate container c6f881b9d51f
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##ENV 命令&lt;/p&gt;
+
+&lt;p&gt;用于设置环境变量&lt;/p&gt;
+
+&lt;p&gt;ENV &lt;key&gt; &lt;value&gt;
+来设置环境变量，比如：&lt;/p&gt;
+
+&lt;p&gt;ENV LANG en_US.UTF-8
+ENV LC_ALL en_US.UTF-8
+设置了后，后续的RUN命令都可以使用&lt;/p&gt;
+
+&lt;p&gt;使用此dockerfile生成的image新建container，可以通过 docker inspect 看到这个环境变量:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;root@tankywoo-docker:~# docker inspect 49bfc7a9817f
+    ...
+    &amp;quot;Env&amp;quot;: [
+        &amp;quot;name=tanky&amp;quot;,
+        &amp;quot;HOME=/&amp;quot;,
+        &amp;quot;PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin&amp;quot;
+    ],
+    ...
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;里面的name=tanky就是设置的。&lt;/p&gt;
+
+&lt;p&gt;也可以通过在docker run时设置或修改环境变量:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker run -i -t --env name=&amp;quot;tanky&amp;quot; ubuntu:newtest /bin/bash
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##ADD 命令&lt;/p&gt;
+
+&lt;p&gt;从src复制文件到container的dest路径:&lt;/p&gt;
+
+&lt;p&gt;ADD &lt;src&gt; &lt;dest&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;src&amp;gt; 是相对被构建的源目录的相对路径，可以是文件或目录的路径，也可以是一个远程的文件url
+&amp;lt;dest&amp;gt; 是container中的绝对路径
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;将文件&lt;src&gt;拷贝到container的文件系统对应的路径&lt;dest&gt;&lt;/p&gt;
+
+&lt;p&gt;所有拷贝到container中的文件和文件夹权限为0755,uid和gid为0&lt;/p&gt;
+
+&lt;p&gt;如果文件是可识别的压缩格式，则docker会帮忙解压缩&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;如果要ADD本地文件，则本地文件必须在 docker build &amp;lt;PATH&amp;gt;，指定的&amp;lt;PATH&amp;gt;目录下
+
+
+如果要ADD远程文件，则远程文件必须在 docker build &amp;lt;PATH&amp;gt;，指定的&amp;lt;PATH&amp;gt;目录下。比如:
+
+docker build github.com/creack/docker-firefox
+
+
+docker-firefox目录下必须有Dockerfile和要ADD的文件
+
+
+注意:使用docker build - &amp;lt; somefile方式进行build，是不能直接将本地文件ADD到container中。只能ADD
+ url file.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;ADD只有在build镜像的时候运行一次，后面运行container的时候不会再重新加载了。&lt;/p&gt;
+
+&lt;p&gt;##VOLUME 命令&lt;/p&gt;
+
+&lt;p&gt;VOLUME [&amp;ldquo;mountpoint&amp;rdquo;]&lt;/p&gt;
+
+&lt;p&gt;如:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;VOLUME [&amp;quot;/data&amp;quot;]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;创建一个挂载点用于共享目录&lt;/p&gt;
+
+&lt;p&gt;可以将本地文件夹或者其他container的文件夹挂载到container中。&lt;/p&gt;
+
+&lt;p&gt;具体参考 Docker 4 &amp;ndash; 总结
+##WORKDIR 命令&lt;/p&gt;
+
+&lt;p&gt;切换目录用，可以多次切换(相当于cd命令)，对RUN,CMD,ENTRYPOINT生效
+WORKDIR /path/to/workdir
+配置RUN, CMD, ENTRYPOINT 命令设置当前工作路径&lt;/p&gt;
+
+&lt;p&gt;可以设置多次，如果是相对路径，则相对前一个 WORKDIR 命令&lt;/p&gt;
+
+&lt;p&gt;比如:&lt;/p&gt;
+
+&lt;p&gt;WORKDIR /a WORKDIR b WORKDIR c RUN pwd&lt;/p&gt;
+
+&lt;p&gt;其实是在 /a/b/c 下执行 pwd
+##CMD 命令&lt;/p&gt;
+
+&lt;p&gt;有三种格式:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    CMD [&amp;quot;executable&amp;quot;,&amp;quot;param1&amp;quot;,&amp;quot;param2&amp;quot;] (like an exec, preferred form)
+    CMD [&amp;quot;param1&amp;quot;,&amp;quot;param2&amp;quot;] (as default parameters to ENTRYPOINT)
+    CMD command param1 param2 (as a shell
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;一个Dockerfile里只能有一个CMD，如果有多个，只有最后一个生效。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;The main purpose of a CMD is to provide defaults for an executing container.(为可执行的容器提供默认值) These defaults can include an executable, or they can omit the executable, in which case you must specify an ENTRYPOINT as well.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##TODO 还没搞清楚这个的作用
+##ONBUILD
+ONBUILD 指定的命令在构建镜像时并不执行，而是在它的子镜像中执行
+TODO&lt;/p&gt;
+
+&lt;p&gt;总结一下，基本常用的命令是: FROM, MAINTAINER, RUN, ENTRYPOINT, USER, PORT, ADD
+一些例子&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    docker-wordpress-nginx A Dockerfile that installs the latest wordpress, nginx and php-fpm.
+    rails-meets-docker
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>Docker 所有种类容器运行方法</title>
+            <link>http://kooksee.github.io/blog/Docker%20%E6%89%80%E6%9C%89%E7%A7%8D%E7%B1%BB%E5%AE%B9%E5%99%A8%E8%BF%90%E8%A1%8C%E6%96%B9%E6%B3%95/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/Docker%20%E6%89%80%E6%9C%89%E7%A7%8D%E7%B1%BB%E5%AE%B9%E5%99%A8%E8%BF%90%E8%A1%8C%E6%96%B9%E6%B3%95/</guid>
+            <description>
+
+&lt;h2 id=&#34;各种容器:f4861149b557706634d70e0e95ed362c&#34;&gt;各种容器&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;nginx 这是对外的总服务接口&lt;code&gt;docker run -it -d --name nnn --net=prod -v /root/nginx:/etc/nginx -v /root/brew:/root/brew -p 3000:80 nginx&lt;/code&gt; 其中-v 一个是挂载配置文件，另外一个是挂载Linux通用工具用来检查内部网卡服务。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;consul 是我们的服务发现工具&lt;code&gt;docker run -it -d --name consul -p 8500:8500 -v /root/consulData:/data/ -v /bin/consul:/bin/consul ubuntu:14.04 /bin/consul agent -bind=0.0.0.0 -dev -ui -client=0.0.0.0&lt;/code&gt; 外部访问接口为8k5 /data/ 为consul 存储的位置， 第二个是挂载命令进去， 整个服务以agent 的形式运行， 绑定客户端以及服务器端为0000为所有位置均可以访问。-client最重要不然只能本地访问了。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;通用APP运行方法：&lt;code&gt;docker run -it -d --name prod-X -v /app:/aXXXpp --net=prod ubuntu:14.04 /app/XXXX.exe -flags&lt;/code&gt; 名字很重要prod为服务组，X为服务名字，与微服务名字一致， /app的位置为将要运行的app的可执行文件 &amp;ndash;net 为加入网络的组（服务网络隔离） 最后直接运行即可&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;测试用Postgres &lt;code&gt;docker run -it --name test-postgres -e POSTGRES_PASSWORD=wothing -v /app:/app -d postgres:9.5.1
+&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&#34;李坤测试用容器-单container运行容器启动方法:f4861149b557706634d70e0e95ed362c&#34;&gt;李坤测试用容器（单Container运行容器启动方法）&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;docker run -it --name test-likun -d -p 446:22 -p 3002:3002 -v /app/likun:/app/likun -v /bin/consul:/bin/consul -e &#39;PUBKEY=ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC9YXv4T7Q0295K5fM/uCd1HxLRZztoqXUGBI/QD2wxeq8Wg/MHWC1jqDwIbU7zCvK6E2CM8NtlJSCA0D27XjRGVCJY7bYHlPL1Ah+qUwp4+6RnrDhQQaJPREUSzMhYQJRu8Fh8wxwvqkSPDQv9FZlNoCMDcisxkyTA+t9Yevr4BFHKARMFAqWmymJGtplUrHlyQIT7MzR4cWHD4xXW71sw2E6zQYO7vUQ91Qhpz8DG3VH085sQ6v4Xr3noS+sSRDX537EAdyME0LYrPb5BgK58lYBgDtJvcCD0uRFSVkJg8raNLgqt1aEmgqkKjI8Co/t3tww3utJ3wm2GCrQxl8dD likun@wothing.com&#39; index.tenxcloud.com/philo/dmonit:1.1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;如果容器缺少类库的情况-注意我是如何把类库挂载进入docker-容器的:f4861149b557706634d70e0e95ed362c&#34;&gt;如果容器缺少类库的情况 注意我是如何把类库挂载进入docker 容器的。&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;docker run -it --name kkk -d -p 445:22 -v /usr/lib/x86_64-linux-gnu/libapparmor.so.1:/usr/lib/x86_64-linux-gnu/libapparmor.so.1 -v /lib/x86_64-linux-gnu/libsystemd-journal.so.0.10.2:/lib/x86_64-linux-gnu/libsystemd-journal.so.0 -v /usr/bin/docker:/usr/local/bin/docker -v /var/run/docker.sock:/var/run/docker.sock -e &#39;PUBKEY=ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDcTvSn5METOJUKXRr+Sa92eL2PRZlHb5tdKMublwgvHWaYNxJyXrxCARmBCy8VAo6rb/OeTsyuMWjZ7fVpxKc32ZkcBoIRL7YNkAonO8nHMSLvWUSKkwo7wfWubJhBQtDjvJ40WIcECrFkssFxbcl9YuUeZjdclmcylBkfwzdHJl7c3NtOjtCosN1RUDQZZJEJzKpSNcYtX/D1fPY9MovDWAeQ+xcLb6Gy5rnCTfyGgZDowyDpFNNe+j0a9G1zjlEww3GvOD/UUIf7hDaji+HjO8/sLfHjfAWWULStoEl/aUoofs93QVQFxCPOeYnZR/QL8MkfXQmwme7Nv7xBeqrt Li-jianying@lijianyings-MacBook-Pro.local&#39; index.tenxcloud.com/philo/dmonit:1.1
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>Docker 网络配置</title>
+            <link>http://kooksee.github.io/blog/Docker%20%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/Docker%20%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/</guid>
+            <description>
+
+&lt;p&gt;阅读目录&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;摘要
+Docker选项快速指南
+配置DNS
+容器间通信
+为主机绑定容器端口
+定制 docker0
+建立你自己的桥接网络
+Docker 如何使容器连接到网络
+工具和实例
+建立点对点连接
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;摘要&lt;/p&gt;
+
+&lt;p&gt;当docker启动时，它会在宿主机器上创建一个名为docker0的虚拟网络接口。它会从RFC 1918定义的私有地址中随机选择一个主机不用的地址和子网掩码，并将它分配给docker0。例如当我启动docker几分钟后它选择了172.17.42.1/16－一个16位的子网掩码为主机和它的容器提供了65,534个ip地址。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;注意: 本文讨论了Docker的高级网络配置和选项。通常你不会用到这些。如果你想查看一个较为简单的Docker网络介绍和容器概念介绍来着手，请参见Docker用户指南.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;但docker0并不是正常的网络接口。它只是一个在绑定到这上面的其他网卡间自动转发数据包的虚拟以太网桥。它可以使容器与主机相互通信。每次 Docker创建一个容器，它就会创建一对对等接口(peer interface)，类似于一个管子的两端－在这边可以收到另一边发送的数据包。Docker会将对等接口中的一个做为eth0接口连接到容器上，并使 用类似于vethAQI2QT这样的惟一名称来持有另一个，该名称取决于主机的命名空间。通过将所有veth*接口绑定到docker0桥接网卡 上，Docker在主机和所有Docker容器间创建一个共享的虚拟子网。&lt;/p&gt;
+
+&lt;p&gt;本文其他部分将会讲解使用Docker选项的所有方式，并且－在高级模式下－使用纯linux网线配置命令来&lt;/p&gt;
+
+&lt;p&gt;调整，补充，或完全替代Docker的默认网络配置。
+回到顶部
+Docker选项快速指南&lt;/p&gt;
+
+&lt;p&gt;这里有一份关于Docker网络配置的命令行选项列表，省去您查找相关资料的麻烦。
+一些网络配置的命令行选项只能在服务器启动时提供给Docker服务器。并且一旦启动起来就无法改变。&lt;/p&gt;
+
+&lt;p&gt;一些网络配置命令选项只能在启动时提供给Docker服务器，并且在运行中不能改变:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;-b BRIDGE或--bridge=BRIDGE— see    建立自己的网桥
+
+--bip=CIDR— see    定制docker0
+
+-H SOCKET...或--host=SOCKET...—   它看起来像是在设置容器的网络，但实际却恰恰相反：它告诉Docker服务器要接收命令的通道，例如“run container&amp;quot;和&amp;quot;stop container&amp;quot;。
+
+--icc=true|false— see    容器间通信
+
+--ip=IP_ADDRESS— see    绑定容器端口
+
+--ip-forward=true|false— see    容器间通信
+
+--iptables=true|false— see   容器间通信
+
+--mtu=BYTES— see    定制docker0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;有两个网络配置选项可以在启动时或调用docker run时设置。当在启动时设置它会成为docker run的默认值:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;--dns=IP_ADDRESS...— see    配置DNS
+
+--dns-search=DOMAIN...— see    配置DNS
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;最后，一些网络配置选项只能在调用docker run时指出，因为它们要为每个容器做特定的配置:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;-h HOSTNAME或--hostname=HOSTNAME— see    配置DNS 和  Docker与容器连接原理
+
+--link=CONTAINER_NAME:ALIAS— see   配置DNS and    容器间通信
+
+--net=bridge|none|container:NAME_or_ID|host— see   Docker与容器连接原理
+
+-p SPECor--publish=SPEC— see    绑定容器端口
+
+-P或--publish-all=true|false— see    绑定容器端口
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;接下来的部分会对以上话题从易到难做出逐一解答。
+回到顶部
+配置DNS&lt;/p&gt;
+
+&lt;p&gt;怎样为Docker提供的每一个容器进行主机名和DNS配置，而不必建立自定义镜像并将主机名写到里面？它的诀窍是覆盖三个至关重要的在/etc下的容器内的虚拟文件，那几个文件可以写入新的信息。你可以在容器内部运行mount看到这个：&lt;/p&gt;
+
+&lt;p&gt;$$ mount&amp;hellip;/dev/disk/by-uuid/1fec&amp;hellip;ebdf on /etc/hostname type ext4 &amp;hellip;/dev/disk/by-uuid/1fec&amp;hellip;ebdf on /etc/hosts type ext4 &amp;hellip;tmpfs on /etc/resolv.conf type tmpfs &amp;hellip;&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;这样的配置允许Docker去做聪明的事情，类似于当主机接收到新的DHCP配置之后，保持resolv.conf的数据到所有的容器中。 Docker怎样维护在容器内的这些文件从Docker的一个版本到下一个版本的具体细节，你应该抛开这些单独的文件本身并且使用下面的Docker选项 代替。&lt;/p&gt;
+
+&lt;p&gt;有四种不同的选项会影响容器守护进程的服务名称。&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;-h HOSTNAME 或者 &amp;ndash;hostname=HOSTNAME  &amp;ndash;设置容器的主机名，仅本机可见。这种方式是写到/etc/hostname ，以及/etc/hosts 文件中，作为容器主机IP的别名，并且将显示在容器的bash中。不过这种方式设置的主机名将不容易被容器之外可见。这将不会出现在 docker ps 或者 其他的容器的/etc/hosts 文件中。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&amp;ndash;link=CONTAINER_NAME:ALIAS  &amp;ndash;使用这个选项去run一个容器将在此容器的/etc/hosts文件中增加一个主机名ALIAS，这个主机名是名为CONTAINER_NAME 的容器的IP地址的别名。这使得新容器的内部进程可以访问主机名为ALIAS的容器而不用知道它的IP。&amp;ndash;link= 关于这个选项的详细讨论请看：    Communication between containers.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&amp;ndash;dns=IP_ADDRESS &amp;ndash;设置DNS服务器的IP地址，写入到容器的/etc/resolv.conf文件中。当容器中的进程尝试访问不在/etc/hosts文件中的主机A 时，容器将以53端口连接到IP_ADDRESS这个DNS服务器去搜寻主机A的IP地址。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&amp;ndash;dns-search=DOMAIN &amp;ndash;设置DNS服务器的搜索域，以防容器尝试访问不完整的主机名时从中检索相应的IP。这是写入到容器的 /etc/resolv.conf文件中的。当容器尝试访问主机 host，而DNS搜索域被设置为 example.com ,那么DNS将不仅去查寻host主机的IP，还去查询host.example.com的 IP。&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;在docker中，如果启动容器时缺少以上最后两种选项设置时，将使得容器的/etc/resolv.conf文件看起来和宿主主机的/etc/resolv.conf文件一致。这些选项将修改默认的设置。
+回到顶部
+容器间通信&lt;/p&gt;
+
+&lt;p&gt;在操作系统层面上，决定两个容器间的通信能否得到控制，有以下三个因素。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;网络拓扑逻辑是否连接上了容器的网络接口。默认情况下Docker将把所有容器绑定到一个 singledocker0bridge,并为两个容器间的包传输提供路径。参见本文档后续部分---其他可能的拓扑逻辑
+
+主机是否要发送IP包？这由ip_forward系统参数控制。如果这个参数设为1，那么数据包只能在容器间传输。通常情况下，让 Docker服务器使用它的默认设置  --ip-forward=true ,   Docker在启动的时候会把ip_forwardsh.  要检查设置或手动设置参数，可以这样做：
+
+# Usually not necessary: turning on forwarding,# on the host where your Docker server is running$ cat /proc/sys/net/ipv4/ip_forward0$ sudo echo 1 &amp;gt; /proc/sys/net/ipv4/ip_forward
+$ cat /proc/sys/net/ipv4/ip_forward1
+
+iptables是否允许特殊连接?如果你把设置 --iptables=false,当守护进程启动时，Docker不会改变你的系统iptables规则。另外，如果你保留默认设置  --icc=true，Docker服务器或向FORWARD链添加一个带有全局ACCEPT策略的默认规则。如果不保留默认设置，系统会把策略设为 DROP.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;几乎所有人使用docker都希望ip_forward 是打开的，至少使容器间的通讯成为可能。但是否同意 &amp;ndash;icc=true 或者更改为 &amp;ndash;icc=false 使得iptables 可以保护容器以及宿主主机不被任意地端口扫描、避免被已经被渗透的容器所访问，这是一个策略问题。（在ubuntu，是编辑/etc/default /docker文件中的DOCKER_OPTS参数，然后重启docker服务）&lt;/p&gt;
+
+&lt;p&gt;如果你选择最安全的设置 &amp;ndash;icc=false ，那么当你想让它们彼此提供服务的时候如何让它们相互通讯？&lt;/p&gt;
+
+&lt;p&gt;答案是：使用前文提到的 &amp;ndash;link=CONTAINER_NAME:ALIAS 选项。如果docker守护进程正在以 &amp;ndash;icc=false 和 &amp;ndash;iptables=true 参数运行，当以选项 &amp;ndash;link= 执行 docker run 命令时，docker服务将插入一部分 iptables ACCEPT 规则使得新容器可以连接其他容器所暴露出来的端口（此端口指前文在 Dockerfile 中提到的EXPOSE这一行）。更多详细文档介绍请看：linking Docker containers。&lt;/p&gt;
+
+&lt;p&gt;注意: &amp;ndash;link 选项中的 CONTAINER_NAME 的值必须是 docker自动分配的容器名称，比如 stupefied_pare， 或者是在执行docker run 的时候用 &amp;ndash;name= 指定的容器名称.  这不能使一个docker无法识别的主机名。&lt;/p&gt;
+
+&lt;p&gt;你可以在你的Docker主机上运行iptables命令，来观察FORWARD链是否有默认的ACCEPT或DROP策略&lt;/p&gt;
+
+&lt;h1 id=&#34;when-icc-false-you-should-see-a-drop-rule-sudo-iptables-l-n-chain-forward-policy-accept-target-prot-opt-source-destination:b1927aed458c7b4d8f1e229af0616036&#34;&gt;When &amp;ndash;icc=false, you should see a DROP rule:$ sudo iptables -L -n&amp;hellip;Chain FORWARD (policy ACCEPT)target     prot opt source               destination&lt;/h1&gt;
+
+&lt;p&gt;DROP       all  &amp;ndash;  0.0.0.0/0            0.0.0.0/0&amp;hellip;# When a &amp;ndash;link= has been created under &amp;ndash;icc=false,# you should see port-specific ACCEPT rules overriding# the subsequent DROP policy for all other packets:$ sudo iptables -L -n&amp;hellip;Chain FORWARD (policy ACCEPT)target     prot opt source               destination
+ACCEPT     tcp  &amp;ndash;  172.17.0.2           172.17.0.3           tcp spt:80ACCEPT     tcp  &amp;ndash;  172.17.0.3           172.17.0.2           tcp dpt:80DROP       all  &amp;ndash;  0.0.0.0/0            0.0.0.0/0&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;注意: Docker的iptables规则完全显示了容器相互间的原始IP地址，所以一个容器到另一个容器的连接，需要显示地显示出第一个容器的原始IP地址。
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;回到顶部
+为主机绑定容器端口&lt;/p&gt;
+
+&lt;p&gt;默认情况下，Docker容器可以连接到外部区域，但外部区域不能连接到容器。在Docker启动时，由于它在主机上创建了一个iptables伪装规则，使得每一个输出连接看起来都是由主机IP地址建立起来的。&lt;/p&gt;
+
+&lt;h1 id=&#34;you-can-see-that-the-docker-server-creates-a-masquerade-rule-that-let-containers-connect-to-ip-addresses-in-the-outside-world-sudo-iptables-t-nat-l-n-chain-postrouting-policy-accept-target-prot-opt-source-destination:b1927aed458c7b4d8f1e229af0616036&#34;&gt;You can see that the Docker server creates a# masquerade rule that let containers connect# to IP addresses in the outside world:$ sudo iptables -t nat -L -n&amp;hellip;Chain POSTROUTING (policy ACCEPT)target     prot opt source               destination&lt;/h1&gt;
+
+&lt;p&gt;MASQUERADE  all  &amp;ndash;  172.17.0.0/16       !172.17.0.0/16&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;当调用docker run的时候，如果你想让容器接受输入连接，你需要提供特殊选项。这些选项的详细说明在 Docker User Guide.  有两种方法可以实现。&lt;/p&gt;
+
+&lt;p&gt;首先，你可以提供 -P 或者 &amp;ndash;publish-all=true|false 选项参数来执行 docker run 命令，这将会识别所有在dockerfile中暴露的端口，并且随机映射到 49000-49900 之间的主机端口。这看起来是一个很大的不便，当你要启动一个新的容器时你需要知道那个主机端口已经被映射。&lt;/p&gt;
+
+&lt;p&gt;更方便的操作是使用 -p SPEC 或者 &amp;ndash;publish=SPEC 选项，这两个选项让你明确的指定docker容器的端口映射到任意的主机端口中，不局限于49000-49900.&lt;/p&gt;
+
+&lt;p&gt;无论如何，你应该通过审查你的NAT表，去看看docker在你的网络占做了什么。&lt;/p&gt;
+
+&lt;h1 id=&#34;what-your-nat-rules-might-look-like-when-docker:b1927aed458c7b4d8f1e229af0616036&#34;&gt;What your NAT rules might look like when Docker&lt;/h1&gt;
+
+&lt;h1 id=&#34;is-finished-setting-up-a-p-forward:b1927aed458c7b4d8f1e229af0616036&#34;&gt;is finished setting up a -P forward:&lt;/h1&gt;
+
+&lt;p&gt;$ iptables -t nat -L -n
+&amp;hellip;Chain
+DOCKER (2 references)
+target     prot opt source               destination
+DNAT       tcp  &amp;ndash;  0.0.0.0/0            0.0.0.0/0            tcp dpt:49153 to:172.17.0.2:80&lt;/p&gt;
+
+&lt;h1 id=&#34;what-your-nat-rules-might-look-like-when-docker-1:b1927aed458c7b4d8f1e229af0616036&#34;&gt;What your NAT rules might look like when Docker&lt;/h1&gt;
+
+&lt;h1 id=&#34;is-finished-setting-up-a-p-80-80-forward:b1927aed458c7b4d8f1e229af0616036&#34;&gt;is finished setting up a -p 80:80 forward:&lt;/h1&gt;
+
+&lt;p&gt;Chain
+DOCKER (2 references)
+target     prot opt source               destination
+DNAT       tcp  &amp;ndash;  0.0.0.0/0            0.0.0.0/0            tcp dpt:80 to:172.17.0.2:80&lt;/p&gt;
+
+&lt;p&gt;可以看到，docker暴露了这些容器的端口到通配IP地址：0.0.0.0 ，这个通配IP地址可以匹配宿主主机上任意一个可以进入的端口。如果你希望更多的限制，并且只允许容器服务通过特殊的宿主主机的外部网络接口来相互联系， 那么你有两种选择。当你执行 docker run 命令时，你可以使用 -p IP:host_port:container_port 或者  -p IP::port 来明确地绑定外部接口。&lt;/p&gt;
+
+&lt;p&gt;或者如果你希望dokcer永远转发到一个特殊的IP地址上，你可以编辑你的docker系统设置文件（ubuntu系统的设置方法为：编辑 /etc/default/docker文件，改写DOCKER_OPTS参数），增加选项 &amp;ndash;ip=IP_ADDRESS 。修改完之后记得重启你的docker服务。&lt;/p&gt;
+
+&lt;p&gt;如果你希望更详细的指导，请参考： Docker User Guide .
+回到顶部
+定制 docker0&lt;/p&gt;
+
+&lt;p&gt;默认地，docker服务会在linux内核新建一个网络桥接docker0，使得物理主机和其他虚拟网络接口之间可以传递发送数据包，因此，这表现如一个独立的网络。&lt;/p&gt;
+
+&lt;p&gt;docker0有一个IP地址和子网掩码，使得物理主机可以从容器的桥接网络接收和发送数据包。并且给这个桥接网络一个MTU（最大传输单元）或者 说网络接口允许的最大包长度-例如1,500 bytes 或者从docker的宿主主机上的网络接口拷贝的数值。在服务启动的时候两者都是可配置的：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;--bip=CIDR— 为docker0桥接网络提供一个特殊的IP地址和一个子网掩码, 使用标准的 CIDR 记法例如192.168.1.5/24.
+
+--mtu=BYTES— 从写docker0的最大数据包长度。
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在ubuntu系统上，你可以增加以上的配置到 /etc/default/docker 文件中的DOCKER_OPTS参数中，然后重启docker服务。&lt;/p&gt;
+
+&lt;p&gt;当你有一个或多个正常运行的容器时，你可以通过在主机上运行brct1命令，观察interfaces列的输出，来确定Docker已经将这些容器正确地连接到docker0网桥。下面是一个连接了两个不同容器的主机：&lt;/p&gt;
+
+&lt;h1 id=&#34;display-bridge-info-sudo-brctl-show:b1927aed458c7b4d8f1e229af0616036&#34;&gt;Display bridge info$ sudo brctl show&lt;/h1&gt;
+
+&lt;p&gt;bridge name     bridge id               STP enabled     interfaces
+docker0         8000.3a1d7362b4ee       no              veth65f9
+                                                        vethdda6&lt;/p&gt;
+
+&lt;p&gt;如果你的Docker主机还没安装brct1命令，那么你可以在Ubuntu上运行sudo apt-get install bridge-utils来安装它。&lt;/p&gt;
+
+&lt;p&gt;最后，每次新建一个容器的时候都会用到docker0 桥接网络。每次在执行docker run命令新建一个容器的时候，docker从可利用的桥接网络中随机选择一个未被使用的IP地址，以及使用桥接网络的子网掩码，用来配置容器 eth0网络接口。docker宿主主机的IP地址被docker容器作为默认的网关。&lt;/p&gt;
+
+&lt;h1 id=&#34;the-network-as-seen-from-a-container-sudo-docker-run-i-t-rm-base-bin-bash:b1927aed458c7b4d8f1e229af0616036&#34;&gt;The network, as seen from a container$ sudo docker run -i -t &amp;ndash;rm base /bin/bash&lt;/h1&gt;
+
+&lt;p&gt;$$ ip addr show eth024: eth0: &lt;BROADCAST,UP,LOWER_UP&gt; mtu 1500 qdisc pfifo_fast state UP group default qlen 1000
+    link/ether 32:6f:e0:35:57:91 brd ff:ff:ff:ff:ff:ff
+    inet 172.17.0.&lt;sup&gt;3&lt;/sup&gt;&amp;frasl;&lt;sub&gt;16&lt;/sub&gt; scope global eth0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::306f:e0ff:fe35:&lt;sup&gt;5791&lt;/sup&gt;&amp;frasl;&lt;sub&gt;64&lt;/sub&gt; scope link
+       valid_lft forever preferred_lft forever&lt;/p&gt;
+
+&lt;p&gt;$$ ip routedefault via 172.17.42.1 dev eth0172.17.0.0/16 dev eth0  proto kernel  scope link  src 172.17.0.3$$ exit&lt;/p&gt;
+
+&lt;p&gt;记住docker的宿主主机无法转发docker容器的数据包到因特网上，除非它的ip_forward 系统设置为1，详情请看： Communication between containers 。
+回到顶部
+建立你自己的桥接网络&lt;/p&gt;
+
+&lt;p&gt;如果你希望建立完整的自己的桥接网络，你可以在启动docker之前用 -b BRIDGE 或者 &amp;ndash;bridge=BRIDGE选项参数高数docker使用你自己的桥接网络。如果你已经用docker0启动docker了，你需要停止docker服务然后移除docker0.&lt;/p&gt;
+
+&lt;h1 id=&#34;stopping-docker-and-removing-docker0-sudo-service-docker-stop:b1927aed458c7b4d8f1e229af0616036&#34;&gt;Stopping Docker and removing docker0$ sudo service docker stop&lt;/h1&gt;
+
+&lt;p&gt;$ sudo ip link set dev docker0 down
+$ sudo brctl delbr docker0&lt;/p&gt;
+
+&lt;p&gt;然后，在启动docker服务之前，新建你自己的桥接网络，写上你想要的配置。接下来我们新建一个简单的桥接网络，刚好用这些选项来定做docker0 ，这刚好足够说明这个技术。&lt;/p&gt;
+
+&lt;h1 id=&#34;create-our-own-bridge-sudo-brctl-addbr-bridge0:b1927aed458c7b4d8f1e229af0616036&#34;&gt;Create our own bridge$ sudo brctl addbr bridge0&lt;/h1&gt;
+
+&lt;p&gt;$ sudo ip addr add 192.168.5.&lt;sup&gt;1&lt;/sup&gt;&amp;frasl;&lt;sub&gt;24&lt;/sub&gt; dev bridge0
+$ sudo ip link set dev bridge0 up# Confirming that our bridge is up and running$ ip addr show bridge04: bridge0: &lt;BROADCAST,MULTICAST&gt; mtu 1500 qdisc noop state UP group default
+    link/ether 66:38:d0:0d:76:18 brd ff:ff:ff:ff:ff:ff
+    inet 192.168.5.&lt;sup&gt;1&lt;/sup&gt;&amp;frasl;&lt;sub&gt;24&lt;/sub&gt; scope global bridge0
+       valid_lft forever preferred_lft forever# Tell Docker about it and restart (on Ubuntu)$ echo &amp;lsquo;DOCKER_OPTS=&amp;ldquo;-b=bridge0&amp;rdquo;&amp;rsquo; &amp;gt;&amp;gt; /etc/default/docker
+$ sudo service docker start&lt;/p&gt;
+
+&lt;p&gt;运行结构应该是docker服务成功启动，已经准备好绑定容器到桥接网络上。当核实好桥接网络的配置之后，尝试着新建一个容器，你将看到容器的IP地址是在你的新的桥接网络范围内的，这是docker自动检测的。&lt;/p&gt;
+
+&lt;p&gt;正如前文所述，可以用 brctl show 命令查看，新增或者移除网络接口，可以在docker容器中执行 ip addr 和 ip route 命令查看IP地址是否是从网桥IP段分配的，以及docker的宿主主机的IP是否被作为默认网关。
+回到顶部
+Docker 如何使容器连接到网络&lt;/p&gt;
+
+&lt;p&gt;docker是正在发展中的，并会持续提升网络配置的逻辑。当前命令行是很难满足docker新建容器时所需要的网络配置。&lt;/p&gt;
+
+&lt;p&gt;让我们回顾一些基础知识。&lt;/p&gt;
+
+&lt;p&gt;通讯的时候使用网际协议（IP），一个机器需要访问至少一个网络接口用来发送和接收包，路由表定义了通过接口可达IP地址范围。网络接口不一定非是 物理设备。实际上，在每一个Linux机器（和每个Docker容器内部）的lo回环接口都是有效的而且完全是虚拟的——Linux内核简单地拷贝回环 （数据）包，直接从发送者的内存放入接收者的内存。&lt;/p&gt;
+
+&lt;p&gt;Docker使用特殊的虚拟接口让容器在主机间通讯——成对的虚拟接口被叫做“peers”，它被链接到主机内核的内部，因此（数据）包能在他们之间传输。他们简单创建，待会儿我们将会看到。&lt;/p&gt;
+
+&lt;p&gt;Docker配置容器的步骤是：&lt;/p&gt;
+
+&lt;p&gt;1.创建一对虚拟接口&lt;/p&gt;
+
+&lt;p&gt;2.在主Docker主机内部给它一个唯一的名称，比如veth65f9，绑定它到docker0或者Docker使用的任何网桥上&lt;/p&gt;
+
+&lt;p&gt;3.让其他的接口翻墙进入新的容器（已经提供了lo接口），在容器的独立和唯一网络接口命名空间内，重新命名它为更漂亮的名字eth0，名称不要和其他的物理接口冲突。&lt;/p&gt;
+
+&lt;p&gt;4.在网桥的网络地址访问内给容器的eth0一个新的IP地址，设置它的缺省路由为Docker主机在网桥上拥有的IP地址。&lt;/p&gt;
+
+&lt;p&gt;这些步骤结束后，容器将立即拥有一个eth0（虚拟）网卡，并会发现它自己可以和其他的容器以及互联网通讯。&lt;/p&gt;
+
+&lt;p&gt;你可以使用 &amp;ndash;net= 这个选项来执行 docker run 启动一个容器，这个选项有一下可选参数。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;--net=bridge— 默认选项，用网桥的方式来连接docker容器。
+
+--net=host— 高数docker跳过配置容器的独立网络栈。本质上来说，这个参数告诉docker不去打包容器的网络层。当然，docker 容器的进程仍然被限制在它自己独有的文件系统、进程列表以及其他资源中。一个快速命令 ip addr 将像你展示docker的网络，它是建立在docker 宿主主机上的，有完整的权限去访问宿主主机的网络接口。注意这不意味着docker容器可以去重新配置宿主主机的网络栈，重新配置是需要 --privaleged=true 这个选项参数的，但是这个选项参数会让docker容器打开大量的端口以及其他的系统的超级管理权限的进程。这也会允许容器去访问宿主主机的网络服务，比 如 D-bus。这会使docker容器里的进程有有权限去做一些意想不到的事，比如重启你的宿主主机。所以要谨慎使用这个选项参数。
+
+--net=container:NAME_or_ID— 告诉docker让这个新建的容器使用已有容器的网络配置。这个新建的容器将配置新的自己的文件系统和进程列表以及其他资源限制，但是将共享这个指定的容 器的网络IP地址以及端口号，使得这两个容器可以通过 loopback接口相互访问。
+
+--net=none— 告诉docker为新建的容器建立一个网络栈，但不对这个网络栈进行任何配置，在这个文档的最后将介绍如何让你去建立自定义的网络配置。
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;去了解以下这一步是非常必要的，如果你在建立容器的时候使用 &amp;ndash;net=none  这个选项参数。以下是一些命令去去配置自定义网络，就好像你让docker完全去自己配置一样。&lt;/p&gt;
+
+&lt;h1 id=&#34;at-one-shell-start-a-container-and-leave-its-shell-idle-and-running-sudo-docker-run-i-t-rm-net-none-base-bin-bash:b1927aed458c7b4d8f1e229af0616036&#34;&gt;At one shell, start a container and# leave its shell idle and running$ sudo docker run -i -t &amp;ndash;rm &amp;ndash;net=none base /bin/bash&lt;/h1&gt;
+
+&lt;p&gt;root@63f36fc01b5f:/#&lt;/p&gt;
+
+&lt;h1 id=&#34;at-another-shell-learn-the-container-process-id:b1927aed458c7b4d8f1e229af0616036&#34;&gt;At another shell, learn the container process ID&lt;/h1&gt;
+
+&lt;h1 id=&#34;and-create-its-namespace-entry-in-var-run-netns-for-the-ip-netns-command-we-will-be-using-below-sudo-docker-inspect-f-state-pid-63f36fc01b5f2778-pid-2778-sudo-mkdir-p-var-run-netns:b1927aed458c7b4d8f1e229af0616036&#34;&gt;and create its namespace entry in /var/run/netns/# for the &amp;ldquo;ip netns&amp;rdquo; command we will be using below$ sudo docker inspect -f &amp;lsquo;{{.State.Pid}}&amp;rsquo; 63f36fc01b5f2778$ pid=2778$ sudo mkdir -p /var/run/netns&lt;/h1&gt;
+
+&lt;p&gt;$ sudo ln -s /proc/$pid/ns/net /var/run/netns/$pid# Check the bridge&amp;rsquo;s IP address and netmask$ ip addr show docker021: docker0: &amp;hellip;inet 172.17.42.&lt;sup&gt;1&lt;/sup&gt;&amp;frasl;&lt;sub&gt;16&lt;/sub&gt; scope global docker0&amp;hellip;# Create a pair of &amp;ldquo;peer&amp;rdquo; interfaces A and B,# bind the A end to the bridge, and bring it up$ sudo ip link add A type veth peer name B
+$ sudo brctl addif docker0 A
+$ sudo ip link set A up# Place B inside the container&amp;rsquo;s network namespace,# rename to eth0, and activate it with a free IP$ sudo ip link set B netns $pid
+$ sudo ip netns exec $pid ip link set dev B name eth0
+$ sudo ip netns exec $pid ip link set eth0 up
+$ sudo ip netns exec $pid ip addr add 172.17.42.&lt;sup&gt;99&lt;/sup&gt;&amp;frasl;&lt;sub&gt;16&lt;/sub&gt; dev eth0
+$ sudo ip netns exec $pid ip route add default via 172.17.42.1&lt;/p&gt;
+
+&lt;p&gt;到这一步你的容器应该可以正常运行网络操作了。&lt;/p&gt;
+
+&lt;p&gt;当你最后退出shell以及清理掉这个容器的时候，这个容器的虚拟网络 eth0 将在网络接口A 被清除后被消除，也会自动在网桥 docker0 上销毁。所以不用你执行其他的命令，所有的东西将被清理。当然，是几乎所有的东西：&lt;/p&gt;
+
+&lt;h1 id=&#34;clean-up-dangling-symlinks-in-var-run-netnsfind-l-var-run-netns-type-l-delete:b1927aed458c7b4d8f1e229af0616036&#34;&gt;Clean up dangling symlinks in /var/run/netnsfind -L /var/run/netns -type l -delete&lt;/h1&gt;
+
+&lt;p&gt;还要注意上面的脚本使用了现代的ip命令行替代旧的弃用的封装，类似ipconfig和route，这些老的命令行还是会一直呆在我们的容器内部工作。如果你很忙碌的话，ip addr命令行也可以只键入ip a。&lt;/p&gt;
+
+&lt;p&gt;总之，注意这个ip netns exec重要的命令行，它让我们以root用户进入内部并配置一个网络命名空间。如果在容器内部运行，类似的命令行可能不会工作，因为安全容器化的部分是 Docker剥离容器的处理过程，这个过程要正确地配置自己的网络。使用ip netns exec可以让我们完成配置，还避免了运行容器自身&amp;ndash;privileged=true的危险步骤。
+回到顶部
+工具和实例&lt;/p&gt;
+
+&lt;p&gt;在把自定义网络拓扑逻辑分类成下面几个部分之前，你应该关注一些外部工具盒关于配置的实例。下面就有两个例子：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;J&amp;amp;eacute;r&amp;amp;ocirc;me Petazzoni 创建了一个pipework的shell脚本，帮助你在复杂场景下建立容器间连接:    https://github.com/jpetazzo/pipework
+
+Brandon Rhodes 为下一个版本的Python网络编程基金会创建了整个的网络拓扑逻辑，包括路由器NAT&#39;d防火墙，和提供HTTP,SMTP,POP,IMAP,Telnet,SSH,FTP的服务器:    https://github.com/brandon-rhodes/fopnp/tree/m/playground
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;两个工具都使用网络命令并和之前见到的版本很相似，在下面章节会看到。
+回到顶部
+建立点对点连接&lt;/p&gt;
+
+&lt;p&gt;缺省情况下, Docker通过docker0将所有的容器添加到虚拟子网中。你能够按照Building your own bridge中的方法创建你自己的桥让容器连接到不同的虚拟子网。启动容器时使用命令docker run &amp;ndash;net=none，然后使用shell命令添加容器到你自己的桥，方法见How Docker networks a container。&lt;/p&gt;
+
+&lt;p&gt;但是有时你想让两个特别的容器能够直接通讯，不用绑定到主机的以太网桥上。&lt;/p&gt;
+
+&lt;p&gt;解决方案是简单的。创建一对对等接口，将他们放到容器中，并将其配置为经典的点对点链接。两个容器就能够直接通讯了（当然要告诉每个容器对方的IP地址）。您可能会调整在上一节的指示去这样的事情：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# Start up two containers in two terminal windows$ sudo docker run -i -t --rm --net=none base /bin/bash
+root@1f1f4c1f931a:/#
+
+$ sudo docker run -i -t --rm --net=none base /bin/bash
+root@12e343489d2f:/#
+
+# Learn the container process IDs
+# and create their namespace entries
+
+$ sudo docker inspect -f &#39;{{.State.Pid}}&#39; 1f1f4c1f931a
+2989
+$ sudo docker inspect -f &#39;{{.State.Pid}}&#39; 12e343489d2f
+3004
+$ sudo mkdir -p /var/run/netns
+$ sudo ln -s /proc/2989/ns/net /var/run/netns/2989$ sudo ln -s /proc/3004/ns/net /var/run/netns/3004# Create the &amp;quot;peer&amp;quot; interfaces and hand them out$ sudo ip link add A type veth peer name B
+
+$ sudo ip link set A netns 2989$ sudo ip netns exec 2989 ip addr add 10.1.1.1/32 dev A
+$ sudo ip netns exec 2989 ip link set A up
+$ sudo ip netns exec 2989 ip route add 10.1.1.2/32 dev A
+
+$ sudo ip link set B netns 3004$ sudo ip netns exec 3004 ip addr add 10.1.1.2/32 dev B
+$ sudo ip netns exec 3004 ip link set B up
+$ sudo ip netns exec 3004 ip route add 10.1.1.1/32 dev B
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;两个容器应该可以相互ping通以确定连接成功。点对点链接不依赖于子网或子网掩码，但是ip route需要确认一些其他的单一IP地址是连接到了特定的网络接口。&lt;/p&gt;
+
+&lt;p&gt;请注意点对点链接可以安全的和其他类型的网络连接混合使用。如果你想用点对点链接替换容器的正常网络连接，启动的时候，不需要带参数&amp;ndash;net=none。&lt;/p&gt;
+
+&lt;p&gt;在Docker主机和容器之间创建点对点链接是这个模板最终的排列方式，它允许主机和有单一IP地址的容器通讯。除非你有很特别的网络需求，让你尝试使用这样的解决方案，正如我们前面探讨的，使用&amp;ndash;icc=false锁定跨容器的通讯是更好的方案。&lt;/p&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>Docker持续交付说明</title>
+            <link>http://kooksee.github.io/blog/Docker%E6%8C%81%E7%BB%AD%E4%BA%A4%E4%BB%98%E8%AF%B4%E6%98%8E/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/Docker%E6%8C%81%E7%BB%AD%E4%BA%A4%E4%BB%98%E8%AF%B4%E6%98%8E/</guid>
+            <description>
+
+&lt;h2 id=&#34;ci:47696ca6b8b5a6acc0634b15cdb2236a&#34;&gt;CI&lt;/h2&gt;
+
+&lt;p&gt;目前ci是通过golang环境做了一个builder Container
+方法：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker clone https://github.com/wothing/17mei.git
+cd 17mei
+make
+cd gateway/test
+go test ......  -dh prod-postgres.prod -du postgres -dpwd wothing -dn wothing -api http://prod-gw.prod:3001/v1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;注意最后test命令： 需要指定数据库位置以及gateway的位置&lt;/p&gt;
+
+&lt;h2 id=&#34;数据库重置:47696ca6b8b5a6acc0634b15cdb2236a&#34;&gt;数据库重置：&lt;/h2&gt;
+
+&lt;h3 id=&#34;pgsql-免密码配置:47696ca6b8b5a6acc0634b15cdb2236a&#34;&gt;pgsql 免密码配置&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;echo &amp;quot;prod-postgres.prod:5432:wothing:postgres:wothing&amp;quot;  &amp;gt; ~/.pgpass
+chmod 0600 ~/.pgpass
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;重置脚本执行:47696ca6b8b5a6acc0634b15cdb2236a&#34;&gt;重置脚本执行：&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;cd /go/src/github.com/wothing/17mei/sql
+psql -h prod-postgres.prod -U postgres  -d wothing -f user.sql
+psql -h prod-postgres.prod -U postgres  -d wothing -f user_example.sql
+psql -h prod-postgres.prod -U postgres  -d wothing -f activity.sql
+psql -h prod-postgres.prod -U postgres  -d wothing -f activity_example.sql
+psql -h prod-postgres.prod -U postgres  -d wothing -f diary.sql
+psql -h prod-postgres.prod -U postgres  -d wothing -f diary_samples.sql
+psql -h prod-postgres.prod -U postgres  -d wothing -f other.sql
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;generate-mei-id:47696ca6b8b5a6acc0634b15cdb2236a&#34;&gt;Generate Mei id&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;/go/src/github.com/wothing/17mei/user/meigen
+go run meigen.go  -dh prod-postgres.prod -du postgres -dpwd wothing -dn wothing
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;看到用了多少毫秒输出之后马上停下来大概就能有一千个了。&lt;/p&gt;
+
+&lt;h2 id=&#34;更新服务的容器运行:47696ca6b8b5a6acc0634b15cdb2236a&#34;&gt;更新服务的容器运行&lt;/h2&gt;
+
+&lt;p&gt;&lt;code&gt;docker restart prod-diary prod-verification prod-activity prod-push prod-other prod-mediastore prod-gw prod-user&lt;/code&gt;&lt;/p&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>Github 团队协作</title>
+            <link>http://kooksee.github.io/blog/Github%20%E5%9B%A2%E9%98%9F%E5%8D%8F%E4%BD%9C/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/Github%20%E5%9B%A2%E9%98%9F%E5%8D%8F%E4%BD%9C/</guid>
+            <description>
+
+&lt;h1 id=&#34;github-团队协作:4a8ac693e47e69c7b976131245779879&#34;&gt;Github 团队协作&lt;/h1&gt;
+
+&lt;p&gt;Git 再次将 Unix 设计哲学发挥到极致，尤其是 KISS 原则（Keep It Simple and Stupid）。&lt;/p&gt;
+
+&lt;p&gt;使用它的人（不仅是编程人员）对它的认识，可能是这样：与其说 Git 是一个分布式版本控制工具，不如说 Git 是一个分布式文件系统。正式这样看似简单粗暴的设计让 Git 从众多版本控制工具中脱颖而出。&lt;/p&gt;
+
+&lt;p&gt;Git 相比其他版本控制工具有众多优势。如分布式，任何一个仓库都是一各完整的镜像。又如创建删除分支，Git 以很低的代价让使用它的人可以随意地快速创建删除分支。&lt;/p&gt;
+
+&lt;p&gt;本文就 Git 的分布式和分支特性，结合 Github 强大的源码分享贡献平台，探讨一种简单有效的 Github 团队协作流程，实现多环境发布、Pull Request 的流程化。&lt;/p&gt;
+
+&lt;p&gt;这个流程有如下两个原则：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;任何程序都可以追踪到对应的源码；&lt;/li&gt;
+&lt;li&gt;所有代码都必须经过严格代码走查。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&#34;每个环境对应一个源码分支:4a8ac693e47e69c7b976131245779879&#34;&gt;每个环境对应一个源码分支&lt;/h2&gt;
+
+&lt;p&gt;通常 Git 仓库会有一个 master 分支，这个分支的代码应该 &lt;strong&gt;一直&lt;/strong&gt; 是最新稳定版的， &lt;strong&gt;永远&lt;/strong&gt; 对着应生产环境发布的版本，所有生产环境应用都要从这个分支上发布，所以我们不应该在这个分支上做开发。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Source branch  ===&amp;gt;   Deploy environment
+master                Production
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;我们可以创建一个 develop 分支，所有开发工作都在这个分支上进行。本地开发好，单元测试通过后，发布到开发环境和其他系统（或服务，或模块，或应用)联调测试。&lt;/p&gt;
+
+&lt;p&gt;（至于为什么不简写成 dev，答案是约定和对齐。大多数项目 develop 分支名都不缩写成 dev，所以我们也不应该缩写。对齐就是说 dev/master，一个缩写一个不缩写，很别扭，develop/master 看起来舒服点儿。）&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Source branch  ===&amp;gt;   Deploy environment
+develop               Development
+master                Production
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;开发环境只是开发人员自己的环境，开发人员可以自由发布，所以经常会有各种变化，无法稳定，这对测试人员来说，是个灾难，所以说必须搭建属于测试人员自己的测试环境。这个环境相对稳定，只会定期发布，也可以做一些压力测试等。&lt;/p&gt;
+
+&lt;p&gt;既然有了测试环境，那么测试环境对应的源码就必须被标记，我们可以建一个 testing 分支（名字为什么这么长，不再解释了）。同 master 一样，testing 分支最新代码永远对应着测试环境。&lt;/p&gt;
+
+&lt;p&gt;有了 testing 分支，那么我们开发环境联调通过的代码就可以从 develop 分支定期合并到 testing 分支了，合并完成后，从 testing 分支上编译并打包，发布到测试环境，测试，联调。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Source branch  ===&amp;gt;   Deploy environment
+develop               Development
+testing               Testing
+master                Production
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;注意，所有测试环境发布工作都要在 testing 这个分支上进行，坚决不能从 develop 上发布，这个可以在发布脚本上做严格控制。同样，生产环境发布工作也不能从 develop/testing 分支上进行。&lt;/p&gt;
+
+&lt;p&gt;测试环境积累一定的功能点，测试和联调通过后，就可以把 testing 分支的代码合并到 master 分支。这时 master 分支上的代码就是最新稳定版的，可以发布到生产环境了。但是发布前，必须更新 changelog，然后打 tag，以说明本次发布更新了哪些功能。打完 tag，才能发布，发布时只能从 master 分支编译大包，发布到生产环境。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;develop ...................................
+             \   \   \       \        \
+testing ------o---o---o-------o--------o
+                       \       \
+master  ----------------o-------o
+                        |       |
+Tags                  1.0.1   1.0.2
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这样说来，我们至少会有 3 个分支：develop/testing/master，一般项目基本够用，如果需要 UAT（Stage）环境，可以再添加其他分支。&lt;/p&gt;
+
+&lt;p&gt;这里只考虑到所有开发人员都工作在 develop 分支上这种情况，如果有需要，可以从 develop 分支上创建特性分支，开发完成后，合并到 develop 分支。&lt;/p&gt;
+
+&lt;h2 id=&#34;所有代码都必须经过代码走查:4a8ac693e47e69c7b976131245779879&#34;&gt;所有代码都必须经过代码走查&lt;/h2&gt;
+
+&lt;p&gt;Github 提供了 Fork 和 Pull request 功能，可以方便地分享代码，也可以贡献代码。&lt;/p&gt;
+
+&lt;p&gt;利用这些功能，团队可以很方便地完成代码审查，而不会影响效率和协作，而且 Github 的文件比较和批注非常强大，大大提高了代码审查和沟通效率。&lt;/p&gt;
+
+&lt;p&gt;具体流程如下：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;在 Github 组织（如 gotips）下创建项目仓库（如 test-git），此时项目地应该是  &lt;code&gt;https://github.com/gotips/test-git&lt;/code&gt;；&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;参与该项目的组织成员把这个项目 fork 到自己的账号下，此时项目地址是 &lt;code&gt;https://github.com/omigo/test-git&lt;/code&gt;（如果仓库是私有的，fork 后，在自己的账号下依然是私有的，不会泄露）；&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;然后在本机创建组织目录（如 go 语言需要创建 $GOPATH/src/github.com/gotips）；&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;把自己 Github 账号下的项目 clone 到刚创建的组织目录下 &lt;code&gt;git clone git@github.com:omigo/test-git.git&lt;/code&gt;（为什么不放到自己的目录下？代码是组织的，包路径也是组织的，不是自己的）；&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;此时本地项目只有一个远程仓库快捷方式 &lt;code&gt;origin =&amp;gt; git@github.com:omigo/test-git.git&lt;/code&gt;，再添加一个组织快捷方式，执行 &lt;code&gt;git remote add gotips git@github.com:gotips/test-git.git&lt;/code&gt;；&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;前面所有工作都是准备环境，现在可以编码了。写完一个独立逻辑，单元测试通过后，提交一次到本地仓库。同时，不定期地推送到自己的 Github 仓库；&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;直到独立的功能点完成，所有代码都在自己的 Github 仓库后，就可以提交 Pull request，请其他伙伴帮忙审查代码了。到自己的 Github 账号下，点击【New pull request】，选择分支，点击【Create pull request】，填写清晰明确的注释，再次点击【Create pull request】。提交 Pull Request 时可以选择 Labels、Assignee 等给定标记、指定由谁来做 Code Review；&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;当被人邀请做 Code Review 时，我们会得到一个 Pull Request 链接，如 &lt;code&gt;https://github.com/gotips/test-git/pull/1&lt;/code&gt;。进入后，可以看到提交人的注释和每次的提交日志，【Files changed】页面详细列出了所有的文件变更，并和修改前对比，发现问题，可以点击代码，在该行下写注释，提交人会收到通知，修改，然后再提交。如果审查没问题，就可以点击【Merge pull request】，完成合并。这样代码才到算回到组织仓库中，开发才算完成，可以测试了。&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;pre&gt;&lt;code&gt;Github workflow:
+
+                +------------+             +------------+                     +--------------+
+                |   Local    |  git push   |   Github   |    pull request     |    Github    |
+Developer       | Repository |  --------&amp;gt;  | Repository |     ---------&amp;gt;      |  Repository  |
+  1..n          |   1..n     |             |    1..n    |                     | Organization |
+                +------------+             +------------+                     +--------------+
+                      ^                                                              |
+                      |                       git pull                               |
+                      +--------------------------------------------------------------+
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;注意：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;只能 Push 到 Github 个人仓库，不能 Push 到组织仓库，可以从组织仓库 Pull 代码&lt;code&gt;git pull gotips develop&lt;/code&gt;（如果觉得不安全，可以使用 &lt;code&gt;git fetch&lt;/code&gt;）；&lt;/li&gt;
+&lt;li&gt;提交 Pull Request 之前，需要先从 &lt;strong&gt;组织&lt;/strong&gt; 仓库上拉取代码，保证代码时最新的，避免 Pull Request 代码合并时发生冲突，造成合并困难；&lt;/li&gt;
+&lt;li&gt;如果发生了冲突，最好是让提交人先更新代码，自己解决冲突，然后提交，再次 Code Review，轻松合并；&lt;/li&gt;
+&lt;li&gt;一个 Pull Request 修改的代码，最好不要超过 200 行，差不多是一天的工作量，太多，Code Review 看不过来，大多情况下草草了事，质量无法保证；&lt;/li&gt;
+&lt;li&gt;代码要符合规范，统一格式，避免琐碎问题影响 Code Review 心情；&lt;/li&gt;
+&lt;li&gt;Code Review 是一个学习的机会，但更多是监督与合作，提交人和合并人共同对代码负责，代码有问题，两人共同承担；&lt;/li&gt;
+&lt;li&gt;最好不要强制谁走查谁的代码，应该由提交人邀请，这样才能合作更友好。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&#34;分支管理与-pull-request-的结合:4a8ac693e47e69c7b976131245779879&#34;&gt;分支管理与 Pull Request 的结合&lt;/h2&gt;
+
+&lt;p&gt;上面分别探讨了分支管理和 Pull Request，下面再说说，如何把两者结合起来。&lt;/p&gt;
+
+&lt;p&gt;我们的原则依然不变：只能在 develop 分支做开发（可能也有其他特性分支），每次提交必须经过严格审查，每个分支对应一个发布环境。&lt;/p&gt;
+
+&lt;p&gt;为了方便，一般我们团队协作中，会把 develop 分支设置为默认分支。&lt;/p&gt;
+
+&lt;p&gt;在组织下创建仓库后，建好 3 个分支 master/testing/develop，然后到 Settings -&amp;gt; Branches 下面 选择 develop 为默认分支。这样所有人 fork 的项目也会默认 develop 分支，clone 也是 develop 分支，避免分支切换和忘记切换分支带来的麻烦。开发都在 develop 分支，Pull Request 也在 develop 分支，merge 也是。&lt;/p&gt;
+
+&lt;p&gt;然后就是测试环境发布了，测试环境对应 testing 分支，应该指定一人专门管理测试环境发布。所有开发人员先从组织仓库 develop 分支拉取最新（需要发布到测试环境的版本），和本地代码 develop 分支合并后，再把 develop 分支合并到 testing 分支，然后提交代码到 Github 个人仓库 testing 分支下，提交 pull request 给测试发布管理者。测试发布管理者合并后，从组织仓库更新 testing 代码，并从 testing 分支发布到测试环境。&lt;/p&gt;
+
+&lt;p&gt;如果分支不多，并且团队协作良好，合并分支的工作也可以由测试发布管理者一个人完成，以简化流程。&lt;/p&gt;
+
+&lt;p&gt;同样指定一位生产发布管理者，测试通过后，测试发布管理者就可以把 testing 分支合并到 master 分支，提交到 Github 个人仓库 master 分支，提交 Pull Request 给生产发布管理者。生产发布管理者合并代码，打 tag，完成生产环境发布。&lt;/p&gt;
+
+&lt;p&gt;ChangeLog 问题，什么时候更新 ChangeLog 呢？&lt;/p&gt;
+
+&lt;p&gt;我们如果开发时就已经知道版本号，那么开发时就可以更新，如果发布时才知道版本号，那么发布管理者可以通过 git log 了解本次发布有哪些更新，编写 ChangeLog。当然不排除有更好的 ChangeLog 更新办法，或者有更好的 Git 协作流程。&lt;/p&gt;
+
+&lt;p&gt;注意：无论是分支管理，还是 Pull Request，还是编写 ChangeLog，都需要 git log 清晰明确，粒度要细，至少不能丢掉功能点，不能把两个功能点一次 commit，log   上只写一个功能点，更加不能出现无效 log，比如 优化、修复 bug、更新了一些文档、调整算法等等。&lt;/p&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>HTTP请求错误大全</title>
+            <link>http://kooksee.github.io/blog/HTTP%E8%AF%B7%E6%B1%82%E9%94%99%E8%AF%AF%E5%A4%A7%E5%85%A8/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/HTTP%E8%AF%B7%E6%B1%82%E9%94%99%E8%AF%AF%E5%A4%A7%E5%85%A8/</guid>
+            <description>&lt;p&gt;1xx - 信息提示
+这些状态代码表示临时的响应。客户端在收到常规响应之前，应准备接收一个或多个 1xx 响应。
+100 - 继续
+101 - 切换协议&lt;/p&gt;
+
+&lt;p&gt;2xx - 成功
+这类状态代码表明服务器成功地接受了客户端请求。
+200 - 确定。客户端请求已成功
+201 - 已创建
+202 - 已接受
+203 - 非权威性信息
+204 - 无内容
+205 - 重置内容
+206 - 部分内容&lt;/p&gt;
+
+&lt;p&gt;3xx - 重定向
+客户端浏览器必须采取更多操作来实现请求。例如，浏览器可能不得不请求服务器上的不同的页面，或通过代理服务器重复该请求。
+302 - 对象已移动。
+304 - 未修改。
+307 - 临时重定向。&lt;/p&gt;
+
+&lt;p&gt;4xx - 客户端错误
+发生错误，客户端似乎有问题。例如，客户端请求不存在的页面，客户端未提供有效的身份验证信息。
+400 - 错误的请求
+401 - 访问被拒绝
+ · 401.1 - 登录失败。
+ · 401.2 - 服务器配置导致登录失败。
+ · 401.3 - 由于 ACL 对资源的限制而未获得授权。
+ · 401.4 - 筛选器授权失败。
+ · 401.5 - ISAPI/CGI 应用程序授权失败。
+ · 401.7 – 访问被 Web 服务器上的 URL 授权策略拒绝。这个错误代码为 IIS 6.0 所专用。
+403 - 禁止访问
+ · 403.1 - 执行访问被禁止。
+ · 403.2 - 读访问被禁止。
+ · 403.3 - 写访问被禁止。
+ · 403.4 - 要求 SSL。
+ · 403.5 - 要求 SSL 128。
+ · 403.6 - IP 地址被拒绝。
+ · 403.7 - 要求客户端证书。
+ · 403.8 - 站点访问被拒绝。
+ · 403.9 - 用户数过多。
+ · 403.10 - 配置无效。
+ · 403.11 - 密码更改。
+ · 403.12 - 拒绝访问映射表。
+ · 403.13 - 客户端证书被吊销。
+ · 403.14 - 拒绝目录列表。
+ · 403.15 - 超出客户端访问许可。
+ · 403.16 - 客户端证书不受信任或无效。
+ · 403.17 - 客户端证书已过期或尚未生效。
+ · 403.18 - 在当前的应用程序池中不能执行所请求的 URL。这个错误代码为 IIS 6.0 所专用。
+ · 403.19 - 不能为这个应用程序池中的客户端执行 CGI。这个错误代码为 IIS 6.0 所专用。
+ · 403.20 - Passport 登录失败。这个错误代码为 IIS 6.0 所专用。
+404 - 没有找到文件或目录
+ · 404.1 - 无法在所请求的端口上访问 Web 站点。
+ · 404.2 - Web 服务扩展锁定策略阻止本请求。
+ · 404.3 - MIME 映射策略阻止本请求。
+405 - 用来访问本页面的 HTTP 谓词不被允许（方法不被允许）
+406 - 客户端浏览器不接受所请求页面的 MIME 类型
+407 - 要求进行代理身份验证
+412 - 前提条件失败
+413 – 请求实体太大
+414 - 请求 URI 太长
+415 – 不支持的媒体类型
+416 – 所请求的范围无法满足
+417 – 执行失败
+423 – 锁定的错误&lt;/p&gt;
+
+&lt;p&gt;5xx - 服务器端错误
+服务器由于遇到错误而不能完成该请求。
+500 - 内部服务器错误
+ · 500.12 - 应用程序正忙于在 Web 服务器上重新启动。
+ · 500.13 - Web 服务器太忙。
+ · 500.15 - 不允许直接请求 Global.asa。
+ · 500.16 – UNC 授权凭据不正确。这个错误代码为 IIS 6.0 所专用。
+ · 500.18 – URL 授权存储不能打开。这个错误代码为 IIS 6.0 所专用。
+ · 500.100 - 内部 ASP 错误。
+501 - 页眉值指定了未实现的配置
+502 - Web 服务器用作网关或代理服务器时收到了无效响应。502.1 - CGI 应用程序超时
+502.2 - CGI 应用程序出错。application
+503 - 服务不可用。这个错误代码为 IIS 6.0 所专用
+504 - 网关超时
+505 - HTTP 版本不受支持&lt;/p&gt;
+
+&lt;p&gt;HTTP 304 错误介绍&lt;/p&gt;
+
+&lt;p&gt;表示请求的网页(文件)与上次对比没有更新。&lt;/p&gt;
+
+&lt;p&gt;意思是蜘蛛来到你的网站，你网站没有更新内容，并且与上次一样，就会返回304代码。如果每次蜘蛛来你的网站都有新的内容出现，就会反回200代码。因为304代码是记录网站内容是否有更新，在24小时内没有更新，那么快照就会停止。同样，如果返回的304太多，表示网站没有更新，蜘蛛也就不会经常光顾， 影响收录。&lt;/p&gt;
+
+&lt;p&gt;把蜘蛛来的时候给记录下来，算出蜘蛛每隔多久来一次网站，然后就分隔多久更新一下文章，更新文章时要原创+转载。让蜘蛛每次来都能够有新的内容，而不是无功而返。这样就会产生很多200代码。&lt;/p&gt;
+
+&lt;p&gt;如果客户端在请求一个文件的时候，发现自己缓存的文件有 Last Modified ，那么在请求中会包含 If Modified Since ，这个时间就是缓存文件的 Last Modified 。因此，如果请求中包含 If Modified Since，就说明已经有缓存在客户端。只要判断这个时间和当前请求的文件的修改时间就可以确定是返回 304 还是 200 。对于静态文件，例如：CSS、图片，服务器会自动完成 Last Modified 和 If Modified Since 的比较，完成缓存或者更新。但是对于动态页面，就是动态产生的页面，往往没有包含 Last Modified 信息，这样浏览器、网关等都不会做缓存，也就是在每次请求的时候都完成一个 200 的请求。&lt;/p&gt;
+
+&lt;p&gt;因此，对于动态页面做缓存加速，首先要在 Response 的 HTTP Header 中增加 Last Modified 定义，其次根据 Request 中的 If Modified Since 和被请求内容的更新时间来返回 200 或者 304 。虽然在返回 304 的时候已经做了一次数据库查询，但是可以避免接下来更多的数据库查询，并且没有返回页面内容而只是一个 HTTP Header，从而大大的降低带宽的消耗，对于用户的感觉也是提高。&lt;/p&gt;
+
+&lt;p&gt;304不是错误。是请求一下图片，如果图片在上次访问后没有更新过，就不用下载了，返回304，叫浏览器直接用cache里的，这个很正常的。可以打开火狐firebug使用&amp;rdquo;网络&amp;rdquo;功能查看加载一个页面时所有请求文件的状态，再F5看一下，会看到很多是304，表示直接从浏览器缓存中读取的。&lt;/p&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>Python处理JSON</title>
+            <link>http://kooksee.github.io/blog/Python%E5%A4%84%E7%90%86JSON/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/Python%E5%A4%84%E7%90%86JSON/</guid>
+            <description>&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;什么是json：
+
+JSON(JavaScript Object Notation)
+
+是一种轻量级的数据交换格式。易于人阅读和编写。同时也易于机器解析和生成。它基于JavaScript Programming Language,
+
+Standard ECMA-262 3rd Edition - December
+
+1999的一个子集。JSON采用完全独立于语言的文本格式，但是也使用了类似于C语言家族的习惯（包括C, C++, C#, Java,
+
+JavaScript, Perl, Python等）。这些特性使JSON成为理想的数据交换语言。
+
+JSON建构于两种结构：
+
+“名称/值”对的集合（A collection of name/value pairs）。不同的语言中，它被理解为对象（object），纪录（record），结构（struct），字典（dictionary），哈希表（hash table），有键列表（keyed list），或者关联数组 （associative array）。
+
+值的有序列表（An ordered list of values）。在大部分语言中，它被理解为数组（array）。
+
+这些都是常见的数据结构。事实上大部分现代计算机语言都以某种形式支持它们。这使得一种数据格式在同样基于这些结构的编程语言之间交换成为可能。
+
+jso官方说明参见：http://json.org/
+
+Python操作json的标准api库参考：http://docs.python.org/library/json.html
+
+对简单数据类型的encoding 和 decoding：
+
+使用简单的json.dumps方法对简单数据类型进行编码，例如：
+
+import json
+
+obj=[[1,2,3],123,123.123,&#39;abc&#39;,{&#39;key1&#39;:(1,2,3),&#39;key2&#39;:(4,5,6)}]
+
+encodedjson=json.dumps(obj)
+
+printrepr(obj)
+
+printencodedjson
+
+输出：
+
+[[1, 2, 3], 123, 123.123, &#39;abc&#39;, {&#39;key2&#39;: (4, 5, 6), &#39;key1&#39;: (1, 2, 3)}]
+
+[[1, 2, 3], 123, 123.123, &amp;quot;abc&amp;quot;, {&amp;quot;key2&amp;quot;: [4, 5, 6], &amp;quot;key1&amp;quot;: [1, 2, 3]}]
+
+通过输出的结果可以看出，简单类型通过encode之后跟其原始的repr()输出结果非常相似，但是有些数据类型进行了改变，例如上例中的元组则转换为了列表。在json的编码过程中，会存在从python原始类型向json类型的转化过程，具体的转化对照如下：
+
+
+json.dumps()方法返回了一个str对象encodedjson，我们接下来在对encodedjson进行decode，得到原始数据，需要使用的json.loads()函数：
+decodejson=json.loads(encodedjson)
+
+printtype(decodejson)
+
+printdecodejson[4][&#39;key1&#39;]
+
+printdecodejson
+
+输出：
+
+[1, 2, 3]
+
+[[1, 2, 3], 123, 123.123, u&#39;abc&#39;, {u&#39;key2&#39;: [4, 5, 6], u&#39;key1&#39;: [1, 2, 3]}]
+
+loads方法返回了原始的对象，但是仍然发生了一些数据类型的转化。比如，上例中‘abc’转化为了unicode类型。从json到python的类型转化对照如下：
+
+
+json.dumps方法提供了很多好用的参数可供选择，比较常用的有sort_keys（对dict对象进行排序，我们知道默认dict是无序存放的），separators，indent等参数。
+
+排序功能使得存储的数据更加有利于观察，也使得对json输出的对象进行比较，例如：
+
+data1={&#39;b&#39;:789,&#39;c&#39;:456,&#39;a&#39;:123}
+
+data2={&#39;a&#39;:123,&#39;b&#39;:789,&#39;c&#39;:456}
+
+d1=json.dumps(data1,sort_keys=True)
+
+d2=json.dumps(data2)
+
+d3=json.dumps(data2,sort_keys=True)
+
+printd1
+
+printd2
+
+printd3
+
+printd1==d2
+
+printd1==d3
+
+输出：
+
+{&amp;quot;a&amp;quot;: 123, &amp;quot;b&amp;quot;: 789, &amp;quot;c&amp;quot;: 456}
+
+{&amp;quot;a&amp;quot;: 123, &amp;quot;c&amp;quot;: 456, &amp;quot;b&amp;quot;: 789}
+
+{&amp;quot;a&amp;quot;: 123, &amp;quot;b&amp;quot;: 789, &amp;quot;c&amp;quot;: 456}
+
+False
+
+True
+
+上例中，本来data1和data2数据应该是一样的，但是由于dict存储的无序特性，造成两者无法比较。因此两者可以通过排序后的结果进行存储
+
+就避免了数据比较不一致的情况发生，但是排序后再进行存储，系统必定要多做一些事情，也一定会因此造成一定的性能消耗，所以适当排序是很重要的。
+
+indent参数是缩进的意思，它可以使得数据存储的格式变得更加优雅。
+
+data1={&#39;b&#39;:789,&#39;c&#39;:456,&#39;a&#39;:123}
+
+d1=json.dumps(data1,sort_keys=True,indent=4)
+
+printd1
+
+输出：
+
+{
+
+&amp;quot;a&amp;quot;: 123,
+
+&amp;quot;b&amp;quot;: 789,
+
+&amp;quot;c&amp;quot;: 456
+
+}
+
+输出的数据被格式化之后，变得可读性更强，但是却是通过增加一些冗余的空白格来进行填充的。json主要是作为一种数据通信的格式存在的，而网络通
+
+信是很在乎数据的大小的，无用的空格会占据很多通信带宽，所以适当时候也要对数据进行压缩。separator参数可以起到这样的作用，该参数传递是一个
+
+元组，包含分割对象的字符串。
+
+print&#39;DATA:&#39;,repr(data)
+
+print&#39;repr(data)             :&#39;,len(repr(data))
+
+print&#39;dumps(data)            :&#39;,len(json.dumps(data))
+
+print&#39;dumps(data, indent=2)  :&#39;,len(json.dumps(data, indent=4))
+
+print&#39;dumps(data, separators):&#39;,len(json.dumps(data, separators=(&#39;,&#39;,&#39;:&#39;)))
+
+输出：
+
+DATA: {&#39;a&#39;: 123, &#39;c&#39;: 456, &#39;b&#39;: 789}
+
+repr(data)             : 30
+
+dumps(data)            : 30
+
+dumps(data, indent=2)  : 46
+
+dumps(data, separators): 25
+
+通过移除多余的空白符，达到了压缩数据的目的，而且效果还是比较明显的。
+
+另一个比较有用的dumps参数是skipkeys，默认为False。 dumps方法存储dict对象时，key必须是str类型，如果出现了其他类型的话，那么会产生TypeError异常，如果开启该参数，设为True的话，则会比较优雅的过度。
+
+data={&#39;b&#39;:789,&#39;c&#39;:456,(1,2):123}
+
+printjson.dumps(data,skipkeys=True)
+
+输出：
+
+{&amp;quot;c&amp;quot;: 456, &amp;quot;b&amp;quot;: 789}
+
+处理自己的数据类型
+
+json模块不仅可以处理普通的python内置类型，也可以处理我们自定义的数据类型，而往往处理自定义的对象是很常用的。
+
+首先，我们定义一个类Person。
+
+classPerson(object):
+
+def__init__(self,name,age):
+
+self.name=name
+
+self.age=age
+
+def__repr__(self):
+
+return&#39;Person Object name : %s , age : %d&#39;%(self.name,self.age)
+
+if__name__==&#39;__main__&#39;:
+
+p=Person(&#39;Peter&#39;,22)
+
+printp
+
+如果直接通过json.dumps方法对Person的实例进行处理的话，会报错，因为json无法支持这样的自动转化。通过上面所提到的json
+
+和python的类型转化对照表，可以发现，object类型是和dict相关联的，所以我们需要把我们自定义的类型转化为dict，然后再进行处理。这
+
+里，有两种方法可以使用。
+
+方法一：自己写转化函数
+
+&#39;&#39;&#39;
+
+Created on 2011-12-14
+
+@author: Peter
+
+&#39;&#39;&#39;
+
+importPerson
+
+importjson
+
+p=Person.Person(&#39;Peter&#39;,22)
+
+defobject2dict(obj):
+
+#convert object to a dict
+
+d={}
+
+d[&#39;__class__&#39;]=obj.__class__.__name__
+
+d[&#39;__module__&#39;]=obj.__module__
+
+d.update(obj.__dict__)
+
+returnd
+
+defdict2object(d):
+
+#convert dict to object
+
+if&#39;__class__&#39;ind:
+
+class_name=d.pop(&#39;__class__&#39;)
+
+module_name=d.pop(&#39;__module__&#39;)
+
+module=__import__(module_name)
+
+class_=getattr(module,class_name)
+
+args=dict((key.encode(&#39;ascii&#39;), value)forkey, valueind.items())#get args
+
+inst=class_(**args)#create new instance
+
+else:
+
+inst=d
+
+returninst
+
+d=object2dict(p)
+
+printd
+
+#{&#39;age&#39;: 22, &#39;__module__&#39;: &#39;Person&#39;, &#39;__class__&#39;: &#39;Person&#39;, &#39;name&#39;: &#39;Peter&#39;}
+
+o=dict2object(d)
+
+printtype(o),o
+
+# Person Object name : Peter , age : 22
+
+dump=json.dumps(p,default=object2dict)
+
+printdump
+
+#{&amp;quot;age&amp;quot;: 22, &amp;quot;__module__&amp;quot;: &amp;quot;Person&amp;quot;, &amp;quot;__class__&amp;quot;: &amp;quot;Person&amp;quot;, &amp;quot;name&amp;quot;: &amp;quot;Peter&amp;quot;}
+
+load=json.loads(dump,object_hook=dict2object)
+
+printload
+
+#Person Object name : Peter , age : 22
+
+上面代码已经写的很清楚了，实质就是自定义object类型和dict类型进行转化。object2dict函数将对象模块名、类名以及
+
+__dict__存储在dict对象里，并返回。dict2object函数则是反解出模块名、类名、参数，创建新的对象并返回。在json.dumps
+
+方法中增加default参数，该参数表示在转化过程中调用指定的函数，同样在decode过程中json.loads方法增加object_hook,
+
+指定转化函数。
+
+方法二：继承JSONEncoder和JSONDecoder类，覆写相关方法
+
+JSONEncoder类负责编码，主要是通过其default函数进行转化，我们可以override该方法。同理对于JSONDecoder。
+
+&#39;&#39;&#39;
+
+Created on 2011-12-14
+
+@author: Peter
+
+&#39;&#39;&#39;
+
+importPerson
+
+importjson
+
+p=Person.Person(&#39;Peter&#39;,22)
+
+classMyEncoder(json.JSONEncoder):
+
+defdefault(self,obj):
+
+#convert object to a dict
+
+d={}
+
+d[&#39;__class__&#39;]=obj.__class__.__name__
+
+d[&#39;__module__&#39;]=obj.__module__
+
+d.update(obj.__dict__)
+
+returnd
+
+classMyDecoder(json.JSONDecoder):
+
+def__init__(self):
+
+json.JSONDecoder.__init__(self,object_hook=self.dict2object)
+
+defdict2object(self,d):
+
+#convert dict to object
+
+if&#39;__class__&#39;ind:
+
+class_name=d.pop(&#39;__class__&#39;)
+
+module_name=d.pop(&#39;__module__&#39;)
+
+module=__import__(module_name)
+
+class_=getattr(module,class_name)
+
+args=dict((key.encode(&#39;ascii&#39;), value)forkey, valueind.items())#get args
+
+inst=class_(**args)#create new instance
+
+else:
+
+inst=d
+
+returninst
+
+d=MyEncoder().encode(p)
+
+o=MyDecoder().decode(d)
+
+printd
+
+printtype(o), o
+
+对于JSONDecoder类方法，稍微有点不同，但是改写起来也不是很麻烦。看代码应该就比较清楚了。
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>Sphinx Makefile</title>
+            <link>http://kooksee.github.io/blog/Sphinx%20Makefile/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/Sphinx%20Makefile/</guid>
+            <description>&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;# Makefile for Sphinx documentation
+#
+
+# You can set these variables from the command line.
+SPHINXOPTS    ?=
+SPHINXBUILD   ?= sphinx-build
+PAPER         ?=
+BUILDDIR      ?= _build
+LANGUAGE      ?=
+
+# Internal variables.
+PAPEROPT_a4     = -D latex_paper_size=a4
+PAPEROPT_letter = -D latex_paper_size=letter
+ALLSPHINXOPTS   = -n -d $(BUILDDIR)/doctrees -D language=$(LANGUAGE) $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) .
+# the i18n builder cannot share the environment and doctrees with the others
+I18NSPHINXOPTS  = $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) .
+
+.PHONY: help clean html dirhtml singlehtml pickle json htmlhelp qthelp devhelp epub latex latexpdf text man changes linkcheck doctest gettext
+
+help:
+    @echo &amp;quot;Please use \`make &amp;lt;target&amp;gt;&#39; where &amp;lt;target&amp;gt; is one of&amp;quot;
+    @echo &amp;quot;  html       to make standalone HTML files&amp;quot;
+    @echo &amp;quot;  dirhtml    to make HTML files named index.html in directories&amp;quot;
+    @echo &amp;quot;  singlehtml to make a single large HTML file&amp;quot;
+    @echo &amp;quot;  pickle     to make pickle files&amp;quot;
+    @echo &amp;quot;  json       to make JSON files&amp;quot;
+    @echo &amp;quot;  htmlhelp   to make HTML files and a HTML help project&amp;quot;
+    @echo &amp;quot;  qthelp     to make HTML files and a qthelp project&amp;quot;
+    @echo &amp;quot;  devhelp    to make HTML files and a Devhelp project&amp;quot;
+    @echo &amp;quot;  epub       to make an epub&amp;quot;
+    @echo &amp;quot;  latex      to make LaTeX files, you can set PAPER=a4 or PAPER=letter&amp;quot;
+    @echo &amp;quot;  latexpdf   to make LaTeX files and run them through pdflatex&amp;quot;
+    @echo &amp;quot;  text       to make text files&amp;quot;
+    @echo &amp;quot;  man        to make manual pages&amp;quot;
+    @echo &amp;quot;  texinfo    to make a Texinfo source file&amp;quot;
+    @echo &amp;quot;  gettext    to make PO message catalogs&amp;quot;
+    @echo &amp;quot;  changes    to make an overview of all changed/added/deprecated items&amp;quot;
+    @echo &amp;quot;  linkcheck  to check all external links for integrity&amp;quot;
+    @echo &amp;quot;  doctest    to run all doctests embedded in the documentation (if enabled)&amp;quot;
+
+clean:
+    -rm -rf $(BUILDDIR)/*
+
+html:
+    $(SPHINXBUILD) -b djangohtml $(ALLSPHINXOPTS) $(BUILDDIR)/html
+    @echo
+    @echo &amp;quot;Build finished. The HTML pages are in $(BUILDDIR)/html.&amp;quot;
+
+dirhtml:
+    $(SPHINXBUILD) -b dirhtml $(ALLSPHINXOPTS) $(BUILDDIR)/dirhtml
+    @echo
+    @echo &amp;quot;Build finished. The HTML pages are in $(BUILDDIR)/dirhtml.&amp;quot;
+
+singlehtml:
+    $(SPHINXBUILD) -b singlehtml $(ALLSPHINXOPTS) $(BUILDDIR)/singlehtml
+    @echo
+    @echo &amp;quot;Build finished. The HTML page is in $(BUILDDIR)/singlehtml.&amp;quot;
+
+pickle:
+    $(SPHINXBUILD) -b pickle $(ALLSPHINXOPTS) $(BUILDDIR)/pickle
+    @echo
+    @echo &amp;quot;Build finished; now you can process the pickle files.&amp;quot;
+
+json:
+    $(SPHINXBUILD) -b json $(ALLSPHINXOPTS) $(BUILDDIR)/json
+    @echo
+    @echo &amp;quot;Build finished; now you can process the JSON files.&amp;quot;
+
+htmlhelp:
+    $(SPHINXBUILD) -b htmlhelp $(ALLSPHINXOPTS) $(BUILDDIR)/htmlhelp
+    @echo
+    @echo &amp;quot;Build finished; now you can run HTML Help Workshop with the&amp;quot; \
+          &amp;quot;.hhp project file in $(BUILDDIR)/htmlhelp.&amp;quot;
+
+qthelp:
+    $(SPHINXBUILD) -b qthelp $(ALLSPHINXOPTS) $(BUILDDIR)/qthelp
+    @echo
+    @echo &amp;quot;Build finished; now you can run &amp;quot;qcollectiongenerator&amp;quot; with the&amp;quot; \
+          &amp;quot;.qhcp project file in $(BUILDDIR)/qthelp, like this:&amp;quot;
+    @echo &amp;quot;# qcollectiongenerator $(BUILDDIR)/qthelp/django.qhcp&amp;quot;
+    @echo &amp;quot;To view the help file:&amp;quot;
+    @echo &amp;quot;# assistant -collectionFile $(BUILDDIR)/qthelp/django.qhc&amp;quot;
+
+devhelp:
+    $(SPHINXBUILD) -b devhelp $(ALLSPHINXOPTS) $(BUILDDIR)/devhelp
+    @echo
+    @echo &amp;quot;Build finished.&amp;quot;
+    @echo &amp;quot;To view the help file:&amp;quot;
+    @echo &amp;quot;# mkdir -p $$HOME/.local/share/devhelp/django&amp;quot;
+    @echo &amp;quot;# ln -s $(BUILDDIR)/devhelp $$HOME/.local/share/devhelp/django&amp;quot;
+    @echo &amp;quot;# devhelp&amp;quot;
+
+epub:
+    $(SPHINXBUILD) -b epub $(ALLSPHINXOPTS) $(BUILDDIR)/epub
+    @echo
+    @echo &amp;quot;Build finished. The epub file is in $(BUILDDIR)/epub.&amp;quot;
+
+latex:
+    $(SPHINXBUILD) -b latex $(ALLSPHINXOPTS) $(BUILDDIR)/latex
+    @echo
+    @echo &amp;quot;Build finished; the LaTeX files are in $(BUILDDIR)/latex.&amp;quot;
+    @echo &amp;quot;Run \`make&#39; in that directory to run these through (pdf)latex&amp;quot; \
+          &amp;quot;(use \`make latexpdf&#39; here to do that automatically).&amp;quot;
+
+latexpdf:
+    $(SPHINXBUILD) -b latex $(ALLSPHINXOPTS) $(BUILDDIR)/latex
+    @echo &amp;quot;Running LaTeX files through pdflatex...&amp;quot;
+    make -C $(BUILDDIR)/latex all-pdf
+    @echo &amp;quot;pdflatex finished; the PDF files are in $(BUILDDIR)/latex.&amp;quot;
+
+text:
+    $(SPHINXBUILD) -b text $(ALLSPHINXOPTS) $(BUILDDIR)/text
+    @echo
+    @echo &amp;quot;Build finished. The text files are in $(BUILDDIR)/text.&amp;quot;
+
+man:
+    $(SPHINXBUILD) -b man $(ALLSPHINXOPTS) $(BUILDDIR)/man
+    @echo
+    @echo &amp;quot;Build finished. The manual pages are in $(BUILDDIR)/man.&amp;quot;
+
+texinfo:
+    $(SPHINXBUILD) -b texinfo $(ALLSPHINXOPTS) $(BUILDDIR)/texinfo
+    @echo
+    @echo &amp;quot;Build finished; the Texinfo files are in $(BUILDDIR)/texinfo.&amp;quot;
+
+gettext:
+    $(SPHINXBUILD) -b gettext $(I18NSPHINXOPTS) $(BUILDDIR)/locale
+    @echo
+    @echo &amp;quot;Build finished. The message catalogs are in $(BUILDDIR)/locale.&amp;quot;
+
+changes:
+    $(SPHINXBUILD) -b changes $(ALLSPHINXOPTS) $(BUILDDIR)/changes
+    @echo
+    @echo &amp;quot;The overview file is in $(BUILDDIR)/changes.&amp;quot;
+
+linkcheck:
+    $(SPHINXBUILD) -b linkcheck $(ALLSPHINXOPTS) $(BUILDDIR)/linkcheck
+    @echo
+    @echo &amp;quot;Link check complete; look for any errors in the above output &amp;quot; \
+          &amp;quot;or in $(BUILDDIR)/linkcheck/output.txt.&amp;quot;
+
+doctest:
+    $(SPHINXBUILD) -b doctest $(ALLSPHINXOPTS) $(BUILDDIR)/doctest
+    @echo &amp;quot;Testing of doctests in the sources finished, look at the &amp;quot; \
+          &amp;quot;results in $(BUILDDIR)/doctest/output.txt.&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>UNICODE,GBK,UTF-8区别</title>
+            <link>http://kooksee.github.io/blog/UNICODE,GBK,UTF-8%E5%8C%BA%E5%88%AB/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/UNICODE,GBK,UTF-8%E5%8C%BA%E5%88%AB/</guid>
+            <description>&lt;p&gt;[TOC]&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;简单来说，unicode，gbk和大五码就是编码的值，而utf-8,uft-16之类就是这个值的表现形式．而前面那三种编码是一兼容的，同一个汉字，那三个码值是完全不一样的．如＂汉＂的uncode值与gbk就是不一样的，假设uncode为a040，gbk为b030，而uft-8码，就是把那个值表现的形式．utf-8码完全只针对uncode来组织的，如果ＧＢＫ要转ＵＴＦ－８必须先转uncode码，再转utf-8就ＯＫ了．&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;详细的就见下面转的这篇文章．&lt;/p&gt;
+
+&lt;p&gt;谈谈Unicode编码，简要解释UCS、UTF、BMP、BOM等名词&lt;/p&gt;
+
+&lt;p&gt;这是一篇程序员写给程序员的趣味读物。所谓趣味是指可以比较轻松地了解一些原来不清楚的概念，增进知识，类似于打RPG游戏的升级。整理这篇文章的动机是两个问题：&lt;/p&gt;
+
+&lt;p&gt;问题一：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    使用Windows记事本的“另存为”，可以在GBK、Unicode、Unicode big endian和UTF-8这几种编码方式间相互转换。同样是txt文件，Windows是怎样识别编码方式的呢？
+
+我很早前就发现Unicode、Unicode big endian和UTF-8编码的txt文件的开头会多出几个字节，分别是FF、FE（Unicode）,FE、FF（Unicode big endian）,EF、BB、BF（UTF-8）。但这些标记是基于什么标准呢？
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;问题二：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    最近在网上看到一个ConvertUTF.c，实现了UTF-32、UTF-16和UTF-8这三种编码方式的相互转换。对于Unicode(UCS2)、GBK、UTF-8这些编码方式，我原来就了解。但这个程序让我有些糊涂，想不起来UTF-16和UCS2有什么关系。
+
+查了查相关资料，总算将这些问题弄清楚了，顺带也了解了一些Unicode的细节。写成一篇文章，送给有过类似疑问的朋友。本文在写作时尽量做到通俗易懂，但要求读者知道什么是字节，什么是十六进制。
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##big endian和little endian&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    big endian和little endian是CPU处理多字节数的不同方式。例如“汉”字的Unicode编码是6C49。那么写到文件里时，究竟是将6C写在前面，还是将49写在前面？如果将6C写在前面，就是big endian。如果将49写在前面，就是little endian。
+
+“endian”这个词出自《格列佛游记》。小人国的内战就源于吃鸡蛋时是究竟从大头(Big-Endian)敲开还是从小头(Little-Endian)敲开，由此曾发生过六次叛乱，一个皇帝送了命，另一个丢了王位。
+
+我们一般将endian翻译成“字节序”，将big endian和little endian称作“大尾”和“小尾”。
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##字符编码、内码，顺带介绍汉字编码&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    字符必须编码后才能被计算机处理。计算机使用的缺省编码方式就是计算机的内码。早期的计算机使用7位的ASCII编码，为了处理汉字，程序员设计了用于简体中文的GB2312和用于繁体中文的big5。
+
+GB2312(1980年)一共收录了7445个字符，包括6763个汉字和682个其它符号。汉字区的内码范围高字节从B0-F7，低字节从A1-FE，占用的码位是72*94=6768。其中有5个空位是D7FA-D7FE。
+
+GB2312支持的汉字太少。1995年的汉字扩展规范GBK1.0收录了21886个符号，它分为汉字区和图形符号区。汉字区包括21003个字符。
+
+从ASCII、GB2312到GBK，这些编码方法是向下兼容的，即同一个字符在这些方案中总是有相同的编码，后面的标准支持更多的字符。在这些编码中，英文和中文可以统一地处理。区分中文编码的方法是高字节的最高位不为0。按照程序员的称呼，GB2312、GBK都属于双字节字符集 (DBCS)。
+
+2000年的GB18030是取代GBK1.0的正式国家标准。该标准收录了27484个汉字，同时还收录了藏文、蒙文、维吾尔文等主要的少数民族文字。从汉字字汇上说，GB18030在GB13000.1的20902个汉字的基础上增加了CJK扩展A的6582个汉字（Unicode码0x3400-0x4db5），一共收录了27484个汉字。
+
+CJK就是中日韩的意思。Unicode为了节省码位，将中日韩三国语言中的文字统一编码。GB13000.1就是ISO/IEC 10646-1的中文版，相当于Unicode 1.1。
+
+GB18030的编码采用单字节、双字节和4字节方案。其中单字节、双字节和GBK是完全兼容的。4字节编码的码位就是收录了CJK扩展A的6582个汉字。例如：UCS的0x3400在GB18030中的编码应该是8139EF30，UCS的0x3401在GB18030中的编码应该是8139EF31。
+
+微软提供了GB18030的升级包，但这个升级包只是提供了一套支持CJK扩展A的6582个汉字的新字体：新宋体-18030，并不改变内码。Windows 的内码仍然是GBK。
+
+这里还有一些细节：
+
+GB2312的原文还是区位码，从区位码到内码，需要在高字节和低字节上分别加上A0。
+
+对于任何字符编码，编码单元的顺序是由编码方案指定的，与endian无关。例如GBK的编码单元是字节，用两个字节表示一个汉字。这两个字节的顺序是固定的，不受CPU字节序的影响。UTF-16的编码单元是word（双字节），word之间的顺序是编码方案指定的，word内部的字节排列才会受到endian的影响。后面还会介绍UTF-16。
+
+GB2312的两个字节的最高位都是1。但符合这个条件的码位只有128*128=16384个。所以GBK和GB18030的低字节最高位都可能不是1。不过这不影响DBCS字符流的解析：在读取DBCS字符流时，只要遇到高位为1的字节，就可以将下两个字节作为一个双字节编码，而不用管低字节的高位是什么。
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##Unicode、UCS和UTF&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    前面提到从ASCII、GB2312、GBK到GB18030的编码方法是向下兼容的。而Unicode只与ASCII兼容（更准确地说，是与ISO-8859-1兼容），与GB码不兼容。例如“汉”字的Unicode编码是6C49，而GB码是BABA。
+
+Unicode也是一种字符编码方法，不过它是由国际组织设计，可以容纳全世界所有语言文字的编码方案。Unicode的学名是&amp;quot;Universal Multiple-Octet Coded Character Set&amp;quot;，简称为UCS。UCS可以看作是&amp;quot;Unicode Character Set&amp;quot;的缩写。
+
+根据维基百科全书(http://zh.wikipedia.org/wiki/)的记载：历史上存在两个试图独立设计Unicode的组织，即国际标准化组织（ISO）和一个软件制造商的协会（unicode.org）。ISO开发了ISO 10646项目，Unicode协会开发了Unicode项目。
+
+在1991年前后，双方都认识到世界不需要两个不兼容的字符集。于是它们开始合并双方的工作成果，并为创立一个单一编码表而协同工作。从Unicode2.0开始，Unicode项目采用了与ISO 10646-1相同的字库和字码。
+
+目前两个项目仍都存在，并独立地公布各自的标准。Unicode协会现在的最新版本是2005年的Unicode 4.1.0。ISO的最新标准是ISO 10646-3:2003。
+
+UCS只是规定如何编码，并没有规定如何传输、保存这个编码。例如“汉”字的UCS编码是6C49，我可以用4个ascii数字来传输、保存这个编码；也可以用utf-8编码:3个连续的字节E6 B1 89来表示它。关键在于通信双方都要认可。UTF-8、UTF-7、UTF-16都是被广泛接受的方案。UTF-8的一个特别的好处是它与ISO-8859-1完全兼容。UTF是“UCS Transformation Format”的缩写。
+
+IETF的RFC2781和RFC3629以RFC的一贯风格，清晰、明快又不失严谨地描述了UTF-16和UTF-8的编码方法。我总是记不得IETF是Internet Engineering Task Force的缩写。但IETF负责维护的RFC是Internet上一切规范的基础。
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;###内码和code page&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    目前Windows的内核已经支持Unicode字符集，这样在内核上可以支持全世界所有的语言文字。但是由于现有的大量程序和文档都采用了某种特定语言的编码，例如GBK，Windows不可能不支持现有的编码，而全部改用Unicode。
+
+Windows使用代码页(code page)来适应各个国家和地区。code page可以被理解为前面提到的内码。GBK对应的code page是CP936。
+
+微软也为GB18030定义了code page：CP54936。但是由于GB18030有一部分4字节编码，而Windows的代码页只支持单字节和双字节编码，所以这个code page是无法真正使用的。
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##UCS-2、UCS-4、BMP&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    UCS有两种格式：UCS-2和UCS-4。顾名思义，UCS-2就是用两个字节编码，UCS-4就是用4个字节（实际上只用了31位，最高位必须为0）编码。下面让我们做一些简单的数学游戏：
+
+UCS-2有2^16=65536个码位，UCS-4有2^31=2147483648个码位。
+
+UCS-4根据最高位为0的最高字节分成2^7=128个group。每个group再根据次高字节分为256个plane。每个plane根据第3个字节分为256行 (rows)，每行包含256个cells。当然同一行的cells只是最后一个字节不同，其余都相同。
+
+group 0的plane 0被称作Basic Multilingual Plane, 即BMP。或者说UCS-4中，高两个字节为0的码位被称作BMP。
+
+将UCS-4的BMP去掉前面的两个零字节就得到了UCS-2。在UCS-2的两个字节前加上两个零字节，就得到了UCS-4的BMP。而目前的UCS-4规范中还没有任何字符被分配在BMP之外。
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##UTF编码&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;UTF-8就是以8位为单元对UCS进行编码。从UCS-2到UTF-8的编码方式如下：
+
+UCS-2编码(16进制) UTF-8 字节流(二进制)
+
+0000 - 007F 0xxxxxxx
+
+0080 - 07FF 110xxxxx 10xxxxxx
+
+0800 - FFFF 1110xxxx 10xxxxxx 10xxxxxx
+
+例如“汉”字的Unicode编码是6C49。6C49在0800-FFFF之间，所以肯定要用3字节模板了：1110xxxx 10xxxxxx 10xxxxxx。将6C49写成二进制是：0110 110001 001001，用这个比特流依次代替模板中的x，得到：11100110 10110001 10001001，即E6 B1 89。
+
+读者可以用记事本测试一下我们的编码是否正确。需要注意，UltraEdit在打开utf-8编码的文本文件时会自动转换为UTF-16，可能产生混淆。你可以在设置中关掉这个选项。更好的工具是Hex Workshop。
+
+UTF-16以16位为单元对UCS进行编码。对于小于0x10000的UCS码，UTF-16编码就等于UCS码对应的16位无符号整数。对于不小于0x10000的UCS码，定义了一个算法。不过由于实际使用的UCS2，或者UCS4的BMP必然小于0x10000，所以就目前而言，可以认为UTF-16和UCS-2基本相同。但UCS-2只是一个编码方案，UTF-16却要用于实际的传输，所以就不得不考虑字节序的问题。
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##UTF的字节序和BOM&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    UTF-8以字节为编码单元，没有字节序的问题。UTF-16以两个字节为编码单元，在解释一个UTF-16文本前，首先要弄清楚每个编码单元的字节序。例如“奎”的Unicode编码是594E，“乙”的Unicode编码是4E59。如果我们收到UTF-16字节流“594E”，那么这是“奎”还是“乙”？
+
+Unicode规范中推荐的标记字节顺序的方法是BOM。BOM不是“Bill Of Material”的BOM表，而是Byte order Mark。BOM是一个有点小聪明的想法：
+
+在UCS编码中有一个叫做&amp;quot;ZERO WIDTH NO-BREAK SPACE&amp;quot;的字符，它的编码是FEFF。而FFFE在UCS中是不存在的字符，所以不应该出现在实际传输中。UCS规范建议我们在传输字节流前，先传输字符&amp;quot;ZERO WIDTH NO-BREAK SPACE&amp;quot;。
+
+这样如果接收者收到FEFF，就表明这个字节流是Big-Endian的；如果收到FFFE，就表明这个字节流是Little-Endian的。因此字符&amp;quot;ZERO WIDTH NO-BREAK SPACE&amp;quot;又被称作BOM。
+
+UTF-8不需要BOM来表明字节顺序，但可以用BOM来表明编码方式。字符&amp;quot;ZERO WIDTH NO-BREAK SPACE&amp;quot;的UTF-8编码是EF BB BF（读者可以用我们前面介绍的编码方法验证一下）。所以如果接收者收到以EF BB BF开头的字节流，就知道这是UTF-8编码了。
+
+Windows就是使用BOM来标记文本文件的编码方式的。
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##进一步的参考资料&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    本文主要参考的资料是 &amp;quot;Short overview of ISO-IEC 10646 and Unicode&amp;quot; (http://www.nada.kth.se/i18n/ucs/unicode-iso10646-oview.html)。
+
+我还找了两篇看上去不错的资料，不过因为我开始的疑问都找到了答案，所以就没有看：
+
+&amp;quot;Understanding Unicode A general introduction to the Unicode Standard&amp;quot; (http://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&amp;amp;item_id=IWS-Chapter04a)
+
+&amp;quot;Character set encoding basics Understanding character set encodings and legacy encodings&amp;quot; (http://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&amp;amp;item_id=IWS-Chapter03)
+
+我写过UTF-8、UCS-2、GBK相互转换的软件包，包括使用Windows API和不使用Windows API的版本。以后有时间的话，我会整理一下放到我的个人主页上(http://fmddlmyy.home4u.china.com)。
+
+我是想清楚所有问题后才开始写这篇文章的，原以为一会儿就能写好。没想到考虑措辞和查证细节花费了很长时间，竟然从下午1:30写到9:00。希望有读者能从中受益。
+
+附录1 再说说区位码、GB2312、内码和代码页
+
+有的朋友对文章中这句话还有疑问：
+
+“GB2312的原文还是区位码，从区位码到内码，需要在高字节和低字节上分别加上A0。”
+
+我再详细解释一下：
+
+“GB2312的原文”是指国家1980年的一个标准《中华人民共和国国家标准信息交换用汉字编码字符集 基本集 GB 2312-80》。这个标准用两个数来编码汉字和中文符号。第一个数称为“区”，第二个数称为“位”。所以也称为区位码。1-9区是中文符号，16-55区是一级汉字，56-87区是二级汉字。现在Windows也还有区位输入法，例如输入1601得到“啊”。（这个区位输入法可以自动识别16进制的GB2312和10进制的区位码，也就是说输入B0A1同样会得到“啊”。）
+
+内码是指操作系统内部的字符编码。早期操作系统的内码是与语言相关的。现在的Windows在系统内部支持Unicode，然后用代码页适应各种语言，“内码”的概念就比较模糊了。微软一般将缺省代码页指定的编码说成是内码。
+
+内码这个词汇，并没有什么官方的定义，代码页也只是微软这个公司的叫法。作为程序员，我们只要知道它们是什么东西，没有必要过多地考证这些名词。
+
+所谓代码页(code page)就是针对一种语言文字的字符编码。例如GBK的code page是CP936，BIG5的code page是CP950，GB2312的code page是CP20936。
+
+Windows中有缺省代码页的概念，即缺省用什么编码来解释字符。例如Windows的记事本打开了一个文本文件，里面的内容是字节流：BA、BA、D7、D6。Windows应该去怎么解释它呢？
+
+是按照Unicode编码解释、还是按照GBK解释、还是按照BIG5解释，还是按照ISO8859-1去解释？如果按GBK去解释，就会得到“汉字”两个字。按照其它编码解释，可能找不到对应的字符，也可能找到错误的字符。所谓“错误”是指与文本作者的本意不符，这时就产生了乱码。
+
+答案是Windows按照当前的缺省代码页去解释文本文件里的字节流。缺省代码页可以通过控制面板的区域选项设置。记事本的另存为中有一项ANSI，其实就是按照缺省代码页的编码方法保存。
+
+Windows的内码是Unicode，它在技术上可以同时支持多个代码页。只要文件能说明自己使用什么编码，用户又安装了对应的代码页，Windows就能正确显示，例如在HTML文件中就可以指定charset。
+
+有的HTML文件作者，特别是英文作者，认为世界上所有人都使用英文，在文件中不指定charset。如果他使用了0x80-0xff之间的字符，中文Windows又按照缺省的GBK去解释，就会出现乱码。这时只要在这个html文件中加上指定charset的语句，例如：
+
+如果原作者使用的代码页和ISO8859-1兼容，就不会出现乱码了。
+
+再说区位码，啊的区位码是1601，写成16进制是0x10,0x01。这和计算机广泛使用的ASCII编码冲突。为了兼容00-7f的ASCII编码，我们在区位码的高、低字节上分别加上A0。这样“啊”的编码就成为B0A1。我们将加过两个A0的编码也称为GB2312编码，虽然GB2312的原文根本没提到这一点。
+
+
+关于编码，这篇文章足矣，谢谢祥龙之子，http://www.cnblogs.com/cy163/archive/2007/05/31/766886.html
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>Ubuntu下安装PyV8</title>
+            <link>http://kooksee.github.io/blog/Ubuntu%E4%B8%8B%E5%AE%89%E8%A3%85PyV8/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/Ubuntu%E4%B8%8B%E5%AE%89%E8%A3%85PyV8/</guid>
+            <description>&lt;blockquote&gt;
+&lt;p&gt;折腾一下午终于弄好PyV8引擎,解析JS方便多了.
+关键: PyV8依赖于Boost,所以安装前先确定你的Linux有没有Boost(就因为这个折腾一下午,官方首页也没说,找了好久)&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;Ubuntu下安装
+sudo apt-get install libboost-all-dev
+sudo apt-get install aptitude
+接着安装PyV8
+用pip安装
+$sudo pip install -v pyv8
+或:
+sudo apt-get install scons libboost-python-dev
+svn checkout http://v8.googlecode.com/svn/trunk/ v8
+svn checkout http://pyv8.googlecode.com/svn/trunk/ pyv8
+cd v8
+export V8_HOME=`/home/buffer/v8`
+cd ../pyv8
+sudo python setup.py build
+sudo python setup.py install
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;接着就可以快乐的使用PyV8了&amp;hellip;.附使用代码&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import PyV8
+
+class v8Doc(PyV8.JSClass):
+    def write(self, s):
+        print s.decode(&#39;utf-8&#39;)
+
+class Global(PyV8.JSClass):
+    def __init__(self):
+        self.document = v8Doc()
+
+glob = Global()
+ctxt = PyV8.JSContext(glob)
+ctxt.enter()
+ctxt.eval(&amp;quot;var ant=8257+4341;var calf=5749+403^ant;var goat=1986+4175^calf;var fish=6422+7944^goat;var worm=7920+3648^fish;&amp;quot;)
+ctxt.eval(&amp;quot;document.write(((10502^calf)+24).toString());&amp;quot;)
+jss = &amp;quot;document.write((10502^calf)+24);&amp;quot;
+jss = &amp;quot;var thisvalue = &amp;quot; + jss.strip().replace(&amp;quot;document.write(&amp;quot;,&amp;quot;&amp;quot;).replace(&amp;quot;);&amp;quot;,&amp;quot;;&amp;quot;)
+print jss
+ctxt.eval(jss)
+vars = ctxt.locals.thisvalue
+print &amp;quot;vars = &amp;quot; + str(vars)
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

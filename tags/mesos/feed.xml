@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Mesos on 百里求一的博客</title>
+        <link>http://kooksee.github.io/tags/mesos/</link>
+        <language>zh-CN</language>
+        <author>CoderZh</author>
+        <rights>Copyright (c) 2015, CoderZh; all rights reserved.</rights>
+        <updated>Mon, 01 Jan 0001 00:00:00 UTC</updated>
+        
+        <item>
+            <title>mesos集群搭建</title>
+            <link>http://kooksee.github.io/blog/mesos%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/mesos%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA/</guid>
+            <description>&lt;p&gt;教程:
+&lt;a href=&#34;http://www.jdon.com/artichect/managing-docker-clusters-using-mesos-and-marathon.html&#34;&gt;http://www.jdon.com/artichect/managing-docker-clusters-using-mesos-and-marathon.html&lt;/a&gt;
+&lt;a href=&#34;http://www.tuicool.com/articles/aqieeiB&#34;&gt;http://www.tuicool.com/articles/aqieeiB&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://www.dianping.com/shop/32712731&#34;&gt;http://www.dianping.com/shop/32712731&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;目前，我们容器管理集群的技术栈包括以下内容：
+mesos（资源调度）
+marathon（服务编排）
+chronos（分布式计划任务）
+docker（容器引擎）
+consul+registrator（服务注册和发现）
+haproxy（负载均衡）
+prometheus（服务监控）
+nagios/zabbix（节点监控）
+salt（节点配置管理）
+cobbler（节点自动化装机）
+ELK（日志收集分析）&lt;/p&gt;
+
+&lt;p&gt;我们的持续集成管理平台在这些技术的基础上，实现了我们的集群管理、容器管理、应用管理等业务流程。&lt;/p&gt;
+
+&lt;p&gt;安装Docker
+$ sudo apt-key adv &amp;ndash;keyserver hkp://keyserver.ubuntu.com:80 &amp;ndash;recv-keys 36A1D7869245C8950F966E92D8576A8BA88D21E9
+$ sudo sh -c &amp;ldquo;echo deb &lt;a href=&#34;https://get.docker.io/ubuntu&#34;&gt;https://get.docker.io/ubuntu&lt;/a&gt; docker main &amp;gt; /etc/apt/sources.list.d/docker.list&amp;rdquo;
+$ sudo apt-get update
+$ sudo apt-get install lxc-docker&lt;/p&gt;
+
+&lt;p&gt;将下面一行加入到/etc/default/docker以激活Docker在TCP的API：
+DOCKER_OPTS=&amp;ldquo;-H 127.0.0.1:4243&amp;rdquo;
+然后重启Docker:
+$ sudo service docker restart
+最后，为Docker客户端定义使用TCP API的环境：
+$ export DOCKER_HOST=tcp://127.0.0.1:4243&lt;/p&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

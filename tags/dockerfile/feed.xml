@@ -1,0 +1,689 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Dockerfile on 百里求一的博客</title>
+        <link>http://kooksee.github.io/tags/dockerfile/</link>
+        <language>zh-CN</language>
+        <author>CoderZh</author>
+        <rights>Copyright (c) 2015, CoderZh; all rights reserved.</rights>
+        <updated>Mon, 01 Jan 0001 00:00:00 UTC</updated>
+        
+        <item>
+            <title>Docker 2 -- 关于Dockerfile</title>
+            <link>http://kooksee.github.io/blog/Docker%202%20--%20%E5%85%B3%E4%BA%8EDockerf/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/Docker%202%20--%20%E5%85%B3%E4%BA%8EDockerf/</guid>
+            <description>&lt;blockquote&gt;
+&lt;p&gt;Dockerfile是一个镜像的表示，可以通过Dockerfile来描述构建镜像的步骤，并自动构建一个容器&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;所有的 Dockerfile 命令格式都是:
+INSTRUCTION arguments&lt;/p&gt;
+
+&lt;p&gt;虽然指令忽略大小写，但是建议使用大写。&lt;/p&gt;
+
+&lt;p&gt;##FROM 命令
+FROM &lt;image&gt;
+或
+FROM &lt;image&gt;:&lt;tag&gt;&lt;/p&gt;
+
+&lt;p&gt;这个设置基本的镜像，为后续的命令使用，所以应该作为Dockerfile的第一条指令。&lt;/p&gt;
+
+&lt;p&gt;比如:
+FROM ubuntu
+如果没有指定 tag ，则默认tag是latest，如果都没有则会报错。&lt;/p&gt;
+
+&lt;p&gt;##RUN 命令&lt;/p&gt;
+
+&lt;p&gt;RUN命令会在上面FROM指定的镜像里执行任何命令，然后提交(commit)结果，提交的镜像会在后面继续用到。&lt;/p&gt;
+
+&lt;p&gt;两种格式:&lt;/p&gt;
+
+&lt;p&gt;RUN &lt;command&gt; (the command is run in a shell - &lt;code&gt;/bin/sh -c&lt;/code&gt;)&lt;/p&gt;
+
+&lt;p&gt;或:&lt;/p&gt;
+
+&lt;p&gt;RUN &lt;a href=&#34;exec form&#34;&gt;&amp;ldquo;executable&amp;rdquo;, &amp;ldquo;param1&amp;rdquo;, &amp;ldquo;param2&amp;rdquo; &amp;hellip; &lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;RUN命令等价于:&lt;/p&gt;
+
+&lt;p&gt;docker run image command
+docker commit container_id&lt;/p&gt;
+
+&lt;p&gt;##注释&lt;/p&gt;
+
+&lt;p&gt;使用 # 作为注释&lt;/p&gt;
+
+&lt;p&gt;如:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# VERSION       1.0
+
+# use the ubuntu base image provided by dotCloud
+FROM ubuntu
+
+# make sure the package repository is up to date
+RUN echo &amp;quot;deb http://archive.ubuntu.com/ubuntu precise main universe&amp;quot; &amp;gt; /etc/apt/sources.list
+RUN apt-get update
+
+# install memcached
+RUN apt-get install -y memcached
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##MAINTAINER 命令&lt;/p&gt;
+
+&lt;p&gt;MAINTAINER name&lt;/p&gt;
+
+&lt;p&gt;MAINTAINER命令用来指定维护者的姓名和联系方式&lt;/p&gt;
+
+&lt;p&gt;如:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;MAINTAINER Guillaume J. Charmes, guillaume@dotcloud.com
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##ENTRYPOINT 命令
+&lt;a href=&#34;http://cloud.51cto.com/art/201411/457338.htm&#34;&gt;http://cloud.51cto.com/art/201411/457338.htm&lt;/a&gt;
+有两种语法格式，一种就是上面的(shell方式):&lt;/p&gt;
+
+&lt;p&gt;ENTRYPOINT cmd param1 param2 &amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;第二种是 exec 格式:
+ENTRYPOINT [&amp;ldquo;cmd&amp;rdquo;, &amp;ldquo;param1&amp;rdquo;, &amp;ldquo;param2&amp;rdquo;..&lt;/p&gt;
+
+&lt;p&gt;如:&lt;/p&gt;
+
+&lt;p&gt;ENTRYPOINT [&amp;ldquo;echo&amp;rdquo;, &amp;ldquo;Whale you be my container&amp;rdquo;]&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;container启动时执行的命令，但是一个Dockerfile中只能有一条ENTRYPOINT命令，如果多条，则只执行最后一条
+ENTRYPOINT 命令设置在容器启动时执行命令&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;root@tankywoo-docker:~# cat Dockerfile
+FROM ubuntu
+ENTRYPOINT echo &amp;quot;Welcome!&amp;quot;
+
+root@tankywoo-docker:~# docker run 62fda5e450d5
+Welcome!
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##USER 命令&lt;/p&gt;
+
+&lt;p&gt;比如指定 memcached 的运行用户，可以使用上面的 ENTRYPOINT 来实现:&lt;/p&gt;
+
+&lt;p&gt;ENTRYPOINT [&amp;ldquo;memcached&amp;rdquo;, &amp;ldquo;-u&amp;rdquo;, &amp;ldquo;daemon&amp;rdquo;]&lt;/p&gt;
+
+&lt;p&gt;更好的方式是：&lt;/p&gt;
+
+&lt;p&gt;ENTRYPOINT [&amp;ldquo;memcached&amp;rdquo;]
+USER daemon&lt;/p&gt;
+
+&lt;p&gt;##EXPOSE 命令&lt;/p&gt;
+
+&lt;p&gt;EXPOSE 命令可以设置一个端口在运行的镜像中暴露在外&lt;/p&gt;
+
+&lt;p&gt;EXPOSE &lt;port&gt; [&lt;port&gt;&amp;hellip;]&lt;/p&gt;
+
+&lt;p&gt;比如memcached使用端口 11211，可以把这个端口暴露在外，这样容器外可以看到这个端口并与其通信。&lt;/p&gt;
+
+&lt;p&gt;EXPOSE 11211&lt;/p&gt;
+
+&lt;p&gt;container内部服务开启的端口。主机上要用还得在启动container时，做host-container的端口映射：&lt;/p&gt;
+
+&lt;p&gt;docker run -d -p 127.0.0.1:33301:22 centos6-ssh&lt;/p&gt;
+
+&lt;p&gt;container ssh服务的22端口被映射到主机的33301端口&lt;/p&gt;
+
+&lt;p&gt;一个完整的例子:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# Memcached
+#
+# VERSION       2.2
+
+# use the ubuntu base image provided by dotCloud
+FROM ubuntu
+
+MAINTAINER Victor Coisne victor.coisne@dotcloud.com
+
+# make sure the package repository is up to date
+RUN echo &amp;quot;deb http://archive.ubuntu.com/ubuntu precise main universe&amp;quot; &amp;gt; /etc/apt/sources.list
+RUN apt-get update
+
+# install memcached
+RUN apt-get install -y memcached
+
+# Launch memcached when launching the container
+ENTRYPOINT [&amp;quot;memcached&amp;quot;]
+
+# run memcached as the daemon user
+USER daemon
+
+# expose memcached port
+EXPOSE 11211
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;上面是官方例子，国内建议换成163或sohu的源，不然太慢了。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;root@tankywoo-docker:~# docker build -t tankywoo  - &amp;lt; dck                       [38/480]
+Uploading context  2.56 kB
+Uploading context
+Step 0 : FROM ubuntu
+ ---&amp;gt; 99ec81b80c55
+Step 1 : MAINTAINER Victor Coisne victor.coisne@dotcloud.com
+ ---&amp;gt; Using cache
+ ---&amp;gt; 2b58110877f6
+Step 2 : RUN echo &amp;quot;deb http://mirrors.163.com/ubuntu/ precise main restricted universe multiverse&amp;quot; &amp;gt; /etc/apt/sources.list
+ ---&amp;gt; Running in f55a4a8bb069
+ ---&amp;gt; d48c6a965398
+Step 3 : RUN apt-get update
+ ---&amp;gt; Running in da091a1dd6e7
+Ign http://mirrors.163.com precise InRelease
+Get:1 http://mirrors.163.com precise Release.gpg [198 B]
+
+....
+
+Processing triggers for libc-bin (2.19-0ubuntu6) ...
+Processing triggers for ureadahead (0.100.0-16) ...
+ ---&amp;gt; 2886671b5b86
+Step 5 : ENTRYPOINT [&amp;quot;memcached&amp;quot;]
+ ---&amp;gt; Running in e8aeeab92cb6
+ ---&amp;gt; 7148293a4053
+Step 6 : USER daemon
+ ---&amp;gt; Running in 288766b19606
+ ---&amp;gt; 235e7f630ffa
+Step 7 : EXPOSE 11211
+ ---&amp;gt; Running in c6f881b9d51f
+ ---&amp;gt; 666c5d65f396
+Successfully built 666c5d65f396
+Removing intermediate container f55a4a8bb069
+Removing intermediate container da091a1dd6e7
+Removing intermediate container f23631d3d45a
+Removing intermediate container e8aeeab92cb6
+Removing intermediate container 288766b19606
+Removing intermediate container c6f881b9d51f
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##ENV 命令&lt;/p&gt;
+
+&lt;p&gt;用于设置环境变量&lt;/p&gt;
+
+&lt;p&gt;ENV &lt;key&gt; &lt;value&gt;
+来设置环境变量，比如：&lt;/p&gt;
+
+&lt;p&gt;ENV LANG en_US.UTF-8
+ENV LC_ALL en_US.UTF-8
+设置了后，后续的RUN命令都可以使用&lt;/p&gt;
+
+&lt;p&gt;使用此dockerfile生成的image新建container，可以通过 docker inspect 看到这个环境变量:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;root@tankywoo-docker:~# docker inspect 49bfc7a9817f
+    ...
+    &amp;quot;Env&amp;quot;: [
+        &amp;quot;name=tanky&amp;quot;,
+        &amp;quot;HOME=/&amp;quot;,
+        &amp;quot;PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin&amp;quot;
+    ],
+    ...
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;里面的name=tanky就是设置的。&lt;/p&gt;
+
+&lt;p&gt;也可以通过在docker run时设置或修改环境变量:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker run -i -t --env name=&amp;quot;tanky&amp;quot; ubuntu:newtest /bin/bash
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##ADD 命令&lt;/p&gt;
+
+&lt;p&gt;从src复制文件到container的dest路径:&lt;/p&gt;
+
+&lt;p&gt;ADD &lt;src&gt; &lt;dest&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;src&amp;gt; 是相对被构建的源目录的相对路径，可以是文件或目录的路径，也可以是一个远程的文件url
+&amp;lt;dest&amp;gt; 是container中的绝对路径
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;将文件&lt;src&gt;拷贝到container的文件系统对应的路径&lt;dest&gt;&lt;/p&gt;
+
+&lt;p&gt;所有拷贝到container中的文件和文件夹权限为0755,uid和gid为0&lt;/p&gt;
+
+&lt;p&gt;如果文件是可识别的压缩格式，则docker会帮忙解压缩&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;如果要ADD本地文件，则本地文件必须在 docker build &amp;lt;PATH&amp;gt;，指定的&amp;lt;PATH&amp;gt;目录下
+
+
+如果要ADD远程文件，则远程文件必须在 docker build &amp;lt;PATH&amp;gt;，指定的&amp;lt;PATH&amp;gt;目录下。比如:
+
+docker build github.com/creack/docker-firefox
+
+
+docker-firefox目录下必须有Dockerfile和要ADD的文件
+
+
+注意:使用docker build - &amp;lt; somefile方式进行build，是不能直接将本地文件ADD到container中。只能ADD
+ url file.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;ADD只有在build镜像的时候运行一次，后面运行container的时候不会再重新加载了。&lt;/p&gt;
+
+&lt;p&gt;##VOLUME 命令&lt;/p&gt;
+
+&lt;p&gt;VOLUME [&amp;ldquo;mountpoint&amp;rdquo;]&lt;/p&gt;
+
+&lt;p&gt;如:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;VOLUME [&amp;quot;/data&amp;quot;]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;创建一个挂载点用于共享目录&lt;/p&gt;
+
+&lt;p&gt;可以将本地文件夹或者其他container的文件夹挂载到container中。&lt;/p&gt;
+
+&lt;p&gt;具体参考 Docker 4 &amp;ndash; 总结
+##WORKDIR 命令&lt;/p&gt;
+
+&lt;p&gt;切换目录用，可以多次切换(相当于cd命令)，对RUN,CMD,ENTRYPOINT生效
+WORKDIR /path/to/workdir
+配置RUN, CMD, ENTRYPOINT 命令设置当前工作路径&lt;/p&gt;
+
+&lt;p&gt;可以设置多次，如果是相对路径，则相对前一个 WORKDIR 命令&lt;/p&gt;
+
+&lt;p&gt;比如:&lt;/p&gt;
+
+&lt;p&gt;WORKDIR /a WORKDIR b WORKDIR c RUN pwd&lt;/p&gt;
+
+&lt;p&gt;其实是在 /a/b/c 下执行 pwd
+##CMD 命令&lt;/p&gt;
+
+&lt;p&gt;有三种格式:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    CMD [&amp;quot;executable&amp;quot;,&amp;quot;param1&amp;quot;,&amp;quot;param2&amp;quot;] (like an exec, preferred form)
+    CMD [&amp;quot;param1&amp;quot;,&amp;quot;param2&amp;quot;] (as default parameters to ENTRYPOINT)
+    CMD command param1 param2 (as a shell
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;一个Dockerfile里只能有一个CMD，如果有多个，只有最后一个生效。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;The main purpose of a CMD is to provide defaults for an executing container.(为可执行的容器提供默认值) These defaults can include an executable, or they can omit the executable, in which case you must specify an ENTRYPOINT as well.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##TODO 还没搞清楚这个的作用
+##ONBUILD
+ONBUILD 指定的命令在构建镜像时并不执行，而是在它的子镜像中执行
+TODO&lt;/p&gt;
+
+&lt;p&gt;总结一下，基本常用的命令是: FROM, MAINTAINER, RUN, ENTRYPOINT, USER, PORT, ADD
+一些例子&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    docker-wordpress-nginx A Dockerfile that installs the latest wordpress, nginx and php-fpm.
+    rails-meets-docker
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>dockerfile</title>
+            <link>http://kooksee.github.io/blog/dockerfile/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/dockerfile/</guid>
+            <description>
+
+&lt;p&gt;monogdb集群
+&lt;strong&gt;&lt;a href=&#34;http://linux.cn/article-4832-1-rel.html&#34;&gt;http://linux.cn/article-4832-1-rel.html&lt;/a&gt;&lt;/strong&gt;
+&lt;a href=&#34;http://linux.cn/article-4832-1-rel.html&#34;&gt;http://linux.cn/article-4832-1-rel.html&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;rancheros
+&lt;a href=&#34;https://releases.rancher.com/os/latest/rancheros.iso&#34;&gt;https://releases.rancher.com/os/latest/rancheros.iso&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://os.51cto.com/art/201409/451927_all.htm&#34;&gt;http://os.51cto.com/art/201409/451927_all.htm&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;虚拟化容器
+&lt;a href=&#34;https://hyper.sh/&#34;&gt;https://hyper.sh/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;关于rancheros的配置
+&lt;a href=&#34;http://www.techweb.com.cn/network/system/2015-12-07/2237261.shtml&#34;&gt;http://www.techweb.com.cn/network/system/2015-12-07/2237261.shtml&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;企业邮箱登录
+&lt;a href=&#34;http://mail.wifiplus.io/cgi-bin/frame_html?sid=EubzpSgHwAiKy3gu,7&amp;amp;r=78d31fd00ebe05f280f2f80624bfea15&#34;&gt;http://mail.wifiplus.io/cgi-bin/frame_html?sid=EubzpSgHwAiKy3gu,7&amp;amp;r=78d31fd00ebe05f280f2f80624bfea15&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;距离计算
+&lt;a href=&#34;http://apis.map.qq.com/ws/distance/v1/?mode=driving&amp;amp;from=39.983171,116.308479&amp;amp;to=39.996060,116.353455;39.949227,116.394310&amp;amp;key=I3OBZ-MBSRQ-WBJ5P-G5VZS-QGAIF-Y7B27&#34;&gt;http://apis.map.qq.com/ws/distance/v1/?mode=driving&amp;amp;from=39.983171,116.308479&amp;amp;to=39.996060,116.353455;39.949227,116.394310&amp;amp;key=I3OBZ-MBSRQ-WBJ5P-G5VZS-QGAIF-Y7B27&lt;/a&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;#-------------------------------------------------------------------------------
+#Copyright (C) &amp;lt;2011&amp;gt; by &amp;lt;James Dyson&amp;gt;
+#Contact dyson.james10@gmail.com
+#Python 3
+
+#Permission is hereby granted, free of charge, to any person obtaining a copy
+#of this code to use this code without restriction, including without limitation
+#the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+#sell copies of the code, and to permit persons to whom the code is
+#furnished to do so, subject to the following conditions:
+
+#The above copyright notice and this permission notice shall be included in
+#all copies or substantial portions of the code.
+
+#THE CODE IS PROVIDED &amp;quot;AS IS&amp;quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+#IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+#FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+#AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+#LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+#OUT OF OR IN CONNECTION WITH THE CODE OR THE USE OR OTHER DEALINGS IN
+#THE CODE.
+#-------------------------------------------------------------------------------
+
+from math import *
+
+#Two Example GPS Locations
+lat1 = 53.32055555555556
+lat2 = 53.31861111111111
+lon1 = -1.7297222222222221
+lon2 = -1.6997222222222223
+Aaltitude = 2000
+Oppsite  = 20000
+
+#Haversine Formuala to find vertical angle and distance
+lon1, lat1, lon2, lat2 = map(radians, [lon1, lat1, lon2, lat2])
+
+dlon = lon2 - lon1
+dlat = lat2 - lat1
+a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
+c = 2 * atan2(sqrt(a), sqrt(1-a))
+Base = 6371 * c
+
+#Horisontal Bearing
+def calcBearing(lat1, lon1, lat2, lon2):
+    dLon = lon2 - lon1
+    y = sin(dLon) * cos(lat2)
+    x = cos(lat1) * sin(lat2) \
+        - sin(lat1) * cos(lat2) * cos(dLon)
+    return atan2(y, x)
+
+Bearing = calcBearing(lat1, lon1, lat2, lon2)
+Bearing = degrees(Bearing)
+
+Base2 = Base * 1000
+distance = Base * 2 + Oppsite * 2 / 2
+Caltitude = Oppsite - Aaltitude
+
+#Convertion from radians to decimals
+a = Oppsite/Base
+b = atan(a)
+c = degrees(b)
+
+#Convert meters into Kilometers
+distance = distance / 1000
+
+#Output the data
+print(&amp;quot;---------------------------------------&amp;quot;)
+print(&amp;quot;:::::Auto Aim Directional Anntenna:::::&amp;quot;)
+print(&amp;quot;---------------------------------------&amp;quot;)
+print(&amp;quot;Horizontial Distance:&amp;quot;, Base,&amp;quot;km&amp;quot;)
+print(&amp;quot;   Vertical Distance:&amp;quot;, distance,&amp;quot;km&amp;quot;)
+print(&amp;quot;    Vertical Bearing:&amp;quot;,c)
+print(&amp;quot; Horizontial Bearing:&amp;quot;,Bearing)
+print(&amp;quot;---------------------------------------&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;获得大众点评能商铺的qq地图的坐标
+&lt;a href=&#34;http://apis.map.qq.com/ws/staticmap/v2/?key=I3OBZ-MBSRQ-WBJ5P-G5VZS-QGAIF-Y7B27&amp;amp;size=300*300&amp;amp;center=39.90981,116.4145403&amp;amp;zoom=15&amp;amp;markers=icon:http://i2.dpfile.com/lib/1.0/map/img/marker.png|39.90981,116.4145403&#34;&gt;http://apis.map.qq.com/ws/staticmap/v2/?key=I3OBZ-MBSRQ-WBJ5P-G5VZS-QGAIF-Y7B27&amp;amp;size=300*300&amp;amp;center=39.90981,116.4145403&amp;amp;zoom=15&amp;amp;markers=icon:http://i2.dpfile.com/lib/1.0/map/img/marker.png|39.90981,116.4145403&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;坐标转换
+&lt;a href=&#34;http://apis.map.qq.com/ws/coord/v1/translate?locations=39.12,116.83;30.21,115.43&amp;amp;type=3&amp;amp;key=I3OBZ-MBSRQ-WBJ5P-G5VZS-QGAIF-Y7B27&#34;&gt;http://apis.map.qq.com/ws/coord/v1/translate?locations=39.12,116.83;30.21,115.43&amp;amp;type=3&amp;amp;key=I3OBZ-MBSRQ-WBJ5P-G5VZS-QGAIF-Y7B27&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;求的坐标位置，参数location=39.984154,116.307490，用；隔开多个值，返回结果
+[
+    {
+        &amp;ldquo;lng&amp;rdquo;: 116.823402,
+        &amp;ldquo;lat&amp;rdquo;: 39.114285
+    },
+    {
+        &amp;ldquo;lng&amp;rdquo;: 115.423571,
+        &amp;ldquo;lat&amp;rdquo;: 30.203786
+    }
+]
+&lt;a href=&#34;http://apis.map.qq.com/ws/geocoder/v1/?location=39.984154,116.307490&amp;amp;key=I3OBZ-MBSRQ-WBJ5P-G5VZS-QGAIF-Y7B27&amp;amp;get_poi=1&#34;&gt;http://apis.map.qq.com/ws/geocoder/v1/?location=39.984154,116.307490&amp;amp;key=I3OBZ-MBSRQ-WBJ5P-G5VZS-QGAIF-Y7B27&amp;amp;get_poi=1&lt;/a&gt;
+Install Deepin terminal in ubuntu&lt;/p&gt;
+
+&lt;p&gt;sudo add-apt-repository ppa:noobslab/deepin-sc
+sudo apt-get update
+sudo apt-get install deepin-terminal&lt;/p&gt;
+
+&lt;p&gt;lng:116.46026,lat:39.91412
+安装NFS服务器nfs-kernel-server后启动失败：Not starting NFS kernel daemon: no exports  &lt;a href=&#34;http://www.crifan.com/after_install_nfs_kernel_server_start_fail_not_starting_nfs_kernel_daemon_no_exports/&#34;&gt;http://www.crifan.com/after_install_nfs_kernel_server_start_fail_not_starting_nfs_kernel_daemon_no_exports/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;mount -t nfs4 192.168.13.97:~/share ~/test1/&lt;/p&gt;
+
+&lt;p&gt;FROM ubuntu
+RUN echo &amp;ldquo;deb &lt;a href=&#34;http://cn.archive.ubuntu.com/ubuntu&#34;&gt;http://cn.archive.ubuntu.com/ubuntu&lt;/a&gt; precise main&amp;rdquo; &amp;gt; /etc/apt/sources.list
+RUN apt-get update
+RUN apt-get install -y vim&lt;/p&gt;
+
+&lt;p&gt;Docker Image是通过Dockerfile来创建的. 具体的创建过程可以参考这里.
+　　我们可以在编写Dockerfile的时候, 将需要的文件通过 ADD 关键字添加文件到Docker Image里面.&lt;/p&gt;
+
+&lt;p&gt;FROM 3scale/openresty&lt;/p&gt;
+
+&lt;h2 id=&#34;add-your-supervisor-openresty-config:13a98cce61a7c185eb25fd01e8410188&#34;&gt;add your supervisor openresty config&lt;/h2&gt;
+
+&lt;p&gt;ADD openresty.conf /etc/supervisor/conf.d/&lt;/p&gt;
+
+&lt;h1 id=&#34;add-your-app:13a98cce61a7c185eb25fd01e8410188&#34;&gt;Add your app&lt;/h1&gt;
+
+&lt;p&gt;ADD . /var/www
+CMD [&amp;ldquo;supervisor&amp;rdquo;]&lt;/p&gt;
+
+&lt;p&gt;　　引用自 3scale/openresty
+　　这个Dockerfile中的ADD 关键字是将本机添加到Docker Image中的/var/www 文件夹中.&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;通过docker run命令的-v/&amp;ndash;volume参数
+　　假设我们需要将本机的/data 目录分享到Docker的/mnt 目录下, 我们可以通过这样的命令:&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;$ touch /data/bilibala
+$ docker run -v /data:/mnt -i -t ubuntu bash
+root@c039a83c35d0:/# ls /mnt
+bilibala
+这个命令可以在启动container中绑定文件夹.
+3. 通过API绑定目录
+　　其实这个方法本质上跟2是一样的, 但是唯一不同的就是, API将docker run 这个命令分成两步了, 分别是:create_container 和 start 在create_container 中, 通过volumes 参数定义需要挂载的目录. 在start 中, binds参数绑定.
+　　下面是一个简单的example:&lt;/p&gt;
+
+&lt;p&gt;#!/usr/bin/env python2.7
+import docker
+c = docker.Client()
+container = c.create_container(&amp;lsquo;ubunt&amp;rsquo;,
+command=&amp;lsquo;bash&amp;rsquo;, volumes=[&amp;lsquo;/mnt&amp;rsquo;],
+tty=True, stdin_open=True)
+c.start(container[&amp;lsquo;Id&amp;rsquo;], binds={&amp;lsquo;/data&amp;rsquo;:&amp;lsquo;/mnt&amp;rsquo;})&lt;/p&gt;
+
+&lt;p&gt;　　这里就创建了一个挂载了/data目录的container.&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;docker login
+自建的image可以上传到官方仓库与大家分享，也方便以后自己重用。
+但在上传之前，需要先到官方仓库注册一个用户。注意：注册完要先去收一下邮件，通过邮箱验证以后才可以从docker登录。
+然后从本地docker登录官方仓库：
+docker login
+之后就可以上传自己创建的image了：
+docker push yourname/imagename&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;##attach
+attach 只要用于重新登录一个正在执行的容器，如果容器没有在运行那么先start&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;ID=$(sudo docker run -d ubuntu /usr/bin/top -b)
+sudo docker attach $ID
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;docker build -t &amp;ldquo;ubuntu:v1&amp;rdquo; .
+docker build -t &amp;ldquo;ubuntu:v1&amp;rdquo; - &amp;lt; Dockerfile_path
+docker build - &amp;lt; Dockerfile_path
+docker build - &amp;lt; context.tar.gz
+docker build github.com/creack/docker-firefox
+docker build . Uploading context 10240 bytes&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;需要关注的博客文档
+&lt;a href=&#34;http://www.philo.top/&#34;&gt;http://www.philo.top/&lt;/a&gt;
+&lt;a href=&#34;https://github.com/lijianying10&#34;&gt;https://github.com/lijianying10&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;ubuntu下NFS安装与配置（实现两台linux之间的文件夹挂载与共享访问） 收藏
+&lt;!-- @page { margin: 2cm } P { margin-bottom: 0.21cm } --&gt;&lt;/p&gt;
+
+&lt;p&gt;NFS 安装与配置&lt;/p&gt;
+
+&lt;p&gt;NFS 全称为“网络文件系统”（ Network File System ）&lt;/p&gt;
+
+&lt;p&gt;本机 ip 地址： 219.229.128.44 用“机器一”表示&lt;/p&gt;
+
+&lt;p&gt;要连接的机器地址： 219.229.128.87 用“机器二”表示&lt;/p&gt;
+
+&lt;p&gt;1 、安装 nfs 服务版（机器一、机器二都要装）&lt;/p&gt;
+
+&lt;p&gt;服务器端安装 : sudo aptitude install nfs-common nfs-kernel-server portmap&lt;/p&gt;
+
+&lt;p&gt;在客户端则需要安装： sudo aptitude install nfs-common portmap
+sudo apt-get install nfs-kernel-server ( 这条命令好像就可以 )&lt;/p&gt;
+
+&lt;p&gt;启动服务 sudo /etc/init.d/nfs-kernel-server start&lt;/p&gt;
+
+&lt;p&gt;停止服务 sudo /etc/init.d/nfs-kernel-server stop&lt;/p&gt;
+
+&lt;p&gt;重启服务 sudo /etc/init.d/nfs-kernel-server restart&lt;/p&gt;
+
+&lt;p&gt;2 、修改 nsf 配置文件（机器二）&lt;/p&gt;
+
+&lt;p&gt;（ 1 ）配置 expores 文件
+sudo gedit /etc/exports
+在文件中添加 nfs 的目录&lt;/p&gt;
+
+&lt;p&gt;书写规则是：（每个共享规则一行）&lt;/p&gt;
+
+&lt;p&gt;共享目录 主机 ( 参数 )&lt;/p&gt;
+
+&lt;p&gt;例如： /home/fzu/dd 219.229.128.44(ro,sync, no_root_squash)&lt;/p&gt;
+
+&lt;p&gt;上面的规则代表将 /home/fzu/dd 目录以读写同步方式共享给主机 219.229.128.44 。如果登陆到 NFS 主机的用户是 root, 那么该用户就具有 NFS 主机的 root 用户的权限。&lt;/p&gt;
+
+&lt;p&gt;Ip 地址可以写成 219.229.128.* 代表 ip 地址以 219.229.128 开始的主机或者直接写成是＊代表全部的主机。
+下面是一些 NFS 共享的常用参数：&lt;/p&gt;
+
+&lt;p&gt;rw ： 可读写的权限；&lt;/p&gt;
+
+&lt;p&gt;ro ： 只读的权限；&lt;/p&gt;
+
+&lt;p&gt;no_root_squash ：登入到 NFS 主机的用户如果是 ROOT 用户，他就拥有 ROOT 的权限 root_squash ：在登入 NFS 主机使用目录的使用者如果是 root 时，那么这个使用者的权限将被压缩成为匿名使用者，通常他的 UID 与 GID 都会变成 nobody 那个身份&lt;/p&gt;
+
+&lt;p&gt;all_squash ：不管登陆 NFS 主机的用户是什么都会被重新设定为 nobody 。&lt;/p&gt;
+
+&lt;p&gt;anonuid ：将登入 NFS 主机的用户都设定成指定的 user id, 此 ID 必须存在于 /etc/passwd 中。&lt;/p&gt;
+
+&lt;p&gt;anongid ：同 anonuid ，但是变成 group ID 就是了！&lt;/p&gt;
+
+&lt;p&gt;sync ：资料同步写入存储器中。&lt;/p&gt;
+
+&lt;p&gt;async ：资料会先暂时存放在内存中，不会直接写入硬盘。&lt;/p&gt;
+
+&lt;p&gt;insecure ：允许从这台机器过来的非授权访问。
+存盘退出&lt;/p&gt;
+
+&lt;p&gt;（ 2 ）配置 hosts.deny 文件&lt;/p&gt;
+
+&lt;p&gt;sudo gedit /etc/hosts.deny&lt;/p&gt;
+
+&lt;p&gt;在文件末尾加入&lt;/p&gt;
+
+&lt;h3 id=&#34;nfs-daemons:13a98cce61a7c185eb25fd01e8410188&#34;&gt;NFS DAEMONS&lt;/h3&gt;
+
+&lt;p&gt;portmap:ALL&lt;/p&gt;
+
+&lt;p&gt;lockd:ALL&lt;/p&gt;
+
+&lt;p&gt;mountd:ALL&lt;/p&gt;
+
+&lt;p&gt;rquotad:ALL&lt;/p&gt;
+
+&lt;p&gt;statd:ALL&lt;/p&gt;
+
+&lt;p&gt;（ 3 ）配置 hosts.allow 文件&lt;/p&gt;
+
+&lt;p&gt;在文件末尾加入&lt;/p&gt;
+
+&lt;h3 id=&#34;nfs-daemons-1:13a98cce61a7c185eb25fd01e8410188&#34;&gt;NFS DAEMONS&lt;/h3&gt;
+
+&lt;p&gt;portmap: 219.229.128.&lt;/p&gt;
+
+&lt;p&gt;lockd: 219.229.128.&lt;/p&gt;
+
+&lt;p&gt;rquotad: 219.229.128.&lt;/p&gt;
+
+&lt;p&gt;mountd: 219.229.128.&lt;/p&gt;
+
+&lt;p&gt;statd: 219.229.128.&lt;/p&gt;
+
+&lt;p&gt;表示给以 219.228.128. 开头的 ip 地址权限，以上两个文件主要是安全设置&lt;/p&gt;
+
+&lt;p&gt;3 、在目录 /home/fzu/ 下建立 nsf 的目录 dd （机器二）
+sudo mkdir /home/fzu/dd
+修改该目录的权限
+sudo chmod 777 -R /home/fzu/dd&lt;/p&gt;
+
+&lt;p&gt;4 、从新启动 nfs （机器一）
+sudo /etc/init.d/nfs-kernel-server restart&lt;/p&gt;
+
+&lt;p&gt;5 、挂载（机器一）
+sudo mount 219.229.128.44:/home/fzu/dd /home/fzu/disk1
+表示将 219.229.128.44 上的 /home/fzu/dd 文件夹挂载到本机的 /home/fzu/disk1 下&lt;/p&gt;
+
+&lt;p&gt;6 、卸载（机器一）
+sudo umount /home/fzu/disk1&lt;/p&gt;
+
+&lt;p&gt;本文来自CSDN博客，转载请标明出处：&lt;a href=&#34;http://blog.csdn.net/s030702614/archive/2009/10/13/4662718.aspx&#34;&gt;http://blog.csdn.net/s030702614/archive/2009/10/13/4662718.aspx&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;　很巧，我最近发现了一个命令，它能彻底的解决我们的问题。&lt;/p&gt;
+
+&lt;p&gt;　　printf “\033c”正是我们需要的命令。它是真正的清空了终端屏幕，它的功能跟DOS里CMD.EXE提供的CLS效果很相似。&lt;/p&gt;
+
+&lt;p&gt;　　但这个命令究竟是做什么的？它的工作原理是什么？&lt;/p&gt;
+
+&lt;p&gt;　　\033  ==  \x1B == 27 == ESC&lt;/p&gt;
+
+&lt;p&gt;　　于是，这个命令变成了c，它是VT-XXX中表示“Full Reset (RIS)”的转义码。现今我们使用的所有的终端都是VT兼容的，但如果你发现自己使用的是一个非常奇怪的终端，那这个命令你可能用不了。printf是bash里内置的命令，内置命令的优先级比其它可执行文件要高。&lt;/p&gt;
+
+&lt;p&gt;　　我们还可以使用另外一个命令，reset，它也是清空终端屏幕，但我们仍然可以使用上下键查看历史命令。这个命令的一个缺点是，它执行起来有点慢，也许是因为它没有发送ESC c指令，但这个命令的兼容性显然比之前的那个要好。&lt;/p&gt;
+
+&lt;p&gt;　　reset命令在你的终端控制错乱时非常有用。你是否遇到过输入字符不出现在光标的位置的情况？当你敲击回车键时，新提示符并没有出现在新行上，而是出现在老提示符的前面？reset命令就是来修正这个问题的。你在CYGWIN上也能使用这个命令。 :)&lt;/p&gt;
+
+&lt;p&gt;[英文原文：how-to-clear-terminal-screen-for-real ]&lt;/p&gt;
+
+&lt;p&gt;via: &lt;a href=&#34;http://www.vaikan.com/how-to-clear-the-terminal-screen-for-real-in-case-of-linux/&#34;&gt;http://www.vaikan.com/how-to-clear-the-terminal-screen-for-real-in-case-of-linux/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;PS：可以用命令别名 alias来替换 printf ‘\033c’ 。&lt;/p&gt;
+
+&lt;p&gt;现在终端中编辑  .bashrc   ,vim .bashrc   添加 alias clc=‘printf &amp;ldquo;\033c&amp;rdquo; ’或者alias clc=”printf ’\033c ‘ &amp;ldquo; ,但是不能&lt;/p&gt;
+
+&lt;p&gt;alias clc=‘printf ’\033c‘ ’。具体原因见另一博文  &lt;a href=&#34;http://blog.csdn.net/zhaozicang/article/details/20081463&#34;&gt;http://blog.csdn.net/zhaozicang/article/details/20081463&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;FROM ubuntu:14.04&lt;/p&gt;
+
+&lt;p&gt;RUN sed -i &amp;rsquo;s/archive.ubuntu/mirrors.aliyun/g&amp;rsquo; /etc/apt/sources.list &amp;amp;&amp;amp; apt-get update
+RUN apt-get install -y curl git m4 texinfo libbz2-dev libcurl4-openssl-dev libexpat-dev libncurses-dev zlib1g-dev
+RUN apt-get install -y vim-nox locales xfonts-utils fontconfig tmux openssh-server screen
+COPY .tmux.conf /root/
+COPY .bashrc /root/
+COPY freem /bin/
+COPY xdev /bin/
+COPY e /bin/
+RUN chmod +x /bin/e /bin/xdev /bin/freem
+RUN echo &amp;ldquo;en_US.UTF-8 UTF-8&amp;rdquo; &amp;gt; /etc/locale.gen &amp;amp;&amp;amp; locale-gen &amp;ldquo;en_US.UTF-8&amp;rdquo;
+RUN mkdir /root/.ssh
+CMD service ssh start &amp;amp;&amp;amp; echo $PUBKEY &amp;gt; /root/.ssh/authorized_keys &amp;amp;&amp;amp; /bin/bash&lt;/p&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

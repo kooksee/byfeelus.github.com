@@ -1,0 +1,1727 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <base href="http://kooksee.github.io/">
+  <title>pipetools类库代码分析 - 百里求一的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+  
+  <meta name="description" content="最近研究了一下pipetools的代码,附上作者的github:https://github.com/0101/pipetools pipet">
+  <meta name="author" content="kooksee">
+  <meta itemprop="name" content="pipetools类库代码分析 - 百里求一的博客">
+  <meta itemprop="description" content="最近研究了一下pipetools的代码,附上作者的github:https://github.com/0101/pipetools pipet">
+  <meta itemprop="image" content="http://kooksee.github.io/img/author.jpg">
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@kooksee" />
+  <meta name="twitter:title" content="pipetools类库代码分析 - 百里求一的博客" />
+  
+  <meta name="twitter:description" content="dfgffcfcffcfgvhbjgfdcgv">
+  
+  <link rel="shortcut icon" href="img/favicon.ico"/>
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+  <link rel="apple-touch-icon-precomposed" href="apple-touch-icon.png" />
+  <link rel="stylesheet" href="highlight/styles/github.css">
+  <script src="highlight/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <link rel="stylesheet" href="font/hack/css/hack.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+  <header>
+    <div>
+  
+  <div id="imglogo">
+    <a href="http://kooksee.github.io/"><img src="http://kooksee.github.io/img/logo.svg" alt="百里求一的博客" title="百里求一的博客"/></a>
+  </div>
+  
+  <div id="textlogo">
+    <h1 class="site-name"><a href="http://kooksee.github.io/" title="百里求一的博客">百里求一的博客</a></h1>
+    <h2 class="blog-motto">观察，思考，学习</h2>
+  </div>
+  <div class="navbar"><a class="navbutton navmobile" href="#" title="menu"></a></div>
+  <nav class="animated">
+    <ul>
+      
+      <li><a href="/">首页</a></li>
+      
+      <li><a href="/about/">关于</a></li>
+      
+      <li><a href="/tags/">标签</a></li>
+      
+      <li>
+        <form class="search" method="get" action="https://www.google.com/search">
+          <div>
+            <input type="text" id="search" name="q" placeholder="搜索">
+          </div>
+        </form>
+      </li>
+    </ul>
+  </nav>
+</div>
+
+  </header>
+  <div id="container">
+    <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody">
+    <header class="article-info clearfix">
+  <h1 itemprop="name">
+      <a href="http://kooksee.github.io/blog/pipetools%E7%B1%BB%E5%BA%93%E4%BB%A3/" title="pipetools类库代码分析" itemprop="url">pipetools类库代码分析</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://kooksee.github.io" title="kooksee">kooksee</a>
+    
+  </p>
+  <p class="article-time">
+    <time datetime="0001-01-01 00:00:00 &#43;0000 UTC" itemprop="datePublished">0001年01月01日</time>
+  </p>
+</header>
+
+	<div class="article-content">
+    
+    <blockquote>
+<p>最近研究了一下pipetools的代码,附上作者的github:<a href="https://github.com/0101/pipetools">https://github.com/0101/pipetools</a>
+pipetools是一个python类库,他能够让你通过管道符链式的方式给函数传递参数,比如:</p>
+
+<pre><code class="language-pyth">f = pipe | list | foreach(&quot;{0}=={0}&quot;)
+print f(&quot;1112342snfjfbjeryehbsa&quot;)
+
+#再简单一点的方式是:
+print (pipe | list | foreach(&quot;{0}=={0}&quot;))(&quot;1112342snfjfbjeryehbsa&quot;)
+
+#又或者是:
+print &quot;1112342snfjfbjeryehbsa&quot; &gt; pipe | list | foreach(&quot;{0}=={0}&quot;)
+#这种传参数方式比传统的要直观,方便,容易书写
+</code></pre>
+</blockquote>
+
+<hr />
+
+<pre><code>copy一点小东西
+</code></pre>
+
+<p>##函数对象
+&gt; 在python当中一切皆对象，函数也不例外，也具有属性（可用dir()查询）。作为对象，它还可以赋值给其它对象名，或者作为参数传递。
+搬砖地址是：<a href="http://www.cnblogs.com/cnshen/p/3684863.html">http://www.cnblogs.com/cnshen/p/3684863.html</a></p>
+
+<pre><code class="language-python">#lambda函数
+func = lambda x,y: x + y
+print func(3,4)
+#lambda生成一个函数对象。该函数参数为x,y，返回值为x+y。函数对象赋给func。func的调用与正常函数无异。
+#以上定义可以写成以下形式：
+def func(x, y):
+    return x + y
+
+
+#函数作为参数传递
+#函数可以作为一个对象，进行参数传递。函数名(比如func)即该对象。比如说:
+def test(f, a, b):
+    print 'test'
+    print f(a, b)
+
+test(func, 3, 5)
+#test函数的第一个参数f就是一个函数对象。将func传递给f，test中的f()就拥有了func()的功能。
+#我们因此可以提高程序的灵活性。可以使用上面的test函数，带入不同的函数参数。比如:
+test((lambda x,y: x**2 + y), 6, 9)
+
+#函数作为返回结果
+#函数是一个对象，所以可以作为某个函数的返回结果。
+def line_conf():
+    def line(x):
+        return 2*x+1
+    return line       # return a function object
+
+my_line = line_conf()
+print(my_line(5))
+#其实，这也就是传说中的闭包
+
+
+#闭包与并行运算
+'''
+闭包有效的减少了函数所需定义的参数数目。这对于并行运算来说有重要的意义。在并行运算的环境下，我们可以让每台电脑负责一个函数，然后将一台电脑的输出和下一台电脑的输入串联起来。最终，我们像流水线一样工作，从串联的电脑集群一端输入数据，从另一端输出数据。这样的情境最适合只有一个参数输入的函数。闭包就可以实现这一目的。
+
+并行运算正称为一个热点。这也是函数式编程又热起来的一个重要原因。函数式编程早在1950年代就已经存在，但应用并不广泛。然而，我们上面描述的流水线式的工作并行集群过程，正适合函数式编程。由于函数式编程这一天然优势，越来越多的语言也开始加入对函数式编程范式的支持。
+'''
+</code></pre>
+
+<p>##partial函数</p>
+
+<pre><code class="language-python">#局部函数应用，又称偏函数
+#我的简单理解是functools.partial函数通过两次传递参数的方式计算被传递函数对象的结果，比如：
+def hello(x,y,z,w):
+    return 12
+print partial(hello)(1,2,3,4) == 12
+print partial(hello,1)(2,3,4) == 12
+print partial(hello,1,2)(3,4) == 12
+print partial(hello1,2,3,4)() == 12
+
+#具体的实现搬个砖：http://blog.csdn.net/largetalk/article/details/6612342
+def partial(func, *args, **keywords):  
+    def newfunc(*fargs, **fkeywords):  
+        newkeywords = keywords.copy()  
+        newkeywords.update(fkeywords)  
+        return func(*(args + fargs), **newkeywords)  
+    newfunc.func = func  
+    newfunc.args = args  
+    newfunc.keywords = keywords  
+    return newfunc  
+</code></pre>
+
+<pre><code>在pipetools文件夹中有五个主要的python文件,咱们一个一个的分析起作用
+</code></pre>
+
+<p>##debug.py文件</p>
+
+<pre><code class="language-python"># encoding=utf-8
+from itertools import imap, chain
+
+def set_name(name, f):
+    '''
+    给f函数对象增加一个名字为__pipetools__name__值为name的属性
+    :param name:
+    :param f:
+    :return:
+
+    &gt;&gt;&gt; set_name(&quot;hello&quot;,lambda x:x).__pipetools__name__
+    'hello'
+    '''
+
+    try:
+        f.__pipetools__name__ = name
+    except (AttributeError, UnicodeEncodeError):
+        pass
+    return f
+
+
+def get_name(f):
+    '''
+    返回f函数对象的标识名
+    返回值是字符串
+    :param f:
+    :return:
+    '''
+    from pipetools.main import Pipe
+
+    pipetools_name = getattr(f, '__pipetools__name__', None)
+    if pipetools_name: #如果__pipetools__name__属性存在，那么f是函数对象或者函数
+        return pipetools_name() if callable(pipetools_name) else pipetools_name
+
+    if isinstance(f, Pipe):
+        return repr(f)
+
+    return f.__name__ if hasattr(f, '__name__') else repr(f)
+
+
+def repr_args(*args, **kwargs):
+    '''
+    返回列表和字典参数的字符串形式
+    :param args:
+    :param kwargs:
+    :return:
+
+    &gt;&gt;&gt; repr_args(2, 3, 21, 4, 5, name=2234, ii='ffff')
+    &quot;2, 3, 21, 4, 5, ii='ffff', name=2234&quot;
+    '''
+    return ', '.join(chain( #chain连接多个迭代器为一个
+        imap('{0!r}'.format, args),
+        imap('{0[0]}={0[1]!r}'.format, kwargs.iteritems())))
+</code></pre>
+
+<p>##ds_builder.py</p>
+
+<pre><code class="language-python"># encoding=utf-8
+
+from functools import partial
+from pipetools.main import XObject, StringFormatter
+
+class NoBuilder(ValueError):
+    pass
+
+def DSBuilder(definition):
+    '''
+    definition是一个可转换迭代器
+    可转换迭代器是让一个序列或者字典经过其他函数处理后可迭代
+    :param definition:
+    :return:
+    '''
+
+    builder = select_builder(definition)
+    if builder:
+        return builder(definition)
+    raise NoBuilder(&quot;Don't know how to build %s&quot; % type(definition))
+
+
+def SequenceBuilder(cls, definition):
+    '''
+    把definition里面的可求值元素转换成其对应的函数
+    可求值元素是能够让里面的元素经过转换,变成一个能够传递参数的函数
+    而ds_item返回的是一个值,故而整体返回值是一个lambda包含着的cls类型的序列
+    :param cls:
+    :param definition:
+    :return:
+    '''
+    return lambda x: cls(ds_item(d, x) for d in definition)
+
+
+def DictBuilder(definition):
+    return lambda x: dict(
+        (ds_item(key_def, x), ds_item(val_def, x))
+        for key_def, val_def in definition.iteritems())
+'''
+定义了三种构造器,列表,元组,字典构造器
+定义构造器的目的是让列表,元组,字典里面的特殊元素转化成正常的元素
+根据前面partial的介绍简单理解一下下面字典的作用，SequenceBuilder是一个有两个参数的函数，partial(SequenceBuilder, tuple)(data)得到计算结果，相当于tuple(data),也就是说partial(SequenceBuilder, tuple)是对tuple的封装，作用和tuple是一样的，封装的目的是处理data中复杂的数据结构
+'''
+builders = {
+    tuple: partial(SequenceBuilder, tuple),
+    list: partial(SequenceBuilder, list),
+    dict: DictBuilder,
+}
+
+
+def select_builder(definition):
+    '''
+    根据definition的类型,返回其对应的构造转换器，也就是上面builders中的value
+    :param definition:
+    :return:
+    '''
+    for cls, builder in builders.iteritems():
+        if isinstance(definition, cls):
+            return builder
+
+
+def ds_item(definition, data):
+    '''
+    根据definition的类型转换成其对应的函数,然后根据data参数值返回处理后的结果
+    简而言之,该函数的结果是值,不是函数对象
+    :param definition:
+    :param data:
+    :return:
+    '''
+    if isinstance(definition, XObject):
+        return (~definition)(data)
+    if isinstance(definition, basestring):
+        return StringFormatter(definition)(data)
+    if callable(definition):
+        return definition(data)
+    try:
+        return DSBuilder(definition)(data)
+    except NoBuilder:
+        # static item
+        return definition
+
+</code></pre>
+
+<p>##decorators.py</p>
+
+<pre><code class="language-python"># encoding=utf-8
+
+import re
+from functools import partial, wraps
+from pipetools.debug import repr_args, set_name, get_name
+from pipetools.ds_builder import DSBuilder, NoBuilder
+from pipetools.main import pipe, XObject, StringFormatter, xpartial
+
+
+def pipe_util(func):
+    &quot;&quot;&quot;
+    装饰器装饰函数func之后，然后让其返回一个函数对象pipe_util_wrapper
+    pipe_util_wrapper函数的首参数为函数，返回值是一个Pipe对象
+
+    被装饰者的首参数就是pipe_util_wrapper的首参数
+
+    &quot;&quot;&quot;
+
+    @wraps(func)
+    def pipe_util_wrapper(function, *args, **kwargs):
+        if isinstance(function, XObject):
+            function = ~function
+
+        original_function = function
+
+        if args or kwargs:
+            function = xpartial(function, *args, **kwargs)
+
+        name = lambda: '%s(%s)' % (get_name(func), ', '.join(
+            filter(None, (get_name(original_function), repr_args(*args, **kwargs)))))
+
+        f = func(function) #被装饰者的返回值
+
+        result = pipe | set_name(name, f) #把被装饰者的返回值封装成一个Pipe对象
+
+        # if the util defines an 'attrs' mapping, copy it as attributes
+        # to the result
+        attrs = getattr(f, 'attrs', {})
+        for k, v in attrs.iteritems():
+            setattr(result, k, v)
+
+        # result是一个拥有f函数的Pipe对象
+        return result
+
+    return pipe_util_wrapper
+
+
+def auto_string_formatter(func):
+    &quot;&quot;&quot;
+    把含有格式化的字符串转化成该字符串的格式化函数形式
+
+    &quot;&quot;&quot;
+    @wraps(func)
+    def auto_string_formatter_wrapper(function, *args, **kwargs):
+        if isinstance(function, basestring):
+            function = StringFormatter(function) #StringFormatter的返回值类似于&quot;{0}&quot;.format
+
+        return func(function, *args, **kwargs)
+    return auto_string_formatter_wrapper
+
+
+def data_structure_builder(func):
+    &quot;&quot;&quot;
+    装饰器处理元素中包含特殊数据结构的元组，列表，字典等
+    &quot;&quot;&quot;
+
+    @wraps(func)
+    def ds_builder_wrapper(function, *args, **kwargs):
+        try:
+            function = DSBuilder(function)
+        except NoBuilder:
+            pass
+        return func(function, *args, **kwargs)
+
+    return ds_builder_wrapper
+
+
+def regex_condition(func):
+    &quot;&quot;&quot;
+    If a condition is given as string instead of a function, it is turned
+    into a regex-matching function.
+    &quot;&quot;&quot;
+
+    @wraps(func)
+    def regex_condition_wrapper(condition, *args, **kwargs):
+        if isinstance(condition, basestring):
+            condition = partial(re.match, condition)
+        return func(condition, *args, **kwargs)
+
+    return regex_condition_wrapper
+</code></pre>
+
+<p>##utils.py</p>
+
+<pre><code class="language-python">from functools import partial
+from itertools import imap, ifilter, islice, takewhile, dropwhile
+import operator
+
+from pipetools.debug import set_name, repr_args, get_name
+from pipetools.decorators import data_structure_builder, regex_condition
+from pipetools.decorators import pipe_util, auto_string_formatter
+from pipetools.main import pipe, X, _iterable
+
+KEY, VALUE = X[0], X[1]
+
+
+@pipe_util
+@auto_string_formatter
+@data_structure_builder
+def foreach(function):
+    &quot;&quot;&quot;
+    Returns a function that takes an iterable and returns an iterator over the
+    results of calling `function` on each item of the iterable.
+
+    &gt;&gt;&gt; xrange(5) &gt; foreach(factorial) | list
+    [1, 1, 2, 6, 24]
+
+    &gt;&gt;&gt; &quot;1234567assfsd&quot; &gt; foreach(&quot;{0}&quot;) | list
+    [u'1', u'2', u'3', u'4', u'5', u'6', u'7', u'a', u's', u's', u'f', u's', u'd']
+
+    &gt;&gt;&gt; &quot;123455dHHJBHJgg&quot; &gt; foreach(X.lower()) | list
+    ['1', '2', '3', '4', '5', '5', 'd', 'h', 'h', 'j', 'b', 'h', 'j', 'g', 'g']
+
+    &gt;&gt;&gt; &quot;12BHJgg&quot; &gt; foreach((&quot;{0}&quot;,&quot;{0}==&quot;)) | list
+    [(u'1', u'1=='), (u'2', u'2=='), (u'B', u'B=='), (u'H', u'H=='), (u'J', u'J=='), (u'g', u'g=='), (u'g', u'g==')]
+
+    &gt;&gt;&gt; &quot;12BHJgg&quot; &gt; foreach([X,X.upper()]) | list
+    [['1', '1'], ['2', '2'], ['B', 'B'], ['H', 'H'], ['J', 'J'], ['g', 'G'], ['g', 'G']]
+
+    &gt;&gt;&gt; &quot;12BHJgg&quot; &gt; foreach({X:X.upper()}) | list
+    [{'1': '1'}, {'2': '2'}, {'B': 'B'}, {'H': 'H'}, {'J': 'J'}, {'g': 'G'}, {'g': 'G'}]
+
+    &quot;&quot;&quot;
+    return partial(imap, function)
+
+@pipe_util
+def foreach_do(function):
+    &quot;&quot;&quot;
+    foreach除了返回一个迭代器什么都不会执行
+    foreach_do马上就会被执行，如果你只是想马上看到结果，不考虑性能等副作用的话，它很适合你
+
+    &gt;&gt;&gt; xrange(5) &gt; foreach_do(factorial) | foreach_do(X+3)
+    [4, 4, 5, 9, 27]
+
+    &gt;&gt;&gt; &quot;12332dffrrr&quot; &gt; foreach_do(X.upper())
+    ['1', '2', '3', '3', '2', 'D', 'F', 'F', 'R', 'R', 'R']
+    &quot;&quot;&quot;
+    return lambda iterable: [function(item) for item in iterable]
+
+@pipe_util
+@regex_condition
+def where(condition):
+    &quot;&quot;&quot;
+    Pipe-able lazy filter.
+
+    &gt;&gt;&gt; odd_range = xrange | where(X % 2) | list
+    &gt;&gt;&gt; odd_range(10)
+    [1, 3, 5, 7, 9]
+
+    &quot;&quot;&quot;
+    return partial(ifilter, condition)
+
+
+@pipe_util
+@regex_condition
+def where_not(condition):
+    &quot;&quot;&quot;
+    Inverted :func:`where`.
+    &quot;&quot;&quot;
+    return partial(ifilter, pipe | condition | operator.not_)
+
+
+@pipe_util
+@data_structure_builder
+def sort_by(function):
+    &quot;&quot;&quot;
+    Sorts an incoming sequence by using the given `function` as key.
+
+    &gt;&gt;&gt; xrange(10) &gt; sort_by(-X)
+    [9, 8, 7, 6, 5, 4, 3, 2, 1, 0]
+
+    Supports automatic data-structure creation::
+
+        users &gt; sort_by([X.last_name, X.first_name])
+
+    There is also a shortcut for ``sort_by(X)`` called ``sort``:
+
+    &gt;&gt;&gt; [4, 5, 8, -3, 0] &gt; sort
+    [-3, 0, 4, 5, 8]
+
+    And (as of ``0.2.3``) a shortcut for reversing the sort:
+
+    &gt;&gt;&gt; 'asdfaSfa' &gt; sort_by(X.lower()).descending
+    ['s', 'S', 'f', 'f', 'd', 'a', 'a', 'a']
+    &quot;&quot;&quot;
+    f = partial(sorted, key=function)
+    f.attrs = {'descending': _descending_sort_by(function)}
+    return f
+
+
+@pipe_util
+def _descending_sort_by(function):
+    return partial(sorted, key=function, reverse=True)
+
+
+sort = sort_by(X)
+
+
+@pipe_util
+@auto_string_formatter
+@data_structure_builder
+def debug_print(function):
+    &quot;&quot;&quot;
+    Prints function applied on input and returns the input.
+
+    ::
+
+        foo = (pipe
+            | something
+            | debug_print(X.get_status())
+            | something_else
+            | foreach(debug_print(&quot;attr is: {0.attr}&quot;))
+            | etc)
+    &quot;&quot;&quot;
+
+    def debug(thing):
+        print function(thing)
+        return thing
+
+    return debug
+
+
+@pipe_util
+def as_args(function):
+    &quot;&quot;&quot;
+    Applies the sequence in the input as positional arguments to `function`.
+
+    ::
+
+        some_lists &gt; as_args(izip)
+    &quot;&quot;&quot;
+    return lambda x: function(*x)
+
+
+@pipe_util
+def as_kwargs(function):
+    &quot;&quot;&quot;
+    Applies the dictionary in the input as keyword arguments to `function`.
+    &quot;&quot;&quot;
+    return lambda x: function(**x)
+
+
+def take_first(count):
+    &quot;&quot;&quot;
+    Assumes an iterable on the input, returns an iterable with first `count`
+    items from the input (or possibly less, if there isn't that many).
+
+    &gt;&gt;&gt; xrange(9000) &gt; where(X % 100 == 0) | take_first(5) | tuple
+    (0, 100, 200, 300, 400)
+
+    &quot;&quot;&quot;
+
+    def _take_first(iterable):
+        return islice(iterable, count)
+
+    return pipe | set_name('take_first(%s)' % count, _take_first)
+
+
+def drop_first(count):
+    &quot;&quot;&quot;
+    Assumes an iterable on the input, returns an iterable with identical items
+    except for the first `count`.
+
+    &gt;&gt;&gt; xrange(10) &gt; drop_first(5) | tuple
+    (5, 6, 7, 8, 9)
+    &quot;&quot;&quot;
+
+    def _drop_first(iterable):
+        g = (x for x in xrange(1, count + 1))
+        return dropwhile(lambda i: unless(StopIteration, g.next)(), iterable)
+
+    return pipe | set_name('drop_first(%s)' % count, _drop_first)
+
+
+def unless(exception_class_or_tuple, func, *args, **kwargs):
+    &quot;&quot;&quot;
+    When `exception_class_or_tuple` occurs while executing `func`, it will
+    be caught and ``None`` will be returned.
+
+    &gt;&gt;&gt; f = where(X &gt; 10) | list | unless(IndexError, X[0])
+    &gt;&gt;&gt; f([5, 8, 12, 4])
+    12
+    &gt;&gt;&gt; f([1, 2, 3])
+    None
+    &quot;&quot;&quot;
+
+    @pipe_util
+    @auto_string_formatter
+    @data_structure_builder
+    def construct_unless(function):
+        # a wrapper so we can re-use the decorators
+        def _unless(*args, **kwargs):
+            try:
+                return function(*args, **kwargs)
+            except exception_class_or_tuple:
+                pass
+
+        return _unless
+
+    name = lambda: 'unless(%s, %s)' % (exception_class_or_tuple, ', '.join(
+        filter(None, (get_name(func), repr_args(*args, **kwargs)))))
+
+    return set_name(name, construct_unless(func, *args, **kwargs))
+
+
+@pipe_util
+@regex_condition
+def select_first(condition):
+    &quot;&quot;&quot;
+    Returns first item from input sequence that satisfies `condition`. Or
+    ``None`` if none does.
+
+    &gt;&gt;&gt; ['py', 'pie', 'pi'] &gt; select_first(X.startswith('pi'))
+    'pie'
+
+    As of ``0.2.1`` you can also
+    :ref:`directly use regular expressions &lt;auto-regex&gt;` and write the above
+    as:
+
+    &gt;&gt;&gt; ['py', 'pie', 'pi'] &gt; select_first('^pi')
+    'pie'
+
+    There is also a shortcut for ``select_first(X)`` called ``first_of``:
+
+    &gt;&gt;&gt; first_of(['', None, 0, 3, 'something'])
+    3
+    &gt;&gt;&gt; first_of([])
+    None
+    &quot;&quot;&quot;
+    return where(condition) | unless(StopIteration, X.next())
+
+
+first_of = select_first(X)
+
+
+@pipe_util
+@auto_string_formatter
+@data_structure_builder
+def group_by(function):
+    &quot;&quot;&quot;
+    Groups input sequence by `function`.
+
+    Returns an iterator over a sequence of tuples where the first item is a
+    result of `function` and the second one a list of items matching this
+    result.
+
+    Ordering of the resulting iterator is undefined, but ordering of the items
+    in the groups is preserved.
+
+    &gt;&gt;&gt; [1, 2, 3, 4, 5, 6] &gt; group_by(X % 2) | list
+    [(0, [2, 4, 6]), (1, [1, 3, 5])]
+    &quot;&quot;&quot;
+
+    def _group_by(seq):
+        result = {}
+        for item in seq:
+            result.setdefault(function(item), []).append(item)
+        return result.iteritems()
+
+    return _group_by
+
+
+def _flatten(x):
+    if not _iterable(x):
+        yield x
+    else:
+        for y in x:
+            for z in _flatten(y):
+                yield z
+
+
+def flatten(*args):
+    &quot;&quot;&quot;
+    Flattens an arbitrarily deep nested iterable(s).
+    &quot;&quot;&quot;
+    return _flatten(args)
+
+
+flatten = pipe | flatten
+
+
+def count(iterable):
+    &quot;&quot;&quot;
+    Returns the number of items in `iterable`.
+    &quot;&quot;&quot;
+    return sum(1 for whatever in iterable)
+
+
+count = pipe | count
+
+
+@pipe_util
+@regex_condition
+def take_until(condition):
+    &quot;&quot;&quot;
+    &gt;&gt;&gt; [1, 4, 6, 4, 1] &gt; take_until(X &gt; 5) | list
+    [1, 4]
+    &quot;&quot;&quot;
+    return partial(takewhile, pipe | condition | operator.not_)
+
+</code></pre>
+
+<p>##main.py</p>
+
+<pre><code class="language-python"># encoding=utf-8
+from collections import Iterable
+from functools import partial, wraps
+
+from pipetools.debug import get_name, set_name, repr_args
+
+
+class Pipe(object):
+    &quot;&quot;&quot;
+    Pipe-style combinator.
+
+    Example::
+
+        p = pipe | F | G | H
+
+        p(x) == H(G(F(x)))
+
+    &quot;&quot;&quot;
+
+    def __init__(self, func=None):
+        self.func = func
+        self.__name__ = 'Pipe'
+
+    def __str__(self):
+        return get_name(self.func)
+
+    __repr__ = __str__
+
+    @staticmethod
+    def compose(first, second):
+        name = lambda: '{0} | {1}'.format(get_name(first), get_name(second))
+
+        def composite(*args, **kwargs):
+            return second(first(*args, **kwargs))
+
+        return set_name(name, composite)
+
+    @classmethod
+    def bind(cls, first, second):
+        return cls(cls.compose(first, second) if all([first, second]) else first or second)
+
+    def __or__(self, next_func):
+        return self.bind(self.func, prepare_function_for_pipe(next_func))
+
+    def __ror__(self, prev_func):
+        return self.bind(prepare_function_for_pipe(prev_func), self.func)
+
+    def __lt__(self, thing):
+        return self.func(thing) if self.func else thing
+
+    def __call__(self, *args, **kwargs):
+        return self.func(*args, **kwargs)
+
+    def __get__(self, instance, owner):
+        return partial(self, instance) if instance else self
+
+
+pipe = Pipe()
+
+
+class Maybe(Pipe):
+    @staticmethod
+    def compose(first, second):
+        name = lambda: '{0} ?| {1}'.format(get_name(first), get_name(second))
+
+        def composite(*args, **kwargs):
+            result = first(*args, **kwargs)
+            return None if result is None else second(result)
+
+        return set_name(name, composite)
+
+    def __call__(self, *args, **kwargs):
+        if len(args) == 1 and args[0] is None and not kwargs:
+            return None
+        return self.func(*args, **kwargs)
+
+    def __lt__(self, thing):
+        return (
+            None if thing is None else
+            self.func(thing) if self.func else
+            thing)
+
+
+maybe = Maybe()
+
+
+def prepare_function_for_pipe(thing):
+    if isinstance(thing, XObject):
+        return ~thing
+    if isinstance(thing, tuple):
+        return xpartial(*thing)
+    if isinstance(thing, basestring):
+        return StringFormatter(thing)
+    if callable(thing):
+        return thing
+    raise ValueError('Cannot pipe %s' % thing)
+
+
+def StringFormatter(template):
+    '''
+    把一个字符串转化为一个带有format格式的函数
+    content是格式化字符串的参数
+    :param template:
+    :return:
+    '''
+    f = unicode(template).format
+
+    def _format(content):
+        if isinstance(content, dict):
+            return f(**content)
+        if _iterable(content):
+            return f(*content)
+        return f(content)
+
+    return set_name(lambda: &quot;format('%s')&quot; % template[:20], _format)
+
+
+def _iterable(obj):
+    &quot;Iterable but not a string&quot;
+    return isinstance(obj, Iterable) and not isinstance(obj, basestring)
+
+
+class XObject(object):
+    def __init__(self, func=None):
+        self._func = func
+        set_name(lambda: get_name(func) if func else 'X', self)
+
+    def __repr__(self):
+        return get_name(self)
+
+    def __invert__(self):
+        return self._func or set_name('X', lambda x: x)
+
+    def bind(self, name, func):
+        set_name(name, func)
+        return XObject((self._func | func) if self._func else (pipe | func))
+
+    def __call__(self, *args, **kwargs):
+        name = lambda: 'X(%s)' % repr_args(*args, **kwargs)
+        return self.bind(name, lambda x: x(*args, **kwargs))
+
+    def __eq__(self, other):
+        return self.bind(lambda: 'X == {0!r}'.format(other), lambda x: x == other)
+
+    def __getattr__(self, name):
+        return self.bind(lambda: 'X.{0}'.format(name), lambda x: getattr(x, name))
+
+    def __getitem__(self, item):
+        return self.bind(lambda: 'X[{0!r}]'.format(item), lambda x: x[item])
+
+    def __gt__(self, other):
+        return self.bind(lambda: 'X &gt; {0!r}'.format(other), lambda x: x &gt; other)
+
+    def __ge__(self, other):
+        return self.bind(lambda: 'X &gt;= {0!r}'.format(other), lambda x: x &gt;= other)
+
+    def __lt__(self, other):
+        return self.bind(lambda: 'X &lt; {0!r}'.format(other), lambda x: x &lt; other)
+
+    def __le__(self, other):
+        return self.bind(lambda: 'X &lt;= {0!r}'.format(other), lambda x: x &lt;= other)
+
+    def __mod__(self, y):
+        return self.bind(lambda: 'X % {0!r}'.format(y), lambda x: x % y)
+
+    def __ne__(self, other):
+        return self.bind(lambda: 'X != {0!r}'.format(other), lambda x: x != other)
+
+    def __neg__(self):
+        return self.bind(lambda: '-X', lambda x: -x)
+
+    def __mul__(self, other):
+        return self.bind(lambda: 'X * {0!r}'.format(other), lambda x: x * other)
+
+    def __div__(self, other):
+        return self.bind(lambda: 'X / {0!r}'.format(other), lambda x: x / other)
+
+    def __add__(self, other):
+        return self.bind(lambda: 'X + {0!r}'.format(other), lambda x: x + other)
+
+    def __sub__(self, other):
+        return self.bind(lambda: 'X - {0!r}'.format(other), lambda x: x - other)
+
+    def __pow__(self, other):
+        return self.bind(lambda: 'X ** {0!r}'.format(other), lambda x: x ** other)
+
+    def __ror__(self, func):
+        return pipe | func | self
+
+    def __or__(self, func):
+        if isinstance(func, Pipe):
+            return func.__ror__(self)
+        return pipe | self | func
+
+    def _in_(self, y):
+        return self.bind(lambda: 'X._in_({0!r})'.format(y), lambda x: x in y)
+
+
+X = XObject()
+
+
+def xpartial(func, *xargs, **xkwargs):
+    &quot;&quot;&quot;
+    Like :func:`functools.partial`, but can take an :class:`XObject`
+    placeholder that will be replaced with the first positional argument
+    when the partially applied function is called.
+
+    Useful when the function's positional arguments' order doesn't fit your
+    situation, e.g.:
+
+    &gt;&gt;&gt; reverse_range = xpartial(range, X, 0, -1)
+    &gt;&gt;&gt; reverse_range(5)
+    [5, 4, 3, 2, 1]
+
+    It can also be used to transform the positional argument to a keyword
+    argument, which can come in handy inside a *pipe*::
+
+        xpartial(objects.get, id=X)
+
+    Also the XObjects are evaluated, which can be used for some sort of
+    destructuring of the argument::
+
+        xpartial(somefunc, name=X.name, number=X.contacts['number'])
+
+    Lastly, unlike :func:`functools.partial`, this creates a regular function
+    which will bind to classes (like the ``curry`` function from
+    ``django.utils.functional``).
+    &quot;&quot;&quot;
+    any_x = any(isinstance(a, XObject)
+                for a in xargs + tuple(xkwargs.values()))
+    use = lambda x, value: (~x)(value) if isinstance(x, XObject) else x
+
+    @wraps(func)
+    def xpartially_applied(*func_args, **func_kwargs):
+        if any_x:
+            if not func_args:
+                raise ValueError('Function &quot;%s&quot; partially applied with an '
+                                 'X placeholder but called with no positional arguments.'
+                                 % get_name(func))
+            first = func_args[0]
+            rest = func_args[1:]
+            args = tuple(use(x, first) for x in xargs) + rest
+            kwargs = dict((k, use(x, first)) for k, x in xkwargs.iteritems())
+            kwargs.update(func_kwargs)
+        else:
+            args = xargs + func_args
+            kwargs = dict(xkwargs, **func_kwargs)
+        return func(*args, **kwargs)
+
+    name = lambda: '%s(%s)' % (get_name(func), repr_args(*xargs, **xkwargs))
+    return set_name(name, xpartially_applied)
+
+
+if __name__ == '__main__':
+    f = 'ggggcdwecfwefhweejhjwq' &gt; pipe | list | ','.join
+    print f
+
+</code></pre>
+
+	</div>
+  <footer class="article-footer clearfix">
+  
+  
+    <div class="article-tags">
+      <span></span>
+      
+      <a href="/tags/pipetools">pipetools</a>
+      
+      <a href="/tags/%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90">代码分析</a>
+      
+    </div>
+  
+
+
+
+
+  <div class="article-share" id="share">
+    <div data-url="http://kooksee.github.io/blog/pipetools%E7%B1%BB%E5%BA%93%E4%BB%A3/" data-title="pipetools类库代码分析" data-tsina="1816308191" class="share clearfix">
+    </div>
+  </div>
+</footer>
+
+	</article>
+  
+<section class="comment">
+  <div class="ds-thread" data-thread-key="http://kooksee.github.io/blog/pipetools%E7%B1%BB%E5%BA%93%E4%BB%A3/"
+   data-title="pipetools类库代码分析" data-url="http://kooksee.github.io/blog/pipetools%E7%B1%BB%E5%BA%93%E4%BB%A3/"></div>
+</section>
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"kooksee"};
+(function() {
+  var ds = document.createElement('script');
+  ds.type = 'text/javascript';ds.async = true;
+  ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+  ds.charset = 'UTF-8';
+  (document.getElementsByTagName('head')[0]
+  || document.getElementsByTagName('body')[0]).appendChild(ds);
+})();
+</script>
+
+
+
+
+</div>
+
+    <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+  
+
+<div class="categorieslist">
+  <p class="asidetitle">分类</p>
+  <ul>
+    
+    <li><a href="http://kooksee.github.io/categories/%e6%8a%80%e6%9c%af%e6%96%87%e7%ab%a0" title="技术文章">技术文章<sup>2</sup></a></li>
+    
+  </ul>
+</div>
+
+
+
+  
+
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+      
+			<li><a href="http://kooksee.github.io/tags/api" title="api">api<sup>2</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/api%e8%ae%be%e8%ae%a1%e8%bd%af%e4%bb%b6" title="api设计软件">api设计软件<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/bhnhbhbh" title="bhnhbhbh">bhnhbhbh<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/bools.py" title="bools.py">bools.py<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/ceo" title="ceo">ceo<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/cmd" title="cmd">cmd<sup>2</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/cmd%e6%a8%a1%e5%9d%97" title="cmd模块">cmd模块<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/consul" title="consul">consul<sup>3</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/ddd" title="ddd">ddd<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/docker" title="docker">docker<sup>13</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/docker-machine" title="docker-machine">docker-machine<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/dockerfile" title="dockerfile">dockerfile<sup>2</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/error" title="error">error<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/fish" title="fish">fish<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/flask" title="flask">flask<sup>3</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/gbk" title="gbk">gbk<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/groovy" title="groovy">groovy<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/hashlib" title="hashlib">hashlib<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/ipc" title="ipc">ipc<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/itertools" title="itertools">itertools<sup>2</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/javascript" title="javascript">javascript<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/jquery" title="jquery">jquery<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/json" title="json">json<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/knn" title="knn">knn<sup>2</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/linux" title="linux">linux<sup>2</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/lpc" title="lpc">lpc<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/makefile" title="makefile">makefile<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/mesos" title="mesos">mesos<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/mht" title="mht">mht<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/mongodb" title="mongodb">mongodb<sup>5</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/nodejs" title="nodejs">nodejs<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/openvpn" title="openvpn">openvpn<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/pipetools" title="pipetools">pipetools<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/plan_morning" title="plan_morning">plan_morning<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/postgresql" title="postgresql">postgresql<sup>2</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/pyshell" title="pyshell">pyshell<sup>2</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/python" title="python">python<sup>36</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/python%e6%a8%a1%e5%9d%97" title="python模块">python模块<sup>8</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/pyv8" title="pyv8">pyv8<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/rpc" title="rpc">rpc<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/shell" title="shell">shell<sup>2</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/shutil" title="shutil">shutil<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/simplejson" title="simplejson">simplejson<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/smb" title="smb">smb<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/software" title="software">software<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/sphinx" title="sphinx">sphinx<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/spyder" title="spyder">spyder<sup>2</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/sql" title="sql">sql<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/sqlalchemy" title="sqlalchemy">sqlalchemy<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/ssh" title="ssh">ssh<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/stringio" title="stringio">stringio<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/sublime" title="sublime">sublime<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/subprocess" title="subprocess">subprocess<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/ubuntu" title="ubuntu">ubuntu<sup>4</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/utf-8" title="utf-8">utf-8<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/webpack" title="webpack">webpack<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/wiki" title="wiki">wiki<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/wtf" title="wtf">wtf<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/zipfile" title="zipfile">zipfile<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/zmq" title="zmq">zmq<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e4%b8%89%e5%85%83%e8%a1%a8%e8%be%be%e5%bc%8f" title="三元表达式">三元表达式<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e4%b8%8b%e8%bd%bd%e5%99%a8" title="下载器">下载器<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e4%b8%ad%e7%bc%80%e8%af%ad%e6%b3%95" title="中缀语法">中缀语法<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e4%b9%a6%e7%b1%8d%e6%8e%a8%e8%8d%90" title="书籍推荐">书籍推荐<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e4%bb%a3%e7%90%86" title="代理">代理<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e4%bb%a3%e7%a0%81%e5%88%86%e6%9e%90" title="代码分析">代码分析<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e4%bb%bb%e5%8a%a1%e5%8f%91%e5%b8%83%e5%b9%b3%e5%8f%b0" title="任务发布平台">任务发布平台<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%85%bb%e7%94%9f" title="养生">养生<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%86%85%e6%a0%b8%e5%8d%87%e7%ba%a7" title="内核升级">内核升级<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%8d%9a%e5%ae%a2" title="博客">博客<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%90%8d%e8%af%8d%e5%ae%9a%e4%b9%89" title="名词定义">名词定义<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%91%bd%e4%bb%a4" title="命令">命令<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%9b%a2%e9%98%9f%e5%90%88%e4%bd%9c" title="团队合作">团队合作<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%a4%87%e5%bf%98%e5%bd%95" title="备忘录">备忘录<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%a4%9a%e8%bf%9b%e7%a8%8b%e4%b8%8b%e8%bd%bd%e5%99%a8" title="多进程下载器">多进程下载器<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%ad%a6%e4%b9%a0%e7%ac%94%e8%ae%b0" title="学习笔记">学习笔记<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%ae%9e%e4%b9%a0" title="实习">实习<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%b7%a5%e5%85%b7" title="工具">工具<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%b8%b8%e7%94%a8%e6%a8%a1%e5%9d%97" title="常用模块">常用模块<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%b9%bf%e5%91%8a" title="广告">广告<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%be%ae%e6%9c%8d%e5%8a%a1" title="微服务">微服务<sup>2</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%bf%83%e7%90%86%e5%ad%a6" title="心理学">心理学<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%bf%ab%e9%80%9f%e5%8e%9f%e5%9e%8b" title="快速原型">快速原型<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%bf%ab%e9%80%9f%e5%bc%80%e5%8f%91" title="快速开发">快速开发<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%bf%ab%e9%80%9f%e6%8e%92%e5%ba%8f" title="快速排序">快速排序<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%80%bb%e8%a3%81" title="总裁">总裁<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%8a%80%e6%9c%af" title="技术">技术<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%8f%92%e4%bb%b6" title="插件">插件<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%95%b0%e6%8d%ae%e5%ba%93" title="数据库">数据库<sup>2</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%95%b0%e6%8d%ae%e5%ba%93%e8%ae%a4%e8%af%81" title="数据库认证">数据库认证<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%96%87%e6%a1%a3%e8%a7%84%e8%8c%83" title="文档规范">文档规范<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%96%87%e6%a1%a3%e9%a9%b1%e5%8a%a8%e5%bc%80%e5%8f%91" title="文档驱动开发">文档驱动开发<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%96%b0%e6%a6%82%e5%bf%b5" title="新概念">新概念<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%96%b9%e4%be%bf" title="方便">方便<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%97%a5%e8%ae%b0" title="日记">日记<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%98%be%e7%a4%ba%e6%9c%8d%e5%8a%a1%e5%99%a8%e9%94%99%e8%af%af%e4%bf%a1%e6%81%af" title="显示服务器错误信息">显示服务器错误信息<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%9c%80%e4%bd%b3%e6%93%8d%e4%bd%9c" title="最佳操作">最佳操作<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%9c%ba%e6%a2%b0%e5%ad%a6%e4%b9%a0" title="机械学习">机械学习<sup>2</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%9d%83%e9%99%90" title="权限">权限<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%af%95%e4%b8%9a%e8%ae%be%e8%ae%a1" title="毕业设计">毕业设计<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%b4%bb%e5%8a%a8" title="活动">活动<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%b7%b7%e8%9b%8b%e9%80%bb%e8%be%91" title="混蛋逻辑">混蛋逻辑<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e7%83%ad%e7%82%b9%e9%97%ae%e9%a2%98" title="热点问题">热点问题<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e7%88%ac%e8%99%ab" title="爬虫">爬虫<sup>4</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e7%ae%97%e6%b3%95" title="算法">算法<sup>4</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e7%ae%a1%e9%81%93" title="管道">管道<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e7%b1%bb%e5%ba%93%e6%8e%a8%e8%8d%90" title="类库推荐">类库推荐<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e7%b3%bb%e7%bb%9f%e5%91%bd%e4%bb%a4" title="系统命令">系统命令<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e7%bc%96%e7%a0%81" title="编码">编码<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e7%bc%96%e7%a8%8b%e8%a7%84%e8%8c%83" title="编程规范">编程规范<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e7%bc%96%e7%a8%8b%e9%a3%8e%e6%a0%bc" title="编程风格">编程风格<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e7%bd%91%e7%bb%9c%e9%93%be%e6%8e%a5" title="网络链接">网络链接<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e8%81%8a%e5%a4%a9%e5%ae%a4" title="聊天室">聊天室<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e8%85%b9%e5%bc%8f%e5%91%bc%e5%90%b8" title="腹式呼吸">腹式呼吸<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e8%91%a3%e4%ba%8b%e9%95%bf" title="董事长">董事长<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e8%a1%a8%e5%8d%95%e9%aa%8c%e8%af%81" title="表单验证">表单验证<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e8%af%b7%e6%b1%82%e9%94%99%e8%af%af" title="请求错误">请求错误<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e8%bf%9b%e7%a8%8b%e9%80%9a%e4%bf%a1" title="进程通信">进程通信<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e9%82%bb%e9%87%8c%e9%97%ae%e9%a2%98" title="邻里问题">邻里问题<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e9%94%99%e8%af%af%e9%9b%86%e9%94%a6" title="错误集锦">错误集锦<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e9%97%ad%e5%8c%85" title="闭包">闭包<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e9%9c%80%e6%b1%82%e5%88%86%e6%9e%90" title="需求分析">需求分析<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e9%9d%a2%e8%af%95" title="面试">面试<sup>1</sup></a></li>
+      
+		</ul>
+</div>
+
+
+
+  
+  <div class="archiveslist">
+    <p class="asidetitle">归档</p>
+    <ul class="archive-list">
+      
+      
+      <li class="archive-list-item">
+        <a class="archive-list-link" href="http://kooksee.github.io/post/#2015-01">2015年01月</a><span class="archive-list-count">1</span>
+      </li>
+      
+      
+      <li class="archive-list-item">
+        <a class="archive-list-link" href="http://kooksee.github.io/post/#0001-01">0001年01月</a><span class="archive-list-count">108</span>
+      </li>
+      
+    </ul>
+
+  </div>
+
+
+  
+
+<div class="tagcloudlist">
+  <p class="asidetitle">标签云</p>
+  <div class="tagcloudlist clearfix">
+    
+    <a href="http://kooksee.github.io/tags/api" style="font-size: 12px;">api</a>
+    
+    <a href="http://kooksee.github.io/tags/api%e8%ae%be%e8%ae%a1%e8%bd%af%e4%bb%b6" style="font-size: 12px;">api设计软件</a>
+    
+    <a href="http://kooksee.github.io/tags/bhnhbhbh" style="font-size: 12px;">bhnhbhbh</a>
+    
+    <a href="http://kooksee.github.io/tags/bools.py" style="font-size: 12px;">bools.py</a>
+    
+    <a href="http://kooksee.github.io/tags/ceo" style="font-size: 12px;">ceo</a>
+    
+    <a href="http://kooksee.github.io/tags/cmd" style="font-size: 12px;">cmd</a>
+    
+    <a href="http://kooksee.github.io/tags/cmd%e6%a8%a1%e5%9d%97" style="font-size: 12px;">cmd模块</a>
+    
+    <a href="http://kooksee.github.io/tags/consul" style="font-size: 12px;">consul</a>
+    
+    <a href="http://kooksee.github.io/tags/ddd" style="font-size: 12px;">ddd</a>
+    
+    <a href="http://kooksee.github.io/tags/docker" style="font-size: 12px;">docker</a>
+    
+    <a href="http://kooksee.github.io/tags/docker-machine" style="font-size: 12px;">docker-machine</a>
+    
+    <a href="http://kooksee.github.io/tags/dockerfile" style="font-size: 12px;">dockerfile</a>
+    
+    <a href="http://kooksee.github.io/tags/error" style="font-size: 12px;">error</a>
+    
+    <a href="http://kooksee.github.io/tags/fish" style="font-size: 12px;">fish</a>
+    
+    <a href="http://kooksee.github.io/tags/flask" style="font-size: 12px;">flask</a>
+    
+    <a href="http://kooksee.github.io/tags/gbk" style="font-size: 12px;">gbk</a>
+    
+    <a href="http://kooksee.github.io/tags/groovy" style="font-size: 12px;">groovy</a>
+    
+    <a href="http://kooksee.github.io/tags/hashlib" style="font-size: 12px;">hashlib</a>
+    
+    <a href="http://kooksee.github.io/tags/ipc" style="font-size: 12px;">ipc</a>
+    
+    <a href="http://kooksee.github.io/tags/itertools" style="font-size: 12px;">itertools</a>
+    
+    <a href="http://kooksee.github.io/tags/javascript" style="font-size: 12px;">javascript</a>
+    
+    <a href="http://kooksee.github.io/tags/jquery" style="font-size: 12px;">jquery</a>
+    
+    <a href="http://kooksee.github.io/tags/json" style="font-size: 12px;">json</a>
+    
+    <a href="http://kooksee.github.io/tags/knn" style="font-size: 12px;">knn</a>
+    
+    <a href="http://kooksee.github.io/tags/linux" style="font-size: 12px;">linux</a>
+    
+    <a href="http://kooksee.github.io/tags/lpc" style="font-size: 12px;">lpc</a>
+    
+    <a href="http://kooksee.github.io/tags/makefile" style="font-size: 12px;">makefile</a>
+    
+    <a href="http://kooksee.github.io/tags/mesos" style="font-size: 12px;">mesos</a>
+    
+    <a href="http://kooksee.github.io/tags/mht" style="font-size: 12px;">mht</a>
+    
+    <a href="http://kooksee.github.io/tags/mongodb" style="font-size: 12px;">mongodb</a>
+    
+    <a href="http://kooksee.github.io/tags/nodejs" style="font-size: 12px;">nodejs</a>
+    
+    <a href="http://kooksee.github.io/tags/openvpn" style="font-size: 12px;">openvpn</a>
+    
+    <a href="http://kooksee.github.io/tags/pipetools" style="font-size: 12px;">pipetools</a>
+    
+    <a href="http://kooksee.github.io/tags/plan_morning" style="font-size: 12px;">plan_morning</a>
+    
+    <a href="http://kooksee.github.io/tags/postgresql" style="font-size: 12px;">postgresql</a>
+    
+    <a href="http://kooksee.github.io/tags/pyshell" style="font-size: 12px;">pyshell</a>
+    
+    <a href="http://kooksee.github.io/tags/python" style="font-size: 12px;">python</a>
+    
+    <a href="http://kooksee.github.io/tags/python%e6%a8%a1%e5%9d%97" style="font-size: 12px;">python模块</a>
+    
+    <a href="http://kooksee.github.io/tags/pyv8" style="font-size: 12px;">pyv8</a>
+    
+    <a href="http://kooksee.github.io/tags/rpc" style="font-size: 12px;">rpc</a>
+    
+    <a href="http://kooksee.github.io/tags/shell" style="font-size: 12px;">shell</a>
+    
+    <a href="http://kooksee.github.io/tags/shutil" style="font-size: 12px;">shutil</a>
+    
+    <a href="http://kooksee.github.io/tags/simplejson" style="font-size: 12px;">simplejson</a>
+    
+    <a href="http://kooksee.github.io/tags/smb" style="font-size: 12px;">smb</a>
+    
+    <a href="http://kooksee.github.io/tags/software" style="font-size: 12px;">software</a>
+    
+    <a href="http://kooksee.github.io/tags/sphinx" style="font-size: 12px;">sphinx</a>
+    
+    <a href="http://kooksee.github.io/tags/spyder" style="font-size: 12px;">spyder</a>
+    
+    <a href="http://kooksee.github.io/tags/sql" style="font-size: 12px;">sql</a>
+    
+    <a href="http://kooksee.github.io/tags/sqlalchemy" style="font-size: 12px;">sqlalchemy</a>
+    
+    <a href="http://kooksee.github.io/tags/ssh" style="font-size: 12px;">ssh</a>
+    
+    <a href="http://kooksee.github.io/tags/stringio" style="font-size: 12px;">stringio</a>
+    
+    <a href="http://kooksee.github.io/tags/sublime" style="font-size: 12px;">sublime</a>
+    
+    <a href="http://kooksee.github.io/tags/subprocess" style="font-size: 12px;">subprocess</a>
+    
+    <a href="http://kooksee.github.io/tags/ubuntu" style="font-size: 12px;">ubuntu</a>
+    
+    <a href="http://kooksee.github.io/tags/utf-8" style="font-size: 12px;">utf-8</a>
+    
+    <a href="http://kooksee.github.io/tags/webpack" style="font-size: 12px;">webpack</a>
+    
+    <a href="http://kooksee.github.io/tags/wiki" style="font-size: 12px;">wiki</a>
+    
+    <a href="http://kooksee.github.io/tags/wtf" style="font-size: 12px;">wtf</a>
+    
+    <a href="http://kooksee.github.io/tags/zipfile" style="font-size: 12px;">zipfile</a>
+    
+    <a href="http://kooksee.github.io/tags/zmq" style="font-size: 12px;">zmq</a>
+    
+    <a href="http://kooksee.github.io/tags/%e4%b8%89%e5%85%83%e8%a1%a8%e8%be%be%e5%bc%8f" style="font-size: 12px;">三元表达式</a>
+    
+    <a href="http://kooksee.github.io/tags/%e4%b8%8b%e8%bd%bd%e5%99%a8" style="font-size: 12px;">下载器</a>
+    
+    <a href="http://kooksee.github.io/tags/%e4%b8%ad%e7%bc%80%e8%af%ad%e6%b3%95" style="font-size: 12px;">中缀语法</a>
+    
+    <a href="http://kooksee.github.io/tags/%e4%b9%a6%e7%b1%8d%e6%8e%a8%e8%8d%90" style="font-size: 12px;">书籍推荐</a>
+    
+    <a href="http://kooksee.github.io/tags/%e4%bb%a3%e7%90%86" style="font-size: 12px;">代理</a>
+    
+    <a href="http://kooksee.github.io/tags/%e4%bb%a3%e7%a0%81%e5%88%86%e6%9e%90" style="font-size: 12px;">代码分析</a>
+    
+    <a href="http://kooksee.github.io/tags/%e4%bb%bb%e5%8a%a1%e5%8f%91%e5%b8%83%e5%b9%b3%e5%8f%b0" style="font-size: 12px;">任务发布平台</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%85%bb%e7%94%9f" style="font-size: 12px;">养生</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%86%85%e6%a0%b8%e5%8d%87%e7%ba%a7" style="font-size: 12px;">内核升级</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%8d%9a%e5%ae%a2" style="font-size: 12px;">博客</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%90%8d%e8%af%8d%e5%ae%9a%e4%b9%89" style="font-size: 12px;">名词定义</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%91%bd%e4%bb%a4" style="font-size: 12px;">命令</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%9b%a2%e9%98%9f%e5%90%88%e4%bd%9c" style="font-size: 12px;">团队合作</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%a4%87%e5%bf%98%e5%bd%95" style="font-size: 12px;">备忘录</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%a4%9a%e8%bf%9b%e7%a8%8b%e4%b8%8b%e8%bd%bd%e5%99%a8" style="font-size: 12px;">多进程下载器</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%ad%a6%e4%b9%a0%e7%ac%94%e8%ae%b0" style="font-size: 12px;">学习笔记</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%ae%9e%e4%b9%a0" style="font-size: 12px;">实习</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%b7%a5%e5%85%b7" style="font-size: 12px;">工具</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%b8%b8%e7%94%a8%e6%a8%a1%e5%9d%97" style="font-size: 12px;">常用模块</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%b9%bf%e5%91%8a" style="font-size: 12px;">广告</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%be%ae%e6%9c%8d%e5%8a%a1" style="font-size: 12px;">微服务</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%bf%83%e7%90%86%e5%ad%a6" style="font-size: 12px;">心理学</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%bf%ab%e9%80%9f%e5%8e%9f%e5%9e%8b" style="font-size: 12px;">快速原型</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%bf%ab%e9%80%9f%e5%bc%80%e5%8f%91" style="font-size: 12px;">快速开发</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%bf%ab%e9%80%9f%e6%8e%92%e5%ba%8f" style="font-size: 12px;">快速排序</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%80%bb%e8%a3%81" style="font-size: 12px;">总裁</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%8a%80%e6%9c%af" style="font-size: 12px;">技术</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%8f%92%e4%bb%b6" style="font-size: 12px;">插件</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%95%b0%e6%8d%ae%e5%ba%93" style="font-size: 12px;">数据库</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%95%b0%e6%8d%ae%e5%ba%93%e8%ae%a4%e8%af%81" style="font-size: 12px;">数据库认证</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%96%87%e6%a1%a3%e8%a7%84%e8%8c%83" style="font-size: 12px;">文档规范</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%96%87%e6%a1%a3%e9%a9%b1%e5%8a%a8%e5%bc%80%e5%8f%91" style="font-size: 12px;">文档驱动开发</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%96%b0%e6%a6%82%e5%bf%b5" style="font-size: 12px;">新概念</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%96%b9%e4%be%bf" style="font-size: 12px;">方便</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%97%a5%e8%ae%b0" style="font-size: 12px;">日记</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%98%be%e7%a4%ba%e6%9c%8d%e5%8a%a1%e5%99%a8%e9%94%99%e8%af%af%e4%bf%a1%e6%81%af" style="font-size: 12px;">显示服务器错误信息</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%9c%80%e4%bd%b3%e6%93%8d%e4%bd%9c" style="font-size: 12px;">最佳操作</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%9c%ba%e6%a2%b0%e5%ad%a6%e4%b9%a0" style="font-size: 12px;">机械学习</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%9d%83%e9%99%90" style="font-size: 12px;">权限</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%af%95%e4%b8%9a%e8%ae%be%e8%ae%a1" style="font-size: 12px;">毕业设计</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%b4%bb%e5%8a%a8" style="font-size: 12px;">活动</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%b7%b7%e8%9b%8b%e9%80%bb%e8%be%91" style="font-size: 12px;">混蛋逻辑</a>
+    
+    <a href="http://kooksee.github.io/tags/%e7%83%ad%e7%82%b9%e9%97%ae%e9%a2%98" style="font-size: 12px;">热点问题</a>
+    
+    <a href="http://kooksee.github.io/tags/%e7%88%ac%e8%99%ab" style="font-size: 12px;">爬虫</a>
+    
+    <a href="http://kooksee.github.io/tags/%e7%ae%97%e6%b3%95" style="font-size: 12px;">算法</a>
+    
+    <a href="http://kooksee.github.io/tags/%e7%ae%a1%e9%81%93" style="font-size: 12px;">管道</a>
+    
+    <a href="http://kooksee.github.io/tags/%e7%b1%bb%e5%ba%93%e6%8e%a8%e8%8d%90" style="font-size: 12px;">类库推荐</a>
+    
+    <a href="http://kooksee.github.io/tags/%e7%b3%bb%e7%bb%9f%e5%91%bd%e4%bb%a4" style="font-size: 12px;">系统命令</a>
+    
+    <a href="http://kooksee.github.io/tags/%e7%bc%96%e7%a0%81" style="font-size: 12px;">编码</a>
+    
+    <a href="http://kooksee.github.io/tags/%e7%bc%96%e7%a8%8b%e8%a7%84%e8%8c%83" style="font-size: 12px;">编程规范</a>
+    
+    <a href="http://kooksee.github.io/tags/%e7%bc%96%e7%a8%8b%e9%a3%8e%e6%a0%bc" style="font-size: 12px;">编程风格</a>
+    
+    <a href="http://kooksee.github.io/tags/%e7%bd%91%e7%bb%9c%e9%93%be%e6%8e%a5" style="font-size: 12px;">网络链接</a>
+    
+    <a href="http://kooksee.github.io/tags/%e8%81%8a%e5%a4%a9%e5%ae%a4" style="font-size: 12px;">聊天室</a>
+    
+    <a href="http://kooksee.github.io/tags/%e8%85%b9%e5%bc%8f%e5%91%bc%e5%90%b8" style="font-size: 12px;">腹式呼吸</a>
+    
+    <a href="http://kooksee.github.io/tags/%e8%91%a3%e4%ba%8b%e9%95%bf" style="font-size: 12px;">董事长</a>
+    
+    <a href="http://kooksee.github.io/tags/%e8%a1%a8%e5%8d%95%e9%aa%8c%e8%af%81" style="font-size: 12px;">表单验证</a>
+    
+    <a href="http://kooksee.github.io/tags/%e8%af%b7%e6%b1%82%e9%94%99%e8%af%af" style="font-size: 12px;">请求错误</a>
+    
+    <a href="http://kooksee.github.io/tags/%e8%bf%9b%e7%a8%8b%e9%80%9a%e4%bf%a1" style="font-size: 12px;">进程通信</a>
+    
+    <a href="http://kooksee.github.io/tags/%e9%82%bb%e9%87%8c%e9%97%ae%e9%a2%98" style="font-size: 12px;">邻里问题</a>
+    
+    <a href="http://kooksee.github.io/tags/%e9%94%99%e8%af%af%e9%9b%86%e9%94%a6" style="font-size: 12px;">错误集锦</a>
+    
+    <a href="http://kooksee.github.io/tags/%e9%97%ad%e5%8c%85" style="font-size: 12px;">闭包</a>
+    
+    <a href="http://kooksee.github.io/tags/%e9%9c%80%e6%b1%82%e5%88%86%e6%9e%90" style="font-size: 12px;">需求分析</a>
+    
+    <a href="http://kooksee.github.io/tags/%e9%9d%a2%e8%af%95" style="font-size: 12px;">面试</a>
+    
+  </div>
+</div>
+
+
+
+  
+
+</aside>
+</div>
+
+  </div>
+  <footer>
+<div id="footer" >
+
+  
+  <div class="line">
+    <span></span>
+    <div style='background:no-repeat url("http://kooksee.github.io/img/author.jpg") left top;-webkit-background-size:6.875em 6.875em;-moz-background-size:6.875em 6.875em;background-size:6.875em 6.875em;' class="author" ></div>
+  </div>
+  
+
+
+  <div class="social-font clearfix">
+    
+    <a href="http://weibo.com/kooksee" target="_blank" title="weibo"></a>
+    
+    
+    <a href="https://twitter.com/kooksee" target="_blank" title="twitter"></a>
+    
+    
+    <a href="https://github.com/kooksee" target="_blank" title="github"></a>
+    
+    
+    <a href="https://www.facebook.com/kooksee" target="_blank" title="facebook"></a>
+    
+    
+    <a href="https://www.linkedin.com/kooksee" target="_blank" title="linkedin"></a>
+    
+  </div>
+  <p class="copyright">Powered by <a href="http://gohugo.io" target="_blank" title="hugo">hugo</a> and Theme by <a href="https://github.com/coderzh/hugo-pacman-theme" target="_blank" title="hugo-pacman-theme">hugo-pacman-theme</a> © 2016
+    
+    <a href="http://kooksee.github.io/" target="_blank" title="kooksee">kooksee</a>
+    
+  </p>
+</div>
+</footer>
+  <script src="http://kooksee.github.io/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+done = false;
+$(document).ready(function(){
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize();
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  $('form.search').on('submit', function (event) {
+    if (false === done) {
+      event.preventDefault();
+      var orgVal = $(this).find('#search').val();
+      $(this).find('#search').val('site:http:\/\/kooksee.github.io\/} ' + orgVal);
+      done = true;
+      $(this).submit();
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});
+</script>
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-10147768-2', 'auto');
+  ga('send', 'pageview');
+  $('#messagesbsb').remove();
+</script>
+
+
+
+</body>
+</html>

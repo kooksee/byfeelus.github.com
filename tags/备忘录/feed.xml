@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>备忘录 on 百里求一的博客</title>
+        <link>http://kooksee.github.io/tags/%E5%A4%87%E5%BF%98%E5%BD%95/</link>
+        <language>zh-CN</language>
+        <author>CoderZh</author>
+        <rights>Copyright (c) 2015, CoderZh; all rights reserved.</rights>
+        <updated>Mon, 01 Jan 0001 00:00:00 UTC</updated>
+        
+        <item>
+            <title>备忘录</title>
+            <link>http://kooksee.github.io/blog/repaire%20boot%20in%20ubuntu/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/repaire%20boot%20in%20ubuntu/</guid>
+            <description>
+
+&lt;h2 id=&#34;repaire-boot-in-ubuntu:f29c6a3b622ed57d932cd31d5324c3e0&#34;&gt;repaire boot in ubuntu&lt;/h2&gt;
+
+&lt;p&gt;sudo add-apt-repository ppa:yannubuntu/boot-repair &amp;amp;&amp;amp; sudo apt-get update&lt;/p&gt;
+
+&lt;p&gt;ubuntu config == &lt;a href=&#34;http://www.111cn.net/sys/Ubuntu/56613.htm&#34;&gt;http://www.111cn.net/sys/Ubuntu/56613.htm&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;##install deepin-terminal in ubuntu
+sudo add-apt-repository ppa:noobslab/deepin-sc
+sudo apt-get update
+sudo apt-get install deepin-terminal&lt;/p&gt;
+
+&lt;h2 id=&#34;install-pyenv-in-ubuntu:f29c6a3b622ed57d932cd31d5324c3e0&#34;&gt;install pyenv in ubuntu&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/yyuu/pyenv&#34;&gt;https://github.com/yyuu/pyenv&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;pycharm5-key:f29c6a3b622ed57d932cd31d5324c3e0&#34;&gt;pycharm5 key&lt;/h2&gt;
+
+&lt;p&gt;://github.com/edmund-huber/&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;ijson&lt;/strong&gt; &amp;ndash;&lt;a href=&#34;http://pypi.python.org/pypi/ijson/&#34;&gt;Iterative JSON parser with Pythonic interface&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;tablib&lt;/strong&gt; &amp;ndash;&lt;a href=&#34;http://python-tablib.org&#34;&gt;Python Module for Tabular Datasets in XLS, CSV, JSON, YAML, &amp;amp;c.&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;simplejson&lt;/strong&gt; &amp;ndash;&lt;a href=&#34;http://simplejson.readthedocs.org/&#34;&gt;simplejson is a simple, fast, extensible JSON encoder/decoder for Python&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;json-sempai&lt;/strong&gt; &amp;ndash;&lt;a href=&#34;https://github.com/kragniz/json-sempai&#34;&gt;Use JSON files as if they are python modules&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;ubuntu-kernel&lt;/strong&gt; &amp;ndash;&lt;a href=&#34;http://kernel.ubuntu.com/~kernel-ppa/mainline/v4.1-rc2-vivid/&#34;&gt;linux内核ubuntu版本下载地址&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;docker镜像分享&lt;/strong&gt; &amp;ndash; &lt;a href=&#34;http://download.openvz.org/template/precreated/&#34;&gt;http://download.openvz.org/template/precreated/&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;中文分词&lt;/strong&gt; &amp;ndash; &lt;a href=&#34;https://github.com/fxsjy/jieba&#34;&gt;https://github.com/fxsjy/jieba&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Sails.js&lt;/strong&gt; &amp;ndash;&lt;a href=&#34;http://m-4.me/sails-js-an-express-based-framework-for-web-rapid-development/&#34;&gt;基于Express的Web快速开发框架&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Meteor&lt;/strong&gt; &amp;ndash;&lt;a href=&#34;http://36kr.com/p/99503.html&#34;&gt;Web 开发者看过来，Meteor 开发框架为你带来下一代高品质实时 Web App 开发的新模式&lt;/a&gt;(&lt;a href=&#34;http://docs.meteorhub.org/#/basic/&#34;&gt;http://docs.meteorhub.org/#/basic/&lt;/a&gt;)&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Haml&lt;/strong&gt; &amp;ndash;&lt;a href=&#34;http://www.oschina.net/p/haml&#34;&gt;Haml是一种用来描述任何XHTML web document的标记语言，它是干净，简单的。而且也不用内嵌代码。Haml的职能就是替代那些内嵌代码的page page templating systems，比如PHP,ERB(Rails的模板系统)，ASP。不过，haml避免了直接coding XHTML到模板，因为它实际上是一个xhtml的抽象描述，内部使用一些code来生成动态内容。Haml 是一种简洁优美的模板语言，可以应用于Ruby on Rails、 PHP等Web开发平台，可以大大缩减模板代码，减少冗余，提高可读性。并且Haml是一种完备的模板语言，没有牺牲当前模板语言的任何特性。Haml由 Hampton Catlin发明并且开发了Ruby on Rails上的实现。&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;https://thimble.mozilla.org/user/byfeelus/51419&#34;&gt;html5&amp;amp;css在线编辑器&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;http://www.firefoxfan.com/firefox-tutorial/firefox-autoproxy-goagent.html&#34;&gt;http://www.firefoxfan.com/firefox-tutorial/firefox-autoproxy-goagent.html&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;https://help.ubuntu.com/community/Boot-Repair&#34;&gt;linux引导修复&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;http://www.css3maker.com/&#34;&gt;css在线编辑&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;https://github.com/JSLite/JS&#34;&gt;https://github.com/JSLite/JS&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

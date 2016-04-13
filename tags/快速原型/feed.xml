@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>快速原型 on 百里求一的博客</title>
+        <link>http://kooksee.github.io/tags/%E5%BF%AB%E9%80%9F%E5%8E%9F%E5%9E%8B/</link>
+        <language>zh-CN</language>
+        <author>CoderZh</author>
+        <rights>Copyright (c) 2015, CoderZh; all rights reserved.</rights>
+        <updated>Mon, 01 Jan 0001 00:00:00 UTC</updated>
+        
+        <item>
+            <title>快速原型开发总结</title>
+            <link>http://kooksee.github.io/blog/%E5%BF%AB%E9%80%9F%E5%8E%9F%E5%9E%8B%E5%BC%80%E5%8F%91%E6%80%BB%E7%BB%93/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/%E5%BF%AB%E9%80%9F%E5%8E%9F%E5%9E%8B%E5%BC%80%E5%8F%91%E6%80%BB%E7%BB%93/</guid>
+            <description>&lt;p&gt;所谓快速原型开发就是用少量的代码快速搭建一个开发环境以及少量的罗辑代码。快速原型不要求性能，不要求画面，甚至不要求严谨的罗辑，更不要求权限问题。
+简单来说吧，如果你想要用快速原型法开发一个bbs系统，那么
+1. 你不必考虑用什么数据库，越简单越好。我喜欢用sqlite。
+2. 你不必为复杂的权限管理伤脑筋，什么权限管理都扔掉
+3. 你不需优美的画面，用什么css框架都是浪费，因为这是原型开发
+4. 你几乎不需要什么复杂的逻辑，比如发帖就是发帖，你不必管是什么帖子，发给谁，你只需要实现这个功能就行
+5. 你不必担心性能问题，你只要能实现就行
+5. 总而言之，快速原型就是快速检验项目各个模块功能是否能够实现并做出简要的展示。
+6. 快速原型要求系统架构划分妥当，技术点明确标出并记录。&lt;/p&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

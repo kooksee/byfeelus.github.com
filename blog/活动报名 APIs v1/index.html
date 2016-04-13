@@ -1,0 +1,1541 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <base href="http://kooksee.github.io/">
+  <title>活动报名 APIs v1 - 百里求一的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+  
+  <meta name="description" content="美容项目对应表: body_parts 1-眼部，2-鼻部，3-胸部，4-吸脂，5-破尿酸，6-瘦脸除皱，7-激光美容 活动状态: status -- 原则是不激活不显示,时间不到不">
+  <meta name="author" content="kooksee">
+  <meta itemprop="name" content="活动报名 APIs v1 - 百里求一的博客">
+  <meta itemprop="description" content="美容项目对应表: body_parts 1-眼部，2-鼻部，3-胸部，4-吸脂，5-破尿酸，6-瘦脸除皱，7-激光美容 活动状态: status -- 原则是不激活不显示,时间不到不">
+  <meta itemprop="image" content="http://kooksee.github.io/img/author.jpg">
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@kooksee" />
+  <meta name="twitter:title" content="活动报名 APIs v1 - 百里求一的博客" />
+  
+  <meta name="twitter:description" content="dfgffcfcffcfgvhbjgfdcgv">
+  
+  <link rel="shortcut icon" href="img/favicon.ico"/>
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+  <link rel="apple-touch-icon-precomposed" href="apple-touch-icon.png" />
+  <link rel="stylesheet" href="highlight/styles/github.css">
+  <script src="highlight/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <link rel="stylesheet" href="font/hack/css/hack.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+  <header>
+    <div>
+  
+  <div id="imglogo">
+    <a href="http://kooksee.github.io/"><img src="http://kooksee.github.io/img/logo.svg" alt="百里求一的博客" title="百里求一的博客"/></a>
+  </div>
+  
+  <div id="textlogo">
+    <h1 class="site-name"><a href="http://kooksee.github.io/" title="百里求一的博客">百里求一的博客</a></h1>
+    <h2 class="blog-motto">观察，思考，学习</h2>
+  </div>
+  <div class="navbar"><a class="navbutton navmobile" href="#" title="menu"></a></div>
+  <nav class="animated">
+    <ul>
+      
+      <li><a href="/">首页</a></li>
+      
+      <li><a href="/about/">关于</a></li>
+      
+      <li><a href="/tags/">标签</a></li>
+      
+      <li>
+        <form class="search" method="get" action="https://www.google.com/search">
+          <div>
+            <input type="text" id="search" name="q" placeholder="搜索">
+          </div>
+        </form>
+      </li>
+    </ul>
+  </nav>
+</div>
+
+  </header>
+  <div id="container">
+    <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody">
+    <header class="article-info clearfix">
+  <h1 itemprop="name">
+      <a href="http://kooksee.github.io/blog/%E6%B4%BB%E5%8A%A8%E6%8A%A5%E5%90%8D%20APIs%20v1/" title="活动报名 APIs v1" itemprop="url">活动报名 APIs v1</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://kooksee.github.io" title="kooksee">kooksee</a>
+    
+  </p>
+  <p class="article-time">
+    <time datetime="0001-01-01 00:00:00 &#43;0000 UTC" itemprop="datePublished">0001年01月01日</time>
+  </p>
+</header>
+
+	<div class="article-content">
+    
+    
+
+<pre><code>美容项目对应表: body_parts
+1-眼部，2-鼻部，3-胸部，4-吸脂，5-破尿酸，6-瘦脸除皱，7-激光美容
+
+活动状态: status -- 原则是不激活不显示,时间不到不让注册
+-1:过期活动
+-2:未激活的活动(未来的新活动),默认,添加一个新活动默认为未激活状态,需要人为激活,未激活的活动不会在app段显示,过期的活动会显示。
+1:在线活动(当前的活动)
+
+是否注册报名过:is_enrolled
+1:注册报名过;
+2:没有注册报名过
+
+报名管理状态:status
+0:所有咨询;
+1:添加咨询;
+2:未添加咨询
+
+数据字典解析:
+page: 代表第几页,默认为1
+size: 代表每页有多少条数据,默认为20
+sort: 代表排序方式,默认为create_at
+</code></pre>
+
+<hr />
+
+<p>[TOC]</p>
+
+<h2 id="获得活动列表:b505ef91d952b4d62ea4a3d4c663cea3">获得活动列表</h2>
+
+<h3 id="url:b505ef91d952b4d62ea4a3d4c663cea3">URL</h3>
+
+<p>POST <code>/activity/list</code></p>
+
+<h3 id="token:b505ef91d952b4d62ea4a3d4c663cea3">TOKEN</h3>
+
+<p><code>required</code></p>
+
+<h3 id="scope:b505ef91d952b4d62ea4a3d4c663cea3">Scope</h3>
+
+<ul>
+<li>APP</li>
+</ul>
+
+<h3 id="input:b505ef91d952b4d62ea4a3d4c663cea3">INPUT</h3>
+
+<pre><code>{
+   &quot;page&quot;: 34,  
+   &quot;size&quot;: 21,
+   &quot;sort&quot;: &quot;the name that sorted by&quot;
+}
+</code></pre>
+
+<h3 id="output:b505ef91d952b4d62ea4a3d4c663cea3">OUTPUT</h3>
+
+<pre><code># 全部信息
+{
+    &quot;code&quot; :&quot;00000&quot;
+    &quot;total&quot;:13,
+    &quot;data&quot; :[
+        {
+            &quot;id&quot;:&quot;ertyuhfg6&quot;,       // 活动ID
+            &quot;status&quot;: -1,           // 活动状态
+            &quot;num&quot;:     1,           // 活动季数
+            &quot;update_at&quot;: ,          // 活动更新时间
+            &quot;title&quot;:&quot;第一季&quot;,       // 活动标题
+            &quot;start_at&quot;:45678933,    // 整型时间戳
+            &quot;end_at&quot;:3221426,       // 整形时间戳
+        },  
+    ]
+}
+
+{
+    &quot;code&quot;:   &quot;10002&quot;,
+    &quot;message&quot;:&quot;数据参数转化错误&quot;
+}
+</code></pre>
+
+<h3 id="error:b505ef91d952b4d62ea4a3d4c663cea3">ERROR</h3>
+
+<p><code>none</code></p>
+
+<h3 id="curl:b505ef91d952b4d62ea4a3d4c663cea3">CURL</h3>
+
+<pre><code>curl\
+  -X POST\
+  -d '{&quot;page&quot;:1,&quot;size&quot;:10,&quot;sort&quot;:&quot;create_at&quot;}'\
+  -i http://localhost:3001/v1/activity/list
+</code></pre>
+
+<hr />
+
+<h2 id="获得活动详情:b505ef91d952b4d62ea4a3d4c663cea3">获得活动详情</h2>
+
+<h3 id="url-1:b505ef91d952b4d62ea4a3d4c663cea3">URL</h3>
+
+<p>POST <code>/activity/get</code></p>
+
+<h3 id="token-1:b505ef91d952b4d62ea4a3d4c663cea3">TOKEN</h3>
+
+<p><code>required</code></p>
+
+<h3 id="scope-1:b505ef91d952b4d62ea4a3d4c663cea3">Scope</h3>
+
+<ul>
+<li>APP</li>
+</ul>
+
+<h3 id="input-1:b505ef91d952b4d62ea4a3d4c663cea3">INPUT</h3>
+
+<pre><code>{
+    &quot;ids&quot;: [&quot;activity_id1&quot;, &quot;activity_id2&quot;]
+}
+</code></pre>
+
+<h3 id="output-1:b505ef91d952b4d62ea4a3d4c663cea3">OUTPUT</h3>
+
+<pre><code>{
+    &quot;code&quot;:&quot;00000&quot;
+    &quot;data&quot;: [
+              {
+                 &quot;id&quot;:&quot;ertyuhfg6&quot;,       // 活动ID
+                 &quot;status&quot;: -1,           // 活动状态,-1:未激活的活动(未来的新活动);1:在线活动(当前的活动);
+                 &quot;num&quot;:     1,           // 活动季数
+                 &quot;name&quot;:&quot;美白&quot;,          // 活动名字
+                 &quot;title&quot;:&quot;第一季&quot;,       // 活动标题
+                 &quot;cites&quot;:[&quot;北京&quot;,&quot;上海&quot;],// 多个城市
+                 &quot;start_at&quot;:45678933,    // 整形时间戳
+                 &quot;end_at&quot;:3221426,       // 整形时间戳
+                 &quot;update_at&quot;: 123456 ,   // 活动更新时间
+                 &quot;body_parts&quot;:      [{&quot;id&quot;:1,&quot;name&quot;:&quot;脸部&quot;},{&quot;id&quot;:2,&quot;name&quot;:&quot;胸部&quot;},{&quot;id&quot;:3,&quot;name&quot;:&quot;&quot;}], //[]:required,每个数字对应一个身体部位，对应表从活动中获取
+                 &quot;content&quot;:&quot;超文本&quot;      // 活动信息
+            }
+     ]
+}
+
+{
+    &quot;code&quot;:&quot;10002&quot;,
+    &quot;message&quot;:&quot;数据参数转化错误&quot;
+}
+</code></pre>
+
+<h3 id="error-1:b505ef91d952b4d62ea4a3d4c663cea3">ERROR</h3>
+
+<p><code>none</code></p>
+
+<h3 id="curl-1:b505ef91d952b4d62ea4a3d4c663cea3">CURL</h3>
+
+<pre><code>curl\
+  -X POST\
+  -d '{&quot;ids&quot;:[&quot;id1&quot;,&quot;id2&quot;]}'
+  -i http://localhost:3001/v1/activity/get
+</code></pre>
+
+<p>##活动报名</p>
+
+<h3 id="url-2:b505ef91d952b4d62ea4a3d4c663cea3">URL</h3>
+
+<p>POST <code>/activity/enroll</code></p>
+
+<h3 id="token-2:b505ef91d952b4d62ea4a3d4c663cea3">TOKEN</h3>
+
+<p><code>required</code></p>
+
+<h3 id="scope-2:b505ef91d952b4d62ea4a3d4c663cea3">Scope</h3>
+
+<ul>
+<li>APP</li>
+</ul>
+
+<h3 id="input-2:b505ef91d952b4d62ea4a3d4c663cea3">INPUT</h3>
+
+<pre><code>{
+    &quot;activity_id&quot;:        &quot;4eb3a4ff-ad0c-4a03-963c-1a9e4290863e&quot;,  //string:required, 活动Id
+    &quot;attrs&quot;:{                                //基本属性
+        &quot;nickname&quot;:        &quot;irons&quot;,          //string:required, 昵称
+        &quot;mobile&quot;:          &quot;86-18621936702&quot;, //string:required, 电话号码
+        &quot;gender&quot;:          &quot;female&quot;,         //string:required, 性别
+        &quot;birthday&quot;:        &quot;2015-12-24&quot;,     //string:required, 生日
+        &quot;occupation&quot;:      &quot;学生&quot;,           //string:required, 职业[学生, 上班族, 自由职业者, 全职主妇, 网红, 其他 ]
+        &quot;body_parts&quot;:      [1,2],            //[]:required,每个数字对应一个身体部位，对应表从活动中获取
+    },
+
+    &quot;extras&quot;:{              //可扩展属性
+        &quot;front_photos&quot;:     [&quot;http://qiniu.com/1dasdf/asdf.jpg&quot;,&quot;http://qiniu.com/1dasdf/asdf.jpg&quot;],//[]:required,正面照
+        &quot;profile_photos&quot;:   [&quot;http://qiniu.com/1dasdf/asdf.jpg&quot;,&quot;http://qiniu.com/1dasdf/asdf.jpg&quot;]//[]:required,侧面照
+    }
+}
+</code></pre>
+
+<h3 id="output-2:b505ef91d952b4d62ea4a3d4c663cea3">OUTPUT</h3>
+
+<pre><code># 只有返回成功的状态码时才会有data这个返回结果,否则返回message结果
+{
+    &quot;code&quot;:&quot;00000&quot;
+}
+
+{
+    &quot;code&quot;:&quot;10002&quot;,
+    &quot;message&quot;:&quot;传入参数错误&quot;
+}
+
+{
+    &quot;code&quot;:&quot;11201&quot;,
+    &quot;message&quot;:&quot;用户已经注册该活动&quot;
+}
+</code></pre>
+
+<h3 id="error-2:b505ef91d952b4d62ea4a3d4c663cea3">ERROR</h3>
+
+<ul>
+<li>ErrEnrollExists  :&ldquo;11201&rdquo;</li>
+<li>ErrRequestFormat :&ldquo;10002&rdquo;</li>
+</ul>
+
+<h3 id="curl-2:b505ef91d952b4d62ea4a3d4c663cea3">CURL</h3>
+
+<pre><code>curl\
+    -X POST\
+    -d '{&quot;activity_id&quot;:&quot;wefddw&quot;,&quot;mobile&quot;:&quot;86-18621936702&quot;,&quot;gender&quot;:&quot;female&quot;,&quot;birthday&quot;:&quot;2015-12-24&quot;,&quot;occupation&quot;:&quot;学生&quot;,&quot;invitation_code&quot;:&quot;221ss&quot;,&quot;front_photo&quot;:[&quot;http://qiniu.com/fefw/ddw.jpg&quot;,&quot;http://qiniu.com/dee/fefew.jpg&quot;],&quot;profile_photo&quot;: [&quot;http://qiniu.com/fefw/ddw.jpg&quot;,&quot;http://qiniu.com/dee/fefew.jpg&quot;],&quot;activity_id&quot;:&quot;dwfeww&quot;,&quot;apply_reason&quot;:&quot;申请理由&quot;}'\
+    -i http://localhost:3001/v1/activity/enroll\
+    -H &quot;Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE0MzM0MjkwNjgsImlhdCI6MTQzMzE2OTg2OCwic3ViIjoiNTU2YzY0OTNkZjhlNTY2NDViM2NmYjdlIn0.WA3UlkU2gDH5UCZ_q4abUSBTMEuY21ytAWgyUfPInEaYlJaI1Iav23yHoSHLggloV4emHf6f2hJuV-3LQuGMQfO60yC4zkgeBvBjjXm6808K_ZsuWMtzco8sTjV-2y6VbHb-EnUItVNE-YJuRiP_i0A0H3gJb7IfsSubOz63G3bXvCFUFxPy9Y7DPmpocLXexltf_-EKbyMNHHob5Nll0XOnb3dMZnXU9QhXnx1kT-2uexzdDVsWEZC6UexmRS9b86_oZ4tfGCcNG-Tg9Bl1ole_Yp_9fUBvqA9o-5gsEzFcc0atdEyM1ytFXAaO5SVCqbOnvRKKOdCrduGLth2w&quot;
+</code></pre>
+
+<hr />
+
+<h2 id="用户是否在该次活动报过名过:b505ef91d952b4d62ea4a3d4c663cea3">用户是否在该次活动报过名过</h2>
+
+<h3 id="url-3:b505ef91d952b4d62ea4a3d4c663cea3">URL</h3>
+
+<p>POST <code>/activity/is_enrolled</code></p>
+
+<h3 id="token-3:b505ef91d952b4d62ea4a3d4c663cea3">TOKEN</h3>
+
+<p><code>required</code></p>
+
+<h3 id="scope-3:b505ef91d952b4d62ea4a3d4c663cea3">Scope</h3>
+
+<ul>
+<li>APP</li>
+</ul>
+
+<h3 id="input-3:b505ef91d952b4d62ea4a3d4c663cea3">INPUT</h3>
+
+<pre><code>{
+    &quot;activity_id&quot;:&quot;4eb3a4ff-ad0c-4a03-963c-1a9e4290863e&quot;
+}
+</code></pre>
+
+<h3 id="output-3:b505ef91d952b4d62ea4a3d4c663cea3">OUTPUT</h3>
+
+<pre><code>{
+    &quot;code&quot;:&quot;00000&quot;,
+    &quot;data&quot;:{
+        &quot;is_enrolled&quot;:1   //1:true,2:false
+    },
+}
+
+{
+    &quot;code&quot;:&quot;11203&quot;,
+    &quot;message&quot;:&quot;活动不存在!&quot;
+}
+</code></pre>
+
+<h3 id="error-3:b505ef91d952b4d62ea4a3d4c663cea3">ERROR</h3>
+
+<ul>
+<li>ErrActivityNotExists //11203</li>
+</ul>
+
+<h3 id="curl-3:b505ef91d952b4d62ea4a3d4c663cea3">CURL</h3>
+
+<pre><code>curl -i http://localhost:3001/v1/activity/is_enrolled\
+     -d '{&quot;activity_id&quot;:&quot;bhbdhbvdvfhfvbdfhd&quot;}'\
+     -H &quot;Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE0MzM0MjkwNjgsImlhdCI6MTQzMzE2OTg2OCwic3ViIjoiNTU2YzY0OTNkZjhlNTY2NDViM2NmYjdlIn0.WA3UlkU2gDH5UCZ_q4abUSBTMEuY21ytAWgyUfPInEaYlJaI1Iav23yHoSHLggloV4emHf6f2hJuV-3LQuGMQfO60yC4zkgeBvBjjXm6808K_ZsuWMtzco8sTjV-2y6VbHb-EnUItVNE-YJuRiP_i0A0H3gJb7IfsSubOz63G3bXvCFUFxPy9Y7DPmpocLXexltf_-EKbyMNHHob5Nll0XOnb3dMZnXU9QhXnx1kT-2uexzdDVsWEZC6UexmRS9b86_oZ4tfGCcNG-Tg9Bl1ole_Yp_9fUBvqA9o-5gsEzFcc0atdEyM1ytFXAaO5SVCqbOnvRKKOdCrduGLth2w&quot;
+</code></pre>
+
+<hr />
+
+<h2 id="获得报名信息:b505ef91d952b4d62ea4a3d4c663cea3">获得报名信息</h2>
+
+<h3 id="url-4:b505ef91d952b4d62ea4a3d4c663cea3">URL</h3>
+
+<p>POST <code>/activity/get_enrolls</code></p>
+
+<h3 id="token-4:b505ef91d952b4d62ea4a3d4c663cea3">TOKEN</h3>
+
+<p><code>required</code></p>
+
+<h3 id="scope-4:b505ef91d952b4d62ea4a3d4c663cea3">Scope</h3>
+
+<ul>
+<li>INTER</li>
+</ul>
+
+<h3 id="input-4:b505ef91d952b4d62ea4a3d4c663cea3">INPUT</h3>
+
+<pre><code>{
+    &quot;activity_id&quot;: &quot;活动ID&quot;, // 根据活动ID获得活动相关的注册报名
+    &quot;page&quot;:&quot;enroll_id&quot;,
+    &quot;size&quot;:12,
+    &quot;sort&quot;:&quot;&quot;,
+    &quot;status&quot;:2
+}
+</code></pre>
+
+<h3 id="output-4:b505ef91d952b4d62ea4a3d4c663cea3">OUTPUT</h3>
+
+<pre><code>{
+    &quot;code&quot;:&quot;00000&quot;
+    &quot;total&quot;:23,
+    &quot;data&quot;:[
+        {
+            &quot;id&quot;:&quot;enroll_id&quot;,
+            &quot;user_id&quot;:&quot;&quot;,
+            &quot;activity_id&quot;:&quot;&quot;,
+            &quot;status&quot;:2,
+            &quot;share_count&quot;:2,
+            &quot;create_at&quot;:               12334444          //时间戳
+            &quot;attrs&quot;:{                                    //基本属性
+                    &quot;nickname&quot;:        &quot;irons&quot;,          //string:required, 昵称
+                    &quot;mobile&quot;:          &quot;86-18621936702&quot;, //string:required, 电话号码
+                    &quot;gender&quot;:          &quot;female&quot;,         //string:required, 性别
+                    &quot;birthday&quot;:        &quot;2015-12-24&quot;,     //string:required, 生日
+                    &quot;occupation&quot;:      &quot;学生&quot;,           //string:required, 职业[学生, 上班族, 自由职业者, 全职主妇, 网红, 其他 ]
+                    &quot;body_parts&quot;:      [1,2,3], //[]:required,每个数字对应一个身体部位，对应表从活动中获取
+                },
+
+                &quot;extras&quot;:{                               //可扩展属性
+                    &quot;front_photos&quot;:     [&quot;http://qiniu.com/1dasdf/asdf.jpg&quot;],//[]:required,正面照
+                    &quot;profile_photos&quot;:   [&quot;http://qiniu.com/1dasdf/asdf.jpg&quot;],//[]:required,侧面照
+                }
+        }
+    ]
+}
+</code></pre>
+
+<h3 id="error-4:b505ef91d952b4d62ea4a3d4c663cea3">ERROR</h3>
+
+<p><code>none</code></p>
+
+<h3 id="curl-4:b505ef91d952b4d62ea4a3d4c663cea3">CURL</h3>
+
+<pre><code>curl\
+    -X POST\
+    -i http://localhost:3001/v1/activity/get_enrolls\
+    -H &quot;Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE0MzM0MjkwNjgsImlhdCI6MTQzMzE2OTg2OCwic3ViIjoiNTU2YzY0OTNkZjhlNTY2NDViM2NmYjdlIn0.WA3UlkU2gDH5UCZ_q4abUSBTMEuY21ytAWgyUfPInEaYlJaI1Iav23yHoSHLggloV4emHf6f2hJuV-3LQuGMQfO60yC4zkgeBvBjjXm6808K_ZsuWMtzco8sTjV-2y6VbHb-EnUItVNE-YJuRiP_i0A0H3gJb7IfsSubOz63G3bXvCFUFxPy9Y7DPmpocLXexltf_-EKbyMNHHob5Nll0XOnb3dMZnXU9QhXnx1kT-2uexzdDVsWEZC6UexmRS9b86_oZ4tfGCcNG-Tg9Bl1ole_Yp_9fUBvqA9o-5gsEzFcc0atdEyM1ytFXAaO5SVCqbOnvRKKOdCrduGLth2w&quot;
+</code></pre>
+
+<hr />
+
+<h2 id="创建活动:b505ef91d952b4d62ea4a3d4c663cea3">创建活动</h2>
+
+<h3 id="url-5:b505ef91d952b4d62ea4a3d4c663cea3">URL</h3>
+
+<p>POST <code>/activity/add</code></p>
+
+<h3 id="token-5:b505ef91d952b4d62ea4a3d4c663cea3">TOKEN</h3>
+
+<p><code>required</code></p>
+
+<h3 id="scope-5:b505ef91d952b4d62ea4a3d4c663cea3">Scope</h3>
+
+<ul>
+<li>INTER</li>
+</ul>
+
+<h3 id="input-5:b505ef91d952b4d62ea4a3d4c663cea3">INPUT</h3>
+
+<pre><code>{
+     &quot;name&quot;:&quot;美白&quot;,           // 活动名字
+     &quot;title&quot;:&quot;第一季&quot;,        // 活动标题
+     &quot;cites&quot;:[&quot;北京&quot;,&quot;上海&quot;], // 多个城市
+     &quot;start_at&quot;:45678933,     // 时间戳
+     &quot;end_at&quot;:3221426,        // 时间戳
+     &quot;body_parts&quot;:      [1,2,3], //[]:required,每个数字对应一个身体部位，对应表从活动中获取
+     &quot;content&quot;:&quot;the html5 text&quot; // 活动信息
+}
+</code></pre>
+
+<h3 id="output-5:b505ef91d952b4d62ea4a3d4c663cea3">OUTPUT</h3>
+
+<pre><code>{
+    &quot;code&quot;:&quot;00000&quot;,
+}
+
+{
+    &quot;code&quot;:&quot;10002&quot;,
+    &quot;message&quot;:&quot;传入信息转化错误!&quot;
+}
+</code></pre>
+
+<h3 id="error-5:b505ef91d952b4d62ea4a3d4c663cea3">ERROR</h3>
+
+<p><code>none</code></p>
+
+<h3 id="curl-5:b505ef91d952b4d62ea4a3d4c663cea3">CURL</h3>
+
+<pre><code>curl\
+  -X POST\
+  -i http://localhost:3001/v1/activity/add\
+  -d '{
+         &quot;name&quot;:&quot;美白&quot;,
+         &quot;title&quot;:&quot;第一季&quot;,
+         &quot;cites&quot;:[&quot;上海&quot;, &quot;北京&quot;],
+         &quot;start_at&quot;:45678933,
+         &quot;end_at&quot;:3221426,
+         &quot;body_parts&quot;:      [1,2,3], //[]:required,每个数字对应一个身体部位，对应表从活动中获取
+         &quot;content&quot;:&quot;&quot;
+      }'
+</code></pre>
+
+<hr />
+
+<h2 id="活动编辑:b505ef91d952b4d62ea4a3d4c663cea3">活动编辑</h2>
+
+<h3 id="url-6:b505ef91d952b4d62ea4a3d4c663cea3">URL</h3>
+
+<p>POST <code>/activity/update</code></p>
+
+<h3 id="token-6:b505ef91d952b4d62ea4a3d4c663cea3">TOKEN</h3>
+
+<p><code>required</code></p>
+
+<h3 id="scope-6:b505ef91d952b4d62ea4a3d4c663cea3">Scope</h3>
+
+<ul>
+<li>INTER</li>
+</ul>
+
+<h3 id="input-6:b505ef91d952b4d62ea4a3d4c663cea3">INPUT</h3>
+
+<pre><code>{
+    &quot;id&quot;:&quot;ehjbfwew&quot;,            // 活动ID
+    &quot;name&quot;:&quot;美白&quot;,              // 活动名字
+    &quot;title&quot;:&quot;第一季&quot;,           // 活动标题
+    &quot;cites&quot;:[&quot;北京&quot;,&quot;上海&quot;],    // 多个城市
+    &quot;start_at&quot;:45678933,        // 整型时间戳
+    &quot;end_at&quot;:3221426,           // 整型时间戳
+    &quot;body_parts&quot;:      [1,2,3], //[]:required,每个数字对应一个身体部位，对应表从活动中获取
+    &quot;content&quot;:&quot;the html5 text&quot;  // 活动信息
+}
+</code></pre>
+
+<h3 id="output-6:b505ef91d952b4d62ea4a3d4c663cea3">OUTPUT</h3>
+
+<pre><code>{
+    &quot;code&quot;:&quot;00000&quot;
+}
+</code></pre>
+
+<h3 id="error-6:b505ef91d952b4d62ea4a3d4c663cea3">ERROR</h3>
+
+<p><code>none</code></p>
+
+<h3 id="curl-6:b505ef91d952b4d62ea4a3d4c663cea3">CURL</h3>
+
+<pre><code>curl\
+  -X POST\
+  -i http://localhost:3001/v1/activity/update
+</code></pre>
+
+<hr />
+
+<h2 id="删除活动:b505ef91d952b4d62ea4a3d4c663cea3">删除活动</h2>
+
+<h3 id="url-7:b505ef91d952b4d62ea4a3d4c663cea3">URL</h3>
+
+<p>POST <code>/activity/delete</code></p>
+
+<h3 id="token-7:b505ef91d952b4d62ea4a3d4c663cea3">TOKEN</h3>
+
+<p><code>required</code></p>
+
+<h3 id="scope-7:b505ef91d952b4d62ea4a3d4c663cea3">Scope</h3>
+
+<p>INTER</p>
+
+<h3 id="input-7:b505ef91d952b4d62ea4a3d4c663cea3">INPUT</h3>
+
+<pre><code>{
+   &quot;ids&quot;:[&quot;ehjbfwew&quot;,&quot;fghbj&quot;],// 可以让管理员一次删除多个
+}
+</code></pre>
+
+<h3 id="output-7:b505ef91d952b4d62ea4a3d4c663cea3">OUTPUT</h3>
+
+<pre><code>{
+    &quot;code&quot;:&quot;00000&quot;
+}
+</code></pre>
+
+<h3 id="error-7:b505ef91d952b4d62ea4a3d4c663cea3">ERROR</h3>
+
+<p><code>none</code></p>
+
+<h3 id="curl-7:b505ef91d952b4d62ea4a3d4c663cea3">CURL</h3>
+
+<pre><code>curl\
+  -X POST\
+  -i http://localhost:3001/v1/activity/delete
+</code></pre>
+
+<hr />
+
+<h2 id="获得活动列表-web端:b505ef91d952b4d62ea4a3d4c663cea3">获得活动列表(web端)</h2>
+
+<h3 id="url-8:b505ef91d952b4d62ea4a3d4c663cea3">URL</h3>
+
+<p>POST <code>/activity/list</code></p>
+
+<h3 id="token-8:b505ef91d952b4d62ea4a3d4c663cea3">TOKEN</h3>
+
+<p><code>required</code></p>
+
+<h3 id="scope-8:b505ef91d952b4d62ea4a3d4c663cea3">Scope</h3>
+
+<ul>
+<li>INTER</li>
+</ul>
+
+<h3 id="input-8:b505ef91d952b4d62ea4a3d4c663cea3">INPUT</h3>
+
+<pre><code>{
+   &quot;page&quot;:34,  
+   &quot;size&quot;:21,
+   &quot;sort&quot;:&quot;&quot;
+}
+</code></pre>
+
+<h3 id="output-8:b505ef91d952b4d62ea4a3d4c663cea3">OUTPUT</h3>
+
+<pre><code>
+# 全部信息
+{
+    &quot;code&quot;:&quot;00000&quot;
+    &quot;total&quot;:12,
+    &quot;data&quot;:[
+            {
+                 &quot;id&quot;:&quot;ertyuhfg6&quot;,       // 活动ID
+                 &quot;status&quot;: -1,           // 活动状态,-1:未激活的活动(未来的新活动);1:在线活动(当前的活动);2:下线活动(过期的或者人为下线的活动)
+                 &quot;num&quot;:     1,           // 活动季数
+                 &quot;name&quot;:&quot;美白&quot;,          // 活动名字
+                 &quot;title&quot;:&quot;第一季&quot;,       // 活动标题
+                 &quot;cites&quot;:[&quot;北京&quot;,&quot;上海&quot;],// 多个城市
+                 &quot;start_at&quot;:45678933,    // 时间戳
+                 &quot;end_at&quot;:3221426,       // 时间戳
+                 &quot;update_at&quot;: 123456 ,   // 活动更新时间
+                 &quot;body_parts&quot;:      [{&quot;id&quot;:1,&quot;name&quot;:&quot;脸部&quot;},{&quot;id&quot;:2,&quot;name&quot;:&quot;胸部&quot;},{&quot;id&quot;:3,&quot;name&quot;:&quot;&quot;}], //[]:required,每个数字对应一个身体部位，对应表从活动中获取
+                 &quot;enroll_num&quot;:&quot;本次活动分享的次数&quot;,
+                 &quot;share_num&quot;:&quot;本次活动注册的人数&quot;
+            },  
+    ]
+}
+
+{
+    &quot;code&quot;:&quot;10002&quot;,
+    &quot;message&quot;:&quot;数据参数转化错误&quot;
+}
+</code></pre>
+
+<h3 id="error-8:b505ef91d952b4d62ea4a3d4c663cea3">ERROR</h3>
+
+<p><code>none</code></p>
+
+<h3 id="curl-8:b505ef91d952b4d62ea4a3d4c663cea3">CURL</h3>
+
+<pre><code>curl\
+  -X POST\
+  -i http://localhost:3002/v1/activity/list
+</code></pre>
+
+<hr />
+
+<h2 id="获取html5内容-web端:b505ef91d952b4d62ea4a3d4c663cea3">获取html5内容(web端)</h2>
+
+<h3 id="url-9:b505ef91d952b4d62ea4a3d4c663cea3">URL</h3>
+
+<p>POST <code>/activity/get_content</code></p>
+
+<h3 id="token-9:b505ef91d952b4d62ea4a3d4c663cea3">TOKEN</h3>
+
+<p><code>required</code></p>
+
+<h3 id="scope-9:b505ef91d952b4d62ea4a3d4c663cea3">Scope</h3>
+
+<ul>
+<li>INTER</li>
+</ul>
+
+<h3 id="input-9:b505ef91d952b4d62ea4a3d4c663cea3">INPUT</h3>
+
+<pre><code>{
+    &quot;id&quot;:&quot;activity_id&quot;
+}
+</code></pre>
+
+<h3 id="output-9:b505ef91d952b4d62ea4a3d4c663cea3">OUTPUT</h3>
+
+<pre><code>
+# 全部信息
+{
+    &quot;code&quot;:&quot;00000&quot;
+    &quot;data&quot;:{
+        &quot;content&quot;:&quot;html5 text&quot;
+    }
+}
+</code></pre>
+
+<h3 id="error-9:b505ef91d952b4d62ea4a3d4c663cea3">ERROR</h3>
+
+<p><code>none</code></p>
+
+<h3 id="curl-9:b505ef91d952b4d62ea4a3d4c663cea3">CURL</h3>
+
+<pre><code>curl\
+  -X POST\
+  -i http://localhost:3002/v1/activity/get_content
+</code></pre>
+
+<hr />
+
+<h2 id="获得身体部位对应列表-web端:b505ef91d952b4d62ea4a3d4c663cea3">获得身体部位对应列表(web端)</h2>
+
+<h3 id="url-10:b505ef91d952b4d62ea4a3d4c663cea3">URL</h3>
+
+<p>POST <code>/activity/get_body_parts</code></p>
+
+<h3 id="token-10:b505ef91d952b4d62ea4a3d4c663cea3">TOKEN</h3>
+
+<p><code>required</code></p>
+
+<h3 id="scope-10:b505ef91d952b4d62ea4a3d4c663cea3">Scope</h3>
+
+<ul>
+<li>INTER</li>
+</ul>
+
+<h3 id="input-10:b505ef91d952b4d62ea4a3d4c663cea3">INPUT</h3>
+
+<pre><code>{
+    &quot;ids&quot;:[&quot;body_part_id1&quot;,&quot;body_part_id2&quot;]
+}
+</code></pre>
+
+<h3 id="output-10:b505ef91d952b4d62ea4a3d4c663cea3">OUTPUT</h3>
+
+<pre><code>
+# 全部信息
+{
+    &quot;code&quot;:&quot;00000&quot;,
+    &quot;data&quot;:[
+         {
+            &quot;id&quot;:1,
+            &quot;name&quot;:&quot;鼻子&quot;
+        },
+         {
+            &quot;id&quot;:2,
+            &quot;name&quot;:&quot;脸部&quot;
+        }
+    ]
+}
+</code></pre>
+
+<h3 id="error-10:b505ef91d952b4d62ea4a3d4c663cea3">ERROR</h3>
+
+<p><code>none</code></p>
+
+<h3 id="curl-10:b505ef91d952b4d62ea4a3d4c663cea3">CURL</h3>
+
+<pre><code>curl\
+  -X POST\
+  -i http://localhost:3002/v1/activity/get_body_parts
+</code></pre>
+
+<hr />
+
+<h2 id="修改活动状态:b505ef91d952b4d62ea4a3d4c663cea3">修改活动状态</h2>
+
+<h3 id="url-11:b505ef91d952b4d62ea4a3d4c663cea3">URL</h3>
+
+<p>POST <code>/activity/update_status</code></p>
+
+<h3 id="token-11:b505ef91d952b4d62ea4a3d4c663cea3">TOKEN</h3>
+
+<p><code>required</code></p>
+
+<h3 id="scope-11:b505ef91d952b4d62ea4a3d4c663cea3">Scope</h3>
+
+<ul>
+<li>INTER</li>
+</ul>
+
+<h3 id="input-11:b505ef91d952b4d62ea4a3d4c663cea3">INPUT</h3>
+
+<pre><code>{
+    &quot;id&quot;:&quot;activity id&quot;,
+    &quot;status&quot;: 2
+}
+</code></pre>
+
+<h3 id="output-11:b505ef91d952b4d62ea4a3d4c663cea3">OUTPUT</h3>
+
+<pre><code>
+# 全部信息
+{
+    &quot;code&quot;:&quot;00000&quot;
+}
+</code></pre>
+
+<h3 id="error-11:b505ef91d952b4d62ea4a3d4c663cea3">ERROR</h3>
+
+<p><code>none</code></p>
+
+<h3 id="curl-11:b505ef91d952b4d62ea4a3d4c663cea3">CURL</h3>
+
+<pre><code>curl\
+  -X POST\
+  -i http://localhost:3002/v1/activity/update_status
+</code></pre>
+
+	</div>
+  <footer class="article-footer clearfix">
+  
+  
+    <div class="article-tags">
+      <span></span>
+      
+      <a href="/tags/api">API</a>
+      
+      <a href="/tags/%E6%B4%BB%E5%8A%A8">活动</a>
+      
+    </div>
+  
+
+
+
+
+  <div class="article-share" id="share">
+    <div data-url="http://kooksee.github.io/blog/%E6%B4%BB%E5%8A%A8%E6%8A%A5%E5%90%8D%20APIs%20v1/" data-title="活动报名 APIs v1" data-tsina="1816308191" class="share clearfix">
+    </div>
+  </div>
+</footer>
+
+	</article>
+  
+<section class="comment">
+  <div class="ds-thread" data-thread-key="http://kooksee.github.io/blog/%E6%B4%BB%E5%8A%A8%E6%8A%A5%E5%90%8D%20APIs%20v1/"
+   data-title="活动报名 APIs v1" data-url="http://kooksee.github.io/blog/%E6%B4%BB%E5%8A%A8%E6%8A%A5%E5%90%8D%20APIs%20v1/"></div>
+</section>
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"kooksee"};
+(function() {
+  var ds = document.createElement('script');
+  ds.type = 'text/javascript';ds.async = true;
+  ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+  ds.charset = 'UTF-8';
+  (document.getElementsByTagName('head')[0]
+  || document.getElementsByTagName('body')[0]).appendChild(ds);
+})();
+</script>
+
+
+
+
+</div>
+
+    <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+  
+
+<div class="categorieslist">
+  <p class="asidetitle">分类</p>
+  <ul>
+    
+    <li><a href="http://kooksee.github.io/categories/%e6%8a%80%e6%9c%af%e6%96%87%e7%ab%a0" title="技术文章">技术文章<sup>2</sup></a></li>
+    
+  </ul>
+</div>
+
+
+
+  
+
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+      
+			<li><a href="http://kooksee.github.io/tags/api" title="api">api<sup>2</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/api%e8%ae%be%e8%ae%a1%e8%bd%af%e4%bb%b6" title="api设计软件">api设计软件<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/bhnhbhbh" title="bhnhbhbh">bhnhbhbh<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/bools.py" title="bools.py">bools.py<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/ceo" title="ceo">ceo<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/cmd" title="cmd">cmd<sup>2</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/cmd%e6%a8%a1%e5%9d%97" title="cmd模块">cmd模块<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/consul" title="consul">consul<sup>3</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/ddd" title="ddd">ddd<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/docker" title="docker">docker<sup>13</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/docker-machine" title="docker-machine">docker-machine<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/dockerfile" title="dockerfile">dockerfile<sup>2</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/error" title="error">error<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/fish" title="fish">fish<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/flask" title="flask">flask<sup>3</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/gbk" title="gbk">gbk<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/groovy" title="groovy">groovy<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/hashlib" title="hashlib">hashlib<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/ipc" title="ipc">ipc<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/itertools" title="itertools">itertools<sup>2</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/javascript" title="javascript">javascript<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/jquery" title="jquery">jquery<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/json" title="json">json<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/knn" title="knn">knn<sup>2</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/linux" title="linux">linux<sup>2</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/lpc" title="lpc">lpc<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/makefile" title="makefile">makefile<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/mesos" title="mesos">mesos<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/mht" title="mht">mht<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/mongodb" title="mongodb">mongodb<sup>5</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/nodejs" title="nodejs">nodejs<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/openvpn" title="openvpn">openvpn<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/pipetools" title="pipetools">pipetools<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/plan_morning" title="plan_morning">plan_morning<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/postgresql" title="postgresql">postgresql<sup>2</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/pyshell" title="pyshell">pyshell<sup>2</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/python" title="python">python<sup>36</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/python%e6%a8%a1%e5%9d%97" title="python模块">python模块<sup>8</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/pyv8" title="pyv8">pyv8<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/rpc" title="rpc">rpc<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/shell" title="shell">shell<sup>2</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/shutil" title="shutil">shutil<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/simplejson" title="simplejson">simplejson<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/smb" title="smb">smb<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/software" title="software">software<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/sphinx" title="sphinx">sphinx<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/spyder" title="spyder">spyder<sup>2</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/sql" title="sql">sql<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/sqlalchemy" title="sqlalchemy">sqlalchemy<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/ssh" title="ssh">ssh<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/stringio" title="stringio">stringio<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/sublime" title="sublime">sublime<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/subprocess" title="subprocess">subprocess<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/ubuntu" title="ubuntu">ubuntu<sup>4</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/utf-8" title="utf-8">utf-8<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/webpack" title="webpack">webpack<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/wiki" title="wiki">wiki<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/wtf" title="wtf">wtf<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/zipfile" title="zipfile">zipfile<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/zmq" title="zmq">zmq<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e4%b8%89%e5%85%83%e8%a1%a8%e8%be%be%e5%bc%8f" title="三元表达式">三元表达式<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e4%b8%8b%e8%bd%bd%e5%99%a8" title="下载器">下载器<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e4%b8%ad%e7%bc%80%e8%af%ad%e6%b3%95" title="中缀语法">中缀语法<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e4%b9%a6%e7%b1%8d%e6%8e%a8%e8%8d%90" title="书籍推荐">书籍推荐<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e4%bb%a3%e7%90%86" title="代理">代理<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e4%bb%a3%e7%a0%81%e5%88%86%e6%9e%90" title="代码分析">代码分析<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e4%bb%bb%e5%8a%a1%e5%8f%91%e5%b8%83%e5%b9%b3%e5%8f%b0" title="任务发布平台">任务发布平台<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%85%bb%e7%94%9f" title="养生">养生<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%86%85%e6%a0%b8%e5%8d%87%e7%ba%a7" title="内核升级">内核升级<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%8d%9a%e5%ae%a2" title="博客">博客<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%90%8d%e8%af%8d%e5%ae%9a%e4%b9%89" title="名词定义">名词定义<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%91%bd%e4%bb%a4" title="命令">命令<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%9b%a2%e9%98%9f%e5%90%88%e4%bd%9c" title="团队合作">团队合作<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%a4%87%e5%bf%98%e5%bd%95" title="备忘录">备忘录<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%a4%9a%e8%bf%9b%e7%a8%8b%e4%b8%8b%e8%bd%bd%e5%99%a8" title="多进程下载器">多进程下载器<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%ad%a6%e4%b9%a0%e7%ac%94%e8%ae%b0" title="学习笔记">学习笔记<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%ae%9e%e4%b9%a0" title="实习">实习<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%b7%a5%e5%85%b7" title="工具">工具<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%b8%b8%e7%94%a8%e6%a8%a1%e5%9d%97" title="常用模块">常用模块<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%b9%bf%e5%91%8a" title="广告">广告<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%be%ae%e6%9c%8d%e5%8a%a1" title="微服务">微服务<sup>2</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%bf%83%e7%90%86%e5%ad%a6" title="心理学">心理学<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%bf%ab%e9%80%9f%e5%8e%9f%e5%9e%8b" title="快速原型">快速原型<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%bf%ab%e9%80%9f%e5%bc%80%e5%8f%91" title="快速开发">快速开发<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%bf%ab%e9%80%9f%e6%8e%92%e5%ba%8f" title="快速排序">快速排序<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%80%bb%e8%a3%81" title="总裁">总裁<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%8a%80%e6%9c%af" title="技术">技术<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%8f%92%e4%bb%b6" title="插件">插件<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%95%b0%e6%8d%ae%e5%ba%93" title="数据库">数据库<sup>2</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%95%b0%e6%8d%ae%e5%ba%93%e8%ae%a4%e8%af%81" title="数据库认证">数据库认证<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%96%87%e6%a1%a3%e8%a7%84%e8%8c%83" title="文档规范">文档规范<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%96%87%e6%a1%a3%e9%a9%b1%e5%8a%a8%e5%bc%80%e5%8f%91" title="文档驱动开发">文档驱动开发<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%96%b0%e6%a6%82%e5%bf%b5" title="新概念">新概念<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%96%b9%e4%be%bf" title="方便">方便<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%97%a5%e8%ae%b0" title="日记">日记<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%98%be%e7%a4%ba%e6%9c%8d%e5%8a%a1%e5%99%a8%e9%94%99%e8%af%af%e4%bf%a1%e6%81%af" title="显示服务器错误信息">显示服务器错误信息<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%9c%80%e4%bd%b3%e6%93%8d%e4%bd%9c" title="最佳操作">最佳操作<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%9c%ba%e6%a2%b0%e5%ad%a6%e4%b9%a0" title="机械学习">机械学习<sup>2</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%9d%83%e9%99%90" title="权限">权限<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%af%95%e4%b8%9a%e8%ae%be%e8%ae%a1" title="毕业设计">毕业设计<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%b4%bb%e5%8a%a8" title="活动">活动<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%b7%b7%e8%9b%8b%e9%80%bb%e8%be%91" title="混蛋逻辑">混蛋逻辑<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e7%83%ad%e7%82%b9%e9%97%ae%e9%a2%98" title="热点问题">热点问题<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e7%88%ac%e8%99%ab" title="爬虫">爬虫<sup>4</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e7%ae%97%e6%b3%95" title="算法">算法<sup>4</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e7%ae%a1%e9%81%93" title="管道">管道<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e7%b1%bb%e5%ba%93%e6%8e%a8%e8%8d%90" title="类库推荐">类库推荐<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e7%b3%bb%e7%bb%9f%e5%91%bd%e4%bb%a4" title="系统命令">系统命令<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e7%bc%96%e7%a0%81" title="编码">编码<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e7%bc%96%e7%a8%8b%e8%a7%84%e8%8c%83" title="编程规范">编程规范<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e7%bc%96%e7%a8%8b%e9%a3%8e%e6%a0%bc" title="编程风格">编程风格<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e7%bd%91%e7%bb%9c%e9%93%be%e6%8e%a5" title="网络链接">网络链接<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e8%81%8a%e5%a4%a9%e5%ae%a4" title="聊天室">聊天室<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e8%85%b9%e5%bc%8f%e5%91%bc%e5%90%b8" title="腹式呼吸">腹式呼吸<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e8%91%a3%e4%ba%8b%e9%95%bf" title="董事长">董事长<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e8%a1%a8%e5%8d%95%e9%aa%8c%e8%af%81" title="表单验证">表单验证<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e8%af%b7%e6%b1%82%e9%94%99%e8%af%af" title="请求错误">请求错误<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e8%bf%9b%e7%a8%8b%e9%80%9a%e4%bf%a1" title="进程通信">进程通信<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e9%82%bb%e9%87%8c%e9%97%ae%e9%a2%98" title="邻里问题">邻里问题<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e9%94%99%e8%af%af%e9%9b%86%e9%94%a6" title="错误集锦">错误集锦<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e9%97%ad%e5%8c%85" title="闭包">闭包<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e9%9c%80%e6%b1%82%e5%88%86%e6%9e%90" title="需求分析">需求分析<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e9%9d%a2%e8%af%95" title="面试">面试<sup>1</sup></a></li>
+      
+		</ul>
+</div>
+
+
+
+  
+  <div class="archiveslist">
+    <p class="asidetitle">归档</p>
+    <ul class="archive-list">
+      
+      
+      <li class="archive-list-item">
+        <a class="archive-list-link" href="http://kooksee.github.io/post/#2015-01">2015年01月</a><span class="archive-list-count">1</span>
+      </li>
+      
+      
+      <li class="archive-list-item">
+        <a class="archive-list-link" href="http://kooksee.github.io/post/#0001-01">0001年01月</a><span class="archive-list-count">108</span>
+      </li>
+      
+    </ul>
+
+  </div>
+
+
+  
+
+<div class="tagcloudlist">
+  <p class="asidetitle">标签云</p>
+  <div class="tagcloudlist clearfix">
+    
+    <a href="http://kooksee.github.io/tags/api" style="font-size: 12px;">api</a>
+    
+    <a href="http://kooksee.github.io/tags/api%e8%ae%be%e8%ae%a1%e8%bd%af%e4%bb%b6" style="font-size: 12px;">api设计软件</a>
+    
+    <a href="http://kooksee.github.io/tags/bhnhbhbh" style="font-size: 12px;">bhnhbhbh</a>
+    
+    <a href="http://kooksee.github.io/tags/bools.py" style="font-size: 12px;">bools.py</a>
+    
+    <a href="http://kooksee.github.io/tags/ceo" style="font-size: 12px;">ceo</a>
+    
+    <a href="http://kooksee.github.io/tags/cmd" style="font-size: 12px;">cmd</a>
+    
+    <a href="http://kooksee.github.io/tags/cmd%e6%a8%a1%e5%9d%97" style="font-size: 12px;">cmd模块</a>
+    
+    <a href="http://kooksee.github.io/tags/consul" style="font-size: 12px;">consul</a>
+    
+    <a href="http://kooksee.github.io/tags/ddd" style="font-size: 12px;">ddd</a>
+    
+    <a href="http://kooksee.github.io/tags/docker" style="font-size: 12px;">docker</a>
+    
+    <a href="http://kooksee.github.io/tags/docker-machine" style="font-size: 12px;">docker-machine</a>
+    
+    <a href="http://kooksee.github.io/tags/dockerfile" style="font-size: 12px;">dockerfile</a>
+    
+    <a href="http://kooksee.github.io/tags/error" style="font-size: 12px;">error</a>
+    
+    <a href="http://kooksee.github.io/tags/fish" style="font-size: 12px;">fish</a>
+    
+    <a href="http://kooksee.github.io/tags/flask" style="font-size: 12px;">flask</a>
+    
+    <a href="http://kooksee.github.io/tags/gbk" style="font-size: 12px;">gbk</a>
+    
+    <a href="http://kooksee.github.io/tags/groovy" style="font-size: 12px;">groovy</a>
+    
+    <a href="http://kooksee.github.io/tags/hashlib" style="font-size: 12px;">hashlib</a>
+    
+    <a href="http://kooksee.github.io/tags/ipc" style="font-size: 12px;">ipc</a>
+    
+    <a href="http://kooksee.github.io/tags/itertools" style="font-size: 12px;">itertools</a>
+    
+    <a href="http://kooksee.github.io/tags/javascript" style="font-size: 12px;">javascript</a>
+    
+    <a href="http://kooksee.github.io/tags/jquery" style="font-size: 12px;">jquery</a>
+    
+    <a href="http://kooksee.github.io/tags/json" style="font-size: 12px;">json</a>
+    
+    <a href="http://kooksee.github.io/tags/knn" style="font-size: 12px;">knn</a>
+    
+    <a href="http://kooksee.github.io/tags/linux" style="font-size: 12px;">linux</a>
+    
+    <a href="http://kooksee.github.io/tags/lpc" style="font-size: 12px;">lpc</a>
+    
+    <a href="http://kooksee.github.io/tags/makefile" style="font-size: 12px;">makefile</a>
+    
+    <a href="http://kooksee.github.io/tags/mesos" style="font-size: 12px;">mesos</a>
+    
+    <a href="http://kooksee.github.io/tags/mht" style="font-size: 12px;">mht</a>
+    
+    <a href="http://kooksee.github.io/tags/mongodb" style="font-size: 12px;">mongodb</a>
+    
+    <a href="http://kooksee.github.io/tags/nodejs" style="font-size: 12px;">nodejs</a>
+    
+    <a href="http://kooksee.github.io/tags/openvpn" style="font-size: 12px;">openvpn</a>
+    
+    <a href="http://kooksee.github.io/tags/pipetools" style="font-size: 12px;">pipetools</a>
+    
+    <a href="http://kooksee.github.io/tags/plan_morning" style="font-size: 12px;">plan_morning</a>
+    
+    <a href="http://kooksee.github.io/tags/postgresql" style="font-size: 12px;">postgresql</a>
+    
+    <a href="http://kooksee.github.io/tags/pyshell" style="font-size: 12px;">pyshell</a>
+    
+    <a href="http://kooksee.github.io/tags/python" style="font-size: 12px;">python</a>
+    
+    <a href="http://kooksee.github.io/tags/python%e6%a8%a1%e5%9d%97" style="font-size: 12px;">python模块</a>
+    
+    <a href="http://kooksee.github.io/tags/pyv8" style="font-size: 12px;">pyv8</a>
+    
+    <a href="http://kooksee.github.io/tags/rpc" style="font-size: 12px;">rpc</a>
+    
+    <a href="http://kooksee.github.io/tags/shell" style="font-size: 12px;">shell</a>
+    
+    <a href="http://kooksee.github.io/tags/shutil" style="font-size: 12px;">shutil</a>
+    
+    <a href="http://kooksee.github.io/tags/simplejson" style="font-size: 12px;">simplejson</a>
+    
+    <a href="http://kooksee.github.io/tags/smb" style="font-size: 12px;">smb</a>
+    
+    <a href="http://kooksee.github.io/tags/software" style="font-size: 12px;">software</a>
+    
+    <a href="http://kooksee.github.io/tags/sphinx" style="font-size: 12px;">sphinx</a>
+    
+    <a href="http://kooksee.github.io/tags/spyder" style="font-size: 12px;">spyder</a>
+    
+    <a href="http://kooksee.github.io/tags/sql" style="font-size: 12px;">sql</a>
+    
+    <a href="http://kooksee.github.io/tags/sqlalchemy" style="font-size: 12px;">sqlalchemy</a>
+    
+    <a href="http://kooksee.github.io/tags/ssh" style="font-size: 12px;">ssh</a>
+    
+    <a href="http://kooksee.github.io/tags/stringio" style="font-size: 12px;">stringio</a>
+    
+    <a href="http://kooksee.github.io/tags/sublime" style="font-size: 12px;">sublime</a>
+    
+    <a href="http://kooksee.github.io/tags/subprocess" style="font-size: 12px;">subprocess</a>
+    
+    <a href="http://kooksee.github.io/tags/ubuntu" style="font-size: 12px;">ubuntu</a>
+    
+    <a href="http://kooksee.github.io/tags/utf-8" style="font-size: 12px;">utf-8</a>
+    
+    <a href="http://kooksee.github.io/tags/webpack" style="font-size: 12px;">webpack</a>
+    
+    <a href="http://kooksee.github.io/tags/wiki" style="font-size: 12px;">wiki</a>
+    
+    <a href="http://kooksee.github.io/tags/wtf" style="font-size: 12px;">wtf</a>
+    
+    <a href="http://kooksee.github.io/tags/zipfile" style="font-size: 12px;">zipfile</a>
+    
+    <a href="http://kooksee.github.io/tags/zmq" style="font-size: 12px;">zmq</a>
+    
+    <a href="http://kooksee.github.io/tags/%e4%b8%89%e5%85%83%e8%a1%a8%e8%be%be%e5%bc%8f" style="font-size: 12px;">三元表达式</a>
+    
+    <a href="http://kooksee.github.io/tags/%e4%b8%8b%e8%bd%bd%e5%99%a8" style="font-size: 12px;">下载器</a>
+    
+    <a href="http://kooksee.github.io/tags/%e4%b8%ad%e7%bc%80%e8%af%ad%e6%b3%95" style="font-size: 12px;">中缀语法</a>
+    
+    <a href="http://kooksee.github.io/tags/%e4%b9%a6%e7%b1%8d%e6%8e%a8%e8%8d%90" style="font-size: 12px;">书籍推荐</a>
+    
+    <a href="http://kooksee.github.io/tags/%e4%bb%a3%e7%90%86" style="font-size: 12px;">代理</a>
+    
+    <a href="http://kooksee.github.io/tags/%e4%bb%a3%e7%a0%81%e5%88%86%e6%9e%90" style="font-size: 12px;">代码分析</a>
+    
+    <a href="http://kooksee.github.io/tags/%e4%bb%bb%e5%8a%a1%e5%8f%91%e5%b8%83%e5%b9%b3%e5%8f%b0" style="font-size: 12px;">任务发布平台</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%85%bb%e7%94%9f" style="font-size: 12px;">养生</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%86%85%e6%a0%b8%e5%8d%87%e7%ba%a7" style="font-size: 12px;">内核升级</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%8d%9a%e5%ae%a2" style="font-size: 12px;">博客</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%90%8d%e8%af%8d%e5%ae%9a%e4%b9%89" style="font-size: 12px;">名词定义</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%91%bd%e4%bb%a4" style="font-size: 12px;">命令</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%9b%a2%e9%98%9f%e5%90%88%e4%bd%9c" style="font-size: 12px;">团队合作</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%a4%87%e5%bf%98%e5%bd%95" style="font-size: 12px;">备忘录</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%a4%9a%e8%bf%9b%e7%a8%8b%e4%b8%8b%e8%bd%bd%e5%99%a8" style="font-size: 12px;">多进程下载器</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%ad%a6%e4%b9%a0%e7%ac%94%e8%ae%b0" style="font-size: 12px;">学习笔记</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%ae%9e%e4%b9%a0" style="font-size: 12px;">实习</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%b7%a5%e5%85%b7" style="font-size: 12px;">工具</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%b8%b8%e7%94%a8%e6%a8%a1%e5%9d%97" style="font-size: 12px;">常用模块</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%b9%bf%e5%91%8a" style="font-size: 12px;">广告</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%be%ae%e6%9c%8d%e5%8a%a1" style="font-size: 12px;">微服务</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%bf%83%e7%90%86%e5%ad%a6" style="font-size: 12px;">心理学</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%bf%ab%e9%80%9f%e5%8e%9f%e5%9e%8b" style="font-size: 12px;">快速原型</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%bf%ab%e9%80%9f%e5%bc%80%e5%8f%91" style="font-size: 12px;">快速开发</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%bf%ab%e9%80%9f%e6%8e%92%e5%ba%8f" style="font-size: 12px;">快速排序</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%80%bb%e8%a3%81" style="font-size: 12px;">总裁</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%8a%80%e6%9c%af" style="font-size: 12px;">技术</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%8f%92%e4%bb%b6" style="font-size: 12px;">插件</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%95%b0%e6%8d%ae%e5%ba%93" style="font-size: 12px;">数据库</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%95%b0%e6%8d%ae%e5%ba%93%e8%ae%a4%e8%af%81" style="font-size: 12px;">数据库认证</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%96%87%e6%a1%a3%e8%a7%84%e8%8c%83" style="font-size: 12px;">文档规范</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%96%87%e6%a1%a3%e9%a9%b1%e5%8a%a8%e5%bc%80%e5%8f%91" style="font-size: 12px;">文档驱动开发</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%96%b0%e6%a6%82%e5%bf%b5" style="font-size: 12px;">新概念</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%96%b9%e4%be%bf" style="font-size: 12px;">方便</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%97%a5%e8%ae%b0" style="font-size: 12px;">日记</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%98%be%e7%a4%ba%e6%9c%8d%e5%8a%a1%e5%99%a8%e9%94%99%e8%af%af%e4%bf%a1%e6%81%af" style="font-size: 12px;">显示服务器错误信息</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%9c%80%e4%bd%b3%e6%93%8d%e4%bd%9c" style="font-size: 12px;">最佳操作</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%9c%ba%e6%a2%b0%e5%ad%a6%e4%b9%a0" style="font-size: 12px;">机械学习</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%9d%83%e9%99%90" style="font-size: 12px;">权限</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%af%95%e4%b8%9a%e8%ae%be%e8%ae%a1" style="font-size: 12px;">毕业设计</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%b4%bb%e5%8a%a8" style="font-size: 12px;">活动</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%b7%b7%e8%9b%8b%e9%80%bb%e8%be%91" style="font-size: 12px;">混蛋逻辑</a>
+    
+    <a href="http://kooksee.github.io/tags/%e7%83%ad%e7%82%b9%e9%97%ae%e9%a2%98" style="font-size: 12px;">热点问题</a>
+    
+    <a href="http://kooksee.github.io/tags/%e7%88%ac%e8%99%ab" style="font-size: 12px;">爬虫</a>
+    
+    <a href="http://kooksee.github.io/tags/%e7%ae%97%e6%b3%95" style="font-size: 12px;">算法</a>
+    
+    <a href="http://kooksee.github.io/tags/%e7%ae%a1%e9%81%93" style="font-size: 12px;">管道</a>
+    
+    <a href="http://kooksee.github.io/tags/%e7%b1%bb%e5%ba%93%e6%8e%a8%e8%8d%90" style="font-size: 12px;">类库推荐</a>
+    
+    <a href="http://kooksee.github.io/tags/%e7%b3%bb%e7%bb%9f%e5%91%bd%e4%bb%a4" style="font-size: 12px;">系统命令</a>
+    
+    <a href="http://kooksee.github.io/tags/%e7%bc%96%e7%a0%81" style="font-size: 12px;">编码</a>
+    
+    <a href="http://kooksee.github.io/tags/%e7%bc%96%e7%a8%8b%e8%a7%84%e8%8c%83" style="font-size: 12px;">编程规范</a>
+    
+    <a href="http://kooksee.github.io/tags/%e7%bc%96%e7%a8%8b%e9%a3%8e%e6%a0%bc" style="font-size: 12px;">编程风格</a>
+    
+    <a href="http://kooksee.github.io/tags/%e7%bd%91%e7%bb%9c%e9%93%be%e6%8e%a5" style="font-size: 12px;">网络链接</a>
+    
+    <a href="http://kooksee.github.io/tags/%e8%81%8a%e5%a4%a9%e5%ae%a4" style="font-size: 12px;">聊天室</a>
+    
+    <a href="http://kooksee.github.io/tags/%e8%85%b9%e5%bc%8f%e5%91%bc%e5%90%b8" style="font-size: 12px;">腹式呼吸</a>
+    
+    <a href="http://kooksee.github.io/tags/%e8%91%a3%e4%ba%8b%e9%95%bf" style="font-size: 12px;">董事长</a>
+    
+    <a href="http://kooksee.github.io/tags/%e8%a1%a8%e5%8d%95%e9%aa%8c%e8%af%81" style="font-size: 12px;">表单验证</a>
+    
+    <a href="http://kooksee.github.io/tags/%e8%af%b7%e6%b1%82%e9%94%99%e8%af%af" style="font-size: 12px;">请求错误</a>
+    
+    <a href="http://kooksee.github.io/tags/%e8%bf%9b%e7%a8%8b%e9%80%9a%e4%bf%a1" style="font-size: 12px;">进程通信</a>
+    
+    <a href="http://kooksee.github.io/tags/%e9%82%bb%e9%87%8c%e9%97%ae%e9%a2%98" style="font-size: 12px;">邻里问题</a>
+    
+    <a href="http://kooksee.github.io/tags/%e9%94%99%e8%af%af%e9%9b%86%e9%94%a6" style="font-size: 12px;">错误集锦</a>
+    
+    <a href="http://kooksee.github.io/tags/%e9%97%ad%e5%8c%85" style="font-size: 12px;">闭包</a>
+    
+    <a href="http://kooksee.github.io/tags/%e9%9c%80%e6%b1%82%e5%88%86%e6%9e%90" style="font-size: 12px;">需求分析</a>
+    
+    <a href="http://kooksee.github.io/tags/%e9%9d%a2%e8%af%95" style="font-size: 12px;">面试</a>
+    
+  </div>
+</div>
+
+
+
+  
+
+</aside>
+</div>
+
+  </div>
+  <footer>
+<div id="footer" >
+
+  
+  <div class="line">
+    <span></span>
+    <div style='background:no-repeat url("http://kooksee.github.io/img/author.jpg") left top;-webkit-background-size:6.875em 6.875em;-moz-background-size:6.875em 6.875em;background-size:6.875em 6.875em;' class="author" ></div>
+  </div>
+  
+
+
+  <div class="social-font clearfix">
+    
+    <a href="http://weibo.com/kooksee" target="_blank" title="weibo"></a>
+    
+    
+    <a href="https://twitter.com/kooksee" target="_blank" title="twitter"></a>
+    
+    
+    <a href="https://github.com/kooksee" target="_blank" title="github"></a>
+    
+    
+    <a href="https://www.facebook.com/kooksee" target="_blank" title="facebook"></a>
+    
+    
+    <a href="https://www.linkedin.com/kooksee" target="_blank" title="linkedin"></a>
+    
+  </div>
+  <p class="copyright">Powered by <a href="http://gohugo.io" target="_blank" title="hugo">hugo</a> and Theme by <a href="https://github.com/coderzh/hugo-pacman-theme" target="_blank" title="hugo-pacman-theme">hugo-pacman-theme</a> © 2016
+    
+    <a href="http://kooksee.github.io/" target="_blank" title="kooksee">kooksee</a>
+    
+  </p>
+</div>
+</footer>
+  <script src="http://kooksee.github.io/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+done = false;
+$(document).ready(function(){
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize();
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  $('form.search').on('submit', function (event) {
+    if (false === done) {
+      event.preventDefault();
+      var orgVal = $(this).find('#search').val();
+      $(this).find('#search').val('site:http:\/\/kooksee.github.io\/} ' + orgVal);
+      done = true;
+      $(this).submit();
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});
+</script>
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-10147768-2', 'auto');
+  ga('send', 'pageview');
+  $('#messagesbsb').remove();
+</script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Shell on 百里求一的博客</title>
+        <link>http://kooksee.github.io/tags/shell/</link>
+        <language>zh-CN</language>
+        <author>CoderZh</author>
+        <rights>Copyright (c) 2015, CoderZh; all rights reserved.</rights>
+        <updated>Mon, 01 Jan 0001 00:00:00 UTC</updated>
+        
+        <item>
+            <title>fish</title>
+            <link>http://kooksee.github.io/blog/fish/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/fish/</guid>
+            <description>&lt;blockquote&gt;
+&lt;p&gt;FISH（friendly interactive shell）是一个用户友好的命令行 shell，主要是用来进行交互式使用。shell 就是一个用来执行其他程序的程序。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;##install
+&lt;code&gt;sudo apt-get install fish&lt;/code&gt;&lt;/p&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>pyshell</title>
+            <link>http://kooksee.github.io/blog/pyshell/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/pyshell/</guid>
+            <description>&lt;blockquote&gt;
+&lt;p&gt;pyshell 调用外部命令，让你像执行bash一样方便&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;#!/usr/bin/env python
+# -*- coding:utf-8 -*-
+from subprocess import Popen
+from subprocess import PIPE
+
+
+def py_ver():
+    &#39;&#39;&#39;
+    得到python的版本
+    &#39;&#39;&#39;
+    import sys
+    return sys.version_info[0]
+_ver = py_ver()
+
+if _ver == 2:
+    builtin_str = str
+    bytes = str
+    str = unicode
+    basestring = basestring
+    numeric_types = (int, long, float)
+
+elif _ver == 3:
+    builtin_str = str
+    str = str
+    bytes = bytes
+    basestring = (str, bytes)
+    numeric_types = (int, float)
+else:
+    raise ValueError(u&#39;python 版本不正确&#39;)
+del _ver
+
+# 解析字符串中的环境变量
+
+
+def parse_shell_token(t):
+    import os
+    # 将～等用用户的家目录进行替换
+    t = os.path.expanduser(t)
+    # path中可以使用环境变量,&#39;$PATH&#39;...
+    t = os.path.expandvars(t)
+    return t
+
+
+class cmd(object):
+
+    def __init__(self, *args, **kwargs):
+        self.stdout = None
+        self.cmd(*args, **kwargs)
+
+    def cmd(self, cmd, env=None, stdout=PIPE):
+        p = Popen(parse_shell_token(cmd), shell=True,
+                  stdout=stdout, stdin=PIPE, stderr=PIPE, env=env)
+        self.stdout, self.stderr = p.communicate(input=self.stdout)
+        self.code = p.returncode
+        return self
+
+    def __repr__(self):
+        return self.value()
+
+    def __unicode__(self):
+        return self.value()
+
+    def __str__(self):
+        return self.value()
+
+    def __nonzero__(self):
+        return self.__bool__()
+
+    def __bool__(self):
+        return bool(self.value())
+
+    def value(self):
+        if not self.stdout:
+            return &#39;&#39;
+        return self.stdout.strip()
+if __name__ == &#39;__main__&#39;:
+    print cmd(&#39;ls -al&#39;)
+    print cmd(&amp;quot;ls | grep &#39;LICENSE&#39;&amp;quot;)
+    print cmd(&amp;quot;konsole --hold -e &#39;konsole --help&#39;&amp;quot;)
+    print cmd(&#39;ls $HOME&#39;)
+    print cmd(&#39;ls ~&#39;)
+
+    dd = cmd(&#39;ls ~&#39;).value().split(&#39;\n&#39;)
+    print dd
+    cmd(&amp;quot;gnome-terminal -x bash -c &#39;python -h;read&#39; &amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/blockquote&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

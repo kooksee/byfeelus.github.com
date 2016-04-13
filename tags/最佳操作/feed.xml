@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>最佳操作 on 百里求一的博客</title>
+        <link>http://kooksee.github.io/tags/%E6%9C%80%E4%BD%B3%E6%93%8D%E4%BD%9C/</link>
+        <language>zh-CN</language>
+        <author>CoderZh</author>
+        <rights>Copyright (c) 2015, CoderZh; all rights reserved.</rights>
+        <updated>Mon, 01 Jan 0001 00:00:00 UTC</updated>
+        
+        <item>
+            <title>我的linux操作习惯</title>
+            <link>http://kooksee.github.io/blog/%E6%88%91%E7%9A%84linux%E6%93%8D%E4%BD%9C%E4%B9%A0%E6%83%AF/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/%E6%88%91%E7%9A%84linux%E6%93%8D%E4%BD%9C%E4%B9%A0%E6%83%AF/</guid>
+            <description>&lt;blockquote&gt;
+&lt;p&gt;用linux随时可能会有宕机的危险，谁知道我哪会神经病犯了呢。用deepin宕机的可能性会更高的，所以我才不得不安装一个windows做备份，然后把数据备份到windows上面&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;##备份源列表&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;sudo cp /etc/apt/sources.list /etc/apt/sources.list.bk
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##添加ubuntu的阿里软件源&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;deb http://mirrors.aliyun.com/ubuntu/ vivid main restricted universe multiverse
+deb http://mirrors.aliyun.com/ubuntu/ vivid-security main restricted universe multiverse
+deb http://mirrors.aliyun.com/ubuntu/ vivid-updates main restricted universe multiverse
+deb http://mirrors.aliyun.com/ubuntu/ vivid-proposed main restricted universe multiverse
+deb http://mirrors.aliyun.com/ubuntu/ vivid-backports main restricted universe multiverse
+deb-src http://mirrors.aliyun.com/ubuntu/ vivid main restricted universe multiverse
+deb-src http://mirrors.aliyun.com/ubuntu/ vivid-security main restricted universe multiverse
+deb-src http://mirrors.aliyun.com/ubuntu/ vivid-updates main restricted universe multiverse
+deb-src http://mirrors.aliyun.com/ubuntu/ vivid-proposed main restricted universe multiverse
+deb-src http://mirrors.aliyun.com/ubuntu/ vivid-backports main restricted universe multiverse
+
+sudo cat ./tools/ali.list &amp;gt;&amp;gt; /etc/apt/source.list
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##更新系统&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;sudo apt-get install aptitude
+sudo aptitude update &amp;amp;&amp;amp; sudo aptitude upgrade
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##安装系统相关工具&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;sudo aptitude install aptitude
+sudo aptitude install git openssh openssh-server
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##安装java环境&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;sudo aptitude install openjdk-8-jdk
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##&lt;a href=&#34;http://seisman.info/python-pyenv.html&#34;&gt;安装pyenv&lt;/a&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;git clone git://github.com/yyuu/pyenv.git ~/.pyenv
+echo &#39;export PYENV_ROOT=&amp;quot;$HOME/.pyenv&amp;quot;&#39; &amp;gt;&amp;gt; ~/.bashrc
+echo &#39;export PATH=&amp;quot;$PYENV_ROOT/bin:$PATH&amp;quot;&#39; &amp;gt;&amp;gt; ~/.bashrc
+echo &#39;eval &amp;quot;$(pyenv init -)&amp;quot;&#39; &amp;gt;&amp;gt; ~/.bashrc
+exec $SHELL -l
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##安装python环境&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;pyenv install anaconda2-2.4.1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##&lt;a href=&#34;https://github.com/yyuu/pyenv-virtualenvwrapper&#34;&gt;安装python虚拟环境virtualenvwrapper&lt;/a&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;git clone https://github.com/yyuu/pyenv-virtualenvwrapper.git ~/.pyenv/plugins/pyenv-virtualenvwrapper
+
+pyenv virtualenvwrapper
+export PYENV_VIRTUALENVWRAPPER_PREFER_PYVENV=&amp;quot;true&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##&lt;a href=&#34;http://www.philo.top/2015/02/06/golang-%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E5%BB%BA%E8%AE%AE/&#34;&gt;安装golang&lt;/a&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;sudo aptitude install golang
+
+#配置环境
+export GOROOT=/usr/lib/go
+export GOARCH=amd64
+export GOOS=linux
+export GOPATH=$HOME/go
+export GOBIN=$GOPATH/bin
+export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
+
+mkdir -p ~/go/{bin,pkg,src}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##&lt;a href=&#34;http://www.linuxidc.com/Linux/2014-08/105656.htm&#34;&gt;安装docker&lt;/a&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;sudo aptitude install apt-transport-https
+
+sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 36A1D7869245C8950F966E92D8576A8BA88D21E9
+
+sudo sh -c &amp;quot;echo deb https://get.docker.io/ubuntu docker main &amp;gt; /etc/apt/sources.list.d/docker.list&amp;quot;
+
+sudo aptitude update
+sudo aptitude install lxc-docker
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##docker免sudo操作&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;sudo usermod -aG docker ubuntu
+
+sudo groupadd docker
+sudo gpasswd -a ${USER} docker
+sudo service docker restart
+
+#需要注销或者重启一下电脑
+#然后查看一下服务是否开启
+ps -ef | grep docker
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;curl -L https://github.com/docker/machine/releases/download/v0.5.3/docker-machine_linux-amd64 &amp;gt;/usr/local/bin/docker-machine &amp;amp;&amp;amp; \
+    chmod +x /usr/local/bin/docker-machine
+
+curl -L https://github.com/docker/compose/releases/download/1.5.2/docker-compose-`uname -s`-`uname -m` &amp;gt; /usr/local/bin/docker-compose
+pip install docker-compose
+
+curl -L https://github.com/docker/compose/releases/download/1.5.2/run.sh &amp;gt; /usr/local/bin/docker-compose
+
+
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##&lt;a href=&#34;https://hub.tenxcloud.com/&#34;&gt;登陆时速云下载镜像&lt;/a&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker login index.tenxcloud.com
+
+docker pull
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##&lt;a href=&#34;http://blog.csdn.net/pfanaya/article/details/7665853&#34;&gt;剪贴板操作工具&lt;/a&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#安装
+sudo aptitude install xclip
+
+alias tclip=&#39;xclip -selection clipboard&#39;
+alias fclip=&#39;xclip -selection c -o&#39;
+
+#复制到剪贴板
+ctrl+c
+or
+ls | tclip
+or
+tclip &amp;lt; file.txt
+
+#复制到其他地方
+ctrl+v
+or
+tclip
+or
+tclip | wc
+or
+tclip &amp;gt; file.txt
+
+#然后保存到.bashrc
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##sublime配置&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#deepin安装sublime
+sudo apt-get install sublime-text
+sudo cp /usr/bin/sublime-text /usr/bin/subl
+
+import urllib2,os;pf=&#39;Package Control.sublime-package&#39;;ipp=sublime.installed_packages_path();os.makedirs(ipp) if not os.path.exists(ipp) else None;open(os.path.join(ipp,pf),&#39;wb&#39;).write(urllib2.urlopen(&#39;http://sublime.wbond.net/&#39;+pf.replace(&#39; &#39;,&#39;%20&#39;)).read())
+
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

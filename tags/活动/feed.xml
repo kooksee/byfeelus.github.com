@@ -1,0 +1,742 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>活动 on 百里求一的博客</title>
+        <link>http://kooksee.github.io/tags/%E6%B4%BB%E5%8A%A8/</link>
+        <language>zh-CN</language>
+        <author>CoderZh</author>
+        <rights>Copyright (c) 2015, CoderZh; all rights reserved.</rights>
+        <updated>Mon, 01 Jan 0001 00:00:00 UTC</updated>
+        
+        <item>
+            <title>活动报名 APIs v1</title>
+            <link>http://kooksee.github.io/blog/%E6%B4%BB%E5%8A%A8%E6%8A%A5%E5%90%8D%20APIs%20v1/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/%E6%B4%BB%E5%8A%A8%E6%8A%A5%E5%90%8D%20APIs%20v1/</guid>
+            <description>
+
+&lt;pre&gt;&lt;code&gt;美容项目对应表: body_parts
+1-眼部，2-鼻部，3-胸部，4-吸脂，5-破尿酸，6-瘦脸除皱，7-激光美容
+
+活动状态: status -- 原则是不激活不显示,时间不到不让注册
+-1:过期活动
+-2:未激活的活动(未来的新活动),默认,添加一个新活动默认为未激活状态,需要人为激活,未激活的活动不会在app段显示,过期的活动会显示。
+1:在线活动(当前的活动)
+
+是否注册报名过:is_enrolled
+1:注册报名过;
+2:没有注册报名过
+
+报名管理状态:status
+0:所有咨询;
+1:添加咨询;
+2:未添加咨询
+
+数据字典解析:
+page: 代表第几页,默认为1
+size: 代表每页有多少条数据,默认为20
+sort: 代表排序方式,默认为create_at
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;[TOC]&lt;/p&gt;
+
+&lt;h2 id=&#34;获得活动列表:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;获得活动列表&lt;/h2&gt;
+
+&lt;h3 id=&#34;url:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;URL&lt;/h3&gt;
+
+&lt;p&gt;POST &lt;code&gt;/activity/list&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;token:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;TOKEN&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;required&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;scope:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;Scope&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;APP&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;input:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;INPUT&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;{
+   &amp;quot;page&amp;quot;: 34,  
+   &amp;quot;size&amp;quot;: 21,
+   &amp;quot;sort&amp;quot;: &amp;quot;the name that sorted by&amp;quot;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;output:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;OUTPUT&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;# 全部信息
+{
+    &amp;quot;code&amp;quot; :&amp;quot;00000&amp;quot;
+    &amp;quot;total&amp;quot;:13,
+    &amp;quot;data&amp;quot; :[
+        {
+            &amp;quot;id&amp;quot;:&amp;quot;ertyuhfg6&amp;quot;,       // 活动ID
+            &amp;quot;status&amp;quot;: -1,           // 活动状态
+            &amp;quot;num&amp;quot;:     1,           // 活动季数
+            &amp;quot;update_at&amp;quot;: ,          // 活动更新时间
+            &amp;quot;title&amp;quot;:&amp;quot;第一季&amp;quot;,       // 活动标题
+            &amp;quot;start_at&amp;quot;:45678933,    // 整型时间戳
+            &amp;quot;end_at&amp;quot;:3221426,       // 整形时间戳
+        },  
+    ]
+}
+
+{
+    &amp;quot;code&amp;quot;:   &amp;quot;10002&amp;quot;,
+    &amp;quot;message&amp;quot;:&amp;quot;数据参数转化错误&amp;quot;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;error:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;ERROR&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;none&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;curl:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;CURL&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;curl\
+  -X POST\
+  -d &#39;{&amp;quot;page&amp;quot;:1,&amp;quot;size&amp;quot;:10,&amp;quot;sort&amp;quot;:&amp;quot;create_at&amp;quot;}&#39;\
+  -i http://localhost:3001/v1/activity/list
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;获得活动详情:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;获得活动详情&lt;/h2&gt;
+
+&lt;h3 id=&#34;url-1:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;URL&lt;/h3&gt;
+
+&lt;p&gt;POST &lt;code&gt;/activity/get&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;token-1:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;TOKEN&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;required&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;scope-1:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;Scope&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;APP&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;input-1:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;INPUT&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;{
+    &amp;quot;ids&amp;quot;: [&amp;quot;activity_id1&amp;quot;, &amp;quot;activity_id2&amp;quot;]
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;output-1:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;OUTPUT&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;{
+    &amp;quot;code&amp;quot;:&amp;quot;00000&amp;quot;
+    &amp;quot;data&amp;quot;: [
+              {
+                 &amp;quot;id&amp;quot;:&amp;quot;ertyuhfg6&amp;quot;,       // 活动ID
+                 &amp;quot;status&amp;quot;: -1,           // 活动状态,-1:未激活的活动(未来的新活动);1:在线活动(当前的活动);
+                 &amp;quot;num&amp;quot;:     1,           // 活动季数
+                 &amp;quot;name&amp;quot;:&amp;quot;美白&amp;quot;,          // 活动名字
+                 &amp;quot;title&amp;quot;:&amp;quot;第一季&amp;quot;,       // 活动标题
+                 &amp;quot;cites&amp;quot;:[&amp;quot;北京&amp;quot;,&amp;quot;上海&amp;quot;],// 多个城市
+                 &amp;quot;start_at&amp;quot;:45678933,    // 整形时间戳
+                 &amp;quot;end_at&amp;quot;:3221426,       // 整形时间戳
+                 &amp;quot;update_at&amp;quot;: 123456 ,   // 活动更新时间
+                 &amp;quot;body_parts&amp;quot;:      [{&amp;quot;id&amp;quot;:1,&amp;quot;name&amp;quot;:&amp;quot;脸部&amp;quot;},{&amp;quot;id&amp;quot;:2,&amp;quot;name&amp;quot;:&amp;quot;胸部&amp;quot;},{&amp;quot;id&amp;quot;:3,&amp;quot;name&amp;quot;:&amp;quot;&amp;quot;}], //[]:required,每个数字对应一个身体部位，对应表从活动中获取
+                 &amp;quot;content&amp;quot;:&amp;quot;超文本&amp;quot;      // 活动信息
+            }
+     ]
+}
+
+{
+    &amp;quot;code&amp;quot;:&amp;quot;10002&amp;quot;,
+    &amp;quot;message&amp;quot;:&amp;quot;数据参数转化错误&amp;quot;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;error-1:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;ERROR&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;none&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;curl-1:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;CURL&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;curl\
+  -X POST\
+  -d &#39;{&amp;quot;ids&amp;quot;:[&amp;quot;id1&amp;quot;,&amp;quot;id2&amp;quot;]}&#39;
+  -i http://localhost:3001/v1/activity/get
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##活动报名&lt;/p&gt;
+
+&lt;h3 id=&#34;url-2:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;URL&lt;/h3&gt;
+
+&lt;p&gt;POST &lt;code&gt;/activity/enroll&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;token-2:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;TOKEN&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;required&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;scope-2:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;Scope&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;APP&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;input-2:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;INPUT&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;{
+    &amp;quot;activity_id&amp;quot;:        &amp;quot;4eb3a4ff-ad0c-4a03-963c-1a9e4290863e&amp;quot;,  //string:required, 活动Id
+    &amp;quot;attrs&amp;quot;:{                                //基本属性
+        &amp;quot;nickname&amp;quot;:        &amp;quot;irons&amp;quot;,          //string:required, 昵称
+        &amp;quot;mobile&amp;quot;:          &amp;quot;86-18621936702&amp;quot;, //string:required, 电话号码
+        &amp;quot;gender&amp;quot;:          &amp;quot;female&amp;quot;,         //string:required, 性别
+        &amp;quot;birthday&amp;quot;:        &amp;quot;2015-12-24&amp;quot;,     //string:required, 生日
+        &amp;quot;occupation&amp;quot;:      &amp;quot;学生&amp;quot;,           //string:required, 职业[学生, 上班族, 自由职业者, 全职主妇, 网红, 其他 ]
+        &amp;quot;body_parts&amp;quot;:      [1,2],            //[]:required,每个数字对应一个身体部位，对应表从活动中获取
+    },
+
+    &amp;quot;extras&amp;quot;:{              //可扩展属性
+        &amp;quot;front_photos&amp;quot;:     [&amp;quot;http://qiniu.com/1dasdf/asdf.jpg&amp;quot;,&amp;quot;http://qiniu.com/1dasdf/asdf.jpg&amp;quot;],//[]:required,正面照
+        &amp;quot;profile_photos&amp;quot;:   [&amp;quot;http://qiniu.com/1dasdf/asdf.jpg&amp;quot;,&amp;quot;http://qiniu.com/1dasdf/asdf.jpg&amp;quot;]//[]:required,侧面照
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;output-2:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;OUTPUT&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;# 只有返回成功的状态码时才会有data这个返回结果,否则返回message结果
+{
+    &amp;quot;code&amp;quot;:&amp;quot;00000&amp;quot;
+}
+
+{
+    &amp;quot;code&amp;quot;:&amp;quot;10002&amp;quot;,
+    &amp;quot;message&amp;quot;:&amp;quot;传入参数错误&amp;quot;
+}
+
+{
+    &amp;quot;code&amp;quot;:&amp;quot;11201&amp;quot;,
+    &amp;quot;message&amp;quot;:&amp;quot;用户已经注册该活动&amp;quot;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;error-2:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;ERROR&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;ErrEnrollExists  :&amp;ldquo;11201&amp;rdquo;&lt;/li&gt;
+&lt;li&gt;ErrRequestFormat :&amp;ldquo;10002&amp;rdquo;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;curl-2:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;CURL&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;curl\
+    -X POST\
+    -d &#39;{&amp;quot;activity_id&amp;quot;:&amp;quot;wefddw&amp;quot;,&amp;quot;mobile&amp;quot;:&amp;quot;86-18621936702&amp;quot;,&amp;quot;gender&amp;quot;:&amp;quot;female&amp;quot;,&amp;quot;birthday&amp;quot;:&amp;quot;2015-12-24&amp;quot;,&amp;quot;occupation&amp;quot;:&amp;quot;学生&amp;quot;,&amp;quot;invitation_code&amp;quot;:&amp;quot;221ss&amp;quot;,&amp;quot;front_photo&amp;quot;:[&amp;quot;http://qiniu.com/fefw/ddw.jpg&amp;quot;,&amp;quot;http://qiniu.com/dee/fefew.jpg&amp;quot;],&amp;quot;profile_photo&amp;quot;: [&amp;quot;http://qiniu.com/fefw/ddw.jpg&amp;quot;,&amp;quot;http://qiniu.com/dee/fefew.jpg&amp;quot;],&amp;quot;activity_id&amp;quot;:&amp;quot;dwfeww&amp;quot;,&amp;quot;apply_reason&amp;quot;:&amp;quot;申请理由&amp;quot;}&#39;\
+    -i http://localhost:3001/v1/activity/enroll\
+    -H &amp;quot;Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE0MzM0MjkwNjgsImlhdCI6MTQzMzE2OTg2OCwic3ViIjoiNTU2YzY0OTNkZjhlNTY2NDViM2NmYjdlIn0.WA3UlkU2gDH5UCZ_q4abUSBTMEuY21ytAWgyUfPInEaYlJaI1Iav23yHoSHLggloV4emHf6f2hJuV-3LQuGMQfO60yC4zkgeBvBjjXm6808K_ZsuWMtzco8sTjV-2y6VbHb-EnUItVNE-YJuRiP_i0A0H3gJb7IfsSubOz63G3bXvCFUFxPy9Y7DPmpocLXexltf_-EKbyMNHHob5Nll0XOnb3dMZnXU9QhXnx1kT-2uexzdDVsWEZC6UexmRS9b86_oZ4tfGCcNG-Tg9Bl1ole_Yp_9fUBvqA9o-5gsEzFcc0atdEyM1ytFXAaO5SVCqbOnvRKKOdCrduGLth2w&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;用户是否在该次活动报过名过:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;用户是否在该次活动报过名过&lt;/h2&gt;
+
+&lt;h3 id=&#34;url-3:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;URL&lt;/h3&gt;
+
+&lt;p&gt;POST &lt;code&gt;/activity/is_enrolled&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;token-3:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;TOKEN&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;required&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;scope-3:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;Scope&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;APP&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;input-3:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;INPUT&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;{
+    &amp;quot;activity_id&amp;quot;:&amp;quot;4eb3a4ff-ad0c-4a03-963c-1a9e4290863e&amp;quot;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;output-3:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;OUTPUT&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;{
+    &amp;quot;code&amp;quot;:&amp;quot;00000&amp;quot;,
+    &amp;quot;data&amp;quot;:{
+        &amp;quot;is_enrolled&amp;quot;:1   //1:true,2:false
+    },
+}
+
+{
+    &amp;quot;code&amp;quot;:&amp;quot;11203&amp;quot;,
+    &amp;quot;message&amp;quot;:&amp;quot;活动不存在!&amp;quot;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;error-3:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;ERROR&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;ErrActivityNotExists //11203&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;curl-3:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;CURL&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;curl -i http://localhost:3001/v1/activity/is_enrolled\
+     -d &#39;{&amp;quot;activity_id&amp;quot;:&amp;quot;bhbdhbvdvfhfvbdfhd&amp;quot;}&#39;\
+     -H &amp;quot;Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE0MzM0MjkwNjgsImlhdCI6MTQzMzE2OTg2OCwic3ViIjoiNTU2YzY0OTNkZjhlNTY2NDViM2NmYjdlIn0.WA3UlkU2gDH5UCZ_q4abUSBTMEuY21ytAWgyUfPInEaYlJaI1Iav23yHoSHLggloV4emHf6f2hJuV-3LQuGMQfO60yC4zkgeBvBjjXm6808K_ZsuWMtzco8sTjV-2y6VbHb-EnUItVNE-YJuRiP_i0A0H3gJb7IfsSubOz63G3bXvCFUFxPy9Y7DPmpocLXexltf_-EKbyMNHHob5Nll0XOnb3dMZnXU9QhXnx1kT-2uexzdDVsWEZC6UexmRS9b86_oZ4tfGCcNG-Tg9Bl1ole_Yp_9fUBvqA9o-5gsEzFcc0atdEyM1ytFXAaO5SVCqbOnvRKKOdCrduGLth2w&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;获得报名信息:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;获得报名信息&lt;/h2&gt;
+
+&lt;h3 id=&#34;url-4:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;URL&lt;/h3&gt;
+
+&lt;p&gt;POST &lt;code&gt;/activity/get_enrolls&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;token-4:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;TOKEN&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;required&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;scope-4:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;Scope&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;INTER&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;input-4:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;INPUT&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;{
+    &amp;quot;activity_id&amp;quot;: &amp;quot;活动ID&amp;quot;, // 根据活动ID获得活动相关的注册报名
+    &amp;quot;page&amp;quot;:&amp;quot;enroll_id&amp;quot;,
+    &amp;quot;size&amp;quot;:12,
+    &amp;quot;sort&amp;quot;:&amp;quot;&amp;quot;,
+    &amp;quot;status&amp;quot;:2
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;output-4:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;OUTPUT&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;{
+    &amp;quot;code&amp;quot;:&amp;quot;00000&amp;quot;
+    &amp;quot;total&amp;quot;:23,
+    &amp;quot;data&amp;quot;:[
+        {
+            &amp;quot;id&amp;quot;:&amp;quot;enroll_id&amp;quot;,
+            &amp;quot;user_id&amp;quot;:&amp;quot;&amp;quot;,
+            &amp;quot;activity_id&amp;quot;:&amp;quot;&amp;quot;,
+            &amp;quot;status&amp;quot;:2,
+            &amp;quot;share_count&amp;quot;:2,
+            &amp;quot;create_at&amp;quot;:               12334444          //时间戳
+            &amp;quot;attrs&amp;quot;:{                                    //基本属性
+                    &amp;quot;nickname&amp;quot;:        &amp;quot;irons&amp;quot;,          //string:required, 昵称
+                    &amp;quot;mobile&amp;quot;:          &amp;quot;86-18621936702&amp;quot;, //string:required, 电话号码
+                    &amp;quot;gender&amp;quot;:          &amp;quot;female&amp;quot;,         //string:required, 性别
+                    &amp;quot;birthday&amp;quot;:        &amp;quot;2015-12-24&amp;quot;,     //string:required, 生日
+                    &amp;quot;occupation&amp;quot;:      &amp;quot;学生&amp;quot;,           //string:required, 职业[学生, 上班族, 自由职业者, 全职主妇, 网红, 其他 ]
+                    &amp;quot;body_parts&amp;quot;:      [1,2,3], //[]:required,每个数字对应一个身体部位，对应表从活动中获取
+                },
+
+                &amp;quot;extras&amp;quot;:{                               //可扩展属性
+                    &amp;quot;front_photos&amp;quot;:     [&amp;quot;http://qiniu.com/1dasdf/asdf.jpg&amp;quot;],//[]:required,正面照
+                    &amp;quot;profile_photos&amp;quot;:   [&amp;quot;http://qiniu.com/1dasdf/asdf.jpg&amp;quot;],//[]:required,侧面照
+                }
+        }
+    ]
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;error-4:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;ERROR&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;none&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;curl-4:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;CURL&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;curl\
+    -X POST\
+    -i http://localhost:3001/v1/activity/get_enrolls\
+    -H &amp;quot;Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE0MzM0MjkwNjgsImlhdCI6MTQzMzE2OTg2OCwic3ViIjoiNTU2YzY0OTNkZjhlNTY2NDViM2NmYjdlIn0.WA3UlkU2gDH5UCZ_q4abUSBTMEuY21ytAWgyUfPInEaYlJaI1Iav23yHoSHLggloV4emHf6f2hJuV-3LQuGMQfO60yC4zkgeBvBjjXm6808K_ZsuWMtzco8sTjV-2y6VbHb-EnUItVNE-YJuRiP_i0A0H3gJb7IfsSubOz63G3bXvCFUFxPy9Y7DPmpocLXexltf_-EKbyMNHHob5Nll0XOnb3dMZnXU9QhXnx1kT-2uexzdDVsWEZC6UexmRS9b86_oZ4tfGCcNG-Tg9Bl1ole_Yp_9fUBvqA9o-5gsEzFcc0atdEyM1ytFXAaO5SVCqbOnvRKKOdCrduGLth2w&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;创建活动:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;创建活动&lt;/h2&gt;
+
+&lt;h3 id=&#34;url-5:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;URL&lt;/h3&gt;
+
+&lt;p&gt;POST &lt;code&gt;/activity/add&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;token-5:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;TOKEN&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;required&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;scope-5:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;Scope&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;INTER&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;input-5:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;INPUT&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;{
+     &amp;quot;name&amp;quot;:&amp;quot;美白&amp;quot;,           // 活动名字
+     &amp;quot;title&amp;quot;:&amp;quot;第一季&amp;quot;,        // 活动标题
+     &amp;quot;cites&amp;quot;:[&amp;quot;北京&amp;quot;,&amp;quot;上海&amp;quot;], // 多个城市
+     &amp;quot;start_at&amp;quot;:45678933,     // 时间戳
+     &amp;quot;end_at&amp;quot;:3221426,        // 时间戳
+     &amp;quot;body_parts&amp;quot;:      [1,2,3], //[]:required,每个数字对应一个身体部位，对应表从活动中获取
+     &amp;quot;content&amp;quot;:&amp;quot;the html5 text&amp;quot; // 活动信息
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;output-5:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;OUTPUT&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;{
+    &amp;quot;code&amp;quot;:&amp;quot;00000&amp;quot;,
+}
+
+{
+    &amp;quot;code&amp;quot;:&amp;quot;10002&amp;quot;,
+    &amp;quot;message&amp;quot;:&amp;quot;传入信息转化错误!&amp;quot;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;error-5:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;ERROR&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;none&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;curl-5:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;CURL&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;curl\
+  -X POST\
+  -i http://localhost:3001/v1/activity/add\
+  -d &#39;{
+         &amp;quot;name&amp;quot;:&amp;quot;美白&amp;quot;,
+         &amp;quot;title&amp;quot;:&amp;quot;第一季&amp;quot;,
+         &amp;quot;cites&amp;quot;:[&amp;quot;上海&amp;quot;, &amp;quot;北京&amp;quot;],
+         &amp;quot;start_at&amp;quot;:45678933,
+         &amp;quot;end_at&amp;quot;:3221426,
+         &amp;quot;body_parts&amp;quot;:      [1,2,3], //[]:required,每个数字对应一个身体部位，对应表从活动中获取
+         &amp;quot;content&amp;quot;:&amp;quot;&amp;quot;
+      }&#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;活动编辑:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;活动编辑&lt;/h2&gt;
+
+&lt;h3 id=&#34;url-6:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;URL&lt;/h3&gt;
+
+&lt;p&gt;POST &lt;code&gt;/activity/update&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;token-6:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;TOKEN&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;required&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;scope-6:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;Scope&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;INTER&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;input-6:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;INPUT&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;{
+    &amp;quot;id&amp;quot;:&amp;quot;ehjbfwew&amp;quot;,            // 活动ID
+    &amp;quot;name&amp;quot;:&amp;quot;美白&amp;quot;,              // 活动名字
+    &amp;quot;title&amp;quot;:&amp;quot;第一季&amp;quot;,           // 活动标题
+    &amp;quot;cites&amp;quot;:[&amp;quot;北京&amp;quot;,&amp;quot;上海&amp;quot;],    // 多个城市
+    &amp;quot;start_at&amp;quot;:45678933,        // 整型时间戳
+    &amp;quot;end_at&amp;quot;:3221426,           // 整型时间戳
+    &amp;quot;body_parts&amp;quot;:      [1,2,3], //[]:required,每个数字对应一个身体部位，对应表从活动中获取
+    &amp;quot;content&amp;quot;:&amp;quot;the html5 text&amp;quot;  // 活动信息
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;output-6:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;OUTPUT&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;{
+    &amp;quot;code&amp;quot;:&amp;quot;00000&amp;quot;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;error-6:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;ERROR&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;none&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;curl-6:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;CURL&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;curl\
+  -X POST\
+  -i http://localhost:3001/v1/activity/update
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;删除活动:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;删除活动&lt;/h2&gt;
+
+&lt;h3 id=&#34;url-7:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;URL&lt;/h3&gt;
+
+&lt;p&gt;POST &lt;code&gt;/activity/delete&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;token-7:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;TOKEN&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;required&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;scope-7:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;Scope&lt;/h3&gt;
+
+&lt;p&gt;INTER&lt;/p&gt;
+
+&lt;h3 id=&#34;input-7:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;INPUT&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;{
+   &amp;quot;ids&amp;quot;:[&amp;quot;ehjbfwew&amp;quot;,&amp;quot;fghbj&amp;quot;],// 可以让管理员一次删除多个
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;output-7:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;OUTPUT&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;{
+    &amp;quot;code&amp;quot;:&amp;quot;00000&amp;quot;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;error-7:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;ERROR&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;none&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;curl-7:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;CURL&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;curl\
+  -X POST\
+  -i http://localhost:3001/v1/activity/delete
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;获得活动列表-web端:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;获得活动列表(web端)&lt;/h2&gt;
+
+&lt;h3 id=&#34;url-8:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;URL&lt;/h3&gt;
+
+&lt;p&gt;POST &lt;code&gt;/activity/list&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;token-8:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;TOKEN&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;required&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;scope-8:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;Scope&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;INTER&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;input-8:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;INPUT&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;{
+   &amp;quot;page&amp;quot;:34,  
+   &amp;quot;size&amp;quot;:21,
+   &amp;quot;sort&amp;quot;:&amp;quot;&amp;quot;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;output-8:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;OUTPUT&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;
+# 全部信息
+{
+    &amp;quot;code&amp;quot;:&amp;quot;00000&amp;quot;
+    &amp;quot;total&amp;quot;:12,
+    &amp;quot;data&amp;quot;:[
+            {
+                 &amp;quot;id&amp;quot;:&amp;quot;ertyuhfg6&amp;quot;,       // 活动ID
+                 &amp;quot;status&amp;quot;: -1,           // 活动状态,-1:未激活的活动(未来的新活动);1:在线活动(当前的活动);2:下线活动(过期的或者人为下线的活动)
+                 &amp;quot;num&amp;quot;:     1,           // 活动季数
+                 &amp;quot;name&amp;quot;:&amp;quot;美白&amp;quot;,          // 活动名字
+                 &amp;quot;title&amp;quot;:&amp;quot;第一季&amp;quot;,       // 活动标题
+                 &amp;quot;cites&amp;quot;:[&amp;quot;北京&amp;quot;,&amp;quot;上海&amp;quot;],// 多个城市
+                 &amp;quot;start_at&amp;quot;:45678933,    // 时间戳
+                 &amp;quot;end_at&amp;quot;:3221426,       // 时间戳
+                 &amp;quot;update_at&amp;quot;: 123456 ,   // 活动更新时间
+                 &amp;quot;body_parts&amp;quot;:      [{&amp;quot;id&amp;quot;:1,&amp;quot;name&amp;quot;:&amp;quot;脸部&amp;quot;},{&amp;quot;id&amp;quot;:2,&amp;quot;name&amp;quot;:&amp;quot;胸部&amp;quot;},{&amp;quot;id&amp;quot;:3,&amp;quot;name&amp;quot;:&amp;quot;&amp;quot;}], //[]:required,每个数字对应一个身体部位，对应表从活动中获取
+                 &amp;quot;enroll_num&amp;quot;:&amp;quot;本次活动分享的次数&amp;quot;,
+                 &amp;quot;share_num&amp;quot;:&amp;quot;本次活动注册的人数&amp;quot;
+            },  
+    ]
+}
+
+{
+    &amp;quot;code&amp;quot;:&amp;quot;10002&amp;quot;,
+    &amp;quot;message&amp;quot;:&amp;quot;数据参数转化错误&amp;quot;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;error-8:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;ERROR&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;none&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;curl-8:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;CURL&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;curl\
+  -X POST\
+  -i http://localhost:3002/v1/activity/list
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;获取html5内容-web端:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;获取html5内容(web端)&lt;/h2&gt;
+
+&lt;h3 id=&#34;url-9:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;URL&lt;/h3&gt;
+
+&lt;p&gt;POST &lt;code&gt;/activity/get_content&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;token-9:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;TOKEN&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;required&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;scope-9:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;Scope&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;INTER&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;input-9:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;INPUT&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;{
+    &amp;quot;id&amp;quot;:&amp;quot;activity_id&amp;quot;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;output-9:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;OUTPUT&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;
+# 全部信息
+{
+    &amp;quot;code&amp;quot;:&amp;quot;00000&amp;quot;
+    &amp;quot;data&amp;quot;:{
+        &amp;quot;content&amp;quot;:&amp;quot;html5 text&amp;quot;
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;error-9:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;ERROR&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;none&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;curl-9:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;CURL&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;curl\
+  -X POST\
+  -i http://localhost:3002/v1/activity/get_content
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;获得身体部位对应列表-web端:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;获得身体部位对应列表(web端)&lt;/h2&gt;
+
+&lt;h3 id=&#34;url-10:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;URL&lt;/h3&gt;
+
+&lt;p&gt;POST &lt;code&gt;/activity/get_body_parts&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;token-10:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;TOKEN&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;required&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;scope-10:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;Scope&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;INTER&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;input-10:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;INPUT&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;{
+    &amp;quot;ids&amp;quot;:[&amp;quot;body_part_id1&amp;quot;,&amp;quot;body_part_id2&amp;quot;]
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;output-10:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;OUTPUT&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;
+# 全部信息
+{
+    &amp;quot;code&amp;quot;:&amp;quot;00000&amp;quot;,
+    &amp;quot;data&amp;quot;:[
+         {
+            &amp;quot;id&amp;quot;:1,
+            &amp;quot;name&amp;quot;:&amp;quot;鼻子&amp;quot;
+        },
+         {
+            &amp;quot;id&amp;quot;:2,
+            &amp;quot;name&amp;quot;:&amp;quot;脸部&amp;quot;
+        }
+    ]
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;error-10:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;ERROR&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;none&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;curl-10:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;CURL&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;curl\
+  -X POST\
+  -i http://localhost:3002/v1/activity/get_body_parts
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;修改活动状态:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;修改活动状态&lt;/h2&gt;
+
+&lt;h3 id=&#34;url-11:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;URL&lt;/h3&gt;
+
+&lt;p&gt;POST &lt;code&gt;/activity/update_status&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;token-11:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;TOKEN&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;required&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;scope-11:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;Scope&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;INTER&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;input-11:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;INPUT&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;{
+    &amp;quot;id&amp;quot;:&amp;quot;activity id&amp;quot;,
+    &amp;quot;status&amp;quot;: 2
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;output-11:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;OUTPUT&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;
+# 全部信息
+{
+    &amp;quot;code&amp;quot;:&amp;quot;00000&amp;quot;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;error-11:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;ERROR&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;none&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;curl-11:b505ef91d952b4d62ea4a3d4c663cea3&#34;&gt;CURL&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;curl\
+  -X POST\
+  -i http://localhost:3002/v1/activity/update_status
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

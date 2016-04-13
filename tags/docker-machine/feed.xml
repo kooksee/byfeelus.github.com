@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Docker Machine on 百里求一的博客</title>
+        <link>http://kooksee.github.io/tags/docker-machine/</link>
+        <language>zh-CN</language>
+        <author>CoderZh</author>
+        <rights>Copyright (c) 2015, CoderZh; all rights reserved.</rights>
+        <updated>Mon, 01 Jan 0001 00:00:00 UTC</updated>
+        
+        <item>
+            <title>docker-machine</title>
+            <link>http://kooksee.github.io/blog/docker-machine/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/docker-machine/</guid>
+            <description>&lt;p&gt;Docker Machine是一个简化Docker安装的命令行工具，通过一个简单的命令行即可在相应的平台上安装Docker，比如VirtualBox、 Digital Ocean、Microsoft Azure&lt;/p&gt;
+
+&lt;p&gt;Docker Machine是一个简化Docker安装的命令行工具，通过一个简单的命令行即可在相应的平台上安装Docker，比如VirtualBox、 Digital Ocean、Microsoft Azure。
+Docker官方是这样介绍Machine的初衷的：之前，Docker的安装流程非常复杂，用户需要登录到相应的主机上，根据官方的安装和配置指南来安装Docker，并且不同的操作系统的安装步骤也是不一样的。而有了Machine后，不管是在笔记本、虚拟机还是公有云实例上，用户仅仅需要一个命令&amp;hellip;.当然那你需要先安装Machine。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Machine的命令也非常简单：
+
+% machine create -d [infrastructure provider] [provider options] [machine name]
+
+看着有点懵，infrastructure provider是啥？machine name是啥？我使劲想了半天也没想到好的中文翻译，但是你看例子就明白它们的意思了。
+
+$ machine create -d virtualbox dev
+[info] Downloading boot2docker...[info] Creating SSH key...[info] Creating VirtualBox VM...[info] Starting VirtualBox VM...[info] Waiting for VM to start...[info] &amp;quot;dev&amp;quot; has been created and is now the active host. Docker commands will now run against that host.
+
+$ machine ls
+NAME    ACTIVE   DRIVER         STATE   URL
+dev     *       virtualbox  Running   tcp://192.168.99.100:2375
+
+$ export DOCKER_HOST=`machine url` DOCKER_AUTH=identity
+
+$ docker run busybox echo hello world
+Unable to find image &#39;busybox&#39; locally
+Pulling repository busybox
+e72ac664f4f0: Download complete
+511136ea3c5a: Download complete
+df7546f9f060: Download complete
+e433a6c5b276: Download complete
+hello world
+
+$ machine create -d digitalocean --digitalocean-access-token=... staging
+[info] Creating SSH key...[info] Creating Digital Ocean droplet...[info] Waiting for SSH...[info] &amp;quot;staging&amp;quot; has been created and is now the active host. Docker commands will now run against that host.
+$ machine ls
+NAME      ACTIVE   DRIVER         STATE     URL
+dev                virtualbox     Running   tcp://192.168.99.108:2376
+staging   *        digitalocean   Running   tcp://104.236.37.134:2376
+
+Machine做事也很聪明，很符合Docker公司的做事风格，他们号称自己架构很好，方便第三方集成。所以Machine现在只支持有限的几个平台（VirtualBox、 Digital Ocean、Microsoft Azure），其它平台的兼容留给那些爱Docker的第三方厂商以及开发者去做吧。所以接下来一定会有很多的厂商跟进，比如国内阿里云之类的，他们根据官方的接口开发个Driver即可加入Machine的能力。
+
+需要注意的是Machine是完全独立于Docker项目的，目前的主要维护者是也是一位叫Ben的人，当然还是使用Go语言。
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

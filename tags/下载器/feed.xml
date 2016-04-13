@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>下载器 on 百里求一的博客</title>
+        <link>http://kooksee.github.io/tags/%E4%B8%8B%E8%BD%BD%E5%99%A8/</link>
+        <language>zh-CN</language>
+        <author>CoderZh</author>
+        <rights>Copyright (c) 2015, CoderZh; all rights reserved.</rights>
+        <updated>Mon, 01 Jan 0001 00:00:00 UTC</updated>
+        
+        <item>
+            <title>ubuntu 下载器</title>
+            <link>http://kooksee.github.io/blog/ubuntu%20%E4%B8%8B%E8%BD%BD%E5%99%A8/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/ubuntu%20%E4%B8%8B%E8%BD%BD%E5%99%A8/</guid>
+            <description>&lt;p&gt;&lt;a href=&#34;http://man.chinaunix.net/&#34;&gt;http://man.chinaunix.net/&lt;/a&gt;
+&lt;a href=&#34;http://philo.top/2015/12/13/golang-devenv/&#34;&gt;http://philo.top/2015/12/13/golang-devenv/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Wget还可下载整个网站，如下载&lt;a href=&#34;http://man.chinaunix.net整个Man手册中心。只需输入如下命令即可：&#34;&gt;http://man.chinaunix.net整个Man手册中心。只需输入如下命令即可：&lt;/a&gt; #wget -r -p -np -k &lt;a href=&#34;http://man.chinaunix.net&#34;&gt;http://man.chinaunix.net&lt;/a&gt; 其中-r参数是指使用递归下载，-p是指下载所有显示完整网页所以需要的文件，如图片等，-np是指不搜索上层目录，-k则是指将绝对链接转换为相对链接。&lt;/p&gt;
+
+&lt;p&gt;Downloader for X     Downloader For X（文中简称为D4X）是Linux下功能强大的图形化下载工具。支持HTTP与FTP协议，具有类似NetAnt和FlashGet等多线程、断点续传下载等功能。D4X还具有连接超时断点续传、记录下载日志、模拟下载、链接拖拽下载、自动复制剪贴板链接到下载地址栏中等功能。 1.下载和安装 D4X的下载地址为&lt;a href=&#34;http://www.krasu.ru/soft/chuchelo/files/d4x-2.5.0final.tar.gz，下载后使用如下命令安装：&#34;&gt;http://www.krasu.ru/soft/chuchelo/files/d4x-2.5.0final.tar.gz，下载后使用如下命令安装：&lt;/a&gt; #tar zxvf d4x-2.5.0final.tar.gz #cd d4x-2.5.0final #./configure #make #make install 成功安装后，运行“d4x”命令便可直接运行。它的界面如图3所示，和FlashGet有点相像吧。  in ubuntu just : apt-get install d4x&lt;/p&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

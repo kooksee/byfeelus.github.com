@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>类库推荐 on 百里求一的博客</title>
+        <link>http://kooksee.github.io/tags/%E7%B1%BB%E5%BA%93%E6%8E%A8%E8%8D%90/</link>
+        <language>zh-CN</language>
+        <author>CoderZh</author>
+        <rights>Copyright (c) 2015, CoderZh; all rights reserved.</rights>
+        <updated>Mon, 01 Jan 0001 00:00:00 UTC</updated>
+        
+        <item>
+            <title>让人耳目一新的Python库</title>
+            <link>http://kooksee.github.io/blog/%E8%AE%A9%E4%BA%BA%E8%80%B3%E7%9B%AE%E4%B8%80%E6%96%B0%E7%9A%84Python%E5%BA%93/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/%E8%AE%A9%E4%BA%BA%E8%80%B3%E7%9B%AE%E4%B8%80%E6%96%B0%E7%9A%84Python%E5%BA%93/</guid>
+            <description>&lt;p&gt;[TOC]
+##摘要&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;工欲善其事，必先利其器。Python社区高产富饶，有大量的美丽，实用的库, 这里挑选出来一些接口设计简洁的库。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;##docopt
+    Github: &lt;a href=&#34;https://github.com/docopt/docopt&#34;&gt;https://github.com/docopt/docopt&lt;/a&gt;
+    Pythonic的命令行参数解析库:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;&amp;quot;&amp;quot;&amp;quot;Usage:
+  quick_example.py tcp &amp;lt;host&amp;gt; &amp;lt;port&amp;gt; [--timeout=&amp;lt;seconds&amp;gt;]
+  quick_example.py serial &amp;lt;port&amp;gt; [--baud=9600] [--timeout=&amp;lt;seconds&amp;gt;]
+  quick_example.py -h | --help | --version
+
+&amp;quot;&amp;quot;&amp;quot;
+from docopt import docopt
+
+
+if __name__ == &#39;__main__&#39;:
+    arguments = docopt(__doc__, version=&#39;0.1.1rc&#39;)
+    print(arguments)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##requests&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Github: https://github.com/kennethreitz/requests
+
+大神kennethreitz的作品，简易明了的HTTP请求操作库, 是urllib2的理想替代品
+
+API简洁明了，这才是Python开发者喜欢的:
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;&amp;gt;&amp;gt;&amp;gt; r = requests.get(&#39;https://api.github.com/user&#39;, auth=(&#39;user&#39;, &#39;pass&#39;))
+&amp;gt;&amp;gt;&amp;gt; r.status_code
+200
+&amp;gt;&amp;gt;&amp;gt; r.headers[&#39;content-type&#39;]
+&#39;application/json; charset=utf8&#39;
+&amp;gt;&amp;gt;&amp;gt; r.encoding
+&#39;utf-8&#39;
+&amp;gt;&amp;gt;&amp;gt; r.text
+u&#39;{&amp;quot;type&amp;quot;:&amp;quot;User&amp;quot;...&#39;
+&amp;gt;&amp;gt;&amp;gt; r.json()
+{u&#39;private_gists&#39;: 419, u&#39;total_private_repos&#39;: 77, ...}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##sh&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;http://amoffat.github.io/sh/
+
+如其名，子进程接口。
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;from sh import ifconfig
+print(ifconfig(&amp;quot;wlan0&amp;quot;))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##purl&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;github: &lt;a href=&#34;https://github.com/codeinthehole/&#34;&gt;https://github.com/codeinthehole/&lt;/a&gt;
+拥有简洁接口的URL处理器:&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;&amp;gt;&amp;gt;&amp;gt; from purl import URL
+&amp;gt;&amp;gt;&amp;gt; from_str = URL(&#39;https://www.google.com/search?q=testing&#39;)
+&amp;gt;&amp;gt;&amp;gt; u.query_param(&#39;q&#39;)
+u&#39;testing&#39;
+&amp;gt;&amp;gt;&amp;gt; u.host()
+u&#39;www.google.com&#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##path.py&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;github: &lt;a href=&#34;https://github.com/jaraco/path.py&#34;&gt;https://github.com/jaraco/path.py&lt;/a&gt;
+一个文件系统处理库，不过目前还在开发阶段&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;from path import path
+d = path(&#39;/home/guido/bin&#39;)
+for f in d.files(&#39;*.py&#39;):
+f.chmod(0755)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;##Peewee&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/coleifer/peewee&#34;&gt;https://github.com/coleifer/peewee&lt;/a&gt;
+小型ORM, 接口很漂亮:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# get tweets by editors (&amp;quot;&amp;lt;&amp;lt;&amp;quot; maps to IN)
+Tweet.select().where(Tweet.user &amp;lt;&amp;lt; editors)
+# how many active users are there?
+User.select().where(User.active == True).count()
+
+#类似的我的 CURD.py (https://github.com/hit9/CURD.py) :)
+
+User.create(name=&amp;quot;John&amp;quot;, email=&amp;quot;John@gmail.com&amp;quot;)  # create
+
+User.at(2).update(email=&amp;quot;John@github.com&amp;quot;)  # update
+
+John = User.where(name=&amp;quot;John&amp;quot;).select().fetchone()  # read
+
+# who wrote posts?
+for post, user in (Post &amp;amp; User).select().fetchall():
+    print &amp;quot;Author: %s, PostName: %s&amp;quot; % (user.name, post.name)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;##Pony ORM&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/ponyorm/pony&#34;&gt;https://github.com/ponyorm/pony&lt;/a&gt;
+一个十分独特的ORM，接口简单干净，最大的特点是支持使用generator的语法来进行查询，可以使查询语句变得简洁，灵活，而且漂亮。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;例如可以使用如下的语句来进行一个查询:
+
+select(p for p in Product if p.name.startswith(&#39;A&#39;) and p.cost &amp;lt;= 1000)
+
+同时，Pony ORM还提供了一个ER图编辑工具来进行数据库原型设计。
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##Spyne&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/arskom/spyne&#34;&gt;https://github.com/arskom/spyne&lt;/a&gt;
+一个用于构建RPC服务的工具集，支持SOAP，JSON，XML等多种流行的协议。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;pre&gt;&lt;code&gt;    现在有诸如 flask-restful 以及 django-rest-framework 等框架用于 REST 服务的开发，人们对于 REST 之外的框架似乎兴趣不大。Spyne 很好地填补了这一空白，它支持多种协议，而且本身也封装地相当好:
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class HelloWorldService(ServiceBase):
+    @srpc(Unicode, Integer, _returns=Iterable(Unicode))
+    def say_hello(name, times):
+        for i in range(times):
+            yield &#39;Hello, %s&#39; % name
+
+application = Application([HelloWorldService],
+    tns=&#39;spyne.examples.hello&#39;,
+    in_protocol=Soap11(validator=&#39;lxml&#39;),
+    out_protocol=Soap11()
+)
+
+#短短几行代码便实现了一个支持SOAP 1.1 协议的服务器端application，接入任何一个WSGI兼容的服务器后端就可以运行了。
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##schema&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/halst/schema&#34;&gt;https://github.com/halst/schema&lt;/a&gt;
+同样是docopt的作者编写的，一个数据格式检查库，非常新颖:&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;&amp;gt;&amp;gt;&amp;gt; from schema import Schema
+&amp;gt;&amp;gt;&amp;gt; Schema(int).validate(123)
+123
+&amp;gt;&amp;gt;&amp;gt; Schema(int).validate(&#39;123&#39;)
+Traceback (most recent call last):
+...
+SchemaError: &#39;123&#39; should be instance of &amp;lt;type &#39;int&#39;&amp;gt;
+Traceback (most recent call last):
+...
+SchemaError: &#39;123&#39; should be instance of &amp;lt;type &#39;int&#39;&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##fn.py&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/kachayev/fn.py&#34;&gt;https://github.com/kachayev/fn.py&lt;/a&gt;
+增强Python的函数式编程:&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;from fn import _
+
+print (_ + 2) # &amp;quot;(x1) =&amp;gt; (x1 + 2)&amp;quot;
+print (_ + _ * _) # &amp;quot;(x1, x2, x3) =&amp;gt; (x1 + (x2 * x3))&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##when.py&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/dirn/When.py&#34;&gt;https://github.com/dirn/When.py&lt;/a&gt;
+友好的时间日期库:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;&amp;gt;&amp;gt;&amp;gt; import when
+&amp;gt;&amp;gt;&amp;gt; when.timezone()
+&#39;Asia/Shanghai&#39;
+&amp;gt;&amp;gt;&amp;gt; when.today()
+datetime.date(2013, 5, 14)
+&amp;gt;&amp;gt;&amp;gt; when.tomorrow()
+datetime.date(2013, 5, 15)
+&amp;gt;&amp;gt;&amp;gt; when.now()
+datetime.datetime(2013, 5, 14, 21, 2, 23, 78838)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;##clize&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/epsy/clize&#34;&gt;https://github.com/epsy/clize&lt;/a&gt;
+用 docopt 写程序的使用doc是不是很爽， clize是一个类似的库。可以用程序的函数名字来作为使用方法&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;#!/usr/bin/env python
+
+from clize import clize
+
+@clize
+def echo(text, reverse=false):
+    if reverse:
+        text = text[::-1]
+    print(text)
+if __name__ == &#39;__main__&#39;:
+    import sys
+    echo(*sys.argv)
+
+而这个小程序就可以这么使用:
+
+$ ./echo.py --help
+Usage: ./echo.py [OPTIONS] text
+
+Positional arguments:
+  text
+
+Options:
+  --reverse
+  -h, --help   Show this help
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;##sphinx-theme-rux
+&amp;gt; A no-sidebar red sexy sphinx theme
+&lt;a href=&#34;https://github.com/hit9/sphinx-theme-rux&#34;&gt;https://github.com/hit9/sphinx-theme-rux&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;##lice
+&amp;gt; 一个用来为你的项目生成许可证的工具。这下可方便了，不用手工的去修改了！&lt;a href=&#34;https://github.com/licenses/lice&#34;&gt;https://github.com/licenses/lice&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;##autopep8
+&amp;gt; 每个Python程序员都应该checkout的repo.自动的把你的Python代码转成符合PEP8风格的代码.
+使用 -i 参数来直接修改你的 Python文件:
+autopep8 -i mycode.py
+&lt;a href=&#34;https://github.com/hhatto/autopep8&#34;&gt;https://github.com/hhatto/autopep8&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;##powerline
+&amp;gt; 如果你是个linux(or mac)下的开发者，又喜欢在终端下工作的话，你一定喜欢用powerline来美化自己的工作空间。
+之前github上兴起了vim-powerline,tmux-powerline,还有powerline-bash,现在Lokaltog提供了一个统一的解决方案，只要安装这个python包，再追加些东西到配置文件就可以使用漂亮的powerline了
+&lt;a href=&#34;https://github.com/Lokaltog/powerline&#34;&gt;https://github.com/Lokaltog/powerline&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;##Pocoo小组
+&amp;gt; pocoo出的库，必属精品。 &lt;a href=&#34;http://www.pocoo.org/&#34;&gt;http://www.pocoo.org/&lt;/a&gt;
+它的库很出名: flask, jinja2, pygments,sphinx&lt;/p&gt;
+
+&lt;p&gt;##后言和链接
+&amp;gt; 你可能对 Github上Python开发者应该关心的Repo 感兴趣
+    看下这个gist &lt;a href=&#34;https://gist.github.com/medecau/797129&#34;&gt;https://gist.github.com/medecau/797129&lt;/a&gt;
+    HN: &lt;a href=&#34;https://news.ycombinator.com/item?id=4772261&#34;&gt;https://news.ycombinator.com/item?id=4772261&lt;/a&gt;&lt;/p&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

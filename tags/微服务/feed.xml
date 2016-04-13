@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>微服务 on 百里求一的博客</title>
+        <link>http://kooksee.github.io/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/</link>
+        <language>zh-CN</language>
+        <author>CoderZh</author>
+        <rights>Copyright (c) 2015, CoderZh; all rights reserved.</rights>
+        <updated>Mon, 01 Jan 0001 00:00:00 UTC</updated>
+        
+        <item>
+            <title>17mei 微服务的坑，检查点，以及一些操作细节</title>
+            <link>http://kooksee.github.io/blog/17mei%20%E5%BE%AE%E6%9C%8D%E5%8A%A1%E7%9A%84%E5%9D%91%EF%BC%8C%E6%A3%80%E6%9F%A5%E7%82%B9%EF%BC%8C%E4%BB%A5%E5%8F%8A%E4%B8%80%E4%BA%9B%E6%93%8D%E4%BD%9C%E7%BB%86%E8%8A%82/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/17mei%20%E5%BE%AE%E6%9C%8D%E5%8A%A1%E7%9A%84%E5%9D%91%EF%BC%8C%E6%A3%80%E6%9F%A5%E7%82%B9%EF%BC%8C%E4%BB%A5%E5%8F%8A%E4%B8%80%E4%BA%9B%E6%93%8D%E4%BD%9C%E7%BB%86%E8%8A%82/</guid>
+            <description>
+
+&lt;h1 id=&#34;坑:229a76c2071f7fa22b2d9c3a60de9699&#34;&gt;坑&lt;/h1&gt;
+
+&lt;h2 id=&#34;gateway-运行文件依赖pem文件:229a76c2071f7fa22b2d9c3a60de9699&#34;&gt;gateway 运行文件依赖pem文件&lt;/h2&gt;
+
+&lt;h2 id=&#34;verification里面需要根证书-不然没办法访问https-注意注意-apt-get-install-ca-certificates:229a76c2071f7fa22b2d9c3a60de9699&#34;&gt;verification里面需要根证书。不然没办法访问https 注意注意！ &lt;code&gt;apt-get install ca-certificates&lt;/code&gt;&lt;/h2&gt;
+
+&lt;h2 id=&#34;pgsql第一次运行注意事项:229a76c2071f7fa22b2d9c3a60de9699&#34;&gt;PGSQL第一次运行注意事项&lt;/h2&gt;
+
+&lt;h3 id=&#34;pgsql-docker-运行参数:229a76c2071f7fa22b2d9c3a60de9699&#34;&gt;PGSQL docker 运行参数：&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;docker run -it -d --name prod-postgres -e POSTGRES_PASSWORD=wothing --net=prod postgres:9.5.1&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;建库:229a76c2071f7fa22b2d9c3a60de9699&#34;&gt;建库&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;CREATE DATABASE wothing OWNER postgres;&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;引用extension:229a76c2071f7fa22b2d9c3a60de9699&#34;&gt;引用extension&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;CREATE EXTENSION &amp;quot;pgcrypto&amp;quot;;&lt;/code&gt;&lt;/p&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>Building Microservices: Using an API Gateway</title>
+            <link>http://kooksee.github.io/blog/Building%20Microservices:%20Using%20an%20API%20Gateway/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/Building%20Microservices:%20Using%20an%20API%20Gateway/</guid>
+            <description>&lt;p&gt;Blog
+Tech
+Chris Richardson
+·
+June 15, 2015
+Building Microservices: Using an API Gateway
+API gateway, microservices&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;twitter
+linkedin
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The first article in this seven-part series about designing, building, and deploying microservices introduced the Microservices Architecture pattern. It discussed the benefits and drawbacks of using microservices and how, despite the complexity of microservices, they are usually the ideal choice for complex applications. This is the second article in the series and will discuss building microservices using an API Gateway.&lt;/p&gt;
+
+&lt;p&gt;When you choose to build your application as a set of microservices, you need to decide how your application’s clients will interact with the microservices. With a monolithic application there is just one set of (typically replicated, load-balanced) endpoints. In a microservices architecture, however, each microservice exposes a set of what are typically fine-grained endpoints. In this article, we examine how this impacts client-to-application communication and proposes an approach that uses an API Gateway.&lt;/p&gt;
+
+&lt;p&gt;Editor’s note – This seven-part series of articles is now complete:&lt;/p&gt;
+
+&lt;p&gt;Blog
+Tech
+Chris Richardson
+·
+June 15, 2015
+Building Microservices: Using an API Gateway
+API gateway, microservices&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;twitter
+linkedin
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The first article in this seven-part series about designing, building, and deploying microservices introduced the Microservices Architecture pattern. It discussed the benefits and drawbacks of using microservices and how, despite the complexity of microservices, they are usually the ideal choice for complex applications. This is the second article in the series and will discuss building microservices using an API Gateway.&lt;/p&gt;
+
+&lt;p&gt;When you choose to build your application as a set of microservices, you need to decide how your application’s clients will interact with the microservices. With a monolithic application there is just one set of (typically replicated, load-balanced) endpoints. In a microservices architecture, however, each microservice exposes a set of what are typically fine-grained endpoints. In this article, we examine how this impacts client-to-application communication and proposes an approach that uses an API Gateway.&lt;/p&gt;
+
+&lt;p&gt;Editor’s note – This seven-part series of articles is now complete:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;1，Introduction to Microservices
+2，Building Microservices: Using an API Gateway (this article)
+3，Building Microservices: Inter-Process Communication in a Microservices Architecture
+4，Service Discovery in a Microservices Architecture
+5，Event-Driven Data Management for Microservices
+6，Choosing a Microservices Deployment Strategy
+7，Refactoring a Monolith into Microservices
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Blog
+Tech
+Chris Richardson
+·
+June 15, 2015
+Building Microservices: Using an API Gateway
+API gateway, microservices&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;twitter
+linkedin
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The first article in this seven-part series about designing, building, and deploying microservices introduced the Microservices Architecture pattern. It discussed the benefits and drawbacks of using microservices and how, despite the complexity of microservices, they are usually the ideal choice for complex applications. This is the second article in the series and will discuss building microservices using an API Gateway.&lt;/p&gt;
+
+&lt;p&gt;When you choose to build your application as a set of microservices, you need to decide how your application’s clients will interact with the microservices. With a monolithic application there is just one set of (typically replicated, load-balanced) endpoints. In a microservices architecture, however, each microservice exposes a set of what are typically fine-grained endpoints. In this article, we examine how this impacts client-to-application communication and proposes an approach that uses an API Gateway.&lt;/p&gt;
+
+&lt;p&gt;Editor’s note – This seven-part series of articles is now complete:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Introduction to Microservices
+Building Microservices: Using an API Gateway (this article)
+Building Microservices: Inter-Process Communication in a Microservices Architecture
+Service Discovery in a Microservices Architecture
+Event-Driven Data Management for Microservices
+Choosing a Microservices Deployment Strategy
+Refactoring a Monolith into Microservices
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Introduction&lt;/p&gt;
+
+&lt;p&gt;Let’s imagine that you are developing a native mobile client for a shopping application. It’s likely that you need to implement a product details page, which displays information about any given product.&lt;/p&gt;
+
+&lt;p&gt;For example, the following diagram shows what you will see when scrolling through the product details in Amazon’s Android mobile application.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://www.nginx.com/blog/building-microservices-using-an-api-gateway/&#34;&gt;https://www.nginx.com/blog/building-microservices-using-an-api-gateway/&lt;/a&gt;&lt;/p&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

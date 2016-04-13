@@ -1,0 +1,956 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <base href="http://kooksee.github.io/">
+  <title>基于数据挖掘的智能任务发布系统的设计与实现 - 百里求一的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+  
+  <meta name="description" content="技术调研： &gt; jieba 分词 DPark 大数据分析 TextBlob TextBlob是一个支持Python2和Python3的用于进行文本数据处理的工具包。它提供了简单的API">
+  <meta name="author" content="kooksee">
+  <meta itemprop="name" content="基于数据挖掘的智能任务发布系统的设计与实现 - 百里求一的博客">
+  <meta itemprop="description" content="技术调研： &gt; jieba 分词 DPark 大数据分析 TextBlob TextBlob是一个支持Python2和Python3的用于进行文本数据处理的工具包。它提供了简单的API">
+  <meta itemprop="image" content="http://kooksee.github.io/img/author.jpg">
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@kooksee" />
+  <meta name="twitter:title" content="基于数据挖掘的智能任务发布系统的设计与实现 - 百里求一的博客" />
+  
+  <meta name="twitter:description" content="dfgffcfcffcfgvhbjgfdcgv">
+  
+  <link rel="shortcut icon" href="img/favicon.ico"/>
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+  <link rel="apple-touch-icon-precomposed" href="apple-touch-icon.png" />
+  <link rel="stylesheet" href="highlight/styles/github.css">
+  <script src="highlight/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <link rel="stylesheet" href="font/hack/css/hack.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+  <header>
+    <div>
+  
+  <div id="imglogo">
+    <a href="http://kooksee.github.io/"><img src="http://kooksee.github.io/img/logo.svg" alt="百里求一的博客" title="百里求一的博客"/></a>
+  </div>
+  
+  <div id="textlogo">
+    <h1 class="site-name"><a href="http://kooksee.github.io/" title="百里求一的博客">百里求一的博客</a></h1>
+    <h2 class="blog-motto">观察，思考，学习</h2>
+  </div>
+  <div class="navbar"><a class="navbutton navmobile" href="#" title="menu"></a></div>
+  <nav class="animated">
+    <ul>
+      
+      <li><a href="/">首页</a></li>
+      
+      <li><a href="/about/">关于</a></li>
+      
+      <li><a href="/tags/">标签</a></li>
+      
+      <li>
+        <form class="search" method="get" action="https://www.google.com/search">
+          <div>
+            <input type="text" id="search" name="q" placeholder="搜索">
+          </div>
+        </form>
+      </li>
+    </ul>
+  </nav>
+</div>
+
+  </header>
+  <div id="container">
+    <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody">
+    <header class="article-info clearfix">
+  <h1 itemprop="name">
+      <a href="http://kooksee.github.io/blog/%E5%9F%BA%E4%BA%8E%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98%E7%9A%84%E6%99%BA%E8%83%BD%E4%BB%BB%E5%8A%A1%E5%8F%91%E5%B8%83%E7%B3%BB%E7%BB%9F%E7%9A%84%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0/" title="基于数据挖掘的智能任务发布系统的设计与实现" itemprop="url">基于数据挖掘的智能任务发布系统的设计与实现</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://kooksee.github.io" title="kooksee">kooksee</a>
+    
+  </p>
+  <p class="article-time">
+    <time datetime="0001-01-01 00:00:00 &#43;0000 UTC" itemprop="datePublished">0001年01月01日</time>
+  </p>
+</header>
+
+	<div class="article-content">
+    
+    <p>技术调研：
+&gt; jieba 分词
+DPark 大数据分析
+TextBlob TextBlob是一个支持Python2和Python3的用于进行文本数据处理的工具包。它提供了简单的API，用于一般自然语言处理（NLP），如：语音识别、名词短语提取、情感分析、翻译等功能。
+web框架 flask 框架
+用twisted作为及时聊天框架，前端用sockjs,ajax,pintuer,bootstrap and jquery-ui  <a href="http://jqueryui.com/show/">http://jqueryui.com/show/</a>
+数据库用mongodb,文档化便于管理
+简单异步用ajax,实时数据用sockjs</p>
+
+<p>##背景和目的</p>
+
+<p>互联网盛行的时代最不缺少的就是知识，然而最缺少的也是知识，因为快速有效的找到自己的答案是一个无比困难的问题。于是我们想到搜索引擎，想到百度，想到谷歌。谷歌搜索引擎依靠PageRank算法让其成为世界上查询搜索最靠谱的搜索引擎。我们在58同城上面查询我们需要的信息，可能我们永远也不知道58同城有多少台服务器在工作，后面又有多少技术人员在加班。58同城和百姓网是一个大众化信息，商品发布平台，因为信息繁多，所以很杂乱。如果想要快速找到自己想要的信息，他们已经无法满足现有的需求。所以，对于人们渴切的愿望，网上出现了很多信息发布平台方便人们查询，还有很多任务发布的平台吸引人们去寻找答案。但是无论怎么做，各个企业都是在做一个大众化的平台，结果造成了很多良莠不齐的现象。国外常用的技术类网站有stackoverflow，有github，这些技术性的网站，解决了很公司项目上的问题。但是生活中的很多问题却没法得到解决。之后，不仅仅是能够让用户去发布问题，还能够给用户推荐解决方法。这要归属于自然语言处理的解决方案，同时要有后台大数据的分析才能够收集到用户准确信息。我很喜欢互联网，所以我也很关注互联网，但是关注久了就发现一个很简单的道理，那就是互联网也会像人类文明一样一步步的文明化，正规化，专业化，数据化。而且我发现，现在很多公司开始强调版权问题，强调信誉问题，强调网络文明财产安全问题，这说明互联网已经不单单再像往常一样免费共享了，网民也不能不再像往常一样恣意妄为了。我们知道优酷收费了，爱奇艺收费了，百度收费了，谷歌这个开源的带头人也开始收费了，百度音乐虽资源丰富，但最近也因为版权问题和其他公司合并了，因为无版权的使用就意味着不劳而获，虽然用着方便舒服，但却伤害了原创作者心，故而收费能够鼓励更多的人创造，创新。我喜欢百度知道，知乎，但是他们所做的是一个很大的平台，即使能够学到东西找到答案也是在大家愿意分享的情况下，这仅仅来自于内驱力，远远没有外压力的强大能量，和外诱力的强力吸引。在百度写经验可以通过浏览量赚积分，于是经验上面的文档越来越多。在简书上面写文章，通过打赏金币也可以获得喝一杯咖啡的钱，于是简书上面的好文档也越来越多，这一切都说明了什么呢？说明了大家在分享自己劳动成果的同时更希望获得一下阅读者的鼓励和支持，如果能够支助一二也未尝不是件快乐的事。所以，基于我现在还不太成熟的想法，我想要做一个帮助大家快速准确解决问题的平台，在你解决问题的时候，你的一切辛苦都不会白费，因为每个问题都会附上一杯咖啡的钱。也就是说，这是一个收费的平台，因为收费可以杜绝像百度知道，搜搜那样的大众化平台所遇到的简单的问题，这里的问题大多数都不是依靠百度，搜狗就能查到或者很快查到的。</p>
+
+<p>谷歌最常用的两门语言是c++和python，后来又开发了golang，c++以其性能著称，而python以其简单快速开发著称，golang兼具两者优势，是当今web开发的又一新雏。随着互联网发展，简单的web已经不能够满足人们的需求，从开始的静态页面到现在的动态页面，从开始的关系型数据库到现在的非关系型数据库和图型数据库，互联网正变得越来越复杂，庞大。从web2.0 到来的那一刻，人民对于性能的需求，对于体验的需求近乎苛刻。于是，语音识别开始出现在人们的视野，百度和gu</p>
+
+<p>如果要问在二十一世纪发展最快的是什么，那么毫无疑问就是互联网，我们购物于互联网，学习于互联网，沟通于互联网，交易于互联网。在互联网盛行的这个时代，我们的生活，工作和学习已经和互联网密不可分。所以，当今如果哪个行业和互联网脱轨了，那么它也终将会和世界脱轨，那么它也就离灭亡不远了。我喜欢互联网给我带来的各种便利，我热衷互联网给我提供的各种技术，我乐此不疲到google上搜索千奇百怪的事情，我去github上查询各种好玩的项目，我去stackoverflow查找问题的解决方案，我去优酷上搜索好看的视频，我去网易上搜索好听的音乐，无论何时都会有人在网上搜索着自己喜欢的事情，自己想要的答案，所以我们大部分时间都是在茫茫的互联网中去寻找属于自己的那个答案，所以能够快速有效的找到自己的答案，自己的解决方案是一件无比幸福的事情。然而，庞大的互联网涵盖大量的资料，总是让我们无从下手，即使有google，也不一定能够找到自己的解决方案。</p>
+
+<pre><code>    在互联网盛行的这个时代，如果哪个行业和互联网脱轨了，那么它也最终会和世界脱轨，那么它也就离消失不远了。我很喜欢互联网，所以我也很关注互联网，但是关注久了就发现一个很简单的道理，那就是互联网也会像人类文明一样一步步的文明化，正规化，专业化，数据化。而且我发现，现在很多公司开始强调版权问题，强调信誉问题，强调网络文明财产安全问题，这说明互联网已经不单单再像往常一样免费共享了，网民也不能不再像往常一样恣意妄为了。我们知道优酷收费了，爱奇艺收费了，百度收费了，谷歌这个开源的带头人也开始收费了，百度音乐虽资源丰富，但最近也因为版权问题和其他公司合并了，因为无版权的使用就意味着不劳而获，虽然用着方便舒服，但却伤害了原创作者心，故而收费能够鼓励更多的人创造，创新。我喜欢百度知道，知乎，但是他们所做的是一个很大的平台，即使能够学到东西找到答案也是在大家愿意分享的情况下，这仅仅来自于内驱力，远远没有外压力的强大能量，和外诱力的强力吸引。在百度写经验可以通过浏览量赚积分，于是经验上面的文档越来越多。在简书上面写文章，通过打赏金币也可以获得喝一杯咖啡的钱，于是简书上面的好文档也越来越多，这一切都说明了什么呢？说明了大家在分享自己劳动成果的同时更希望获得一下阅读者的鼓励和支持，如果能够支助一二也未尝不是件快乐的事。所以，基于我现在还不太成熟的想法，我想要做一个帮助大家快速准确解决问题的平台，在你解决问题的时候，你的一切辛苦都不会白费，因为每个问题都会附上一杯咖啡的钱。也就是说，这是一个收费的平台，因为收费可以杜绝像百度知道，搜搜那样的大众化平台所遇到的问题，这里的问题大多数都不是依靠百度，搜狗就能查到或者很快查到的。
+</code></pre>
+
+<p>如果要问在二十一世纪发展最快的是什么，那么毫无疑问就是互联网，我们购物于互联网，学习于互联网，沟通于互联网，交易于互联网。在互联网盛行的这个时代，我们的生活，工作和学习已经和互联网密不可分。所以，当今如果哪个行业和互联网脱轨了，那么它也终将会和世界脱轨，那么它也就离灭亡不远了。我喜欢互联网给我带来的各种便利，我热衷互联网给我提供的各种技术，我乐此不疲的google千奇百怪的事情，我去github上面浏览好玩的项目，我去stackoverflow查找问题的解决方案，我去优酷看视频，我去网易听音乐，我收获于互联网，关注于互联网，但是关注久了之后我就发现了一些痛点。stackoverflow是一个纯粹的解决问题的社区，对于问题的回答很快，但是也会耽误不少时间，而且对问题的分类总结并不是很好。百度知道是一个大众化问题平台，里面的问题大多较生活化，技术含量较低。知乎相对于中国来说还是一个很不错的技术类学习社区，里面也涵盖了不少让人耳目一新的东西，但是大家解决问题的积极性并不高，大多数时间是在提出问题，关注好友。我很渴望有一个高质量的能够及时解决大家问题的平台，让天下不再有难以解决的问题。这也是我毕业设计的初衷，我想用现有的技术去打造一个发布任务，发布问题解决问题的平台，让大家都能够免去很多技术问题，生活问题的困扰。</p>
+
+<p>一个很简单的道理，那就是互联网也会像人类文明一样一步步的文明化，正规化，专业化，数据化。而且我发现，现在很多公司开始强调版权问题，强调信誉问题，强调网络文明财产安全问题，这说明互联网已经不单单再像往常一样免费共享了，网民也不能不再像往常一样恣意妄为了。我们知道优酷收费了，爱奇艺收费了，百度收费了，谷歌这个开源的带头人也开始收费了，百度音乐虽资源丰富，但最近也因为版权问题和其他公司合并了，因为无版权的使用就意味着不劳而获，虽然用着方便舒服，但却伤害了原创作者心，故而收费能够鼓励更多的人创造，创新。我喜欢百度知道，知乎，但是他们所做的是一个很大的平台，即使能够学到东西找到答案也是在大家愿意分享的情况下，这仅仅来自于内驱力，远远没有外压力的强大能量，和外诱力的强力吸引。在百度写经验可以通过浏览量赚积分，于是经验上面的文档越来越多。在简书上面写文章，通过打赏金币也可以获得喝一杯咖啡的钱，于是简书上面的好文档也越来越多，这一切都说明了什么呢？说明了大家在分享自己劳动成果的同时更希望获得一下阅读者的鼓励和支持，如果能够支助一二也未尝不是件快乐的事。所以，基于我现在还不太成熟的想法，我想要做一个帮助大家快速准确解决问题的平台，在你解决问题的时候，你的一切辛苦都不会白费，因为每个问题都会附上一杯咖啡的钱。也就是说，这是一个收费的平台，因为收费可以杜绝像百度知道，搜搜那样的大众化平台所遇到的问题，这里的问题大多数都不是依靠百度，搜狗就能查到或者很快查到的。</p>
+
+<p>##问题是否解决判定方案
+    乙提出问题，甲来回答；一：甲解决了问题，乙否认；二：甲没解决问题说已解决问题，乙否认；因为乙是提出问题方，也就是出钱方，所以只有当乙否认时才会出现问题。针对上述两种情况，有两种方式解决，一：由平台公证人来公正，就是交给系统客服解决；二：在讨论专区里面讨论，由大家来共同评价讨论出结果。如果最后是某一方的问题，某一方的信誉值降低(暂无降低标准)。讨论区评论方利益分配暂定</p>
+
+<p>#每一个正确的被接纳的行为都会受到回报，因为这是你应得的。</p>
+
+<p>python：</p>
+
+<p>Python 是一种面向对象、解释型计算机程序设计语言，由Guido van Rossum于1989年发明，第一个公开发行版发行于1991年。
+Python是纯粹的自由软件， 源代码和解释器CPython遵循 GPL(GNU General Public License)协议[1]  。
+Python语法简洁清晰，特色之一是强制用空白符(whitespace)作为语句缩进。
+Python具有丰富和强大的库。它常被昵称为胶水语言，能够把用其他语言制作的各种模块（尤其是C/C++）很轻松地联结在一起。常见的一种应用情形是，使用Python快速生成程序的原型（有时甚至是程序的最终界面），然后对其中有特别要求的部分，用更合适的语言改写，比如3D游戏中的图形渲染模块，性能要求特别高，就可以用C/C++重写，而后封装为Python可以调用的扩展类库。需要注意的是在您使用扩展类库时可能需要考虑平台问题，某些可能不提供跨平台的实现。</p>
+
+<p>AMQP，即Advanced Message Queuing Protocol，高级消息队列协议，是应用层协议的一个开放标准，为面向消息的中间件设计。消息中间件主要用于组件之间的解耦，消息的发送者无需知道消息使用者的存在，反之亦然。
+AMQP的主要特征是面向消息、队列、路由（包括点对点和发布/订阅）、可靠性、安全。
+RabbitMQ是一个开源的AMQP实现，服务器端用Erlang语言编写，支持多种客户端，如：Python、Ruby、.NET、Java、JMS、C、PHP、ActionScript、XMPP、STOMP等，支持AJAX。用于在分布式系统中存储转发消息，在易用性、扩展性、高可用性等方面表现不俗。
+下面将重点介绍RabbitMQ中的一些基础概念，了解了这些概念，是使用好RabbitMQ的基础。
+ConnectionFactory、Connection、Channel</p>
+
+<p>ConnectionFactory、Connection、Channel都是RabbitMQ对外提供的API中最基本的对象。Connection是RabbitMQ的socket链接，它封装了socket协议相关部分逻辑。ConnectionFactory为Connection的制造工厂。
+Channel是我们与RabbitMQ打交道的最重要的一个接口，我们大部分的业务操作是在Channel这个接口中完成的，包括定义Queue、定义Exchange、绑定Queue与Exchange、发布消息等。</p>
+
+<p>jieba：
+&ldquo;结巴&rdquo;中文分词：做最好的Python中文分词组件</p>
+
+<pre><code>支持三种分词模式：
+    精确模式，试图将句子最精确地切开，适合文本分析；
+    全模式，把句子中所有的可以成词的词语都扫描出来, 速度非常快，但是不能解决歧义；
+    搜索引擎模式，在精确模式的基础上，对长词再次切分，提高召回率，适合用于搜索引擎分词。
+
+支持繁体分词
+
+支持自定义词典
+</code></pre>
+
+<p>flask:</p>
+
+<p>Flask是一个使用 Python 编写的轻量级 Web 应用框架。其 WSGI 工具箱采用 Werkzeug ，模板引擎则使用 Jinja2 。
+Flask使用 BSD 授权。
+Flask也被称为 “microframework” ，因为它使用简单的核心，用 extension 增加其他功能。Flask没有默认使用的数据库、窗体验证工具。然而，Flask保留了扩增的弹性，可以用Flask-extension加入这些功能：ORM、窗体验证工具、文件上传、各种开放式身份验证技术。</p>
+
+<p>mongodb:
+ MongoDB 是一个跨平台的，面向文档的数据库，提供高性能，高可用性和可扩展性方便。 MongoDB 工作在收集和文件的概念。
+  数据库是一个物理容器集合。每个数据库都有自己的一套文件系统上的文件。一个单一的MongoDB服务器通常有多个数据库。</p>
+
+<p>集合</p>
+
+<p>集合是一组MongoDB的文档。它相当于一个RDBMS表。收集存在于一个单一的数据库。集合不执行模式。集合内的文档可以有不同的领域。通常情况下，一个集合中的所有文件是相同或相关的目的。 www.yiibai.com
+文档</p>
+
+<p>文档是一组键 - 值对。文件动态模式。动态模式是指，在相同集合中的文档不需要具有相同的字段或结构组的公共字段的集合的文档，可以容纳不同类型的数据。</p>
+
+<p>postgresql:
+PostgreSQL是以加州大学伯克利分校计算机系开发的 POSTGRES，现在已经更名为PostgreSQL，版本 4.2为基础的对象关系型数据库管理系统（ORDBMS）。PostgreSQL支持大部分 SQL标准并且提供了许多其他现代特性：复杂查询、外键、触发器、视图、事务完整性、MVCC。同样，PostgreSQL 可以用许多方法扩展，比如， 通过增加新的数据类型、函数、操作符、聚集函数、索引。免费使用、修改、和分发 PostgreSQL，不管是私用、商用、还是学术研究使用。
+PostgreSQL 是一个自由的对象-关系数据库服务器(数据库管理系统)，它在灵活的 BSD-风格许可证下发行。它提供了相对其他开放源代码数据库系统(比如 MySQL 和 Firebird)，和专有系统(比如 Oracle、Sybase、IBM 的 DB2 和 Microsoft SQL Server)之外的另一种选择。
+PostgreSQL 不寻常的名字导致一些读者停下来尝试拼读它，特别是那些把SQL拼读为&rdquo;sequel&rdquo;的人。PostgreSQL 开发者把它拼读为 &ldquo;post-gress-Q-L&rdquo;。它也经常被简略念为 &ldquo;postgres&rdquo;。</p>
+
+<p>pony orm:
+Pony ORM 非常有趣
+Pony 可以将 Python Generators 翻译成 SQL.</p>
+
+<p>它拥有可视编辑器和模型等其他特性.
+Pony is an object-relational mapper. The most interesting feature of Pony is its ability to write queries to the database using generator expressions. Pony works with entities which are mapped to a SQL database. Using generator syntax for writing queries allows the user to formulate very eloquent queries. It increases the level of abstraction and allows a programmer to concentrate on the business logic of the application. For this purpose Pony analyzes the abstract syntax tree of a generator and translates it to its SQL equivalent.</p>
+
+<p>docker:
+Docker 是一个开源的应用容器引擎，让开发者可以打包他们的应用以及依赖包到一个可移植的容器中，然后发布到任何流行的 Linux 机器上，也可以实现虚拟化。容器是完全使用沙箱机制，相互之间不会有任何接口（类似 iPhone 的 app）。几乎没有性能开销,可以很容易地在机器和数据中心中运行。最重要的是,他们不依赖于任何语言、框架包括系统。</p>
+
+<p>Docker 是 PaaS 提供商 dotCloud 开源的一个基于 LXC 的高级容器引擎，源代码托管在 Github 上, 基于go语言并遵从Apache2.0协议开源。
+Docker自2013年以来非常火热，无论是从 github 上的代码活跃度，还是Redhat在RHEL6.5中集成对Docker的支持, 就连 Google 的 Compute Engine 也支持 docker 在其之上运行。
+一款开源软件能否在商业上成功，很大程度上依赖三件事 - 成功的 user case(用例), 活跃的社区和一个好故事。 dotCloud 自家的 PaaS 产品建立在docker之上，长期维护且有大量的用户，社区也十分活跃，接下来我们看看docker的故事。
+    环境管理复杂 - 从各种OS到各种中间件到各种app, 一款产品能够成功作为开发者需要关心的东西太多，且难于管理，这个问题几乎在所有现代IT相关行业都需要面对。
+    云计算时代的到来 - AWS的成功, 引导开发者将应用转移到 cloud 上, 解决了硬件管理的问题，然而中间件相关的问题依然存在 (所以openstack HEAT和 AWS cloudformation 都着力解决这个问题)。开发者思路变化提供了可能性。
+    虚拟化手段的变化 - cloud 时代采用标配硬件来降低成本，采用虚拟化手段来满足用户按需使用的需求以及保证可用性和隔离性。然而无论是KVM还是Xen在 docker 看来,都在浪费资源，因为用户需要的是高效运行环境而非OS, GuestOS既浪费资源又难于管理, 更加轻量级的LXC更加灵活和快速
+    LXC的移动性 - LXC在 linux 2.6 的 kernel 里就已经存在了，但是其设计之初并非为云计算考虑的，缺少标准化的描述手段和容器的可迁移性，决定其构建出的环境难于迁移和标准化管理(相对于KVM之类image和snapshot的概念)。docker 就在这个问题上做出实质性的革新。这是docker最独特的地方。</p>
+
+<p>面对上述几个问题，docker设想是交付运行环境如同海运，OS如同一个货轮，每一个在OS基础上的软件都如同一个集装箱，用户可以通过标准化手段自由组装运行环境，同时集装箱的内容可以由用户自定义，也可以由专业人员制造。这样，交付一个软件，就是一系列标准化组件的集合的交付，如同乐高积木，用户只需要选择合适的积木组合，并且在最顶端署上自己的名字(最后个标准化组件是用户的app)。这也就是基于docker的PaaS产品的原型。</p>
+
+<p>在docker的网站上提到了docker的典型场景：</p>
+
+<pre><code>Automating the packaging and deployment of applications
+Creation of lightweight, private PAAS environments
+Automated testing and continuous integration/deployment
+Deploying and scaling web apps, databases and backend services
+</code></pre>
+
+<p>由于其基于LXC的轻量级虚拟化的特点，docker相比KVM之类最明显的特点就是启动快，资源占用小。因此对于构建隔离的标准化的运行环境，轻量级的PaaS(如dokku), 构建自动化测试和持续集成环境，以及一切可以横向扩展的应用(尤其是需要快速启停来应对峰谷的web应用)。</p>
+
+<pre><code>构建标准化的运行环境，现有的方案大多是在一个baseOS上运行一套puppet/chef，或者一个image文件，其缺点是前者需要base OS许多前提条件，后者几乎不可以修改(因为copy on write 的文件格式在运行时rootfs是read only的)。并且后者文件体积大，环境管理和版本控制本身也是一个问题。
+PaaS环境是不言而喻的，其设计之初和dotcloud的案例都是将其作为PaaS产品的环境基础
+因为其标准化构建方法(buildfile)和良好的REST API，自动测试和持续集成/部署能够很好的集成进来
+因为LXC轻量级的特点，其启动快，而且docker能够只加载每个container变化的部分，这样资源占用小，能够在单机环境下与KVM之类的虚拟化方案相比能够更加快速和占用更少资源
+</code></pre>
+
+<p>twisted:
+Twisted是用Python实现的基于事件驱动的网络引擎框架。Twisted诞生于2000年初，在当时的网络游戏开发者看来，无论他们使用哪种语言，手中都鲜有可兼顾扩展性及跨平台的网络库。Twisted的作者试图在当时现有的环境下开发游戏，这一步走的非常艰难，他们迫切地需要一个可扩展性高、基于事件驱动、跨平台的网络开发框架，为此他们决定自己实现一个，并从那些之前的游戏和网络应用程序的开发者中学习，汲取他们的经验教训。</p>
+
+<p>Twisted支持许多常见的传输及应用层协议，包括TCP、UDP、SSL/TLS、HTTP、IMAP、SSH、IRC以及FTP。就像Python一样，Twisted也具有“内置电池”（batteries-included）的特点。Twisted对于其支持的所有协议都带有客户端和服务器实现，同时附带有基于命令行的工具，使得配置和部署产品级的Twisted应用变得非常方便。</p>
+
+<p>外文翻译
+<a href="http://dockone.io/article/482">http://dockone.io/article/482</a>
+<a href="https://www.nginx.com/blog/building-microservices-using-an-api-gateway/">https://www.nginx.com/blog/building-microservices-using-an-api-gateway/</a></p>
+
+<p>最喜欢的go类库
+go依赖管理－－<a href="https://gopm.io/">https://gopm.io/</a>
+web&ndash;<a href="https://github.com/zenazn/goji">https://github.com/zenazn/goji</a>
+网络请求－－<a href="https://github.com/mozillazg/request">https://github.com/mozillazg/request</a>
+system and process utilities －－ <a href="https://github.com/shirou/gopsutil">https://github.com/shirou/gopsutil</a></p>
+
+<p>技术－－产品－－运营
+百度问题：技术驱动遭到了产品运营驱动的市场
+；链接人和服务；李彦宏说，我们信仰技术</p>
+
+	</div>
+  <footer class="article-footer clearfix">
+  
+  
+    <div class="article-tags">
+      <span></span>
+      
+      <a href="/tags/python">python</a>
+      
+      <a href="/tags/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1">毕业设计</a>
+      
+      <a href="/tags/%E4%BB%BB%E5%8A%A1%E5%8F%91%E5%B8%83%E5%B9%B3%E5%8F%B0">任务发布平台</a>
+      
+    </div>
+  
+
+
+
+
+  <div class="article-share" id="share">
+    <div data-url="http://kooksee.github.io/blog/%E5%9F%BA%E4%BA%8E%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98%E7%9A%84%E6%99%BA%E8%83%BD%E4%BB%BB%E5%8A%A1%E5%8F%91%E5%B8%83%E7%B3%BB%E7%BB%9F%E7%9A%84%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0/" data-title="基于数据挖掘的智能任务发布系统的设计与实现" data-tsina="1816308191" class="share clearfix">
+    </div>
+  </div>
+</footer>
+
+	</article>
+  
+<section class="comment">
+  <div class="ds-thread" data-thread-key="http://kooksee.github.io/blog/%E5%9F%BA%E4%BA%8E%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98%E7%9A%84%E6%99%BA%E8%83%BD%E4%BB%BB%E5%8A%A1%E5%8F%91%E5%B8%83%E7%B3%BB%E7%BB%9F%E7%9A%84%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0/"
+   data-title="基于数据挖掘的智能任务发布系统的设计与实现" data-url="http://kooksee.github.io/blog/%E5%9F%BA%E4%BA%8E%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98%E7%9A%84%E6%99%BA%E8%83%BD%E4%BB%BB%E5%8A%A1%E5%8F%91%E5%B8%83%E7%B3%BB%E7%BB%9F%E7%9A%84%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0/"></div>
+</section>
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"kooksee"};
+(function() {
+  var ds = document.createElement('script');
+  ds.type = 'text/javascript';ds.async = true;
+  ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+  ds.charset = 'UTF-8';
+  (document.getElementsByTagName('head')[0]
+  || document.getElementsByTagName('body')[0]).appendChild(ds);
+})();
+</script>
+
+
+
+
+</div>
+
+    <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+  
+
+<div class="categorieslist">
+  <p class="asidetitle">分类</p>
+  <ul>
+    
+    <li><a href="http://kooksee.github.io/categories/%e6%8a%80%e6%9c%af%e6%96%87%e7%ab%a0" title="技术文章">技术文章<sup>2</sup></a></li>
+    
+  </ul>
+</div>
+
+
+
+  
+
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+      
+			<li><a href="http://kooksee.github.io/tags/api" title="api">api<sup>2</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/api%e8%ae%be%e8%ae%a1%e8%bd%af%e4%bb%b6" title="api设计软件">api设计软件<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/bhnhbhbh" title="bhnhbhbh">bhnhbhbh<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/bools.py" title="bools.py">bools.py<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/ceo" title="ceo">ceo<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/cmd" title="cmd">cmd<sup>2</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/cmd%e6%a8%a1%e5%9d%97" title="cmd模块">cmd模块<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/consul" title="consul">consul<sup>3</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/ddd" title="ddd">ddd<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/docker" title="docker">docker<sup>13</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/docker-machine" title="docker-machine">docker-machine<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/dockerfile" title="dockerfile">dockerfile<sup>2</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/error" title="error">error<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/fish" title="fish">fish<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/flask" title="flask">flask<sup>3</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/gbk" title="gbk">gbk<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/groovy" title="groovy">groovy<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/hashlib" title="hashlib">hashlib<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/ipc" title="ipc">ipc<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/itertools" title="itertools">itertools<sup>2</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/javascript" title="javascript">javascript<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/jquery" title="jquery">jquery<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/json" title="json">json<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/knn" title="knn">knn<sup>2</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/linux" title="linux">linux<sup>2</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/lpc" title="lpc">lpc<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/makefile" title="makefile">makefile<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/mesos" title="mesos">mesos<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/mht" title="mht">mht<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/mongodb" title="mongodb">mongodb<sup>5</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/nodejs" title="nodejs">nodejs<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/openvpn" title="openvpn">openvpn<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/pipetools" title="pipetools">pipetools<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/plan_morning" title="plan_morning">plan_morning<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/postgresql" title="postgresql">postgresql<sup>2</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/pyshell" title="pyshell">pyshell<sup>2</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/python" title="python">python<sup>36</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/python%e6%a8%a1%e5%9d%97" title="python模块">python模块<sup>8</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/pyv8" title="pyv8">pyv8<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/rpc" title="rpc">rpc<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/shell" title="shell">shell<sup>2</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/shutil" title="shutil">shutil<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/simplejson" title="simplejson">simplejson<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/smb" title="smb">smb<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/software" title="software">software<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/sphinx" title="sphinx">sphinx<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/spyder" title="spyder">spyder<sup>2</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/sql" title="sql">sql<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/sqlalchemy" title="sqlalchemy">sqlalchemy<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/ssh" title="ssh">ssh<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/stringio" title="stringio">stringio<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/sublime" title="sublime">sublime<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/subprocess" title="subprocess">subprocess<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/ubuntu" title="ubuntu">ubuntu<sup>4</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/utf-8" title="utf-8">utf-8<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/webpack" title="webpack">webpack<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/wiki" title="wiki">wiki<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/wtf" title="wtf">wtf<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/zipfile" title="zipfile">zipfile<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/zmq" title="zmq">zmq<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e4%b8%89%e5%85%83%e8%a1%a8%e8%be%be%e5%bc%8f" title="三元表达式">三元表达式<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e4%b8%8b%e8%bd%bd%e5%99%a8" title="下载器">下载器<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e4%b8%ad%e7%bc%80%e8%af%ad%e6%b3%95" title="中缀语法">中缀语法<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e4%b9%a6%e7%b1%8d%e6%8e%a8%e8%8d%90" title="书籍推荐">书籍推荐<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e4%bb%a3%e7%90%86" title="代理">代理<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e4%bb%a3%e7%a0%81%e5%88%86%e6%9e%90" title="代码分析">代码分析<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e4%bb%bb%e5%8a%a1%e5%8f%91%e5%b8%83%e5%b9%b3%e5%8f%b0" title="任务发布平台">任务发布平台<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%85%bb%e7%94%9f" title="养生">养生<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%86%85%e6%a0%b8%e5%8d%87%e7%ba%a7" title="内核升级">内核升级<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%8d%9a%e5%ae%a2" title="博客">博客<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%90%8d%e8%af%8d%e5%ae%9a%e4%b9%89" title="名词定义">名词定义<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%91%bd%e4%bb%a4" title="命令">命令<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%9b%a2%e9%98%9f%e5%90%88%e4%bd%9c" title="团队合作">团队合作<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%a4%87%e5%bf%98%e5%bd%95" title="备忘录">备忘录<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%a4%9a%e8%bf%9b%e7%a8%8b%e4%b8%8b%e8%bd%bd%e5%99%a8" title="多进程下载器">多进程下载器<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%ad%a6%e4%b9%a0%e7%ac%94%e8%ae%b0" title="学习笔记">学习笔记<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%ae%9e%e4%b9%a0" title="实习">实习<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%b7%a5%e5%85%b7" title="工具">工具<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%b8%b8%e7%94%a8%e6%a8%a1%e5%9d%97" title="常用模块">常用模块<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%b9%bf%e5%91%8a" title="广告">广告<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%be%ae%e6%9c%8d%e5%8a%a1" title="微服务">微服务<sup>2</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%bf%83%e7%90%86%e5%ad%a6" title="心理学">心理学<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%bf%ab%e9%80%9f%e5%8e%9f%e5%9e%8b" title="快速原型">快速原型<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%bf%ab%e9%80%9f%e5%bc%80%e5%8f%91" title="快速开发">快速开发<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%bf%ab%e9%80%9f%e6%8e%92%e5%ba%8f" title="快速排序">快速排序<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%80%bb%e8%a3%81" title="总裁">总裁<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%8a%80%e6%9c%af" title="技术">技术<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%8f%92%e4%bb%b6" title="插件">插件<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%95%b0%e6%8d%ae%e5%ba%93" title="数据库">数据库<sup>2</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%95%b0%e6%8d%ae%e5%ba%93%e8%ae%a4%e8%af%81" title="数据库认证">数据库认证<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%96%87%e6%a1%a3%e8%a7%84%e8%8c%83" title="文档规范">文档规范<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%96%87%e6%a1%a3%e9%a9%b1%e5%8a%a8%e5%bc%80%e5%8f%91" title="文档驱动开发">文档驱动开发<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%96%b0%e6%a6%82%e5%bf%b5" title="新概念">新概念<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%96%b9%e4%be%bf" title="方便">方便<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%97%a5%e8%ae%b0" title="日记">日记<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%98%be%e7%a4%ba%e6%9c%8d%e5%8a%a1%e5%99%a8%e9%94%99%e8%af%af%e4%bf%a1%e6%81%af" title="显示服务器错误信息">显示服务器错误信息<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%9c%80%e4%bd%b3%e6%93%8d%e4%bd%9c" title="最佳操作">最佳操作<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%9c%ba%e6%a2%b0%e5%ad%a6%e4%b9%a0" title="机械学习">机械学习<sup>2</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%9d%83%e9%99%90" title="权限">权限<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%af%95%e4%b8%9a%e8%ae%be%e8%ae%a1" title="毕业设计">毕业设计<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%b4%bb%e5%8a%a8" title="活动">活动<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%b7%b7%e8%9b%8b%e9%80%bb%e8%be%91" title="混蛋逻辑">混蛋逻辑<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e7%83%ad%e7%82%b9%e9%97%ae%e9%a2%98" title="热点问题">热点问题<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e7%88%ac%e8%99%ab" title="爬虫">爬虫<sup>4</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e7%ae%97%e6%b3%95" title="算法">算法<sup>4</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e7%ae%a1%e9%81%93" title="管道">管道<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e7%b1%bb%e5%ba%93%e6%8e%a8%e8%8d%90" title="类库推荐">类库推荐<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e7%b3%bb%e7%bb%9f%e5%91%bd%e4%bb%a4" title="系统命令">系统命令<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e7%bc%96%e7%a0%81" title="编码">编码<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e7%bc%96%e7%a8%8b%e8%a7%84%e8%8c%83" title="编程规范">编程规范<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e7%bc%96%e7%a8%8b%e9%a3%8e%e6%a0%bc" title="编程风格">编程风格<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e7%bd%91%e7%bb%9c%e9%93%be%e6%8e%a5" title="网络链接">网络链接<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e8%81%8a%e5%a4%a9%e5%ae%a4" title="聊天室">聊天室<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e8%85%b9%e5%bc%8f%e5%91%bc%e5%90%b8" title="腹式呼吸">腹式呼吸<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e8%91%a3%e4%ba%8b%e9%95%bf" title="董事长">董事长<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e8%a1%a8%e5%8d%95%e9%aa%8c%e8%af%81" title="表单验证">表单验证<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e8%af%b7%e6%b1%82%e9%94%99%e8%af%af" title="请求错误">请求错误<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e8%bf%9b%e7%a8%8b%e9%80%9a%e4%bf%a1" title="进程通信">进程通信<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e9%82%bb%e9%87%8c%e9%97%ae%e9%a2%98" title="邻里问题">邻里问题<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e9%94%99%e8%af%af%e9%9b%86%e9%94%a6" title="错误集锦">错误集锦<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e9%97%ad%e5%8c%85" title="闭包">闭包<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e9%9c%80%e6%b1%82%e5%88%86%e6%9e%90" title="需求分析">需求分析<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e9%9d%a2%e8%af%95" title="面试">面试<sup>1</sup></a></li>
+      
+		</ul>
+</div>
+
+
+
+  
+  <div class="archiveslist">
+    <p class="asidetitle">归档</p>
+    <ul class="archive-list">
+      
+      
+      <li class="archive-list-item">
+        <a class="archive-list-link" href="http://kooksee.github.io/post/#2015-01">2015年01月</a><span class="archive-list-count">1</span>
+      </li>
+      
+      
+      <li class="archive-list-item">
+        <a class="archive-list-link" href="http://kooksee.github.io/post/#0001-01">0001年01月</a><span class="archive-list-count">108</span>
+      </li>
+      
+    </ul>
+
+  </div>
+
+
+  
+
+<div class="tagcloudlist">
+  <p class="asidetitle">标签云</p>
+  <div class="tagcloudlist clearfix">
+    
+    <a href="http://kooksee.github.io/tags/api" style="font-size: 12px;">api</a>
+    
+    <a href="http://kooksee.github.io/tags/api%e8%ae%be%e8%ae%a1%e8%bd%af%e4%bb%b6" style="font-size: 12px;">api设计软件</a>
+    
+    <a href="http://kooksee.github.io/tags/bhnhbhbh" style="font-size: 12px;">bhnhbhbh</a>
+    
+    <a href="http://kooksee.github.io/tags/bools.py" style="font-size: 12px;">bools.py</a>
+    
+    <a href="http://kooksee.github.io/tags/ceo" style="font-size: 12px;">ceo</a>
+    
+    <a href="http://kooksee.github.io/tags/cmd" style="font-size: 12px;">cmd</a>
+    
+    <a href="http://kooksee.github.io/tags/cmd%e6%a8%a1%e5%9d%97" style="font-size: 12px;">cmd模块</a>
+    
+    <a href="http://kooksee.github.io/tags/consul" style="font-size: 12px;">consul</a>
+    
+    <a href="http://kooksee.github.io/tags/ddd" style="font-size: 12px;">ddd</a>
+    
+    <a href="http://kooksee.github.io/tags/docker" style="font-size: 12px;">docker</a>
+    
+    <a href="http://kooksee.github.io/tags/docker-machine" style="font-size: 12px;">docker-machine</a>
+    
+    <a href="http://kooksee.github.io/tags/dockerfile" style="font-size: 12px;">dockerfile</a>
+    
+    <a href="http://kooksee.github.io/tags/error" style="font-size: 12px;">error</a>
+    
+    <a href="http://kooksee.github.io/tags/fish" style="font-size: 12px;">fish</a>
+    
+    <a href="http://kooksee.github.io/tags/flask" style="font-size: 12px;">flask</a>
+    
+    <a href="http://kooksee.github.io/tags/gbk" style="font-size: 12px;">gbk</a>
+    
+    <a href="http://kooksee.github.io/tags/groovy" style="font-size: 12px;">groovy</a>
+    
+    <a href="http://kooksee.github.io/tags/hashlib" style="font-size: 12px;">hashlib</a>
+    
+    <a href="http://kooksee.github.io/tags/ipc" style="font-size: 12px;">ipc</a>
+    
+    <a href="http://kooksee.github.io/tags/itertools" style="font-size: 12px;">itertools</a>
+    
+    <a href="http://kooksee.github.io/tags/javascript" style="font-size: 12px;">javascript</a>
+    
+    <a href="http://kooksee.github.io/tags/jquery" style="font-size: 12px;">jquery</a>
+    
+    <a href="http://kooksee.github.io/tags/json" style="font-size: 12px;">json</a>
+    
+    <a href="http://kooksee.github.io/tags/knn" style="font-size: 12px;">knn</a>
+    
+    <a href="http://kooksee.github.io/tags/linux" style="font-size: 12px;">linux</a>
+    
+    <a href="http://kooksee.github.io/tags/lpc" style="font-size: 12px;">lpc</a>
+    
+    <a href="http://kooksee.github.io/tags/makefile" style="font-size: 12px;">makefile</a>
+    
+    <a href="http://kooksee.github.io/tags/mesos" style="font-size: 12px;">mesos</a>
+    
+    <a href="http://kooksee.github.io/tags/mht" style="font-size: 12px;">mht</a>
+    
+    <a href="http://kooksee.github.io/tags/mongodb" style="font-size: 12px;">mongodb</a>
+    
+    <a href="http://kooksee.github.io/tags/nodejs" style="font-size: 12px;">nodejs</a>
+    
+    <a href="http://kooksee.github.io/tags/openvpn" style="font-size: 12px;">openvpn</a>
+    
+    <a href="http://kooksee.github.io/tags/pipetools" style="font-size: 12px;">pipetools</a>
+    
+    <a href="http://kooksee.github.io/tags/plan_morning" style="font-size: 12px;">plan_morning</a>
+    
+    <a href="http://kooksee.github.io/tags/postgresql" style="font-size: 12px;">postgresql</a>
+    
+    <a href="http://kooksee.github.io/tags/pyshell" style="font-size: 12px;">pyshell</a>
+    
+    <a href="http://kooksee.github.io/tags/python" style="font-size: 12px;">python</a>
+    
+    <a href="http://kooksee.github.io/tags/python%e6%a8%a1%e5%9d%97" style="font-size: 12px;">python模块</a>
+    
+    <a href="http://kooksee.github.io/tags/pyv8" style="font-size: 12px;">pyv8</a>
+    
+    <a href="http://kooksee.github.io/tags/rpc" style="font-size: 12px;">rpc</a>
+    
+    <a href="http://kooksee.github.io/tags/shell" style="font-size: 12px;">shell</a>
+    
+    <a href="http://kooksee.github.io/tags/shutil" style="font-size: 12px;">shutil</a>
+    
+    <a href="http://kooksee.github.io/tags/simplejson" style="font-size: 12px;">simplejson</a>
+    
+    <a href="http://kooksee.github.io/tags/smb" style="font-size: 12px;">smb</a>
+    
+    <a href="http://kooksee.github.io/tags/software" style="font-size: 12px;">software</a>
+    
+    <a href="http://kooksee.github.io/tags/sphinx" style="font-size: 12px;">sphinx</a>
+    
+    <a href="http://kooksee.github.io/tags/spyder" style="font-size: 12px;">spyder</a>
+    
+    <a href="http://kooksee.github.io/tags/sql" style="font-size: 12px;">sql</a>
+    
+    <a href="http://kooksee.github.io/tags/sqlalchemy" style="font-size: 12px;">sqlalchemy</a>
+    
+    <a href="http://kooksee.github.io/tags/ssh" style="font-size: 12px;">ssh</a>
+    
+    <a href="http://kooksee.github.io/tags/stringio" style="font-size: 12px;">stringio</a>
+    
+    <a href="http://kooksee.github.io/tags/sublime" style="font-size: 12px;">sublime</a>
+    
+    <a href="http://kooksee.github.io/tags/subprocess" style="font-size: 12px;">subprocess</a>
+    
+    <a href="http://kooksee.github.io/tags/ubuntu" style="font-size: 12px;">ubuntu</a>
+    
+    <a href="http://kooksee.github.io/tags/utf-8" style="font-size: 12px;">utf-8</a>
+    
+    <a href="http://kooksee.github.io/tags/webpack" style="font-size: 12px;">webpack</a>
+    
+    <a href="http://kooksee.github.io/tags/wiki" style="font-size: 12px;">wiki</a>
+    
+    <a href="http://kooksee.github.io/tags/wtf" style="font-size: 12px;">wtf</a>
+    
+    <a href="http://kooksee.github.io/tags/zipfile" style="font-size: 12px;">zipfile</a>
+    
+    <a href="http://kooksee.github.io/tags/zmq" style="font-size: 12px;">zmq</a>
+    
+    <a href="http://kooksee.github.io/tags/%e4%b8%89%e5%85%83%e8%a1%a8%e8%be%be%e5%bc%8f" style="font-size: 12px;">三元表达式</a>
+    
+    <a href="http://kooksee.github.io/tags/%e4%b8%8b%e8%bd%bd%e5%99%a8" style="font-size: 12px;">下载器</a>
+    
+    <a href="http://kooksee.github.io/tags/%e4%b8%ad%e7%bc%80%e8%af%ad%e6%b3%95" style="font-size: 12px;">中缀语法</a>
+    
+    <a href="http://kooksee.github.io/tags/%e4%b9%a6%e7%b1%8d%e6%8e%a8%e8%8d%90" style="font-size: 12px;">书籍推荐</a>
+    
+    <a href="http://kooksee.github.io/tags/%e4%bb%a3%e7%90%86" style="font-size: 12px;">代理</a>
+    
+    <a href="http://kooksee.github.io/tags/%e4%bb%a3%e7%a0%81%e5%88%86%e6%9e%90" style="font-size: 12px;">代码分析</a>
+    
+    <a href="http://kooksee.github.io/tags/%e4%bb%bb%e5%8a%a1%e5%8f%91%e5%b8%83%e5%b9%b3%e5%8f%b0" style="font-size: 12px;">任务发布平台</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%85%bb%e7%94%9f" style="font-size: 12px;">养生</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%86%85%e6%a0%b8%e5%8d%87%e7%ba%a7" style="font-size: 12px;">内核升级</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%8d%9a%e5%ae%a2" style="font-size: 12px;">博客</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%90%8d%e8%af%8d%e5%ae%9a%e4%b9%89" style="font-size: 12px;">名词定义</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%91%bd%e4%bb%a4" style="font-size: 12px;">命令</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%9b%a2%e9%98%9f%e5%90%88%e4%bd%9c" style="font-size: 12px;">团队合作</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%a4%87%e5%bf%98%e5%bd%95" style="font-size: 12px;">备忘录</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%a4%9a%e8%bf%9b%e7%a8%8b%e4%b8%8b%e8%bd%bd%e5%99%a8" style="font-size: 12px;">多进程下载器</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%ad%a6%e4%b9%a0%e7%ac%94%e8%ae%b0" style="font-size: 12px;">学习笔记</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%ae%9e%e4%b9%a0" style="font-size: 12px;">实习</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%b7%a5%e5%85%b7" style="font-size: 12px;">工具</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%b8%b8%e7%94%a8%e6%a8%a1%e5%9d%97" style="font-size: 12px;">常用模块</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%b9%bf%e5%91%8a" style="font-size: 12px;">广告</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%be%ae%e6%9c%8d%e5%8a%a1" style="font-size: 12px;">微服务</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%bf%83%e7%90%86%e5%ad%a6" style="font-size: 12px;">心理学</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%bf%ab%e9%80%9f%e5%8e%9f%e5%9e%8b" style="font-size: 12px;">快速原型</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%bf%ab%e9%80%9f%e5%bc%80%e5%8f%91" style="font-size: 12px;">快速开发</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%bf%ab%e9%80%9f%e6%8e%92%e5%ba%8f" style="font-size: 12px;">快速排序</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%80%bb%e8%a3%81" style="font-size: 12px;">总裁</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%8a%80%e6%9c%af" style="font-size: 12px;">技术</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%8f%92%e4%bb%b6" style="font-size: 12px;">插件</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%95%b0%e6%8d%ae%e5%ba%93" style="font-size: 12px;">数据库</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%95%b0%e6%8d%ae%e5%ba%93%e8%ae%a4%e8%af%81" style="font-size: 12px;">数据库认证</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%96%87%e6%a1%a3%e8%a7%84%e8%8c%83" style="font-size: 12px;">文档规范</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%96%87%e6%a1%a3%e9%a9%b1%e5%8a%a8%e5%bc%80%e5%8f%91" style="font-size: 12px;">文档驱动开发</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%96%b0%e6%a6%82%e5%bf%b5" style="font-size: 12px;">新概念</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%96%b9%e4%be%bf" style="font-size: 12px;">方便</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%97%a5%e8%ae%b0" style="font-size: 12px;">日记</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%98%be%e7%a4%ba%e6%9c%8d%e5%8a%a1%e5%99%a8%e9%94%99%e8%af%af%e4%bf%a1%e6%81%af" style="font-size: 12px;">显示服务器错误信息</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%9c%80%e4%bd%b3%e6%93%8d%e4%bd%9c" style="font-size: 12px;">最佳操作</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%9c%ba%e6%a2%b0%e5%ad%a6%e4%b9%a0" style="font-size: 12px;">机械学习</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%9d%83%e9%99%90" style="font-size: 12px;">权限</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%af%95%e4%b8%9a%e8%ae%be%e8%ae%a1" style="font-size: 12px;">毕业设计</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%b4%bb%e5%8a%a8" style="font-size: 12px;">活动</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%b7%b7%e8%9b%8b%e9%80%bb%e8%be%91" style="font-size: 12px;">混蛋逻辑</a>
+    
+    <a href="http://kooksee.github.io/tags/%e7%83%ad%e7%82%b9%e9%97%ae%e9%a2%98" style="font-size: 12px;">热点问题</a>
+    
+    <a href="http://kooksee.github.io/tags/%e7%88%ac%e8%99%ab" style="font-size: 12px;">爬虫</a>
+    
+    <a href="http://kooksee.github.io/tags/%e7%ae%97%e6%b3%95" style="font-size: 12px;">算法</a>
+    
+    <a href="http://kooksee.github.io/tags/%e7%ae%a1%e9%81%93" style="font-size: 12px;">管道</a>
+    
+    <a href="http://kooksee.github.io/tags/%e7%b1%bb%e5%ba%93%e6%8e%a8%e8%8d%90" style="font-size: 12px;">类库推荐</a>
+    
+    <a href="http://kooksee.github.io/tags/%e7%b3%bb%e7%bb%9f%e5%91%bd%e4%bb%a4" style="font-size: 12px;">系统命令</a>
+    
+    <a href="http://kooksee.github.io/tags/%e7%bc%96%e7%a0%81" style="font-size: 12px;">编码</a>
+    
+    <a href="http://kooksee.github.io/tags/%e7%bc%96%e7%a8%8b%e8%a7%84%e8%8c%83" style="font-size: 12px;">编程规范</a>
+    
+    <a href="http://kooksee.github.io/tags/%e7%bc%96%e7%a8%8b%e9%a3%8e%e6%a0%bc" style="font-size: 12px;">编程风格</a>
+    
+    <a href="http://kooksee.github.io/tags/%e7%bd%91%e7%bb%9c%e9%93%be%e6%8e%a5" style="font-size: 12px;">网络链接</a>
+    
+    <a href="http://kooksee.github.io/tags/%e8%81%8a%e5%a4%a9%e5%ae%a4" style="font-size: 12px;">聊天室</a>
+    
+    <a href="http://kooksee.github.io/tags/%e8%85%b9%e5%bc%8f%e5%91%bc%e5%90%b8" style="font-size: 12px;">腹式呼吸</a>
+    
+    <a href="http://kooksee.github.io/tags/%e8%91%a3%e4%ba%8b%e9%95%bf" style="font-size: 12px;">董事长</a>
+    
+    <a href="http://kooksee.github.io/tags/%e8%a1%a8%e5%8d%95%e9%aa%8c%e8%af%81" style="font-size: 12px;">表单验证</a>
+    
+    <a href="http://kooksee.github.io/tags/%e8%af%b7%e6%b1%82%e9%94%99%e8%af%af" style="font-size: 12px;">请求错误</a>
+    
+    <a href="http://kooksee.github.io/tags/%e8%bf%9b%e7%a8%8b%e9%80%9a%e4%bf%a1" style="font-size: 12px;">进程通信</a>
+    
+    <a href="http://kooksee.github.io/tags/%e9%82%bb%e9%87%8c%e9%97%ae%e9%a2%98" style="font-size: 12px;">邻里问题</a>
+    
+    <a href="http://kooksee.github.io/tags/%e9%94%99%e8%af%af%e9%9b%86%e9%94%a6" style="font-size: 12px;">错误集锦</a>
+    
+    <a href="http://kooksee.github.io/tags/%e9%97%ad%e5%8c%85" style="font-size: 12px;">闭包</a>
+    
+    <a href="http://kooksee.github.io/tags/%e9%9c%80%e6%b1%82%e5%88%86%e6%9e%90" style="font-size: 12px;">需求分析</a>
+    
+    <a href="http://kooksee.github.io/tags/%e9%9d%a2%e8%af%95" style="font-size: 12px;">面试</a>
+    
+  </div>
+</div>
+
+
+
+  
+
+</aside>
+</div>
+
+  </div>
+  <footer>
+<div id="footer" >
+
+  
+  <div class="line">
+    <span></span>
+    <div style='background:no-repeat url("http://kooksee.github.io/img/author.jpg") left top;-webkit-background-size:6.875em 6.875em;-moz-background-size:6.875em 6.875em;background-size:6.875em 6.875em;' class="author" ></div>
+  </div>
+  
+
+
+  <div class="social-font clearfix">
+    
+    <a href="http://weibo.com/kooksee" target="_blank" title="weibo"></a>
+    
+    
+    <a href="https://twitter.com/kooksee" target="_blank" title="twitter"></a>
+    
+    
+    <a href="https://github.com/kooksee" target="_blank" title="github"></a>
+    
+    
+    <a href="https://www.facebook.com/kooksee" target="_blank" title="facebook"></a>
+    
+    
+    <a href="https://www.linkedin.com/kooksee" target="_blank" title="linkedin"></a>
+    
+  </div>
+  <p class="copyright">Powered by <a href="http://gohugo.io" target="_blank" title="hugo">hugo</a> and Theme by <a href="https://github.com/coderzh/hugo-pacman-theme" target="_blank" title="hugo-pacman-theme">hugo-pacman-theme</a> © 2016
+    
+    <a href="http://kooksee.github.io/" target="_blank" title="kooksee">kooksee</a>
+    
+  </p>
+</div>
+</footer>
+  <script src="http://kooksee.github.io/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+done = false;
+$(document).ready(function(){
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize();
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  $('form.search').on('submit', function (event) {
+    if (false === done) {
+      event.preventDefault();
+      var orgVal = $(this).find('#search').val();
+      $(this).find('#search').val('site:http:\/\/kooksee.github.io\/} ' + orgVal);
+      done = true;
+      $(this).submit();
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});
+</script>
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-10147768-2', 'auto');
+  ga('send', 'pageview');
+  $('#messagesbsb').remove();
+</script>
+
+
+
+</body>
+</html>

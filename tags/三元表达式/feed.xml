@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>三元表达式 on 百里求一的博客</title>
+        <link>http://kooksee.github.io/tags/%E4%B8%89%E5%85%83%E8%A1%A8%E8%BE%BE%E5%BC%8F/</link>
+        <language>zh-CN</language>
+        <author>CoderZh</author>
+        <rights>Copyright (c) 2015, CoderZh; all rights reserved.</rights>
+        <updated>Mon, 01 Jan 0001 00:00:00 UTC</updated>
+        
+        <item>
+            <title>python三元表达式</title>
+            <link>http://kooksee.github.io/blog/python%E4%B8%89%E5%85%83%E8%A1%A8%E8%BE%BE%E5%BC%8F/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/python%E4%B8%89%E5%85%83%E8%A1%A8%E8%BE%BE%E5%BC%8F/</guid>
+            <description>&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# encoding=utf-8
+
+def t(func, arg1, arg2):
+    &amp;quot;&amp;quot;&amp;quot;
+    苦于python的三元表达式，远没有其他语言的方便，所以就自己创造了一个
+    &amp;gt;&amp;gt;&amp;gt; t(lambda x: x &amp;gt; 4, &#39;ok&#39;, &#39;no&#39;)(2)
+    &#39;no&#39;
+
+    &amp;gt;&amp;gt;&amp;gt; t(3 &amp;gt; 4, &#39;ok&#39;, &#39;no&#39;)
+    &#39;no&#39;
+
+    &amp;gt;&amp;gt;&amp;gt; t(lambda x: x &amp;gt; 4, lambda x:x*3, &#39;no&#39;)(6)(3)
+    9
+
+    &amp;gt;&amp;gt;&amp;gt; t(lambda x: x &amp;gt; 4,t(lambda x: x &amp;gt; 6,&#39;yes&#39;,&#39;no2&#39;),&#39;no1&#39;)(5)(1)
+    &#39;no2&#39;
+
+    :param func:
+    :param arg1:
+    :param arg2:
+    :return:
+    &amp;quot;&amp;quot;&amp;quot;
+    if not callable(func):
+        if func:
+            return arg1
+        else:
+            return arg2
+    else:
+        def _t(*args, **argks):
+            if func(*args, **argks):
+                return arg1
+            else:
+                return arg2
+        return _t
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

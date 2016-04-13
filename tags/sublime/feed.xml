@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Sublime on 百里求一的博客</title>
+        <link>http://kooksee.github.io/tags/sublime/</link>
+        <language>zh-CN</language>
+        <author>CoderZh</author>
+        <rights>Copyright (c) 2015, CoderZh; all rights reserved.</rights>
+        <updated>Mon, 01 Jan 0001 00:00:00 UTC</updated>
+        
+        <item>
+            <title>sublime 控制台输入解决方案</title>
+            <link>http://kooksee.github.io/blog/zsh/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/zsh/</guid>
+            <description>&lt;blockquote&gt;
+&lt;p&gt;下面的配置是通过konsole控制台自带的参数解决了sublime不能输入的问题，这种方式适合任何一种语言&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;{
+&amp;quot;cmd&amp;quot;: [&amp;quot;konsole&amp;quot;,&amp;quot;--hold&amp;quot;,&amp;quot;-e&amp;quot;,&amp;quot;python&amp;quot;,&amp;quot;-u&amp;quot;,&amp;quot;${file}&amp;quot;],
+&amp;quot;file_regex&amp;quot;: &amp;quot;^[ ]*File \&amp;quot;(...*?)\&amp;quot;, line ([0-9]*)&amp;quot;,
+&amp;quot;selector&amp;quot;: &amp;quot;source.python&amp;quot;
+}
+
+第二种方式：去掉--hold参数，自己写一个runpython替代原来的python命令
+
+{
+
+&amp;quot;cmd&amp;quot;: [&amp;quot;konsole&amp;quot;,&amp;quot;-e&amp;quot;,&amp;quot;runpython&amp;quot;,&amp;quot;${file}&amp;quot;],
+&amp;quot;file_regex&amp;quot;: &amp;quot;^[ ]*File \&amp;quot;(...*?)\&amp;quot;, line ([0-9]*)&amp;quot;,
+&amp;quot;selector&amp;quot;: &amp;quot;source.python&amp;quot;
+}
+
+runpython:
+
+#!/bin/zsh
+# ---------------------------------------------------------------------
+# run python.....
+# ---------------------------------------------------------------------
+
+echo &amp;quot;start compiling........&amp;quot;
+#echo $1
+python -u $1
+cat
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/blockquote&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

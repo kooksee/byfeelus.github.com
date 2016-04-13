@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>插件 on 百里求一的博客</title>
+        <link>http://kooksee.github.io/tags/%E6%8F%92%E4%BB%B6/</link>
+        <language>zh-CN</language>
+        <author>CoderZh</author>
+        <rights>Copyright (c) 2015, CoderZh; all rights reserved.</rights>
+        <updated>Mon, 01 Jan 0001 00:00:00 UTC</updated>
+        
+        <item>
+            <title>常用工具推荐</title>
+            <link>http://kooksee.github.io/blog/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7%E6%8E%A8%E8%8D%90/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7%E6%8E%A8%E8%8D%90/</guid>
+            <description>&lt;blockquote&gt;
+&lt;p&gt;我喜欢用实用的工具，我想分享给每一个人，让我们的生活更加方便点&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Cmd　Markdown编辑阅读器
+部落作品，良心之作。如果你喜欢记录一些技术难点，喜欢写一些轻便的文字，希望能够在网上查看自己的分享，那么它很适合你。不过你要稍微会点markdown语法就更好了。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;xmarks　
+一款书签同步工具，支持firefox,chrome等。最主要的是，它强大的去重功能，去除无用文件夹和链接的功能让我很喜欢。我曾经找了很久才找到它。像我一样有上千书签要管理的人，它很适合你&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;NetVideoHunter 火狐插件，它强大的视频音频嗅探能力让我叹服，只要是你在网上观看过得视频，它都能够记录下来，然后你就可以下载下来了。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;IDM(internet download manager)
+它是一款windows下载器，采用的是多线程(也可能是多进程)断点续传的方式下载，速度超快，完胜迅雷。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;dbeaver
+我见过当中最强大的数据库界面管理工具，最主要的是跨平台，除了主流数据库，他还能操作nosql，可以采用json方式查看，不过在连接认证mongodb的时候有点麻烦，有问题请留言。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;XMind &lt;a href=&#34;http://pan.baidu.com/s/1gdWczzt&#34;&gt;最好用的思维导图工具&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;windows下面文件快速搜索工具Everything&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;再也不用在windows上面安装那么臃肿的qq了，win应用商店是我的最爱，快速启动，快速关闭，这是在电脑商秒手机的速度。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Foxmail 最好的邮件管理软件&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

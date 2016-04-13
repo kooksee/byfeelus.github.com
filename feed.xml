@@ -1,1554 +1,2410 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
-        <title> on Hugo PacMan Theme Demo</title>
+        <title> on 百里求一的博客</title>
         <link>http://kooksee.github.io/</link>
         <language>zh-CN</language>
         <author>CoderZh</author>
         <rights>Copyright (c) 2015, CoderZh; all rights reserved.</rights>
-        <updated>Sun, 27 Mar 2016 12:57:37 CST</updated>
+        <updated>Thu, 01 Jan 2015 08:55:31 CST</updated>
         
         <item>
-            <title>做了一个 Hugo 的主题：hugo-pacman-theme</title>
-            <link>http://kooksee.github.io/2016/03/27/hugo-pacman-theme/</link>
-            <pubDate>Sun, 27 Mar 2016 12:57:37 CST</pubDate>
+            <title>关于我</title>
+            <link>http://kooksee.github.io/about/</link>
+            <pubDate>Thu, 01 Jan 2015 08:55:31 CST</pubDate>
             <author>CoderZh</author>
-            <guid>http://kooksee.github.io/2016/03/27/hugo-pacman-theme/</guid>
-            <description>
+            <guid>http://kooksee.github.io/about/</guid>
+            <description>&lt;blockquote&gt;
+&lt;p&gt;屌丝一枚，程序猿一个，梦想成为一个伟大的工程师&lt;/p&gt;
 
-&lt;p&gt;Hugo 是由 Go 语言实现的静态网站生成器，通过 Hugo 可以快速生成一个静态网站，比如个人博客。在 &lt;a href=&#34;https://www.staticgen.com/&#34;&gt;StaticGen&lt;/a&gt; 的静态网站生成器排名里，Hugo 排名第五，也是相当的不错。&lt;/p&gt;
+&lt;p&gt;吃吃泡面，唱唱歌，写写代码，看看大片，这是艺术&lt;/p&gt;
 
-&lt;p&gt;Hugo 本身有很多不错的主题，但挑剔的朋友可能会觉得还不够，希望看到 Jeklly 或 Hexo 里漂亮的主题时也能在 Hugo 里找到对应的主题。其实 Hugo 的主题制作并不复杂，有兴趣的同学可以尝试自己制作主题，或者将其他静态网站生成器里的主题转成 Hugo 的主题。&lt;/p&gt;
+&lt;p&gt;看看新闻，玩玩游戏，泡泡妹纸，吐吐产品，这是生活&lt;/p&gt;
 
-&lt;p&gt;不会做的话参考我做的这个主题（&lt;a href=&#34;https://github.com/coderzh/hugo-pacman-theme&#34;&gt;hugo-pacman-theme&lt;/a&gt;）代码，基本的 Hugo 模板功能都用上了。&lt;/p&gt;
+&lt;p&gt;热爱我的热爱，忘乎所以，不知悔改&lt;/p&gt;
 
-&lt;h3 id=&#34;pacman:54fdd68c9a36858a04277e9977a250be&#34;&gt;Pacman&lt;/h3&gt;
+&lt;p&gt;keep hungry，keep foolish&lt;/p&gt;
 
-&lt;p&gt;&lt;a href=&#34;https://yangjian.me/pacman/&#34;&gt;Pacman&lt;/a&gt; 是一个不错的 Hexo 主题，一直有冲动把这个主题转成 Hugo 的，再加上 Hugo 交流群里有朋友也提到了这个主题，于是利用周末的时间制作了这个主题：&lt;a href=&#34;https://github.com/coderzh/hugo-pacman-theme&#34;&gt;hugo-pacman-theme&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;演示地址：&lt;a href=&#34;http://coderzh.github.io/hugo-pacman-theme/&#34;&gt;http://coderzh.github.io/hugo-pacman-theme/&lt;/a&gt;&lt;/p&gt;
-
-&lt;h4 id=&#34;截图:54fdd68c9a36858a04277e9977a250be&#34;&gt;截图&lt;/h4&gt;
-
-&lt;p&gt;主页：&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;http://7xlx3k.com1.z0.glb.clouddn.com/hugo-pacman-tn.png&#34; alt=&#34;hugo-pacman-tn&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;文章页面：&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;http://7xlx3k.com1.z0.glb.clouddn.com/hugo-pacman-theme.png&#34; alt=&#34;hugo-pacman-theme&#34; /&gt;&lt;/p&gt;
-
-&lt;h4 id=&#34;支持功能:54fdd68c9a36858a04277e9977a250be&#34;&gt;支持功能&lt;/h4&gt;
-
-&lt;ol&gt;
-&lt;li&gt;分类&lt;/li&gt;
-&lt;li&gt;标签（标签云）&lt;/li&gt;
-&lt;li&gt;归档&lt;/li&gt;
-&lt;li&gt;RSS&lt;/li&gt;
-&lt;li&gt;文章大纲（Table Of Content）&lt;/li&gt;
-&lt;li&gt;文章分享功能&lt;/li&gt;
-&lt;li&gt;图片点击预览（FancyBox）&lt;/li&gt;
-&lt;li&gt;多说评论（及 Disqus 评论）&lt;/li&gt;
-&lt;li&gt;Google Analytics&lt;/li&gt;
-&lt;li&gt;代码高亮优化（GitHub 配色）&lt;/li&gt;
-&lt;li&gt;高度配置化，你要的东西都可以通过 config.toml 进行配置。&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h3 id=&#34;使用方法:54fdd68c9a36858a04277e9977a250be&#34;&gt;使用方法&lt;/h3&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;首先，确保安装了最新版 Hugo。下载地址：&lt;a href=&#34;https://github.com/spf13/hugo/releases&#34;&gt;Hugo Release&lt;/a&gt;，如果使用 Mac ，直接用 Homebrew 安装：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ brew install hugo
-&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;把 hugo-pacman-theme clone 下来，放到你的 Hugo 站点的 themes 目录里（Hugo 的使用方法详见：&lt;a href=&#34;http://www.gohugo.org/&#34;&gt;http://www.gohugo.org/&lt;/a&gt;）。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ cd themes
-$ git clone https://github.com/coderzh/hugo-pacman-theme
-&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;配置文件，拷贝一份或者参考：&lt;code&gt;hugo-pacman-theme/exampleSite/config.toml&lt;/code&gt;，配置如下：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-toml&#34;&gt;BaseURL = &amp;quot;http://coderzh.github.io/&amp;quot;
-LanguageCode = &amp;quot;zh-CN&amp;quot;
-HasCJKLanguage = true
-Title = &amp;quot;Hugo PacMan Theme Demo&amp;quot;
-Theme = &amp;quot;hugo-pacman-theme&amp;quot;
-pygmentsStyle = &amp;quot;default&amp;quot;
-pygmentsUseClasses = true
-RSSUri = &amp;quot;feed.xml&amp;quot;
-
-
-[Author]
-  Name = &amp;quot;coderzh&amp;quot;
-
-
-[Params]
-  AuthorHomepage = &amp;quot;http://blog.coderzh.com&amp;quot;
-  BottomIntroduce = &amp;quot;Introduce1 &amp;lt;br/&amp;gt; Introduce2&amp;quot;
-  Description = &amp;quot;&amp;quot;
-  Subtitle = &amp;quot;subtitle&amp;quot;
-  Weibo = &amp;quot;coderzh&amp;quot;
-  WeiboID = 1816308191
-  Twitter = &amp;quot;coderzh&amp;quot;
-  GitHub = &amp;quot;coderzh&amp;quot;
-  Facebook = &amp;quot;coderzh&amp;quot;
-  LinkIn = &amp;quot;coderzh&amp;quot;
-  Imglogo = &amp;quot;img/logo.svg&amp;quot;
-  AuthorImg = &amp;quot;img/author.jpg&amp;quot;
-  # 日期时间格式
-  DateFormat = &amp;quot;2006年01月02日&amp;quot;
-  MonthFormat = &amp;quot;2006年01月&amp;quot;
-  FancyBox = true
-
-
-  # 使用多说评论
-  #[Params.DuoShuo]
-  #  ShortName = &amp;quot;coderzh&amp;quot;
-
-
-  # 使用 Disqus 评论
-  [Params.Disqus]
-    ShortName = &amp;quot;coderzh&amp;quot;
-
-
-  # Google 统计
-  [Params.GoogleAnalytics]
-    ID = &amp;quot;UA-10147768-2&amp;quot;
-
-
-  # 多语言字符串
-  [Params.Strings]
-    Search = &amp;quot;搜索&amp;quot;
-    PageNotFound = &amp;quot;你访问的页面不存在&amp;quot;
-    ShowSideBar = &amp;quot;显示侧边栏&amp;quot;
-    HideSideBar = &amp;quot;隐藏侧边栏&amp;quot;
-    Categories = &amp;quot;分类&amp;quot;
-    Archive = &amp;quot;归档&amp;quot;
-    Tags = &amp;quot;标签&amp;quot;
-    TagCloud = &amp;quot;标签云&amp;quot;
-    Rss = &amp;quot;RSS 订阅&amp;quot;
-    TableOfContents = &amp;quot;文章目录&amp;quot;
-
-
-[Menu]
-  [[Menu.Main]]
-    Name = &amp;quot;首页&amp;quot;
-    URL = &amp;quot;/&amp;quot;
-    Weight = 1
-  [[Menu.Main]]
-    Name = &amp;quot;关于&amp;quot;
-    URL = &amp;quot;/about&amp;quot;
-    Weight = 2
-&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h3 id=&#34;最后:54fdd68c9a36858a04277e9977a250be&#34;&gt;最后&lt;/h3&gt;
-
-&lt;p&gt;该主题参考的 &lt;a href=&#34;https://github.com/A-limon/pacman&#34;&gt;Pacman&lt;/a&gt;，使用 Hugo 的模板语法纯手工一行一行打造。有需要的朋友尽管拿去使用，有问题欢迎反馈：&lt;/p&gt;
-
-&lt;p&gt;GitHub 地址：&lt;a href=&#34;https://github.com/coderzh/hugo-pacman-theme&#34;&gt;https://github.com/coderzh/hugo-pacman-theme&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;Hugo 中文文档：&lt;a href=&#34;http://www.gohugo.org/&#34;&gt;http://www.gohugo.org/&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;Hugo 交流 QQ 群：512499080&lt;/p&gt;
-
-&lt;p&gt;该主题已经&lt;a href=&#34;https://github.com/spf13/hugoThemes/issues/121&#34;&gt;提交&lt;/a&gt;到官方的主题列表，相信不久就可以在官方的 &lt;a href=&#34;http://themes.gohugo.io/&#34;&gt;http://themes.gohugo.io/&lt;/a&gt; 上看到了。&lt;/p&gt;
-</description>
-        </item>
-        
-        <item>
-            <title>懒程序员和他的 dotfiles</title>
-            <link>http://kooksee.github.io/2016/03/19/dotfiles/</link>
-            <pubDate>Sat, 19 Mar 2016 15:05:47 CST</pubDate>
-            <author>CoderZh</author>
-            <guid>http://kooksee.github.io/2016/03/19/dotfiles/</guid>
-            <description>
-
-&lt;p&gt;如果你不知道什么是 dotfiles，那你就不会知道什么是 dotfiles。如果你知道什么是 dotfiles，那你就知道什么是 dotfiles。&lt;/p&gt;
-
-&lt;p&gt;以一段废话开场，引出今天的主题：&lt;code&gt;dotfiles&lt;/code&gt;。软件匠艺社区（&lt;a href=&#34;codingstyle.cn&#34;&gt;codingstyle.cn&lt;/a&gt;）周三晚上有一期分享介绍 Vim 时提到了 dotfiles，这篇文章我们就来好好说一说 dotfiles。&lt;/p&gt;
-
-&lt;h3 id=&#34;什么是-dotfiles:50fc662a6f6921bb445d80a429a8e146&#34;&gt;什么是 dotfiles？&lt;/h3&gt;
-
-&lt;p&gt;dot 即「点」的意思，意思是以点开头的文件。如果你不是程序员，你大概会说，我咋从来没见过这种文件啊？因为这些文件通常都是隐藏文件，平常一般看不到，比如 .git 目录。但这里说的 dotfiles 主要是指用户 home 目录下的点文件，这类文件一般是一些配置文件，比如 vim 的配置文件 .vimrc，zsh 的配置文件 .zshrc 等。通过设置这些配置文件，可以实现出很强大的功能，比如有不少人通过配置 .vimrc，把 vim 活生生变成了一个功能强大的 IDE。还有一些偷懒的程序员在 .profile 之类的文件里设置了大量命令的 alias。以至于你还没看清楚他敲的第一个命令，他已经敲了三四个命令了。&lt;/p&gt;
-
-&lt;p&gt;通过配置各种 dotfiles，程序员可以把系统定制得既顺手又高效。但是问题来了，自己千辛万苦调的设置，如果换一台机器，又得重新设置一遍。这对于追求效率的程序员来说是不可接受的。&lt;/p&gt;
-
-&lt;h3 id=&#34;dotfiles-管理:50fc662a6f6921bb445d80a429a8e146&#34;&gt;dotfiles 管理&lt;/h3&gt;
-
-&lt;p&gt;于是会玩又懒的程序员想出了一个办法，把所有的 dotfiles 放在一个单独的目录进行统一管理，放到 GitHub 或者通过网盘同步。&lt;/p&gt;
-
-&lt;p&gt;为了让 dotfiles 生效，主要有两种方式：&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;通过一个脚本，把所有 dotfile 文件 rsync 到 HOME 目录。&lt;/li&gt;
-&lt;li&gt;使用软链，让 HOME 目录的 dotfile 文件指向你目录的 dotfile 文件。&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;第一种方式适合机器初装，但是假如你有两台机器，希望配置能方便的进行同步，第二种方式是更好的选择。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ ln -s ~/dotfiles/.vimrc ~/.vimrc
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;但是，假如你的 dotfile 文件很多，手工去维护那些软链也是一件麻烦的事情。而程序员又是最不能忍受麻烦的，于是造了各种轮子去维护和管理这些 dotfiles 。&lt;/p&gt;
-
-&lt;p&gt;有些人把软链的管理写成一个 Shell 脚本，也有人做成特定的工具。比如：&lt;a href=&#34;https://github.com/thoughtbot/rcm&#34;&gt;rcm&lt;/a&gt;、 &lt;a href=&#34;http://skwp.github.io/dotfiles/&#34;&gt;YARD&lt;/a&gt;、 &lt;a href=&#34;https://pypi.python.org/pypi/dotfiles&#34;&gt;dotfiles&lt;/a&gt;、 &lt;a href=&#34;https://github.com/lra/mackup&#34;&gt;mackup&lt;/a&gt; ……&lt;/p&gt;
-
-&lt;h3 id=&#34;mackup:50fc662a6f6921bb445d80a429a8e146&#34;&gt;mackup&lt;/h3&gt;
-
-&lt;p&gt;在对比了各种 dotfiles 工具后，我最终选择了 &lt;a href=&#34;https://github.com/lra/mackup&#34;&gt;mackup&lt;/a&gt;。理由主要如下：&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;使用方便，配置起来非常简单。&lt;/li&gt;
-&lt;li&gt;社区贡献了大量现成的软件的 dotfiles 配置，可以直接使用。&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;在 OS X 下，可以直接使用 brew 安装 mackup。其他系统下，可以直接使用 pip 安装。安装好后，备份和还原都只需要一个命令：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;# 备份
-$ mackup backup
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;在新机器上：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;# 还原
-$ mackup restore
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;如果你不想要那些软链了，只需要执行：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ mackup uninstall
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;mackup 可以通过配置文件，指定你希望备份哪些 dotfiles，以及备份到哪里（支持备份到 Dropbox、Google Drive、Copy、iCloud、Box 以及指定的目录。&lt;/p&gt;
-
-&lt;p&gt;比如在我的 mac 上，我的 &lt;a href=&#34;https://github.com/coderzh/dotfiles/blob/master/home/.mackup.cfg&#34;&gt;.mackup.cfg&lt;/a&gt; 这样设置的：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-ini&#34;&gt;[storage]
-engine = file_system
-path = dotfiles
-directory = home 
-
-[applications_to_sync]
-atom
-pycharmce
-myvim
-ideaic15
-zsh
-mackup
-dash
-karabiner
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;code&gt;storage&lt;/code&gt; 里指定了备份到文件系统的 ~/dotfiles/home 路径。&lt;code&gt;applications_to_sync&lt;/code&gt; 指定了备份哪些应用的 dotfiles。mackup 预先定义好了大量 application 的 dotfiles，比如：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;Atom
-Bash
-Dash
-Emacs
-Flux
-Git
-Gradle
-MacOSX
-MacVim
-npm
-Oh My Zsh
-Vim
-WebStorm
-...
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;如果你需要定制某个 application 的 dotfiles 也很简单，比如我发现 mackup 自带的配置里没有 IntelliJ Community 版本的配置，我只需要在新建一个文件： ~/.mackup/ideaic15.cfg ：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-ini&#34;&gt;[application]
-name = My IntelliJ IDEA 15
-
-[configuration_files]
-Library/Preferences/IdeaIC15/keymaps/Mac OS X copy.xml
-Library/Preferences/IdeaIC15/options/keymap.xml
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;code&gt;configuration_files&lt;/code&gt; 里指定我需要备份的文件即可。非常的简单易用。&lt;/p&gt;
-
-&lt;h3 id=&#34;自动安装软件:50fc662a6f6921bb445d80a429a8e146&#34;&gt;自动安装软件&lt;/h3&gt;
-
-&lt;p&gt;在一台新机器上，把之前机器装的软件一个一个手动安装也是非常耗时和麻烦的事情。如果你使用的是 Mac OS X，将会变得非常简单，因为绝大部分的软件开发包及软件都可以通过 &lt;a href=&#34;http://brew.sh/&#34;&gt;Homebrew&lt;/a&gt; 和 &lt;a href=&#34;https://caskroom.github.io/&#34;&gt;brew cask&lt;/a&gt; 来安装。&lt;/p&gt;
-
-&lt;p&gt;我的 Mac 上 99.9% 的软件，可以通过我写的 &lt;a href=&#34;https://github.com/coderzh/dotfiles/blob/master/install/brew.sh&#34;&gt;brew.sh&lt;/a&gt; 脚本来安装：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;# Install Homebrew
-
-# Ask for the administrator password upfront.
-sudo -v
-
-# Keep-alive: update existing `sudo` time stamp until the script has finished.
-while true; do sudo -n true; sleep 60; kill -0 &amp;quot;$$&amp;quot; || exit; done 2&amp;gt;/dev/null &amp;amp;
-
-# Check for Homebrew,
-# Install if we don&#39;t have it
-if test ! $(which brew); then
-  echo &amp;quot;Installing homebrew...&amp;quot;
-  ruby -e &amp;quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)&amp;quot;
-fi
-
-brew tap homebrew/versions
-brew update
-brew upgrade --all
-
-# Install packages
-apps=(
-    caskroom/cask/brew-cask
-    cmake
-    coreutils
-    findutils
-    git
-    gnu-sed --with-default-names
-    go
-    hugo
-    mercurial
-    mackup
-    macvim
-    mysql
-    android-platform-tools
-    python
-    ruby
-    svn
-    vim
-    wget
-    zsh
-)
-
-caskapps=(
-    android-studio
-    alfred
-    atom
-    cheatsheet
-    dash
-    genymotion
-    google-chrome
-    intellij-idea-ce
-    iterm2
-    java
-    karabiner
-    keepassx
-    kindle
-    macdown
-    pomotodo
-    pycharm-ce
-    qq
-    qqmusic
-    qqmacmgr
-    sogouinput
-    thunder
-    vagrant
-    virtualbox
-    vlc
-    wiznote
-    youdao
-)
-
-brew install &amp;quot;${apps[@]}&amp;quot;
-brew tap caskroom/versions
-brew cask update
-brew cask install --appdir=&amp;quot;/Applications&amp;quot; &amp;quot;${caskapps[@]}&amp;quot;
-brew cleanup
-brew cask cleanup
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;pip-npm-gem:50fc662a6f6921bb445d80a429a8e146&#34;&gt;pip、npm、gem&lt;/h3&gt;
-
-&lt;p&gt;使用 pip、npm、gem 安装的包也使用脚本进行一键安装：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;pip install --upgrade pip
-pip install powerline-status
-pip install MySQL-python
-pip install tornado
-pip install torndb
-pip install pycrypto
-pip install mock
-# npm、gem ...
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;os-x-的系统设置:50fc662a6f6921bb445d80a429a8e146&#34;&gt;OS X 的系统设置&lt;/h3&gt;
-
-&lt;p&gt;当你拿到一台新的 Mac 然后开机时，不知道有没有被 Duang~ 的一声吓到的经历。当时吓得的宝宝我赶紧找了如何关闭开机声音的方法（设置静音、插上耳机都不管用！），只要执行一条命令即可：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;sudo nvram SystemAudioVolume=&amp;quot; &amp;quot;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;很多的系统设置都可以通过命令来完成，比如：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;# 电池显示是百分百
-defaults write com.apple.menuextra.battery -bool true
-
-# 设置键盘按键重复的延迟
-defaults write NSGlobalDomain KeyRepeat -int 3
-
-# 禁止自动拼写纠正
-defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
-
-# Finder 显示状态栏
-defaults write com.apple.finder ShowStatusBar -bool true
-
-# Finder 显示地址栏
-defaults write com.apple.finder ShowPathbar -bool true
-
-# 禁止在网络驱动器上生成 .DS_Store 文件 
-defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;字体:50fc662a6f6921bb445d80a429a8e146&#34;&gt;字体&lt;/h3&gt;
-
-&lt;p&gt;程序员喜欢折腾的几样东西：键盘、编辑器、字体。程序员钟爱的几种字体，包括 Source Code Pro、Hack、Menlo 等等，其中对 powerline 字体更是最爱。把所有心爱的字体放在 dotfiles/fonts 目录里，通过自动安装脚本里直接拷贝到 ~/Library/Fonts/ 目录下即可。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;cp -r ~/dotfiles/fonts/* ~/Library/Fonts/
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;使用 powerline 字体需要安装 powerline-status，这个在前面讲的 pip 脚本里已经安装了。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;pip install powerline-status
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;zsh 中使用 powerline 字体，只需要在 .zshrc 中加一句：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;source /usr/local/lib/python2.7/site-packages/powerline/bindings/zsh/powerline.zsh
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;效果如下：&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;http://7xlx3k.com1.z0.glb.clouddn.com/zsh-powerline.png&#34; alt=&#34;zsh-powerline&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;在 vim 里使用 powerline 字体，只需要在 .vimrc 里加：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;set rtp+=/usr/local/lib/python2.7/site-packages/powerline/bindings/vim
-set laststatus=2
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;效果如下：&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;http://7xlx3k.com1.z0.glb.clouddn.com/vim-powerline.png&#34; alt=&#34;vim-powerline&#34; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;总结:50fc662a6f6921bb445d80a429a8e146&#34;&gt;总结&lt;/h3&gt;
-
-&lt;p&gt;懒程序员如果拿到了一个新的 Mac 机器，他只需要做如下几步，就可以把这台新的机器变成熟悉的一台机器：&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;安装 XCode（最好在 Mac Store 里下载安装完整版的 XCode，因为有些软件安装依赖完整版 XCode）：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ sudo softwareupdate -i -a
-$ xcode-select --install
-&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;自动安装软件及系统设置。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ cd ~
-$ git clone https://github.com/coderzh/dotfiles.git
-$ source dotfiles/install.sh
-&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;使用 mackup 恢复 dotfiles。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ cp ~/dotfiles/.mackup.cfg ~/
-$ cp -r ~/dotfiles/.mackup ~/
-$ mackup restore
-&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;&lt;strong&gt;如果一切顺利，程序员，你没有浪费上班时间装电脑，你可以开始搬砖了。:-)&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;（对了，iTerm2 的 Color 设置好像必须手工操作，配色列表可以在 &lt;a href=&#34;https://github.com/mbadolato/iTerm2-Color-Schemes&#34;&gt;https://github.com/mbadolato/iTerm2-Color-Schemes&lt;/a&gt; 找，作为 JetBrains 粉，最后我选择了 JetBrains Darcula.itermcolors 这一款。）&lt;/p&gt;
-
-&lt;p&gt;在 GitHub 里搜 &lt;code&gt;dotfiles&lt;/code&gt; 可以看到大量的 dotfiles，当然，别忘了 Star 我的 dotfiles：&lt;a href=&#34;https://github.com/coderzh/dotfiles&#34;&gt;https://github.com/coderzh/dotfiles&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;最后，温馨提示下，千万不要把 ssh、mysql 密码相关的内容提交上去呦~&lt;/p&gt;
-
-&lt;p&gt;参考资料：&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/mathiasbynens/dotfiles&#34;&gt;https://github.com/mathiasbynens/dotfiles&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/skwp/dotfiles&#34;&gt;https://github.com/skwp/dotfiles&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/donnemartin/dev-setup&#34;&gt;https://github.com/donnemartin/dev-setup&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/webpro/awesome-dotfiles&#34;&gt;https://github.com/webpro/awesome-dotfiles&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/jbernard/dotfiles&#34;&gt;https://github.com/jbernard/dotfiles&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/lra/mackup&#34;&gt;https://github.com/lra/mackup&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/webpro/dotfiles&#34;&gt;https://github.com/webpro/dotfiles&lt;/a&gt;&lt;/li&gt;
-&lt;/ol&gt;
-</description>
-        </item>
-        
-        <item>
-            <title>使用番茄工作法一个月感受</title>
-            <link>http://kooksee.github.io/2016/03/06/pomotodo/</link>
-            <pubDate>Sun, 06 Mar 2016 21:40:47 CST</pubDate>
-            <author>CoderZh</author>
-            <guid>http://kooksee.github.io/2016/03/06/pomotodo/</guid>
-            <description>&lt;p&gt;之前就听说过「番茄工作法」，但是一直没有尝试。春节期间，新买的 MacBook Pro 到了之后，开始装各种效率软件时，发现有人推荐 pomotodo 这个番茄工作法的软件。于是试着了解了下所谓的「番茄工作法」，并且开始尝试，结果一发不可收拾。&lt;/p&gt;
-
-&lt;p&gt;在使用了「番茄工作法」几天后，我就打算写一篇关于它的文章。但是我担心我对它也就几天的热度，于是我打算看看我能坚持多久。除了在家里使用「番茄工作法」，在公司我也使用，到今天为止，差不多坚持了一个月。&lt;/p&gt;
-
-&lt;p&gt;而在刚开始听到那些所谓的「xxx 工作法」，我是不信的。即使大家都说它好，我也会产生一种本能的抗拒心态，大家越说它好，我越抗拒，甚至选择忽略它，不去尝试它。因为在我原来的价值观里，人们想要成功，靠那些所谓的「xxx 工作法」是不靠谱的。&lt;/p&gt;
-
-&lt;p&gt;就像《后会无期》里说的：「&lt;strong&gt;听过很多道理，依然过不好这一生&lt;/strong&gt;」&lt;/p&gt;
-
-&lt;p&gt;我开始思考，如果「番茄工作法」真有那么好，为什么没有听说过哪些成功人士、科学家、伟大的程序员使用了「番茄工作法」？&lt;/p&gt;
-
-&lt;p&gt;而且，「番茄工作法」特别容易让我联想到 GTD （Get Things Done）工具。在我刚工作不久的时候，金山请了一位讲师介绍了 GTD 。那是我第一次听说 GTD ，当时引发了我很大的兴趣。现在还可以在我的博客里找到当时写下的一篇文章《&lt;a href=&#34;http://blog.coderzh.com/2010/01/03/1638096/&#34;&gt;时间管理GTD工具&lt;/a&gt;》（2010 年 1 月）。我尝试过十几二十种不同的 GTD 工具，但是坚持用下来的却没有一个。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;一个东西适不适合自己，只有亲身尝试后才知道。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;我知道有些人一直都在使用 GTD 工具，但是我经过各种尝试之后，发现 GTD 并不适合我。当我刚遇见「番茄工作法」时，我甚至不想开始尝试了。辛亏了 MacBook ，让我有机会做了一些尝试，也让我明白了一些道理：&lt;/p&gt;
-
-&lt;p&gt;那些成功人士、科学家、伟大的程序员也许的确从不使用番茄工作法，因为他们根本就不需要。他们对所从事的事业有着本能的无限热情，他们不需要借助外部的工具就能做到注意力集中，对事物保持长久的热情，本能的已经对时间有了很好的利用。&lt;/p&gt;
-
-&lt;p&gt;而作为普通大众的我，平时有太多的诱惑让我分心，微信、QQ、微博等等。我的注意力开始变得没那么集中，总是在干正事的时候做着做着就开始折腾起和正事毫无关系的事。&lt;/p&gt;
-
-&lt;p&gt;在凯文凯利的《必然》里提到，人类的注意力是稀缺的资源。新的事物和产品会大量涌现，但是每个人一天的时间只有 24 小时，而一天里能吸引注意力的时间又是更少。&lt;/p&gt;
-
-&lt;p&gt;我开始承认随着社交网络的兴起，我的注意力开始变得涣散。所以，番茄工作法也许适合我。它让我注意力保持集中，让我更好的利用时间，也让我更有成就感。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;所以，从现在开始，尝试一下「番茄工作法」吧！&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;说了那么多，还没介绍今天的主角。到底什么是番茄工作法？&lt;/p&gt;
-
-&lt;p&gt;番茄是指番茄钟，一种在厨房用来计时的闹钟。当你决定做一件事时，扭动番茄钟定时 25 分钟，在滴滴答答的时钟声音下，你专注于完成这 25 分钟内要完成的事。期间一旦你被打扰，或者开始做无关的事情，你必须重新开始计时。25 分钟后，再次扭动番茄钟定时 5 分钟用来休息，这时完全不去想刚才的事情，而是好好的放松一下。&lt;/p&gt;
-
-&lt;p&gt;规则非常的简单，为此我还专门买了一个真实的番茄钟，也许是因为几块钱的便宜货，这东西时间到的时候的闹铃声太大以至于我会被它吓到。所以，我现在一直使用软件来进行计时。&lt;/p&gt;
-
-&lt;p&gt;开始一个最好的尝试，就是使用「番茄工作法」阅读《番茄工作法图解》。&lt;/p&gt;
-
-&lt;p&gt;看过了这本书，你会对番茄工作法有更深的了解。你会明白为什么那些软件默认都要模拟番茄钟滴滴答答的声音。我刚开始也是非常的不习惯滴滴答答的声音，觉得是一种噪音反而让我分心，所以我都把声音关了。后来看了书，我才明白，扭动番茄钟的动作，听到滴滴答答的倒计时时间，其实是一种很好的仪式感。表示我现在正在一个番茄钟的时间内，让自己保持注意力。我现在已经离不开滴滴答答的声音了。&lt;/p&gt;
-
-&lt;p&gt;使用番茄工作法除了让你注意力更集中之外，还有诸多好处，比如：&lt;/p&gt;
-
-&lt;p&gt;一件你一直都想做，但是每次想想都觉得很麻烦，从而一直都未动手去做的事。使用番茄工作法，抛开那些长远的麻烦烦恼，只关注现在这 25 分钟内要做的事。再麻烦的事总得开始，一旦开始，很多麻烦烦恼自然被解决了。（解决拖延症）&lt;/p&gt;
-
-&lt;p&gt;又比如：&lt;/p&gt;
-
-&lt;p&gt;你精神亢奋持续保持高度集中注意力的工作，从而忘记了休息，你开始腰酸腿疼，颈椎病开始来找你。使用番茄工作法，每 25 分钟，都提醒你必须站起来活动活动，倒一杯水，和同事闲聊几句。&lt;/p&gt;
-
-&lt;p&gt;再比如：&lt;/p&gt;
-
-&lt;p&gt;项目 deadline 就要到了，但是还有一大堆事情没做，你开始变得紧张起来，你开始焦虑，手忙脚乱，一想到大 Boss 苛刻的眼神，你敲键盘的手已经开始颤抖。使用番茄工作法，在剩下的每个 25 分钟内，我只关注当前的任务，既保持高效完成了任务，又缓解了紧张的情绪。&lt;/p&gt;
-
-&lt;p&gt;在 5 分钟的间隔时间，由于处于完全放松的状态，这时更容易有大局观，而不是扎进到具体的事情后出不来。一旦发现前面做的事情方向错了，立马可以开始调整。&lt;/p&gt;
-
-&lt;p&gt;同时，使用「番茄工作法」，你可以很好的对做的事情进行回顾总结。比如，以下是我近一个月来使用「番茄工作法」的统计情况（统计不一定完全准确，有漏记的情况）：&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;http://7xlx3k.com1.z0.glb.clouddn.com/pomotodo.png&#34; alt=&#34;pomotodo&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;使用番茄工作法，我利用周末的时间，看了几本书，更新了 Hugo 中文文档，学习了 Ruby On Rail，写了一个 Android APP。当然，还包括写公众号文章。&lt;/p&gt;
-
-&lt;p&gt;就在现在，我还处于番茄钟的时间内。写这篇文章，我差不多花了 4 个番茄钟的时间。它也在提醒我，未来我在做同样事情时，我能不能更高效，用更少的番茄钟来完成。&lt;/p&gt;
-</description>
-        </item>
-        
-        <item>
-            <title>《必然》读书笔记之 - 知化Cognifying</title>
-            <link>http://kooksee.github.io/2016/02/21/inevitable-cognifying/</link>
-            <pubDate>Sun, 21 Feb 2016 19:05:10 CST</pubDate>
-            <author>CoderZh</author>
-            <guid>http://kooksee.github.io/2016/02/21/inevitable-cognifying/</guid>
-            <description>&lt;p&gt;2002 年左右，KK 参加了谷歌的一个小型聚会，当时谷歌还是一个家专注搜索的小公司。KK 问拉里·佩奇「已经有这么多家搜索公司，干嘛还要做免费网络搜索？」&lt;/p&gt;
-
-&lt;p&gt;佩奇回答说：「哦，我们其实是在做人工智能。」&lt;/p&gt;
-
-&lt;p&gt;「知化」这个词不太好理解，其实主要说的是人工智能，即让机器或物体拥有智能的过程，技术上涉及到神经网络、机器学习、大数据等领域。如果你正在从事相关领域的研究，是很有前途的方向。&lt;/p&gt;
-
-&lt;p&gt;去年公司有次请了个机器学习的专家来讲课，从头到尾我居然没有听懂他在讲什么。。当然，原因主要是在我的。毕竟机器学习这块属于专业的领域，需要有很多专业知识做背书，我之前对这块也了解甚少。&lt;/p&gt;
-
-&lt;p&gt;但我相信机器学习的大致概念其实是很好解释清楚的，即通过设计一些算法，让计算机能够进行自我学习和改进。有人会想，计算机有这么牛逼吗？还会自己学习？其实这正是一个比较容易误解的地方。并非程序员把代码写好，计算机自个儿在哪里跑就把什么都学会了。机器学习其实是需要人为训练的过程，通过人类不断的告诉机器哪些是对的哪些是错的，准备大量训练的数据，机器通过训练来自动修正已有的算法以达到最佳的效果。&lt;/p&gt;
-
-&lt;p&gt;举个栗子，文章开头提到的，谷歌创始人说谷歌其实是在做人工智能。首先，谷歌的搜索引擎有一套基于 Page Rank 的算法，能够根据关键词自动搜索出相关的网页。算法虽然很先进，但毕竟有时会出错，比如最佳的搜索结果并没有排在第一位。但用户是会自己判断哪个搜索结果对自己有用，用户会用脚投票，谷歌通过分析哪个搜索结果的点击率最高，来自动修正搜索引擎的算法，从而找出最合适的结果排在第一位。&lt;/p&gt;
-
-&lt;p&gt;人工智能目前主要应用在比如垃圾邮件检测、数字识别、语音识别、人脸识别、各种智能设备，自动驾驶等领域，人工智能是未来科技发展的「必然」。对于未来的人工智能，除了给人类带来便利之外，人类也表现出了很多担心。在「知乎」里有个著名的讨论「&lt;a href=&#34;https://www.zhihu.com/question/27864852/answer/39007053&#34;&gt;为什么有很多名人让人们警惕人工智能？&lt;/a&gt;」，答案排名第一个的谢熊猫君开头就给出了一个让人震惊的结论：&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;人工智能很可能导致人类的永生或者灭绝，而这一切很可能在我们的有生之年发生。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;的确是有点危言耸听，而《必然》的作者 KK 显然是人工智能的乐观派，他相信人工智能并不能完全取代人类，而是对人类不擅长的能力的一种补充。计算机的有些能力是人类所不具备的，比如超强记忆容量，超强的计算能力，所以我们发明了硬盘和 CPU 。我们的思维方式不擅长做统计，于是我们制造出各种统计技术很强的智能设备。人类开车比如容易走神分心，于是我们研究制造自动驾驶。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;「创造聪明绝顶的人工智能是个错误，因而探究更多智能种类显得更为明智」&lt;/strong&gt; 从这句话看来，KK 这个乐观派也未必是那么的乐观。也许他是对的，开发一个聪明绝顶的全面人工智能的机器人，对于人类来说本身就是个错误，何况技术实现也非常困难。所以，只要人工智能在某一种特定的心智表现出色就好。比如自动驾驶的人工智能只会做好驾驶一件事，预测天气的人工智能只会用来预测天气。&lt;/p&gt;
-
-&lt;p&gt;假设人工智能在各个方面都逐渐取代了人类，那必然会导致大量的职业消失。就像自动化实现后，机器代替了农民以及在农场作业的动物，淘汰了当时大多数人的工作。作为程序员，想到的是以后人工智能可以根据用户的语音需求自动编写代码，大量的程序员将失业。&lt;/p&gt;
-
-&lt;p&gt;机器将取代更多人类工种，一切都是时间问题。KK 甚至放出了这样的话：&lt;/p&gt;
-
-&lt;p&gt;「或许很难令人相信，但在本世纪结束前，如今人们从事的职业中有 70% 很可能会被自动化设备取代。不用说，亲爱的读者，你的工作也会被机器取代。广泛的自动化将会触及包括体力劳动和知识型工作在内的所有工种。」&lt;/p&gt;
-
-&lt;p&gt;「无论你是一名医生、律师、建筑师、记者甚至程序员，机器人都将历史性地接管你的工作。」&lt;/p&gt;
-
-&lt;p&gt;所以，不要再以为你的职业一定可以干一辈子，也不要以为在大公司上班就一定可以工作到退休，也许某天你所从事的这个职业本身就消失了。你的搬砖技术练的再好，已经没有任何公司需要人搬砖了。&lt;/p&gt;
-
-&lt;p&gt;那么，人类做什么？会有更多新的职业产生出来。未来自动驾驶的汽车随处可见，而相应的会衍生出一个新的名为行程优化师的新工作。当外科自动化机器人成为常规后，会出现一种新的专业分析师，为你解读数据。（未来代码都由机器来自动编写，测试，部署上线，服务器坏了有机器人自动维修。我想不出会出现什么新的职业，也许程序员会变成一个更高端的职业，主要设计和优化机器人使用的编程语言，开发用来生成代码的代码。）&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;「几乎人人都能得到个人机器人，但是仅仅拥有一个机器人并不是成功的关键。成功将青睐那些以最优化的方式与机器人以及机器一同工作的人。」&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;「人类的工作就是不停地给机器人安排任务，这本身就是一项永远做不完的工作，所以，我们至少还能保留这份『工作』。」&lt;/p&gt;
-
-&lt;p&gt;「将来，无论你现在从事什么工作，收入水平如何，都讲反复经历机器人代替人的以下 7 个步骤：」&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;机器人干不了我的工作。&lt;/li&gt;
-&lt;li&gt;好吧，它会许多事情，但是我做的事情它不一定都会。&lt;/li&gt;
-&lt;li&gt;好吧，我做的事情它都会，但是它常常出故障，这时需要我来处理。&lt;/li&gt;
-&lt;li&gt;好吧，它干常规工作时从不出错，但是我需要训练它学习新任务。&lt;/li&gt;
-&lt;li&gt;好吧，就让它做我原来的工作吧，那工作本来就不是人该干的。&lt;/li&gt;
-&lt;li&gt;哇，机器人正在干我以前做的工作，我的新工作不仅好玩多了，工资还高。&lt;/li&gt;
-&lt;li&gt;真高兴，机器人绝对干不了我现在做的事情。&lt;/li&gt;
-&lt;li&gt;【重复】&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;「未来，你的薪水高低将取决于你能否和机器人默契配合。90% 的同事将会是看不见的机器，而没有他们，你的大部分工作将无法完成。这一切都是必然的。让机器人代替我们从事现在的工作，让我们在它们的帮助下去构想有意义的新工作吧。」&lt;/p&gt;
-
-&lt;p&gt;在未来，使用编程语言手敲代码可能会被视为一种复古行为。趁着现在这个到处就差一个程序员的时代，多敲几行代码，说不定就改变世界了呢？&lt;/p&gt;
-</description>
-        </item>
-        
-        <item>
-            <title>我的第一台 Mac</title>
-            <link>http://kooksee.github.io/2016/02/09/my-first-mac/</link>
-            <pubDate>Tue, 09 Feb 2016 10:42:05 CST</pubDate>
-            <author>CoderZh</author>
-            <guid>http://kooksee.github.io/2016/02/09/my-first-mac/</guid>
-            <description>&lt;p&gt;&lt;img src=&#34;http://7xlx3k.com1.z0.glb.clouddn.com/mac.JPG-w&#34; alt=&#34;mac&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;新年第一篇，祝大家猴年大吉，心想事成，万事如意！&lt;/p&gt;
-
-&lt;p&gt;这两天在家里除了带孩子就是在摆弄新到的 MacBook Pro 了。嗯，前几天咬一咬牙，双手颤抖的点击了下单按钮，第三天就收到了。&lt;/p&gt;
-
-&lt;p&gt;当初在买 MBP 还是 iMac 之间纠结过，因为已经有一个台式机，所以确定了买 MBP。然后就是纠结买 13 吋还是 15 吋。之前我去广州新开的苹果体验店看过，15 吋的略大了点，13 吋的大小刚刚好，本来打算就买 13 吋的。直到下单前，又改变主意了，考虑便携性和性能，我更倾向于性能，于是最后一刻改成了 15 吋标准配置（16 G内存 512闪存）。购买时，我使用了教育商店购买，便宜了 1500 软妹币。我准备了堂弟的学生证，然而第二天苹果直接就给我发货了，并没有要求我出示学生证。后来听说是抽查的。&lt;/p&gt;
-
-&lt;p&gt;平常我大都是在 Windows 的平台下开发的，有时用一用 Linux。感觉 Windows 平台下的开发工具链其实挺完善的，写 C/C++ ，C# 有号称宇宙无敌 IDE 的 Visual Studio ，写 Python 有 PyCharm，写 Java 有 IntelliJ ，写 Android 有 Android Studio ，编辑器有 gVim 。对应的效率工具也一应俱全：&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Total Commander 装机必备的神器，谁用谁知道。&lt;/li&gt;
-&lt;li&gt;Launchy 效率神器，快速启动程序。作者长时间未更新，最近换成了另外一个神器：Wox 。没用过的赶紧试试，有惊喜。&lt;/li&gt;
-&lt;li&gt;Clipx / Ditto 多重剪贴板。&lt;/li&gt;
-&lt;li&gt;cmder 终端模拟器，好用到爆，从此告别系统自带的命令行窗口。&lt;/li&gt;
-&lt;li&gt;Visual Studio 的 Visual Assist 插件，一个字就是爽。&lt;/li&gt;
-&lt;li&gt;Visual Studio 的 ViEmu 插件，没有 Vim 模式的 IDE 已经没法用了。&lt;/li&gt;
-&lt;li&gt;&amp;hellip;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;《必然》一书的『过滤』一章中提到，如果你只接触那些你已经喜欢的东西是有风险的，即你可能会卷入一个以自我为中心的漩涡，从而对任何与你的标准存在细微差异的事情都视而不见，即使你原本会喜欢它。这种现象被称为『过滤器泡沫』。&lt;/p&gt;
-
-&lt;p&gt;所以，我们要勇于尝试新事物。当时觉得 Ubuntu 好玩，在上面使劲折腾过，折腾了一段时间后，感觉还是不太适合作为个人的桌面系统。一直想尝试 Mac OS X，昂贵的价格又有点让人望而却步。从体验 Mac 的这几天来看，感觉付出是非常值的，从设计美感到使用体验都非常好，为什么我没有早一点入手呢？&lt;/p&gt;
-
-&lt;p&gt;这两天都在研究 Mac 系统怎么玩，看了很多文章，装了一些软件，学习了很多东西。学习曲线大概是这样的：&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;学习了神奇的触摸板的使用方法。（双指，三指，四指的手法。。。）&lt;/li&gt;
-&lt;li&gt;学习了系统常用的快捷键。&lt;/li&gt;
-&lt;li&gt;学习了在 Mac 上如何安装软件。（Mac App Store、官网下载 dmg、使用 Homebrew）&lt;/li&gt;
-&lt;li&gt;给命令行终端配上漂亮的 Solarized 皮肤，安装配置 Shell 神器：oh-my-zsh&lt;/li&gt;
-&lt;li&gt;安装包管理神器 Homebrew 和 brew cask。&lt;/li&gt;
-&lt;li&gt;安装效率神器：Alfred2。&lt;/li&gt;
-&lt;li&gt;使用 Homebrew 把系统自带的软件包升级到最新版本，比如：git、python、vim 等等。&lt;/li&gt;
-&lt;li&gt;安装和配置 Mac 下的 macvim。&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;嗯，完成了以上步骤后，基本上可以开始干活了。对了，再接上 HHKB，调整开关设置，打开开关 2、3、4，启用 Mac 模式，简直完美！&lt;/p&gt;
-
-&lt;p&gt;接着，我还安装了如下的软件：&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Chrome 浏览器。&lt;/li&gt;
-&lt;li&gt;Dash 查看各种文档的神器。&lt;/li&gt;
-&lt;li&gt;Mou 编辑 MarkDown 的神器。&lt;/li&gt;
-&lt;li&gt;XCode 现在还用不着，先装上。&lt;/li&gt;
-&lt;li&gt;Android Studio&lt;/li&gt;
-&lt;li&gt;ShiftIt 用来调整窗口位置和大小的神器。&lt;/li&gt;
-&lt;li&gt;WizNote 为知笔记&lt;/li&gt;
-&lt;li&gt;QQ&lt;/li&gt;
-&lt;li&gt;微信&lt;/li&gt;
-&lt;li&gt;QQ 音乐&lt;/li&gt;
-&lt;li&gt;有道词典&lt;/li&gt;
-&lt;li&gt;迅雷&lt;/li&gt;
-&lt;li&gt;VLC 视频播放器&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;Alfred2 和 oh-my-zsh 是我用了的最令人惊叹好用的工具，谁还有好用的软件推荐给我啊~~~&lt;/p&gt;
-</description>
-        </item>
-        
-        <item>
-            <title>博客皮肤单独建了个仓库</title>
-            <link>http://kooksee.github.io/2016/02/05/new-hugo-rapid-theme-repo/</link>
-            <pubDate>Fri, 05 Feb 2016 23:55:45 CST</pubDate>
-            <author>CoderZh</author>
-            <guid>http://kooksee.github.io/2016/02/05/new-hugo-rapid-theme-repo/</guid>
-            <description>
-
-&lt;p&gt;有同学提到希望将这个博客的皮肤单独建个仓库，方便使用：&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;https://github.com/coderzh/coderzh-hugo-blog/issues/1&#34;&gt;https://github.com/coderzh/coderzh-hugo-blog/issues/1&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;的确，早就应该这么做了。趁着放春节假期了，把这个撸了一遍，单独的皮肤仓库叫：&lt;code&gt;hugo-rapid-theme&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;只是将它从原博客中抽离出来，还有很大优化的空间，需要的同学先用着吧。&lt;/p&gt;
-
-&lt;p&gt;地址：&lt;a href=&#34;https://github.com/coderzh/hugo-rapid-theme&#34;&gt;https://github.com/coderzh/hugo-rapid-theme&lt;/a&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;说明文档:1c7dc7e052e1f712e7a427da9af2576f&#34;&gt;说明文档&lt;/h2&gt;
-
-&lt;p&gt;以下是 hugo-rapid-theme 的 README 文档：&lt;/p&gt;
-
-&lt;p&gt;Demo: &lt;a href=&#34;http://blog.coderzh.com/&#34;&gt;http://blog.coderzh.com/&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;step1-install-hugo:1c7dc7e052e1f712e7a427da9af2576f&#34;&gt;Step1 Install Hugo&lt;/h3&gt;
-
-&lt;p&gt;Set &lt;a href=&#34;http://www.gohugo.org/doc/overview/installing/&#34;&gt;Hugo Install&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;step2-create-your-site:1c7dc7e052e1f712e7a427da9af2576f&#34;&gt;Step2 Create your site&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code&gt;hugo new site your-blog-name
-cd your-blog-name
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;step3-clone-the-theme-repo:1c7dc7e052e1f712e7a427da9af2576f&#34;&gt;Step3 Clone the theme repo&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code&gt;git clone https://github.com/coderzh/hugo-rapid-theme.git themes/hugo-rapid-theme
-
-# replace config file
-rm config.toml
-cp themes/hugo-rapid-theme/config.yaml .
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;step4-start-your-site:1c7dc7e052e1f712e7a427da9af2576f&#34;&gt;Step4 Start your site&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code&gt;# new content
-hugo new about.md
-# start server
-hugo server
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;step5-have-fun:1c7dc7e052e1f712e7a427da9af2576f&#34;&gt;Step5 Have Fun&lt;/h3&gt;
-
-&lt;p&gt;Now you can open &lt;a href=&#34;http://localhost:1313&#34;&gt;http://localhost:1313&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;Modify the config.yaml and other things, and have fun!&lt;/p&gt;
-
-&lt;p&gt;You can also make this repo as submodule:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;git init
-git submodule add https://github.com/coderzh/hugo-rapid-theme.git themes/hugo-rapid-theme
-&lt;/code&gt;&lt;/pre&gt;
-</description>
-        </item>
-        
-        <item>
-            <title>追求简单和纯粹，我去掉了博客的评论功能</title>
-            <link>http://kooksee.github.io/2016/02/01/close-comments/</link>
-            <pubDate>Mon, 01 Feb 2016 23:35:19 CST</pubDate>
-            <author>CoderZh</author>
-            <guid>http://kooksee.github.io/2016/02/01/close-comments/</guid>
-            <description>&lt;p&gt;一直以来，我们都习惯了有评论功能的博客系统，甚至大多数的博客系统还拿评论数来计算分数，作为你的文章热度的一个指标。&lt;/p&gt;
-
-&lt;p&gt;曾经我也一度以为评论功能很重要，有时还会去期待有人评论。然而从结果来看，几乎大部分的评论都毫无价值。最近还受到了垃圾评论的骚扰，既浪费了我的时间不停的去删除，也影响了阅读者的体验。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;真心想和你交流的人，会想尽一切方法找到你。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;所以，不必担心收不到有用的用户反馈。而且，那么大一个微信二维码放在那里，只要扫一扫关注一下，就可以给我发消息，当然，找到我的邮箱地址也是很容易的事情。&lt;/p&gt;
-
-&lt;p&gt;为了追求最佳的阅读体验，追求一个博客的简单和纯粹，我去掉了博客的评论系统。&lt;/p&gt;
-</description>
-        </item>
-        
-        <item>
-            <title>张小龙悟透《失控》做出了微信，我们看过了《必然》能做什么？</title>
-            <link>http://kooksee.github.io/2016/01/31/inevitable/</link>
-            <pubDate>Sun, 31 Jan 2016 12:22:25 CST</pubDate>
-            <author>CoderZh</author>
-            <guid>http://kooksee.github.io/2016/01/31/inevitable/</guid>
-            <description>&lt;p&gt;凯文凯利在 20 多年前在《失控》一书中预言了人类的未来的科技、社会和经济，现今的万维网、博客、维基百科、无人驾驶、电子货币、去中心化等等，都在上个世纪 90 年代被 KK 成功预言，而他在写《失控》一书时，还没有万维网，因特网才刚刚进入实用阶段。&lt;/p&gt;
-
-&lt;p&gt;微信之父张小龙很早前就读过了《失控》，在他最近被爆出来的饭否日记中，他这么写到：&lt;/p&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;再问有多少人看了失控，无人。我顿时将自己想象为KK而口若悬河了。&lt;/p&gt;
-
-&lt;p&gt;2011-01-13 17:42 by gzallen&lt;/p&gt;
+&lt;p&gt;keep mood，keep thinking&lt;/p&gt;
 &lt;/blockquote&gt;
 
-&lt;p&gt;张小龙非常推崇《失控》中提到的 &lt;strong&gt;去中心化&lt;/strong&gt; 的思想，这点在微信公众号和朋友圈都有体现。比如并没有一个中心化的公众号列表入口，展示最新最热的公众号文章。每个公众号主只与关注者互相连接，用户与用户之间互相连接，好的内容可以在用户之间以几何倍数的传播。又比如前几天的朋友圈红包照片功能，瞬间引爆了朋友圈。&lt;/p&gt;
+&lt;p class=&#34;message&#34;&gt;
+        hello，我叫白云辉，你可以叫我百里或者barry，毕业于河南工业大学软件工程系12级。大一接触python，从此爱上她的简洁,实验室里搞了两年物联网相关协议，中科院里面写了一段时间爬虫，现工作于职上海沃星信息技术有限公司，热爱开源，热爱写作，热爱妹纸。
+&lt;/p&gt;
 
-&lt;p&gt;《失控》这本书很厚，而且里面的内容需要花大量的时间去理解和琢磨。本文的标题纯粹是为了吸引眼球，因为并不能得出这样的结论：悟透了《失控》就一定能做出像微信这样牛逼的产品。更加现实的是，即使看过了《必然》，我们大多数人什么也做不出来。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/kooksee&#34;&gt;&lt;img src=&#34;http://images.cnblogs.com/cnblogs_com/bergus/678467/o_th.jpg&#34; alt=&#34;&#34; /&gt;&lt;/a&gt;
+&lt;a href=&#34;https://github.com/kooksee&#34;&gt;Github&lt;/a&gt;
+&lt;a href=&#34;http://www.cnblogs.com/bergus&#34;&gt;博客园&lt;/a&gt;
+&lt;a href=&#34;http://blog.sina.com.cn/byh18749969962&#34;&gt;新浪博客&lt;/a&gt;
+&lt;a href=&#34;http://www.jianshu.com/users/921d37ff05df&#34;&gt;简书&lt;/a&gt;
+&lt;a href=&#34;http://weibo.com/lm1001&#34;&gt;&lt;i class=&#34;icon-weibo&#34;&gt;&lt;/i&gt;&lt;/a&gt;
+email&lt;sup class=&#34;footnote-ref&#34; id=&#34;fnref:6083a88ee3411b0d17ce02d738f69d47:email&#34;&gt;&lt;a rel=&#34;footnote&#34; href=&#34;#fn:6083a88ee3411b0d17ce02d738f69d47:email&#34;&gt;1&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+&lt;div class=&#34;footnotes&#34;&gt;
 
-&lt;p&gt;但是看这两本书，有助于你了解人类未来的科技趋势。正如罗振宇所说的：&lt;/p&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;这个时代最悲哀的事情，就是——&lt;/p&gt;
-
-&lt;p&gt;你努力，但你不在风口上，&lt;/p&gt;
-
-&lt;p&gt;你聪明，但你不在潮流中。&lt;/p&gt;
-
-&lt;p&gt;知道趋势，意味着已经胜利在望。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;《失控》中预言的很多科技虽然现在已经发生，而在某些领域，比如人工生命、机器人技术、生态学、仿真学等领域，并没有出现新的重大思想。正如他在《必然》中的 &lt;strong&gt;形成(Becomming)&lt;/strong&gt; 中提到的：&lt;/p&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;未来的大部分运转人类生活的伟大产品，在 2016 年以前，都还没被发明出来。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;我们目睹了从 PC 时代到互联网时代，再到现在的移动互联网时代的转变过程。我们正处于形成的过程中，所以我们感觉不到变化。你今天后悔当初为什么没有和张小龙想到一块去。再过几年十几年，你同样也会感叹，我要是在当时就意识到有那么多可能性该多好啊！&lt;/p&gt;
-
-&lt;p&gt;设想未来你的孙子问你，「爷爷，为什么你年轻的时候马桶还不会说话，裤子还需要手来脱，打字还需要键盘，甚至显示屏幕还要放一个笨重的显示器，你居然还在桌子上放两个？！你当时没想到需要做点什么吗？」&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;所以，不要再感叹强大的 BAT 已经垄断市场，未来更大的机会正在发生甚至还未被挖掘，把握最佳的时机，就是现在！&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;有时候我们察觉不到变化，有时候其实是因为并不认可这样的变化，当变化已经形成时却又追悔莫及。所以，我们需要抛弃成见，拥抱变化。&lt;strong&gt;看准方向，找对风口，努力去飞&lt;/strong&gt;。&lt;/p&gt;
-
-&lt;p&gt;有句话叫：风口上的猪也会飞。其实我并不认可这句话。说现实一点，想让猪飞起来，那得是多大的风啊！真有这样一个好的风口，聪明的人早已经把猪赶到不知道哪里去了，还有猪什么事。真正厉害的不是猪，而是扇风的人。有一句话说的好，「为了这些猪，我没少扇多少风。」&lt;/p&gt;
-
-&lt;p&gt;所以，我对于 &lt;strong&gt;形成&lt;/strong&gt; 的理解是，深刻理解形成的本质，抓住最好的时机，付出持续的努力，遇到反对时能够坚定，遇到挫折时能够总结，跌倒时想着爬起来怎样继续前进。有一天你也许功成名就，也许一事无成。但这有什么关系呢，放眼到整个人类社会，&lt;strong&gt;形成&lt;/strong&gt; 的趋势并不因你而左右，你会感激形成的过程中创造出来的种种机会。&lt;/p&gt;
-
-&lt;p&gt;《必然》这本书一共有 12 个关键词，每个关键词都需要深入的思考。我也感觉到一篇苍白无力的读后感是无法总结这本有深度的书，所以一篇文章聊其中一个关键词已经足够。下次我们再来聊聊下个关键词「&lt;strong&gt;知化(Cognifying)&lt;/strong&gt;」&lt;/p&gt;
-
-&lt;p&gt;附录：&lt;/p&gt;
-
-&lt;p&gt;《必然》十二个关键词：形成、知化、流动、屏读、使用、共享、过滤、重混、互动、追踪、提问、开始。&lt;/p&gt;
-</description>
-        </item>
-        
-        <item>
-            <title>我和 ThoughtWorks 的一点小故事</title>
-            <link>http://kooksee.github.io/2016/01/18/thoughtworks-story/</link>
-            <pubDate>Mon, 18 Jan 2016 23:05:24 CST</pubDate>
-            <author>CoderZh</author>
-            <guid>http://kooksee.github.io/2016/01/18/thoughtworks-story/</guid>
-            <description>&lt;p&gt;&lt;img src=&#34;http://7xlx3k.com1.z0.glb.clouddn.com/TW.jpg-wt&#34; alt=&#34;TW&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;2009 年的时候买了一本《卓有成效的程序员》，看的热血沸腾，当时还写了一篇读后感《&lt;a href=&#34;http://blog.coderzh.com/2009/07/18/1526082/&#34;&gt;程序员的共鸣 - 读《卓有成效的程序员》&lt;/a&gt;》，现在翻来看还觉得蛮有意思的。从此后，开始用 Launchy ， ClipX 等提高效率的工具，也开始接触代码编辑器神器 Emacs 和 Vim 。当时年少无知先学了 Emacs ，还全程用 Emacs 开发过一个小项目。后来实在是小指按 ctrl 键按到桑爽的不行了，才发现 Vim 是多么和谐的存在。&lt;/p&gt;
-
-&lt;p&gt;这本书是由 &lt;a href=&#34;https://www.thoughtworks.com/&#34;&gt;ThoughtWorks&lt;/a&gt; 中国公司翻译的，再加上当时用的持续集成工具 CCNet 就是 ThoughtWorks 开发的，瞬间觉得这个公司好牛逼。 更加牛逼的是，世界顶级的 OO 专家，敏捷开发创始人之一的 &lt;a href=&#34;http://www.martinfowler.com&#34;&gt;Martin Fowler&lt;/a&gt; 大牛就在 ThoughtWorks 担任首席科学家。&lt;/p&gt;
-
-&lt;p&gt;当时对持续集成，敏捷开发还挺感兴趣，在博客里写了点东西，还特意关注了几个 ThoughtWorks 员工的博客。没事还在博客里留了几次言，突然有一天博客园的短消息里来了这么一条消息：&lt;/p&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;标题：如果你真的对coding有如此的热情&lt;/p&gt;
-
-&lt;p&gt;可曾想过来ThoughtWorks?&lt;/p&gt;
-
-&lt;p&gt;我看到你在我Blog上的留言了。如果你对代码如此热情，如果你喜欢体会作为程序员更多的可能，可曾想过来ThoughtWorks? 有兴趣的话请与我联系。作为前3年在各种类型的软件公司混过，后4年一直很enjoy的公司，看到你的Blog, 也许，这里是适合你的地方。&lt;/p&gt;
-
-&lt;p&gt;陈金洲&lt;/p&gt;
-
-&lt;p&gt;PS. 为了能联系到你，专门注册了博客园的账号&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;当时的我工作快 3 年，正处于年少轻狂，自信爆棚，感觉啥都能干就缺一个机会的时代。把《设计模式》来回翻了几遍后，就和 Michael Chen 联系面试了。直到很多年后，我才听说， ThoughtWorks 被人称为“最难面试的 IT 公司”。首先说结论，最后我并没有去 ThoughtWorks 。具体情况见下文。&lt;/p&gt;
-
-&lt;p&gt;第一面是 HR 的&lt;strong&gt;英文电话面试&lt;/strong&gt;，我英语也就四级的水平，听和看还行，但平时口语完全没机会训练。我在家设想了 HR 大概会问的几个问题，简单写了写，列了几个关键字就去了。当然，我还是很紧张，平时我就不太擅长电话里和别人沟通，而且还是要用英文，而且还是面试。 HR 的每个问题我还是听的很清楚的，我也就硬撑着把该说的说了。现在记得 HR 问了类似这样的问题：你的同事都是怎么评价你的？你平时遇到过什么难题又是如何解决的。我当时心里想着，当然要说一些同事夸奖我的话了，技术牛逼，喜欢分享，乐于助人之类的。也没遇到什么特别的难题啊，怎么编呢，一时又乱了方寸。&lt;/p&gt;
-
-&lt;p&gt;第一轮电话面试后，我感觉糟透了，感觉没戏了。等了几周也未见回复，感觉就这样被淘汰了，不甘心就发邮件问了 HR 是不是被 out 了 ，HR 回复说还并没有结果让我再等等，又让我感觉到了一丝的希望。&lt;/p&gt;
-
-&lt;p&gt;不久后，收到了邮件进入下一轮面试：&lt;strong&gt;Home Work&lt;/strong&gt; 。给了几道题，让选其中一道，在家写代码，写好后发给他们。我觉得这个环节不错，不像现场面试需要在高度压力的情况下用笔在纸上写代码。Home Work 是你自己在家做的，是在很自然放松的情况下，可以 google ，可以参考任何别人代码的情况下写的你的代码，是最接近真实工作时的状况。&lt;/p&gt;
-
-&lt;p&gt;一共有三个可选题目：&lt;/p&gt;
+&lt;hr /&gt;
 
 &lt;ol&gt;
-&lt;li&gt;PROBLEM ONE:  TRAINS&lt;/li&gt;
-&lt;li&gt;PROBLEM TWO: SALES TAXES&lt;/li&gt;
-&lt;li&gt;PROBLEM THREE: MARS ROVERS&lt;/li&gt;
+&lt;li id=&#34;fn:6083a88ee3411b0d17ce02d738f69d47:email&#34;&gt;&lt;em&gt;kooksee@163.com&lt;/em&gt;
+ &lt;a class=&#34;footnote-return&#34; href=&#34;#fnref:6083a88ee3411b0d17ce02d738f69d47:email&#34;&gt;&lt;sup&gt;[return]&lt;/sup&gt;&lt;/a&gt;&lt;/li&gt;
 &lt;/ol&gt;
-
-&lt;p&gt;&lt;strong&gt;我选了题目意思是我最容易看懂的 MARS ROVERS （火星漫游者）。&lt;/strong&gt;大意是给定火星探测机器人的一个坐标位置，然后给它发送一系列的指令，比如左转、右转、前进，最后输出他的目标点的坐标和朝向。&lt;/p&gt;
-
-&lt;p&gt;我当时是这么想的，这题的算法很简单， ThoughtWorks 考察的肯定不是我能不能实现需求这么简单，而是考察我面向对象设计的能力，以及抽象的能力，能否把代码写的足够优雅，同时又具备很好的未来扩展性。而测试驱动开发作为敏捷开发的一个重要理念，我的 Home Work 里至少是需要包含测试代码的。虽然他们并不知道我是先写的代码还是先写的测试，嗯，我还是尝试先写测试代码，至少它的文件创建日期比功能代码会早一些，哈哈。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;这题肯定要用一些设计模式，但是又要避免过度设计。&lt;/strong&gt;于是我把最有可能关联的几个模式套了进去：工厂模式，状态模式，好像还有命令模式。把类分的很清晰，每个函数也很短，命名也是反复琢磨，最后还配上了单元测试案例。最后，把感觉非常完美的一份代码提交了上去。&lt;/p&gt;
-
-&lt;p&gt;然后又等了漫长的几周，通知进入下一轮面试：&lt;strong&gt;电话技术面试&lt;/strong&gt;。面试我的就是 Michael Chen 。前面主要聊我现在的工作，做了一些什么项目，用了一些什么技术，问的很细，聊的挺愉快。聊完项目后，Michael Chen 提示我进入纯粹的答题环节，问了我一些设计模式相关的问题。&lt;/p&gt;
-
-&lt;p&gt;这次电话技术面试聊完后，我感觉有戏，感觉 ThoughtWorks 正在向我招手。这是我理想中的，非常舒服的面试。但是我当时真的准备好了吗？真的准备好了从珠海赶赴西安或者北京去上班吗？我当时觉得地点无所谓，其实是没有太想清楚的。&lt;/p&gt;
-
-&lt;p&gt;又是漫长的等待，&lt;strong&gt;心里面想着下一轮应该是飞到西安去和 ThoughtWorks 的工程师一起 Pair 结对编程了&lt;/strong&gt;。但等了好几周依然没有消息，我也开始考虑真的要去西安工作吗？我能适应那种经常出差的工作的？我以后真的要走咨询师的路线吗？我想了很久，最后某天 HR 突然来了一个电话，说&lt;strong&gt;前面面试的都很不错，但是英语方面还想和我再确认一次，要加一轮电话英语面试&lt;/strong&gt;。听完后，我感觉很不好，辛苦面试了这么久，又让我苦苦等待了这么久，最后又回到了第一轮的英语面试。我当时有点情绪，所以在加试的电话面试里表现的比第一次还差。&lt;/p&gt;
-
-&lt;p&gt;HR 最后和我说，可能是毕业工作后英语口语用太少了，再复习多练习练习是可以的。&lt;strong&gt;建议我再花一个月的时间复习和练习一下英语口语，然后再来面试&lt;/strong&gt;。我当时已经有情绪了，这个面试折腾了 1 个多月，有点心累了。所以，后面我给 HR 发邮件说我不来了。&lt;/p&gt;
-
-&lt;p&gt;直到最近，我才发现在 ThoughtWorks 的面试者中，被要求回去学习一段时间再回来面试的人大有人在，而且很多人最后都成功入职了。也许当时的我处理的是有点草率了。但命运这种东西谁知道呢，&lt;strong&gt;当时的一个决定对未来有什么影响，谁也说不清。我们还是要感恩现在的自己，以及之前做过的所有正确的和不正确的决定，是它们成就了现在的你。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;这篇聊 ThoughtWorks 是因为&lt;a href=&#34;http://blog.coderzh.com/2016/01/16/coding-style-share/&#34;&gt;上篇文章&lt;/a&gt;提到的，认识了 ThoughtWorks 的前员工 &lt;a href=&#34;http://seabornlee.cn&#34;&gt;Seaborn Lee&lt;/a&gt; （小波） ，又让我想到了之前的面试经历。于是就和 Seaborn Lee 八卦了一下当年面试我的 Michael Chen 到底是怎样的一个存在。&lt;/p&gt;
-
-&lt;p&gt;小波说了五个字：“&lt;strong&gt;他也是传奇&lt;/strong&gt;”，然后是这样描述的 ：&lt;/p&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;一是技术牛&lt;/p&gt;
-
-&lt;p&gt;二是立志做产品&lt;/p&gt;
-
-&lt;p&gt;承诺三年不调薪&lt;/p&gt;
-
-&lt;p&gt;做了几款产品&lt;/p&gt;
-
-&lt;p&gt;金数据成了被收购&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;瞬间让我佩服的五体投地。我从很多 ThoughtWorks 员工那了解到，不管是离职的还是在职的，他们对 ThoughtWorks 公司都是满口的称赞，对公司的认可度非常非常的高，说明这真是一家不错的公司呢。&lt;/p&gt;
+&lt;/div&gt;
 </description>
         </item>
         
         <item>
-            <title>谁也挡不住程序员在微信群里玩起了直播分享</title>
-            <link>http://kooksee.github.io/2016/01/16/coding-style-share/</link>
-            <pubDate>Sat, 16 Jan 2016 17:19:20 CST</pubDate>
+            <title>17mei Docker Consul 运行 服务注册 查看所有当前服务配置</title>
+            <link>http://kooksee.github.io/blog/17mei%20Docker%20Consul%20%E8%BF%90%E8%A1%8C%20%E6%9C%8D%E5%8A%A1%E6%B3%A8%E5%86%8C%20%E6%9F%A5%E7%9C%8B%E6%89%80%E6%9C%89%E5%BD%93%E5%89%8D%E6%9C%8D%E5%8A%A1%E9%85%8D%E7%BD%AE/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
             <author>CoderZh</author>
-            <guid>http://kooksee.github.io/2016/01/16/coding-style-share/</guid>
-            <description>&lt;p&gt;上次写了一篇《&lt;a href=&#34;http://blog.coderzh.com/2015/12/27/code-review/&#34;&gt;大家都应该做的 Code Review&lt;/a&gt;》，在公众号里有位朋友留言：&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;http://7xlx3k.com1.z0.glb.clouddn.com/comments.jpg&#34; alt=&#34;comment&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;开始的感觉是，哦，又一个在留言里推广自己网站的家伙。但在好奇心驱使下，我打开了这个 &lt;a href=&#34;http://codingstyle.cn&#34;&gt;Codingstyle.cn&lt;/a&gt; 的网站。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;http://7xlx3k.com1.z0.glb.clouddn.com/coding-style.jpg&#34; alt=&#34;coding-style&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;界面挺简洁大方的，但好像在哪里见过，哦，原来是 Fork 的 &lt;a href=&#34;https://ruby-china.org/&#34;&gt;Ruby China&lt;/a&gt;。浏览了一些帖子，发现这是一个刚做不久的程序员社区，讨论的主要是敏捷、重构、编程实践、程序人生之类的话题，这位朋友还算比较用心，运营一个程序员社区实属不易，于是我就找了之前的两篇文章贴了过去。&lt;/p&gt;
-
-&lt;p&gt;很快，Seaborn Lee 加了我的微信，并且把我拉到了一个只有 10 几人的“匠艺社区种子用户”的微信群里。然后我发现，群里的其他人都是一些高产博主，Seaborn Lee 正在通过微信群的方式培养自己的种子用户。&lt;/p&gt;
-
-&lt;p&gt;匠艺社区小组每周都组织一次微信分享， Seaborn Lee 问我是否愿意分享一些东西。我婉言拒绝了，对于在微信群里进行语音分享这种事情，我还没经历过，也没有经验，&lt;strong&gt;我更多的是好奇，他们是怎样进行微信群语音分享的？&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;经历了两次匠艺社区分享，着实让我吃了一惊。首先，分享并不是在“匠艺社区种子用户”微信群进行的，而是在另一个单独的叫“软件匠艺小组分享”的微信群，到目前为止，这个群已经有 459 个用户，而且全部都是程序员！&lt;/p&gt;
-
-&lt;p&gt;他们一共分享过三期：&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;a href=&#34;https://codingstyle.cn/topics/56&#34;&gt;微信群分享第一期 微服务 by 许晓斌&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://codingstyle.cn/topics/77&#34;&gt;微信群分享第二期 正交设计 by 刘光聪&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://codingstyle.cn/topics/81&#34;&gt;微信群分享第三期 TDD 的本质不是 TDD by 丁辉&lt;/a&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;我是从第二期开始参加的，一开始我非常好奇，他们是怎样在那么多人的微信群里进行直播分享的。最后发现其实方法非常简单直接，就是：&lt;strong&gt;发语音，截图，打字&lt;/strong&gt;。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;http://7xlx3k.com1.z0.glb.clouddn.com/coding-style-share.jpg&#34; alt=&#34;coding-style-share&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;分享定在每周三晚上 8:30 到 9:30 ，首先会自愿报名选出一个主持人，负责整场分享的进度把控。分享者的内容是一篇文章，会先在群里发出来，然后分享者开始发语音分享，过程中会穿插打字和截图。分享完后，进行话题讨论，最后贴出分享者的二维码，大家自愿打赏。&lt;/p&gt;
-
-&lt;p&gt;分享群的人数增加很快，程序员们闻风而来，很快就逼近了 500 人上限。可以确定的是，群里都是一些爱学习的程序员，不然谁晚上吃饱了不回去抱老婆还在微信群里听你的语音分享。我还发现一个有趣的现象，群里每个人进群时都加了 Seaborn Lee 好友。这就是 Growth Hack 啊！&lt;/p&gt;
-
-&lt;p&gt;前不久我参加了一个培训，老师让我们所有人把微信打开，查看一下自己有多少个好友。我打开一看，发现有 100 多个，其他同事多的有3，4百个。老师说，她的微信里有 1000 多个好友，并不是随便摇一摇加的好友，都是有一定相关性的好友。她给每个好友都加了标签，遇到问题时在朋友圈一发，立马就有相关的人跳出来帮忙。这就是人脉的力量。&lt;/p&gt;
-
-&lt;p&gt;同样，我也很感叹 Seaborn Lee 的做法，在微信群里组织分享，吸引大量爱学习的程序员过来并加为好友，这些人简直就是程序员社区的精准目标用户啊！于是我对 Seaborn Lee 本人的经历产生了兴趣，原来他之前就职于 &lt;a href=&#34;https://www.thoughtworks.com/&#34;&gt;ThoughtWorks&lt;/a&gt; ，目前于创业公司「深圳湾」任 CTO 。在他的博客里的 &lt;a href=&#34;http://seabornlee.cn/isaid.md&#34;&gt;时间线&lt;/a&gt; 一栏更是了解到他从出生、上学到工作一路走来的坎坷经历。了解了这些后， Seaborn Lee 的形象更加鲜活起来了：好学、上进、有活力、爱分享、组织各种社区活动。&lt;/p&gt;
-
-&lt;p&gt;虽然微信里不能很好的支持视频直播，但谁也挡不住爱分享的程序员在微信群里玩起了语音直播。如果你也有兴趣，加我的微信公众号：hacker-thinking ，并发送“爱学习，爱分享”，我将加你为好友并把你加到刚才提到的“软件匠艺小组分享”群，一起学习进步。&lt;/p&gt;
-</description>
-        </item>
-        
-        <item>
-            <title>被脱裤也不怕 - 反馈总结</title>
-            <link>http://kooksee.github.io/2016/01/13/password-security-additional/</link>
-            <pubDate>Wed, 13 Jan 2016 19:06:42 CST</pubDate>
-            <author>CoderZh</author>
-            <guid>http://kooksee.github.io/2016/01/13/password-security-additional/</guid>
+            <guid>http://kooksee.github.io/blog/17mei%20Docker%20Consul%20%E8%BF%90%E8%A1%8C%20%E6%9C%8D%E5%8A%A1%E6%B3%A8%E5%86%8C%20%E6%9F%A5%E7%9C%8B%E6%89%80%E6%9C%89%E5%BD%93%E5%89%8D%E6%9C%8D%E5%8A%A1%E9%85%8D%E7%BD%AE/</guid>
             <description>
 
-&lt;p&gt;在发出前两篇安全相关的文章（&lt;a href=&#34;http://blog.coderzh.com/2016/01/03/security-design/&#34;&gt;设计安全的账号系统的正确姿势&lt;/a&gt; ，&lt;a href=&#34;http://blog.coderzh.com/2016/01/10/a-password-security-design-example/&#34;&gt;即使被拖库，也可以保证密码不泄露&lt;/a&gt;）后，我陆续收到了不少的反馈。我的文章本意是引起大家对密码安全的重视，给大家设计账号安全系统时提供一些参考和思路。&lt;/p&gt;
+&lt;h2 id=&#34;注册服务容器的运行:d04551f912163f99d3b2993cc8f18aae&#34;&gt;注册服务容器的运行&lt;/h2&gt;
 
-&lt;p&gt;正如张小龙说的，“我所说的一切都是错的”。&lt;/p&gt;
-
-&lt;p&gt;所以，我更希望大家从辩证的角度去看待前两篇文章，然后结合自身项目的情况去做相应的设计。同时，我收到不少有价值的反馈，我觉得有必要将这些反馈整理一下，给大家一些参考，也算是对前面文章的补充。&lt;/p&gt;
-
-&lt;p&gt;上篇文章没有提到 &lt;a href=&#34;https://zh.wikipedia.org/wiki/%E8%B6%85%E6%96%87%E6%9C%AC%E4%BC%A0%E8%BE%93%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE&#34;&gt;HTTPS&lt;/a&gt;（SSL/TLS），是我疏漏了。作为一个安全的系统，在保证传输安全时强烈建议直接上 HTTPS（SSL/TLS）。文章中使用 &lt;a href=&#34;https://msdn.microsoft.com/zh-cn/library/cc488016%28v=vs.90%29.aspx&#34;&gt;ECDH&lt;/a&gt; 交换密钥传输的过程其实和 HTTPS（SSL/TLS）是类似的，只不过 HTTPS（SSL/TLS）实现的要完善太多。&lt;/p&gt;
-
-&lt;p&gt;正如一位朋友反馈所说：“14年的时候 openssl 爆出过一个名为 &lt;a href=&#34;https://zh.wikipedia.org/wiki/%E5%BF%83%E8%84%8F%E5%87%BA%E8%A1%80%E6%BC%8F%E6%B4%9E&#34;&gt;Heartbleed&lt;/a&gt; 的漏洞，可见良好的算法不一定被良好的实现，所以从开发者的角度还是不要觉得存在绝对安全的算法比较好。” 所以可以认为我的方案是在 HTTPS（SSL/TLS）基础上再一层加固，当然，如果你认为这一层加固没必要也可以去掉。&lt;/p&gt;
-
-&lt;p&gt;另一方面，目前大量网站还在使用 HTTP ，很多游戏设计时也并未使用 TLS ，所以，我上篇文章使用的方法还是有一定的意义的。&lt;/p&gt;
-
-&lt;h3 id=&#34;反馈汇总:1114219843eb3806f45029c8d223a620&#34;&gt;反馈汇总&lt;/h3&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;“应该从源头上禁止用户使用简单密码”&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;回复：非常同意！&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;“获取 salt 并不需要啥验证，那么还有必要分开存储么，脱裤者直接根据uid调一遍接口不就拿到了？相当于就是公开的吧？”&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;回复：确实是这样。salt 相当于公开的了，没有必要分开存储了。如果你有更好的方法，请告诉我。&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;“使用 HTTPS(SSL/TLS) 来保障传输的安全是不是就可以了？”&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;回复：理论上是足够了，而且推荐使用。 如果你的项目安全级别非常高，本着不信任绝对安全的角度可考虑再一层加固。&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;“salt 使用密码学安全的随机数生成就够了，不需要使用 uid 。”&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;回复：同意，确实不是很必要。&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;“服务器性能够强劲，bcrypt 放在服务端执行也没什么问题。”&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;回复：通过调整 bcrypt 参数让服务端执行在可接受的时间范围内确实可以。但是把这种耗时的操作放到客户端去做不是更好吗？&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;“不知攻焉知防，还是使用现有的算法和协议比较好，不要自己发明。即使自己发明，也需要经过实践的检验不断迭代才行。”&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;回复：首先，文中用到的都是现有的成熟算法，如 bcrypt，SHA-512， AES ，包括 &lt;a href=&#34;https://msdn.microsoft.com/zh-cn/library/cc488016%28v=vs.90%29.aspx&#34;&gt;ECDH&lt;/a&gt;，并没有重新发明什么。文章&lt;strong&gt;重点是对密码的两次加盐哈希以及密码的验证方式&lt;/strong&gt;。当然，方案需要在实践中不断迭代优化，我也是不能同意再多。&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;有一位朋友说的非常好，很多互联网公司对安全不重视，近年来密码安全事故频繁发生，导致密码泄露后被拿去撞库，用户利益受损。&lt;strong&gt;应该去推动一下密码安全的业界标准，避免企业犯错用户买单&lt;/strong&gt;。同时，&lt;strong&gt;互联网没有绝对的安全，强烈建议用户不要用同一个密码，密码定期改！&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;好了，我所说的也都是错的。欢迎继续交流。&lt;/p&gt;
-</description>
-        </item>
-        
-        <item>
-            <title>即使被拖库，也可以保证密码不泄露</title>
-            <link>http://kooksee.github.io/2016/01/10/a-password-security-design-example/</link>
-            <pubDate>Sun, 10 Jan 2016 23:06:42 CST</pubDate>
-            <author>CoderZh</author>
-            <guid>http://kooksee.github.io/2016/01/10/a-password-security-design-example/</guid>
-            <description>
-
-&lt;p&gt;在前一篇文章《&lt;a href=&#34;http://blog.coderzh.com/2016/01/03/security-design/&#34;&gt;设计安全的账号系统的正确姿势&lt;/a&gt;》中，主要提出了一些设计的方法和思路，并没有给出一个更加具体的，可以实施的安全加密方案。经过我仔细的思考并了解了目前一些方案后，我设计了一个自认为还比较安全的安全加密方案。本文主要就是讲述这个方案，非常欢迎和期待有读者一起来讨论。&lt;/p&gt;
-
-&lt;p&gt;首先，我们明确一下安全加密方案的终极目标：&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;即使在数据被拖库，代码被泄露，请求被劫持的情况下，也能保障用户的密码不被泄露。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;说具体一些，我们理想中的绝对安全的系统大概是这样的：&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;首先保障数据很难被拖库。&lt;/li&gt;
-&lt;li&gt;即使数据被拖库，攻击者也无法从中破解出用户的密码。&lt;/li&gt;
-&lt;li&gt;即使数据被拖库，攻击者也无法伪造登录请求通过验证。&lt;/li&gt;
-&lt;li&gt;即使数据被拖库，攻击者劫持了用户的请求数据，也无法破解出用户的密码。&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;如何保障数据不被拖库，这里就不展开讲了。首先我们来说说密码加密。现在应该很少系统会直接保存用户的密码了吧，至少也是会计算密码的 md5 后保存。md5 这种不可逆的加密方法理论上已经很安全了，但是随着彩虹表的出现，使得大量长度不够的密码可以直接从彩虹表里反推出来。&lt;/p&gt;
-
-&lt;p&gt;所以，只对密码进行 md5 加密是肯定不够的。聪明的程序员想出了个办法，即使用户的密码很短，只要我在他的短密码后面加上一段很长的字符，再计算 md5 ，那反推出原始密码就变得非常困难了。加上的这段长字符，我们称为盐（Salt），通过这种方式加密的结果，我们称为 &lt;code&gt;加盐 Hash&lt;/code&gt; 。比如：&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;http://7xlx3k.com1.z0.glb.clouddn.com/salt.png&#34; alt=&#34;salt&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;上一篇我们讲过，常用的哈希函数中，SHA-256、SHA-512 会比 md5 更安全，更难破解，出于更高安全性的考虑，我的这个方案中，会使用 SHA-512 代替 md5 。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;http://7xlx3k.com1.z0.glb.clouddn.com/sha-512.png&#34; alt=&#34;salt&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;通过上面的加盐哈希运算，即使攻击者拿到了最终结果，也很难反推出原始的密码。不能反推，但可以正着推，假设攻击者将 salt 值也拿到了，那么他可以枚举遍历所有 6 位数的简单密码，加盐哈希，计算出一个结果对照表，从而破解出简单的密码。这就是通常所说的暴力破解。&lt;/p&gt;
-
-&lt;p&gt;为了应对暴力破解，我使用了加盐的&lt;strong&gt;慢哈希&lt;/strong&gt;。慢哈希是指执行这个哈希函数非常慢，这样暴力破解需要枚举遍历所有可能结果时，就需要花上非常非常长的时间。比如：bcrypt 就是这样一个慢哈希函数：&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;http://7xlx3k.com1.z0.glb.clouddn.com/bcrypt.png&#34; alt=&#34;bcrypt&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;通过调整 &lt;code&gt;cost&lt;/code&gt; 参数，可以调整该函数慢到什么程度。假设让 bcrypt 计算一次需要 0.5 秒，遍历 6 位的简单密码，需要的时间为：((26 * 2 + 10)^6) / 2 秒，约 900 年。&lt;/p&gt;
-
-&lt;p&gt;好了，有了上面的基础，来看看我的最终解决方案：&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;http://7xlx3k.com1.z0.glb.clouddn.com/password_security.jpg&#34; alt=&#34;password_secutity&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;上图里有很多细节，我分阶段来讲：&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;1. 协商密钥&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;基于非对称加密的密钥协商算法，可以在通信内容完全被公开的情况下，双方协商出一个只有双方才知道的密钥，然后使用该密钥进行对称加密传输数据。比如图中所用的 ECDH 密钥协商。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;2. 请求 Salt&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;双方协商出一个密钥 SharedKey 之后，就可以使用 SharedKey 作为 AES 对称加密的密钥进行通信，客户端传给服务端自己的公钥 A ，以及加密了的用户ID（uid）。服务端从数据库中查找到该 uid 对于的 Salt1 和 Salt2 ，然后再加密返回给客户端。&lt;/p&gt;
-
-&lt;p&gt;注意，服务端保存的 Salt1 和 Salt2 最好和用户数据分开存储，存到其他服务器的数据库里，这样即使被 SQL 注入，想要获得 Salt1 和 Salt2 也会非常困难。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;3. 验证密码&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;这是最重要的一步了。客户端拿到 Salt1 和 Salt2 之后，可以计算出两个加盐哈希：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;SaltHash1 = bcrypt(SHA512(password), uid + salt1, 10)
-SaltHash2 = SHA512(SaltHash1 + uid + salt2)
+&lt;pre&gt;&lt;code&gt;docker run -it -d --name consul -v /bin/consul:/bin/consul --net=prod -p 8500:8500 ubuntu:14.04 /bin/consul agent -bind=0.0.0.0 -dev -ui -client=0.0.0.0
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;使用 SaltHash2 做为 AES 密钥，加密包括 uid，time，SaltHash1，RandKey 等内容传输给服务端：&lt;/p&gt;
+&lt;h2 id=&#34;服务注册:d04551f912163f99d3b2993cc8f18aae&#34;&gt;服务注册&lt;/h2&gt;
 
-&lt;pre&gt;&lt;code&gt;Ticket = AES(SaltHash2, uid + time + SaltHash1 + RandKey)
-AES(SharedKey, Ticket)
+&lt;pre&gt;&lt;code&gt;curl -X PUT -d &#39;{&amp;quot;Name&amp;quot;:&amp;quot;user&amp;quot;,&amp;quot;Address&amp;quot;:&amp;quot;prod-user.prod&amp;quot;,&amp;quot;Port&amp;quot;:13001,&amp;quot;tags&amp;quot;:[&amp;quot;user prod-user.prod 13001&amp;quot;]}&#39; -i http://localhost:8500/v1/agent/service/register
+
+curl -X PUT -d &#39;{&amp;quot;Name&amp;quot;:&amp;quot;diary&amp;quot;, &amp;quot;Port&amp;quot;: 13006, &amp;quot;Address&amp;quot;:&amp;quot;prod-diary.prod&amp;quot;, &amp;quot;tags&amp;quot;:[&amp;quot;diary prod-diary.prod 13006&amp;quot;] }&#39; -i http://localhost:8500/v1/agent/service/register
+
+curl -X PUT -d &#39;{&amp;quot;Name&amp;quot;:&amp;quot;mediastore&amp;quot;, &amp;quot;Port&amp;quot;: 13004, &amp;quot;Address&amp;quot;:&amp;quot;prod-mediastore.prod&amp;quot;, &amp;quot;tags&amp;quot;:[&amp;quot;mediastore prod-mediastore.prod 13004&amp;quot;] }&#39; -i http://localhost:8500/v1/agent/service/register
+
+curl -X PUT -d &#39;{&amp;quot;Name&amp;quot;:&amp;quot;other&amp;quot;, &amp;quot;Port&amp;quot;: 13003, &amp;quot;Address&amp;quot;:&amp;quot;prod-other.prod&amp;quot;, &amp;quot;tags&amp;quot;:[&amp;quot;other prod-other.prod 13003&amp;quot;] }&#39; -i http://localhost:8500/v1/agent/service/register
+
+curl -X PUT -d &#39;{&amp;quot;Name&amp;quot;:&amp;quot;verification&amp;quot;, &amp;quot;Port&amp;quot;: 13002, &amp;quot;Address&amp;quot;:&amp;quot;prod-verification.prod&amp;quot;, &amp;quot;tags&amp;quot;:[&amp;quot;verification prod-verification.prod 13002&amp;quot;] }&#39; -i http://localhost:8500/v1/agent/service/register
+
+curl -X PUT -d &#39;{&amp;quot;Name&amp;quot;:&amp;quot;activity&amp;quot;, &amp;quot;Port&amp;quot;: 13005, &amp;quot;Address&amp;quot;:&amp;quot;prod-verification.prod&amp;quot;, &amp;quot;tags&amp;quot;:[&amp;quot;verification prod-verification.prod 13005&amp;quot;] }&#39; -i http://localhost:8500/v1/agent/service/register
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;服务端使用 SharedKey 解密出 Ticket 之后，再从数据库中找到该 uid 对应的 SaltHash2 ，解密 Ticket ，得到 SaltHash1 ，使用 SaltHash1 重新计算 SaltHash2 看是否和数据库中的 SaltHash2 一致，从而验证密码是否正确。&lt;/p&gt;
+&lt;h2 id=&#34;查看完整consul-当前配置:d04551f912163f99d3b2993cc8f18aae&#34;&gt;查看完整Consul 当前配置&lt;/h2&gt;
 
-&lt;p&gt;校验两个哈希值是否相等时，使用时间恒定的比较函数，防止试探性攻击。&lt;/p&gt;
-
-&lt;p&gt;time 用于记录数据包发送的时间，用来防止录制回放攻击。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;4. 加密传输&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;密码验证通过后，服务端生成一个随机的临时密钥 TempKey（使用安全的随机函数），并使用 RandKey 做为密钥，传输给客户端。之后双方的数据交互都通过 TempKey 作为 AES 密钥进行加密。&lt;/p&gt;
-
-&lt;h4 id=&#34;假设被拖库了:348d28cc795f0a1857c92b26f086746c&#34;&gt;假设被拖库了&lt;/h4&gt;
-
-&lt;p&gt;以上就是整个加密传输、存储的全过程。我们来假设几种攻击场景：&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;假设数据被拖库了，密码会泄露吗？&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;数据库中的 Salt1 ，Salt2 ， SaltHash2 暴露了，想从 SaltHash2 直接反解出原始密码几乎是不可能的事情。&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;假设数据被拖库了，攻击者能不能伪造登录请求通过验证？&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;攻击者在生成 Ticket 时，需要 SaltHash1 ，但由于并不知道密码，所以无法计算出 SaltHash1 ，又无法从 SaltHash2 反推 SaltHash1 ，所以无法伪造登录请求通过验证。&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;假设数据被拖库了，攻击者使用中间人攻击，劫持了用户的请求，密码会被泄露吗？&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;中间人拥有真实服务器所有的数据，仿冒了真实的 Server ，因此，他可以解密出 Ticket 中的 SaltHash1 ，&lt;strong&gt;但是 SaltHash1 是无法解密出原始密码的。所以，密码也不会被泄露。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;但是，中间人攻击可以获取到最后的 TempKey ，从而能监听后续的所有通信过程。这是很难解决的问题，因为在服务端所有东西都暴露的情况下，中间人假设可以劫持用户数据，仿冒真实 Server , 是很难和真实的 Server 区分开的。解决的方法也许只有防止被中间人攻击，保证 Server 的公钥在客户端不被篡改。&lt;/p&gt;
-
-&lt;p&gt;假设攻击已经进展到了这样的程度，还有办法补救吗？有。由于攻击者只能监听用户的登录过程，并不知道真实的密码。所以，只需要在服务端对 Salt2 进行升级，即可生成新的 SaltHash2 ，从而让攻击者所有攻击失效。&lt;/p&gt;
-
-&lt;p&gt;具体是这样的：用户正常的登录，服务端验证通过后，生成新的 Salt2 ，然后根据传过来的 SaltHash1 重新计算了 SaltHash2 存入数据库。下次用户再次登录时，获取到的是新的 Salt2 ，密码没有变，同样能登录，攻击者之前拖库的那份数据也失效了。&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h4 id=&#34;q-a:348d28cc795f0a1857c92b26f086746c&#34;&gt;Q &amp;amp; A&lt;/h4&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;使用 bcrypt 慢哈希函数，服务端应对大量的用户登录请求，性能承受的了吗？&lt;/p&gt;
-
-&lt;p&gt;该方案中，细心一点会注意到， bcrypt 只是在客户端进行运算的，服务端是直接拿到客户端运算好的结果（ SaltHash1 ）后 SHA-512 计算结果进行验证的。所以，把性能压力分摊到了各个客户端。&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;为什么要使用两个 Salt 值？&lt;/p&gt;
-
-&lt;p&gt;使用两个 Salt 值，是为了防止拖库后，劫持了用户请求后将密码破解出来。只有拥有密码的用户，才能用第一个 Salt 值计算出 SaltHash1 ，并且不能反推回原始密码。第二个 Salt 值可以加大被拖库后直接解密出 SaltHash1 的难度。&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;为什么要动态请求 Salt1 和 Salt2 ？&lt;/p&gt;
-
-&lt;p&gt;Salt 值直接写在客户端肯定不好，而且写死了要修改还得升级客户端。动态请求 Salt 值，还可以实现不升级客户端的情况下，对密码进行动态升级：服务端可定期更换 Salt2 ，重新计算 SaltHash2 ，让攻击者即使拖了一次数据也很快处于失效状态。&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;数据库都已经全被拖走了，密码不泄露还有什么意义呢？&lt;/p&gt;
-
-&lt;p&gt;其实是有意义的，正如刚刚提到的升级 Salt2 的补救方案，用户可以在完全不知情的情况下，不需要修改密码就升级了账号体系。同时，保护好用户的密码，不被攻击者拿去撞别家网站的库，也是一份责任。&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;欢迎大家针对本文的方案进行讨论，如有不实或者考虑不周的地方，请尽情指出。或者有更好的建议或意见，欢迎交流！&lt;/p&gt;
-
-&lt;h3 id=&#34;更新-反馈汇总:348d28cc795f0a1857c92b26f086746c&#34;&gt;更新：反馈汇总&lt;/h3&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;“应该从源头上禁止用户使用简单密码”&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;回复：非常同意！&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;“获取 salt 并不需要啥验证，那么还有必要分开存储么，脱裤者直接根据uid调一遍接口不就拿到了？相当于就是公开的吧？”&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;回复：确实是这样。salt 相当于公开的了，没有必要分开存储了。如果你有更好的方法，请告诉我。&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;“使用 HTTPS(SSL/TLS) 来保障传输的安全是不是就可以了？”&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;回复：理论上是足够了，而且推荐使用。 如果你的项目安全级别非常高，本着不信任绝对安全的角度可考虑再一层加固。&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;“salt 使用密码学安全的随机数生成就够了，不需要使用 uid 。”&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;回复：同意，确实不是很必要。&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;“服务器性能够强劲，bcrypt 放在服务端执行也没什么问题。”&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;回复：通过调整 bcrypt 参数让服务端执行在可接受的时间范围内确实可以。但是把这种耗时的操作放到客户端去做不是更好吗？&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;“不知攻焉知防，还是使用现有的算法和协议比较好，不要自己发明。即使自己发明，也需要经过实践的检验不断迭代才行。”&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;回复：首先，文中用到的都是现有的成熟算法，如 bcrypt，SHA-512， AES ，包括 &lt;a href=&#34;https://msdn.microsoft.com/zh-cn/library/cc488016%28v=vs.90%29.aspx&#34;&gt;ECDH&lt;/a&gt;，并没有重新发明什么。文章&lt;strong&gt;重点是对密码的两次加盐哈希以及密码的验证方式&lt;/strong&gt;。当然，方案需要在实践中不断迭代优化，我也是不能同意再多。&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;有一位朋友说的非常好，很多互联网公司对安全不重视，近年来密码安全事故频繁发生，导致密码泄露后被拿去撞库，用户利益受损。&lt;strong&gt;应该去推动一下密码安全的业界标准，避免企业犯错用户买单&lt;/strong&gt;。同时，&lt;strong&gt;互联网没有绝对的安全，强烈建议用户不要用同一个密码，密码定期改！&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;curl &lt;a href=&#34;http://127.0.0.1:8500/v1/agent/services&#34;&gt;http://127.0.0.1:8500/v1/agent/services&lt;/a&gt;&lt;/p&gt;
 </description>
         </item>
         
         <item>
-            <title>设计安全的账号系统的正确姿势</title>
-            <link>http://kooksee.github.io/2016/01/03/security-design/</link>
-            <pubDate>Sun, 03 Jan 2016 18:23:28 CST</pubDate>
+            <title>17mei 微服务的坑，检查点，以及一些操作细节</title>
+            <link>http://kooksee.github.io/blog/17mei%20%E5%BE%AE%E6%9C%8D%E5%8A%A1%E7%9A%84%E5%9D%91%EF%BC%8C%E6%A3%80%E6%9F%A5%E7%82%B9%EF%BC%8C%E4%BB%A5%E5%8F%8A%E4%B8%80%E4%BA%9B%E6%93%8D%E4%BD%9C%E7%BB%86%E8%8A%82/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
             <author>CoderZh</author>
-            <guid>http://kooksee.github.io/2016/01/03/security-design/</guid>
+            <guid>http://kooksee.github.io/blog/17mei%20%E5%BE%AE%E6%9C%8D%E5%8A%A1%E7%9A%84%E5%9D%91%EF%BC%8C%E6%A3%80%E6%9F%A5%E7%82%B9%EF%BC%8C%E4%BB%A5%E5%8F%8A%E4%B8%80%E4%BA%9B%E6%93%8D%E4%BD%9C%E7%BB%86%E8%8A%82/</guid>
             <description>
 
-&lt;p&gt;&lt;img src=&#34;http://7xlx3k.com1.z0.glb.clouddn.com/security.jpg-wt&#34; alt=&#34;security&#34; /&gt;&lt;/p&gt;
+&lt;h1 id=&#34;坑:229a76c2071f7fa22b2d9c3a60de9699&#34;&gt;坑&lt;/h1&gt;
 
-&lt;h3 id=&#34;引子:c2254085ba550b8986e017a4f607e2b0&#34;&gt;引子&lt;/h3&gt;
+&lt;h2 id=&#34;gateway-运行文件依赖pem文件:229a76c2071f7fa22b2d9c3a60de9699&#34;&gt;gateway 运行文件依赖pem文件&lt;/h2&gt;
 
-&lt;p&gt;最近有个虚拟练习项目，涉及到系统安全保障的设计，于是对安全保障这块做了一些更深入的了解。发现了很多有趣的东西，开阔了眼界。中间查了一些资料，于是我打算重新整理，用更加循序渐进，大家都能懂的方式，说一说如何设计一个安全的系统。&lt;/p&gt;
+&lt;h2 id=&#34;verification里面需要根证书-不然没办法访问https-注意注意-apt-get-install-ca-certificates:229a76c2071f7fa22b2d9c3a60de9699&#34;&gt;verification里面需要根证书。不然没办法访问https 注意注意！ &lt;code&gt;apt-get install ca-certificates&lt;/code&gt;&lt;/h2&gt;
 
-&lt;h3 id=&#34;著名的安全事件:c2254085ba550b8986e017a4f607e2b0&#34;&gt;著名的安全事件&lt;/h3&gt;
+&lt;h2 id=&#34;pgsql第一次运行注意事项:229a76c2071f7fa22b2d9c3a60de9699&#34;&gt;PGSQL第一次运行注意事项&lt;/h2&gt;
 
-&lt;p&gt;首先来看看最近几年比较著名的拖库撞库后密码泄露的事件：&lt;/p&gt;
+&lt;h3 id=&#34;pgsql-docker-运行参数:229a76c2071f7fa22b2d9c3a60de9699&#34;&gt;PGSQL docker 运行参数：&lt;/h3&gt;
 
-&lt;ol&gt;
-&lt;li&gt;2011年12月，国内最大的程序员社区 CSDN 遭拖库，600万个账户信息泄露。&lt;/li&gt;
-&lt;li&gt;2014年3月，携程旅行网的系统存技术漏洞，漏洞可能导致用户的姓名、身份证号码、银行卡类别、银行卡卡号、银行卡CVV码以及银行卡6位Bin泄露。&lt;/li&gt;
-&lt;li&gt;2014年5月，小米论坛涉及800万用户信息遭泄露，信息包括用户名、密码、注册IP、邮箱等。&lt;/li&gt;
-&lt;li&gt;2014年12月，12306遭撞库攻击，13万用户信息泄露，包括用户账号、明文密码、身份证、邮箱等敏感信息。&lt;/li&gt;
-&lt;li&gt;2015年10月，网易邮箱遭攻击，近5亿条用户信息被泄露，包括用户名、密码、密码保护信息、登陆IP以及用户生日等多个原始信息。&lt;/li&gt;
-&lt;/ol&gt;
+&lt;p&gt;&lt;code&gt;docker run -it -d --name prod-postgres -e POSTGRES_PASSWORD=wothing --net=prod postgres:9.5.1&lt;/code&gt;&lt;/p&gt;
 
-&lt;p&gt;除了密码泄露事件，数据被物理删除的事件也是发生：&lt;/p&gt;
+&lt;h3 id=&#34;建库:229a76c2071f7fa22b2d9c3a60de9699&#34;&gt;建库&lt;/h3&gt;
 
-&lt;p&gt;2015年5月，携程网及APP陷入瘫痪，数据库遭物理删除疑似离职员工报复。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;CREATE DATABASE wothing OWNER postgres;&lt;/code&gt;&lt;/p&gt;
 
-&lt;p&gt;这么多大公司大网站的系统都遭到攻击，泄露用户信息，更别说其他小网站了。这些攻击都可以从技术上来进行防范的，但是我们看到即使是大公司，安全方面也是那么的薄弱。&lt;/p&gt;
+&lt;h3 id=&#34;引用extension:229a76c2071f7fa22b2d9c3a60de9699&#34;&gt;引用extension&lt;/h3&gt;
 
-&lt;h3 id=&#34;防范方法:c2254085ba550b8986e017a4f607e2b0&#34;&gt;防范方法&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;CREATE EXTENSION &amp;quot;pgcrypto&amp;quot;;&lt;/code&gt;&lt;/p&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>API  设计文档</title>
+            <link>http://kooksee.github.io/blog/API%20%20%E8%AE%BE%E8%AE%A1%E6%96%87%E6%A1%A3/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/API%20%20%E8%AE%BE%E8%AE%A1%E6%96%87%E6%A1%A3/</guid>
+            <description>
 
-&lt;p&gt;防范的方法简单来说数据从用户键盘敲出的那一刻，到服务器后台存储都要保持正确的姿势。比如：&lt;/p&gt;
+&lt;h1 id=&#34;活动报名-apis-v1:2baef82d8a5626322ee50f56601e46b3&#34;&gt;活动报名 APIs v1&lt;/h1&gt;
 
-&lt;ol&gt;
-&lt;li&gt;用正确的姿势保存密码。&lt;/li&gt;
-&lt;li&gt;用正确的姿势传输数据。&lt;/li&gt;
-&lt;li&gt;用正确的姿势加密敏感信息。&lt;/li&gt;
-&lt;li&gt;用正确的姿势对数据进行备份和监控。&lt;/li&gt;
-&lt;/ol&gt;
+&lt;blockquote&gt;
+&lt;p&gt;活动管理,活动体验以及活动报名的相关API&lt;/p&gt;
+&lt;/blockquote&gt;
 
-&lt;h3 id=&#34;用正确的姿势保存密码:c2254085ba550b8986e017a4f607e2b0&#34;&gt;用正确的姿势保存密码&lt;/h3&gt;
+&lt;h2 id=&#34;活动报名:2baef82d8a5626322ee50f56601e46b3&#34;&gt;活动报名&lt;/h2&gt;
 
-&lt;p&gt;这一步非常重要，也比较复杂。用户在浏览器里输入密码，传输到服务器端进行验证，服务端将之前保存的密码信息和用户的输入进行比对。&lt;/p&gt;
+&lt;h3 id=&#34;url:2baef82d8a5626322ee50f56601e46b3&#34;&gt;URL&lt;/h3&gt;
 
-&lt;h4 id=&#34;1-低级错误-明文保存密码:c2254085ba550b8986e017a4f607e2b0&#34;&gt;1. 低级错误：明文保存密码&lt;/h4&gt;
+&lt;p&gt;POST &lt;code&gt;/activity/enroll&lt;/code&gt;&lt;/p&gt;
 
-&lt;p&gt;安全性最低的是在服务端明文保存用户的密码，一旦服务器被入侵，数据被拖走（拖库），所有用户的密码都直接的暴露在外面。这是最初级的做法，毫无安全性可言。假如你在一个网站或论坛注册了一个账号，该网站自动发了一封邮件告诉你注册成功，里面明文写了你的密码，赶紧把密码改了然后再也不要访问这个网站。&lt;/p&gt;
+&lt;h3 id=&#34;token:2baef82d8a5626322ee50f56601e46b3&#34;&gt;TOKEN&lt;/h3&gt;
 
-&lt;h4 id=&#34;2-低级错误-可逆加密密码:c2254085ba550b8986e017a4f607e2b0&#34;&gt;2. 低级错误：可逆加密密码&lt;/h4&gt;
+&lt;p&gt;&lt;code&gt;required&lt;/code&gt;&lt;/p&gt;
 
-&lt;p&gt;既然不能明文保存密码，那当然是加密保存了。耍个小聪明，比如把密码的字母倒着存，或者每个字母存后一个字母，或者进行异或混淆处理，表面上密码看上去已经看不出来原始的密码是什么了，但实际上这个和明文保存密码并没有本质区别，因为黑客既然可以入侵你的服务器，自然可以拿到你的加密代码，只要按你的算法进行简单的解密就可以得到原始密码。&lt;/p&gt;
+&lt;h3 id=&#34;input:2baef82d8a5626322ee50f56601e46b3&#34;&gt;INPUT&lt;/h3&gt;
 
-&lt;h4 id=&#34;3-错误方法-md5-加密密码:c2254085ba550b8986e017a4f607e2b0&#34;&gt;3. 错误方法：md5 加密密码&lt;/h4&gt;
+&lt;pre&gt;&lt;code&gt;{
+    &amp;quot;activity_id&amp;quot;:        &amp;quot;4eb3a4ff-ad0c-4a03-963c-1a9e4290863e&amp;quot;         //string:required, 活动Id
+    &amp;quot;attrs&amp;quot;:{                                //基本属性
+        &amp;quot;nickname&amp;quot;:        &amp;quot;irons&amp;quot;,          //string:required, 昵称
+        &amp;quot;mobile&amp;quot;:          &amp;quot;86-18621936702&amp;quot;, //string:required, 电话号码
+        &amp;quot;gender&amp;quot;:          &amp;quot;female&amp;quot;,         //string:required, 性别
+        &amp;quot;birthday&amp;quot;:        &amp;quot;2015-12-24&amp;quot;,     //string:required, 生日
+        &amp;quot;job&amp;quot;:             &amp;quot;学生&amp;quot;,           //string:required, 职业[学生, 上班族, 自由职业者, 全职主妇, 网红, 其他 ]
+    },
 
-&lt;p&gt;在我还是一个初学者的时候，我已被告知不能用前两种方式保存密码，当时的主流方法是使用 md5 加密密码。（年代久远，现在已绝非主流了。） md5 是一种不可逆的加密方法，即密码被 md5 加密后是无法解密出原始密码的，验证密码是否正确的方法是将用户输入的密码 md5 加密后于数据库里保存的 md5 机密后的结果进行比对。这样，服务器端在不知道真实用户密码的情况下也能对用户密码进行验证了。&lt;/p&gt;
-
-&lt;p&gt;这是早期比较主流的做法，然而，这依然是非常不安全的。因为只要枚举所有短密码进行 md5 加密，做成一个索引表，就能轻易的逆推出原始密码。这种预先计算好的用于逆推加密散列函数的表就是“彩虹表”。随着“彩虹表”不断变大，md5 的加密已经变得非常的不安全。2015年10月网易邮箱的用户密码泄露也被怀疑只对密码进行了 md5 加密。&lt;/p&gt;
-
-&lt;h4 id=&#34;4-正确方法-加盐-hash-保存密码:c2254085ba550b8986e017a4f607e2b0&#34;&gt;4. 正确方法：加盐 hash 保存密码&lt;/h4&gt;
-
-&lt;p&gt;加盐 hash 是指在加密密码时，不只是对密码进行 hash ，而是对密码进行调油加醋，放点盐（salt）再加密，一方面，由于你放的这点盐，让密码本身更长强度更高，彩虹表逆推的难度更大，也因你放的这点盐，让黑客进行撞库时运算量更大，破解的难度更高。&lt;/p&gt;
-
-&lt;p&gt;如何进行加盐就是一门很重要的学问了。md5 是一种 hash 算法，以下就拿 md5 来举例。假如密码是 123456 ，md5 的结果如下：&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;http://7xlx3k.com1.z0.glb.clouddn.com/md5.png&#34; alt=&#34;md5&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;像 123456 这样的简单密码，是很容易被逆推出来的。但是假如我们往简单密码里加点盐试试：&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;http://7xlx3k.com1.z0.glb.clouddn.com/md5-salt.png&#34; alt=&#34;md5-salt&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;上面例子里的 &lt;code&gt;#g5Fv;0Dvk&lt;/code&gt; 就是我们加的盐。加完之后，密码的强度更高了，彩虹表破解的难度加大了。或者进行加盐两次 md5 ：&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;http://7xlx3k.com1.z0.glb.clouddn.com/double-md5-salt.png&#34; alt=&#34;double-md5-salt&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;到这里，你一定会有疑问，是不是把 md5 多做几次，或者自定义一些组合的方式就更安全了。其实不是的，黑客既然能拿到数据库里的数据，也很有可能拿到你的代码。&lt;/p&gt;
-
-&lt;p&gt;一个健壮的、牢不可破的系统应该是：&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;即使被拿走了数据和所有的代码，也没办法破解里面的数据。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;这也是为什么大家不必实现自己的加密算法，而是使用公开的加密算法的原因，比如：RSA、AES、DES 等等。既然无法保证加密代码不被泄露，那就使用公开的加密算法，只要保护好私钥信息，就算你知道我的加密方式也没有任何帮助。&lt;/p&gt;
-
-&lt;p&gt;大部分情况下，使用 md5(md5(password) + salt) 方式加密基本上已经可以了：&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;http://7xlx3k.com1.z0.glb.clouddn.com/salt.png&#34; alt=&#34;salt&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;其中，最关键的是 salt 从哪里来？ salt 该怎么设置才能安全。有几个重要的点：&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;不要使用固定不变的 salt。&lt;/li&gt;
-&lt;li&gt;每个用户的 salt 都需要不同。&lt;/li&gt;
-&lt;li&gt;salt 要保持一定的长度。&lt;/li&gt;
-&lt;li&gt;salt 必须由服务端使用安全的随机函数生成。&lt;/li&gt;
-&lt;li&gt;客户端运算需要的 salt 需要从服务端动态获取。&lt;/li&gt;
-&lt;li&gt;客户端加盐 hash 的结果并不是最终服务端存盘的结果。&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;由于客户端也需要执行加盐 hash ，所以，salt 不能直接写在客户端，而是应该动态从服务端获得。服务端生成随机的 salt 时，必须使用安全的随机函数，防止随机数被预测。&lt;/p&gt;
-
-&lt;p&gt;各语言安全的随机函数：&lt;/p&gt;
-
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th align=&#34;left&#34;&gt;Platform&lt;/th&gt;
-&lt;th align=&#34;left&#34;&gt;CSPRNG&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td align=&#34;left&#34;&gt;PHP&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;mcrypt_create_iv, openssl_random_pseudo_bytes&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td align=&#34;left&#34;&gt;Java&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;java.security.SecureRandom&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td align=&#34;left&#34;&gt;Dot NET (C#, VB)&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;System.Security.Cryptography.RNGCryptoServiceProvider&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td align=&#34;left&#34;&gt;Ruby&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;SecureRandom&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td align=&#34;left&#34;&gt;Python&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;os.urandom&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td align=&#34;left&#34;&gt;Perl&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;Math::Random::Secure&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td align=&#34;left&#34;&gt;C/C++&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;(Windows API)   CryptGenRandom&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td align=&#34;left&#34;&gt;Any language on GNU/Linux or Unix&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;Read from /dev/random or /dev/urandom&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;就算 salt 值动态从服务端获取，也有可能被中间人拦截获取。同时，客户端的加盐 hash 的过程相当于是完全暴露的。一种更安全的做法是，客户端使用 javascript 进行加盐 hash，把结果传到服务器后，服务器对结果再进行一次 &lt;code&gt;加盐 hash&lt;/code&gt; 或者 &lt;code&gt;加密 hash&lt;/code&gt;（比如：&lt;a href=&#34;https://tools.ietf.org/html/rfc2104&#34;&gt;HMAC&lt;/a&gt;） ，然后再和数据库的结果进行比对。&lt;/p&gt;
-
-&lt;p&gt;如果需要达到更高的安全等级，可以考虑：&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;1. 使用更安全的 hash 函数用来抵抗碰撞攻击，比如：SHA256, SHA512, RipeMD, WHIRLPOOL。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;两个不同的内容 hash 的结果可能相同，攻击者在不知道真实密码的情况下，使用其他密码进行碰撞攻击从而登录系统。使用更安全的 hash 函数可以减少这种情况的发生。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;2. 可以使用一种大量消耗 cpu 的 hash 算法对抗暴力破解，比如PBKDF2 或者 bcrypt。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;暴力破解就是枚举所有可能的密码进行尝试验证，使用大量消耗 cpu 的 hash 算法可以极大增加暴力破解的时间。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;3. 比较加盐 md5 结果时，使用时间恒定的比较函数。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;在比较两个字符串时，通常都一个字符一个字符进行比较，如果某个字符不匹配就会立即返回。攻击者可以根据验证的时间长短来判断前几位字符是否正确，然后逐步修正最终得到正确的结果。&lt;/p&gt;
-
-&lt;p&gt;因此，在比较 hash 时，使用时间恒定的比较函数，可以让攻击者摸不着头脑。比如下面这段代码：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;private static boolean slowEquals(byte[] a, byte[] b)
-{
-    int diff = a.length ^ b.length;
-    for(int i = 0; i &amp;lt; a.length &amp;amp;&amp;amp; i &amp;lt; b.length; i++)
-        diff |= a[i] ^ b[i];
-    return diff == 0;
+    &amp;quot;extras&amp;quot;:{                               //可扩展属性
+        &amp;quot;invitation_code&amp;quot;: &amp;quot;123456&amp;quot;,         //string:option,   邀请码,meiId
+        &amp;quot;front_photos&amp;quot;:     [&amp;quot;http://qiniu.com/1dasdf/asdf.jpg&amp;quot;,&amp;quot;http://qiniu.com/1dasdf/asdf.jpg&amp;quot;],//[]:required,正面照
+        &amp;quot;profile_photos&amp;quot;:   [&amp;quot;http://qiniu.com/1dasdf/asdf.jpg&amp;quot;,&amp;quot;http://qiniu.com/1dasdf/asdf.jpg&amp;quot;],//[]:required,侧面照
+        &amp;quot;apply_reason&amp;quot;:     &amp;quot;申请理由&amp;quot;       //string:required,参加活动的理由，改善
+    },
 }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;异或（^）操作可以用来判断两个字符是否相等，比如：&lt;/p&gt;
+&lt;h3 id=&#34;output:2baef82d8a5626322ee50f56601e46b3&#34;&gt;OUTPUT&lt;/h3&gt;
 
-&lt;pre&gt;&lt;code&gt;0 XOR 0 = 0    1 XOR 1 = 0
-0 XOR 1 = 1    1 XOR 0 = 1
+&lt;pre&gt;&lt;code&gt;{
+    &amp;quot;code&amp;quot;:&amp;quot;00000&amp;quot;
+    &amp;quot;data&amp;quot;:{
+        &amp;quot;message&amp;quot;:&amp;quot;附加信息，比如错误提醒以及，变更提醒&amp;quot;
+    }   
+}
+
+{
+    &amp;quot;code&amp;quot;:&amp;quot;11201&amp;quot;,
+    &amp;quot;message&amp;quot;:&amp;quot;用户已经注册该活动&amp;quot;
+}
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;上面的函数枚举每个字符进行异或判断，然后将所有的结果取或运算，得到最终的结果，比较的时间是恒定的。&lt;/p&gt;
+&lt;h3 id=&#34;error:2baef82d8a5626322ee50f56601e46b3&#34;&gt;ERROR&lt;/h3&gt;
 
-&lt;p&gt;&lt;strong&gt;4. salt 的值不要和最终 hash 的结果存在同一个数据库。&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;ErrEnrollExists //error code:11201&lt;/li&gt;
+&lt;/ul&gt;
 
-&lt;p&gt;SQL 注入是常见的攻击手段，被注入后数据库里的数据被暴露无遗。所以，应该将 salt 分开存储，存到别的机器的数据库里，让攻击者拿不到 salt ，从而无法轻易破解信息。&lt;/p&gt;
+&lt;h3 id=&#34;curl:2baef82d8a5626322ee50f56601e46b3&#34;&gt;CURL&lt;/h3&gt;
 
-&lt;p&gt;&lt;strong&gt;5. 最终存储的结果使用基于 key 的 hash 函数，比如 &lt;a href=&#34;https://tools.ietf.org/html/rfc2104&#34;&gt;HMAC&lt;/a&gt;。 key 从外部安全性极高的专属服务中获得。&lt;/strong&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;curl\
+    -X POST\
+    -d &#39;{&amp;quot;activity_id&amp;quot;:&amp;quot;wefddw&amp;quot;,&amp;quot;mobile&amp;quot;:&amp;quot;86-18621936702&amp;quot;,&amp;quot;gender&amp;quot;:&amp;quot;female&amp;quot;,&amp;quot;birthday&amp;quot;:&amp;quot;2015-12-24&amp;quot;,&amp;quot;job&amp;quot;:&amp;quot;学生&amp;quot;,&amp;quot;invitation_code&amp;quot;:&amp;quot;221ss&amp;quot;,&amp;quot;front_photo&amp;quot;:[&amp;quot;http://qiniu.com/fefw/ddw.jpg&amp;quot;,&amp;quot;http://qiniu.com/dee/fefew.jpg&amp;quot;],&amp;quot;profile_photo&amp;quot;: [&amp;quot;http://qiniu.com/fefw/ddw.jpg&amp;quot;,&amp;quot;http://qiniu.com/dee/fefew.jpg&amp;quot;],&amp;quot;activity_id&amp;quot;:&amp;quot;dwfeww&amp;quot;,&amp;quot;apply_reason&amp;quot;:&amp;quot;申请理由&amp;quot;}&#39;\
+    -i http://localhost:3001/v1/activity/enroll\
+    -H &amp;quot;Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE0MzM0MjkwNjgsImlhdCI6MTQzMzE2OTg2OCwic3ViIjoiNTU2YzY0OTNkZjhlNTY2NDViM2NmYjdlIn0.WA3UlkU2gDH5UCZ_q4abUSBTMEuY21ytAWgyUfPInEaYlJaI1Iav23yHoSHLggloV4emHf6f2hJuV-3LQuGMQfO60yC4zkgeBvBjjXm6808K_ZsuWMtzco8sTjV-2y6VbHb-EnUItVNE-YJuRiP_i0A0H3gJb7IfsSubOz63G3bXvCFUFxPy9Y7DPmpocLXexltf_-EKbyMNHHob5Nll0XOnb3dMZnXU9QhXnx1kT-2uexzdDVsWEZC6UexmRS9b86_oZ4tfGCcNG-Tg9Bl1ole_Yp_9fUBvqA9o-5gsEzFcc0atdEyM1ytFXAaO5SVCqbOnvRKKOdCrduGLth2w&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;有了这层加固，即使数据被拖库，攻击者也无法从 hash 的结果逆推回原始密码。因为使用了加密的 hash 函数。基于 key 的 hash 函数只是进行哈希运算时，除了传入原始内容外，还需要传入一个密钥（key）。攻击者没有 key 几乎不可能对数据进行解密。&lt;/p&gt;
+&lt;hr /&gt;
 
-&lt;p&gt;key 可以保存在极高安全性的通用的 key 管理系统，使用加密协议传输，对访问者进行验证，只允许特定的机器有权限访问。&lt;/p&gt;
+&lt;h2 id=&#34;用户是否注册:2baef82d8a5626322ee50f56601e46b3&#34;&gt;用户是否注册&lt;/h2&gt;
 
-&lt;h3 id=&#34;用正确的姿势传输数据:c2254085ba550b8986e017a4f607e2b0&#34;&gt;用正确的姿势传输数据&lt;/h3&gt;
+&lt;h3 id=&#34;url-1:2baef82d8a5626322ee50f56601e46b3&#34;&gt;URL&lt;/h3&gt;
 
-&lt;p&gt;使用 HTTP 协议传输数据时，数据都是明文传输的，数据从发出到服务器接收，中间可能被劫持，篡改。比如常见的 DNS 劫持，HTTP 劫持，中间人攻击。&lt;/p&gt;
+&lt;p&gt;POST &lt;code&gt;/activity/is_enrolled&lt;/code&gt;&lt;/p&gt;
 
-&lt;p&gt;用正确的姿势传输数据，目的就是为了保证传输的数据安全，简单归纳为两点：&lt;/p&gt;
+&lt;h3 id=&#34;token-1:2baef82d8a5626322ee50f56601e46b3&#34;&gt;TOKEN&lt;/h3&gt;
 
-&lt;ol&gt;
-&lt;li&gt;需要确保进行通讯的服务端是官方的、正确的服务端，而不是跟一个假的服务端在通信。&lt;/li&gt;
-&lt;li&gt;确保信息在网络上传输时是加密的，只有客户端和服务端有能力对数据进行解密。&lt;/li&gt;
-&lt;li&gt;确保信息在传输时不被篡改，或者数据被篡改时能立即发现。&lt;/li&gt;
-&lt;/ol&gt;
+&lt;p&gt;&lt;code&gt;required&lt;/code&gt;&lt;/p&gt;
 
-&lt;h4 id=&#34;1-验证服务端的合法性:c2254085ba550b8986e017a4f607e2b0&#34;&gt;1. 验证服务端的合法性&lt;/h4&gt;
+&lt;h3 id=&#34;input-1:2baef82d8a5626322ee50f56601e46b3&#34;&gt;INPUT&lt;/h3&gt;
 
-&lt;p&gt;《改变未来的九大算法》一书中提到了公钥加密和数字签名技术，这是进行安全通信的基础技术保障。这里涉及到了加密技术，先了解两个最基础的概念：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;{
+    &amp;quot;activity_id&amp;quot;:&amp;quot;4eb3a4ff-ad0c-4a03-963c-1a9e4290863e&amp;quot;,
+}
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;ol&gt;
-&lt;li&gt;对称加密：加密和解密时使用的是同一个密钥。&lt;/li&gt;
-&lt;li&gt;非对称加密：需要两个密钥来进行加密和解密：公开密钥（public key，简称公钥）和私有密钥（private key，简称私钥） ，公钥加密的信息只有私钥才能解开，私钥加密的信息只有公钥才能解开。&lt;/li&gt;
-&lt;/ol&gt;
+&lt;h3 id=&#34;output-1:2baef82d8a5626322ee50f56601e46b3&#34;&gt;OUTPUT&lt;/h3&gt;
 
-&lt;p&gt;非对称加密是实现验证服务端合法性的基础，常见的加密算法有 &lt;a href=&#34;http://baike.baidu.com/view/10613.htm&#34;&gt;RSA&lt;/a&gt; 、 &lt;a href=&#34;http://baike.baidu.com/view/584834.htm&#34;&gt;ECC&lt;/a&gt; 等 。服务端生成一对公钥和私钥，公钥是公开的所有人都知道，客户端需要和服务端通信时，使用该公钥进行数据加密，由于只有真实合法的服务端才拥有对应的私钥，所有只有真实的服务端才能解密该信息，然后返回数据给客户端时，使用客户端自己生成的公钥进行加密，这样数据只有对应的客户端才能理解。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;{
+    &amp;quot;code&amp;quot;:&amp;quot;00000&amp;quot;,
+    &amp;quot;data&amp;quot;:{
+        &amp;quot;is_enrolled&amp;quot;:false,
+    },
+}
 
-&lt;p&gt;&lt;img src=&#34;http://7xlx3k.com1.z0.glb.clouddn.com/rsa.gif&#34; alt=&#34;rsa&#34; /&gt;&lt;/p&gt;
+{
+    &amp;quot;code&amp;quot;:&amp;quot;11203&amp;quot;,
+    &amp;quot;message&amp;quot;:&amp;quot;活动不存在!&amp;quot;
+}
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;使用 HTTPS 时，数字证书里包含了名称和公钥信息，只要认证该证书是合法的，并且对方能理解用该公钥加密的信息，就能确定是合法的服务端。&lt;/p&gt;
+&lt;h3 id=&#34;error-1:2baef82d8a5626322ee50f56601e46b3&#34;&gt;ERROR&lt;/h3&gt;
 
-&lt;h4 id=&#34;2-确保通信的安全:c2254085ba550b8986e017a4f607e2b0&#34;&gt;2. 确保通信的安全&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;ErrActivityNotExists //error code:11203&lt;/li&gt;
+&lt;/ul&gt;
 
-&lt;p&gt;既然使用非对称加密的方式，可以保证双方安全的通信，那是不是就一直使用非对称加密传输数据就行了？理论上是可以的，但是非对称加密的效率要比对称加密的效率低很多。通常的做法是，通过非对称加密的方法，协商出一个只有双方知道的对称加密密钥。&lt;/p&gt;
+&lt;h3 id=&#34;curl-1:2baef82d8a5626322ee50f56601e46b3&#34;&gt;CURL&lt;/h3&gt;
 
-&lt;p&gt;即使在不安全的通信环境下，也可以协商出一个只有双方才知道的对称加密密钥。在《改变未来的九大算法》一书里，有一个经典的描述如何交互密钥的例子（在所有沟通都是透明的情况下，如何协商出一个只有你和阿诺德才知道的颜料颜色。）：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;curl -i http://localhost:3001/v1/activity/is_enrolled\
+     -d &#39;{&amp;quot;activity_id&amp;quot;:&amp;quot;bhbdhbvdvfhfvbdfhd&amp;quot;}&#39;\
+     -H &amp;quot;Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE0MzM0MjkwNjgsImlhdCI6MTQzMzE2OTg2OCwic3ViIjoiNTU2YzY0OTNkZjhlNTY2NDViM2NmYjdlIn0.WA3UlkU2gDH5UCZ_q4abUSBTMEuY21ytAWgyUfPInEaYlJaI1Iav23yHoSHLggloV4emHf6f2hJuV-3LQuGMQfO60yC4zkgeBvBjjXm6808K_ZsuWMtzco8sTjV-2y6VbHb-EnUItVNE-YJuRiP_i0A0H3gJb7IfsSubOz63G3bXvCFUFxPy9Y7DPmpocLXexltf_-EKbyMNHHob5Nll0XOnb3dMZnXU9QhXnx1kT-2uexzdDVsWEZC6UexmRS9b86_oZ4tfGCcNG-Tg9Bl1ole_Yp_9fUBvqA9o-5gsEzFcc0atdEyM1ytFXAaO5SVCqbOnvRKKOdCrduGLth2w&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://7xlx3k.com1.z0.glb.clouddn.com/sharedkey.jpg&#34; alt=&#34;sharedkey&#34; /&gt;&lt;/p&gt;
+&lt;hr /&gt;
 
-&lt;p&gt;&lt;a href=&#34;https://msdn.microsoft.com/zh-cn/library/cc488016%28v=vs.90%29.aspx&#34;&gt;ECDH&lt;/a&gt; 就是基于上面原理设计的密钥交换算法：&lt;/p&gt;
+&lt;h2 id=&#34;创建活动:2baef82d8a5626322ee50f56601e46b3&#34;&gt;创建活动&lt;/h2&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://7xlx3k.com1.z0.glb.clouddn.com/ecdh.png&#34; alt=&#34;ecdh&#34; /&gt;&lt;/p&gt;
+&lt;h3 id=&#34;url-2:2baef82d8a5626322ee50f56601e46b3&#34;&gt;URL&lt;/h3&gt;
 
-&lt;p&gt;密钥协商好后，双方就可以使用该密钥进行加密传输了，比如使用 AES 、 DES。&lt;/p&gt;
+&lt;p&gt;POST &lt;code&gt;/activity/create&lt;/code&gt;&lt;/p&gt;
 
-&lt;p&gt;由于 ECDH 密钥交换协议不验证公钥发送者的身份，因此无法阻止中间人攻击。如果监听者 Mallory 截获了 Alice 的公钥，就可以替换为他自己的公钥，并将其发送给 Bob。Mallory 还可以截获 Bob 的公钥，替换为他自己的公钥，并将其发送给 Alice。这样，Mallory 就可以轻松地对 Alice 与 Bob 之间发送的任何消息进行解密。他可以更改消息，用他自己的密钥对消息重新加密，然后将消息发送给接收者。&lt;/p&gt;
+&lt;h3 id=&#34;token-2:2baef82d8a5626322ee50f56601e46b3&#34;&gt;TOKEN&lt;/h3&gt;
 
-&lt;p&gt;解决方法是，Alice 和 Bob 可以在交换公钥之前使用数字签名对公钥进行签名。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;not required&lt;/code&gt;&lt;/p&gt;
 
-&lt;p&gt;即使攻击者不能解密传输的内容，但仍可以使用重放攻击尝试身份验证或用于欺骗系统。重放攻击是指攻击者将数据包截取后，向目标主机重新发送一遍数据包。&lt;/p&gt;
+&lt;h3 id=&#34;input-2:2baef82d8a5626322ee50f56601e46b3&#34;&gt;INPUT&lt;/h3&gt;
 
-&lt;p&gt;防御重放攻击的方法主要有：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;{
+    &amp;quot;activity_id&amp;quot;:&amp;quot;cfgvhjbk&amp;quot;,
+    &amp;quot;attrs&amp;quot;:{
+         &amp;quot;name&amp;quot;:&amp;quot;美白&amp;quot;,
+         &amp;quot;title&amp;quot;:&amp;quot;第一季&amp;quot;,
+         &amp;quot;wechat&amp;quot;:&amp;quot;12321&amp;quot;,
+         &amp;quot;city&amp;quot;:&amp;quot;上海 北京&amp;quot;,
+         &amp;quot;start_at&amp;quot;:45678933,
+         &amp;quot;end_at&amp;quot;:3221426,
+    },
+    &amp;quot;extras&amp;quot;:{
+           &amp;quot;apply_reason_example&amp;quot;: &amp;quot;申请理由范例&amp;quot;,
+           &amp;quot;front_photo_examples&amp;quot;:[&amp;quot;http://www.baidu.com/123.jpg&amp;quot;,&amp;quot;http://www.baidu.com/123.jpg&amp;quot;],
+           &amp;quot;profile_photo_examples&amp;quot;:[&amp;quot;http://www.baidu.com/123.jpg&amp;quot;,&amp;quot;http://www.baidu.com/123.jpg&amp;quot;],
+           &amp;quot;banners&amp;quot;:[
+             {
+               &amp;quot;img&amp;quot;: &amp;quot;http://www.baidu.com/1122.jpg&amp;quot;,
+               &amp;quot;target_type&amp;quot;: &amp;quot;web&amp;quot;,
+               &amp;quot;target_id&amp;quot;: &amp;quot;12345&amp;quot;,
+             },
+             {
+               &amp;quot;img&amp;quot;: &amp;quot;http://www.baidu.com/1122.jpg&amp;quot;,
+               &amp;quot;target_type&amp;quot;: &amp;quot;web&amp;quot;,
+               &amp;quot;target_id&amp;quot;: &amp;quot;1234532&amp;quot;,
+             },
+           ],
+    },
+    &amp;quot;enroll_num&amp;quot;:123,
+    &amp;quot;fund_balance&amp;quot;:22233.53,
+}
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;ol&gt;
-&lt;li&gt;使用时间戳。数据包在一定时间范围内才是有效的。&lt;/li&gt;
-&lt;li&gt;使用递增的序号。收到重复的数据包时可以轻易的发现。&lt;/li&gt;
-&lt;li&gt;使用提问应答方式。收到数据包时可以判断出来是否应答过。&lt;/li&gt;
-&lt;/ol&gt;
+&lt;h3 id=&#34;output-2:2baef82d8a5626322ee50f56601e46b3&#34;&gt;OUTPUT&lt;/h3&gt;
 
-&lt;p&gt;HTTPS 正是使用了上述的原理，保证了通信的安全。所以，任何对安全有需求的系统都应该使用 HTTPS。如果是使用自有协议开发，比如 APP 或游戏，应该使用上述的方法保障通信的安全。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;{
+    &amp;quot;code&amp;quot;:&amp;quot;00000&amp;quot;,
+    &amp;quot;data&amp;quot;:{
+        &amp;quot;message&amp;quot;:&amp;quot;活动创建成功&amp;quot;,
+    },
+}
 
-&lt;h3 id=&#34;用正确的姿势加密敏感信息:c2254085ba550b8986e017a4f607e2b0&#34;&gt;用正确的姿势加密敏感信息&lt;/h3&gt;
+{
+    &amp;quot;code&amp;quot;:&amp;quot;10002&amp;quot;,
+    &amp;quot;message&amp;quot;:&amp;quot;格式化转化错误!&amp;quot;
+}
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;我们都知道，用户的密码不能明文保存，而且要使用不可逆的加密算法，只保存最终的 hash 结果用来验证是否正确。那用户其他的敏感信息呢？比如身份证、银行卡、信用卡等信息，该如何加密保存而不被泄露呢？&lt;/p&gt;
+&lt;h3 id=&#34;error-2:2baef82d8a5626322ee50f56601e46b3&#34;&gt;ERROR&lt;/h3&gt;
 
-&lt;p&gt;对于身份证信息，可以像密码一样只保存 hash 的结果，可以用于用户输入身份证号后进行验证。假如需要给用户显示身份证信息，只需要保存抹掉了几位数字的身份证号。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;none&lt;/code&gt;&lt;/p&gt;
 
-&lt;p&gt;假如你的系统涉及到支付，需要用户的银行卡，信用卡（卡号，CVV码）等信息时，必须遵循 &lt;a href=&#34;http://baike.baidu.com/view/8417913.htm&#34;&gt;PCI DSS&lt;/a&gt; （第三方支付行业数据安全标准）标准。PCI DSS 是由 PCI 安全标准委员会的创始成员(visa、mastercard、American Express、Discover Financial Services、JCB等)制定，力在使国际上采用一致的数据安全措施，包括安全管理、策略、过程、网络体系结构、软件设计的要求的列表等，全面保障交易安全。&lt;/p&gt;
+&lt;h3 id=&#34;curl-2:2baef82d8a5626322ee50f56601e46b3&#34;&gt;CURL&lt;/h3&gt;
 
-&lt;p&gt;如果只是银行卡，还需要遵循 &lt;a href=&#34;http://baike.baidu.com/subview/1812080/12861982.htm&#34;&gt;ADSS&lt;/a&gt; （银联卡收单机构账户信息安全管理标准） 标准。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;curl\
+  -i http://localhost:3001/v1/activity/create\
+  -d &#39;{
+        &amp;quot;attrs&amp;quot;:{
+             &amp;quot;name&amp;quot;:&amp;quot;美白&amp;quot;,
+             &amp;quot;title&amp;quot;:&amp;quot;第一季&amp;quot;,
+             &amp;quot;wechat&amp;quot;:&amp;quot;12321&amp;quot;,
+             &amp;quot;city&amp;quot;:&amp;quot;上海 北京&amp;quot;,
+             &amp;quot;start_at&amp;quot;:45678933,
+             &amp;quot;end_at&amp;quot;:3221426,
+        },
+        &amp;quot;extras&amp;quot;:{
+               &amp;quot;apply_reason_example&amp;quot;: &amp;quot;申请理由范例&amp;quot;,
+               &amp;quot;front_photo_examples&amp;quot;:[&amp;quot;http://www.baidu.com/123.jpg&amp;quot;,&amp;quot;http://www.baidu.com/123.jpg&amp;quot;],
+               &amp;quot;profile_photo_examples&amp;quot;:[&amp;quot;http://www.baidu.com/123.jpg&amp;quot;,&amp;quot;http://www.baidu.com/123.jpg&amp;quot;],
+               &amp;quot;banners&amp;quot;:[
+                 {
+                   &amp;quot;img&amp;quot;: &amp;quot;http://www.baidu.com/1122.jpg&amp;quot;,
+                   &amp;quot;target_type&amp;quot;: &amp;quot;web&amp;quot;,
+                   &amp;quot;target_id&amp;quot;: &amp;quot;12345&amp;quot;,
+                 },
+                 {
+                   &amp;quot;img&amp;quot;: &amp;quot;http://www.baidu.com/1122.jpg&amp;quot;,
+                   &amp;quot;target_type&amp;quot;: &amp;quot;web&amp;quot;,
+                   &amp;quot;target_id&amp;quot;: &amp;quot;1234532&amp;quot;,
+                 },
+               ]
+        },
+        &amp;quot;enroll_num&amp;quot;:123,
+        &amp;quot;fund_balance&amp;quot;:22233.53,
+      }&#39;
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;2014年3月携程泄露用户银行卡信息就是因为没有遵循 &lt;a href=&#34;http://baike.baidu.com/view/8417913.htm&#34;&gt;PCI DSS&lt;/a&gt; 标准。&lt;/p&gt;
+&lt;hr /&gt;
 
-&lt;h3 id=&#34;用正确的姿势对数据进行备份和监控:c2254085ba550b8986e017a4f607e2b0&#34;&gt;用正确的姿势对数据进行备份和监控&lt;/h3&gt;
+&lt;p&gt;##活动信息&lt;/p&gt;
 
-&lt;p&gt;2015年5月的携程数据被删事件，就是数据备份没有做好的例子。数据备份是为了防止由于硬盘损坏或人为破坏导致的数据丢失。主要措施有：磁盘 raid，物理备份（磁带库），异地的逻辑备份。同时做好权限控制，并对访问记录做好监控，及时发现问题，保留现场证据。&lt;/p&gt;
+&lt;h3 id=&#34;url-3:2baef82d8a5626322ee50f56601e46b3&#34;&gt;URL&lt;/h3&gt;
 
-&lt;h2 id=&#34;总结:c2254085ba550b8986e017a4f607e2b0&#34;&gt;总结&lt;/h2&gt;
+&lt;p&gt;POST &lt;code&gt;/activity/get_info&lt;/code&gt;&lt;/p&gt;
 
-&lt;p&gt;本文总结了设计一个安全系统的基本原理和方法，并没有举出一个特定具体的方案，因为不同的系统对安全性的要求各有不同，设计者应该根据自身系统的特点进行具体设计。比如加盐 hash 的具体实施方法，salt 值如何构成等等。&lt;/p&gt;
+&lt;h3 id=&#34;token-3:2baef82d8a5626322ee50f56601e46b3&#34;&gt;TOKEN&lt;/h3&gt;
 
-&lt;p&gt;本文所述内容如有不实之处或者有争议的部分，欢迎交流指出。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;not required&lt;/code&gt;&lt;/p&gt;
 
-&lt;h4 id=&#34;附录:c2254085ba550b8986e017a4f607e2b0&#34;&gt;附录&lt;/h4&gt;
+&lt;h3 id=&#34;input-3:2baef82d8a5626322ee50f56601e46b3&#34;&gt;INPUT&lt;/h3&gt;
 
-&lt;p&gt;常用的加密算法：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;{
+    &amp;quot;activity_id&amp;quot;:&amp;quot;test&amp;quot;, //string:required
+    &amp;quot;extras&amp;quot;:{},          //以后升级时需要的扩展属性
+}
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;ol&gt;
-&lt;li&gt;对称加密：&lt;a href=&#34;http://baike.baidu.com/view/7510.htm&#34;&gt;DES&lt;/a&gt;、&lt;a href=&#34;http://baike.baidu.com/view/350958.htm&#34;&gt;3DES&lt;/a&gt;、TDEA、&lt;a href=&#34;http://baike.baidu.com/view/2208941.htm&#34;&gt;Blowfish&lt;/a&gt;、RC2、RC4、&lt;a href=&#34;http://baike.baidu.com/view/734720.htm&#34;&gt;RC5&lt;/a&gt;、&lt;a href=&#34;http://baike.baidu.com/view/92629.htm&#34;&gt;IDEA&lt;/a&gt;、SKIPJACK、&lt;a href=&#34;http://baike.baidu.com/subview/133041/5358738.htm&#34;&gt;AES&lt;/a&gt;。&lt;/li&gt;
-&lt;li&gt;非对称加密：&lt;a href=&#34;http://baike.baidu.com/view/7520.htm&#34;&gt;RSA&lt;/a&gt;、&lt;a href=&#34;http://baike.baidu.com/view/46554.htm&#34;&gt;ECC&lt;/a&gt;（椭圆曲线加密算法）、&lt;a href=&#34;http://baike.baidu.com/view/551692.htm&#34;&gt;Diffie-Hellman&lt;/a&gt;、&lt;a href=&#34;http://baike.baidu.com/view/2154827.htm&#34;&gt;El Gamal&lt;/a&gt;、DSA（数字签名用）&lt;/li&gt;
-&lt;li&gt;Hash 算法：MD2、MD4、MD5、HAVAL、SHA-1、SHA256、SHA512、RipeMD、WHIRLPOOL、SHA3、&lt;a href=&#34;https://tools.ietf.org/html/rfc2104&#34;&gt;HMAC&lt;/a&gt;&lt;/li&gt;
-&lt;/ol&gt;
+&lt;h3 id=&#34;output-3:2baef82d8a5626322ee50f56601e46b3&#34;&gt;OUTPUT&lt;/h3&gt;
 
-&lt;p&gt;DES、3DES、AES 区别：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;{
+    &amp;quot;code&amp;quot;:&amp;quot;00000&amp;quot;
+    &amp;quot;data&amp;quot;:{
+        &amp;quot;attrs&amp;quot;:{
+            &amp;quot;title&amp;quot;:                 &amp;quot;第一季(仅限上海)&amp;quot;,                                               //string:required, 标题
+            &amp;quot;name&amp;quot;:                  &amp;quot;活动名字&amp;quot;,                                                       //string:required.活动名字
+            &amp;quot;city&amp;quot;:                  &amp;quot;上海&amp;quot;
+            &amp;quot;wechat&amp;quot;:                &amp;quot;wdwww&amp;quot;,                                                         //string:required, 微信公众号
+            &amp;quot;start_at&amp;quot;:              1456305724,                                                      //timestamp:required,活动开始时间
+            &amp;quot;end_at&amp;quot;:                1456305724,                                                       //timestamp:required,活动结束时间
+        },
 
-&lt;ol&gt;
-&lt;li&gt;DES：1976年由美国联邦政府的国家标准局颁布，密钥为 56 位。&lt;/li&gt;
-&lt;li&gt;3DES：DES加密算法的一种模式，它使用3条56位的密钥对数据进行三次加密。&lt;/li&gt;
-&lt;li&gt;AES：高级加密标准，是下一代的加密算法标准，速度快，安全级别高，用来替代原先的DES。密钥长度可以是128，192或256比特。&lt;/li&gt;
-&lt;/ol&gt;
+        &amp;quot;extras&amp;quot;:{
+          &amp;quot;banners&amp;quot;: [                                                                               //string:required, 标题页
+              {                                                                             
+                  &amp;quot;img&amp;quot;        : &amp;quot;http://qiniu.com/sdddww/dwe.jpg&amp;quot;,                           //string:required, 图片链接
+                  &amp;quot;target_type&amp;quot;: &amp;quot;web&amp;quot;,                                                       //string:required, 目标类型
+                  &amp;quot;target_id&amp;quot;  : &amp;quot;http://qiniu.com/sdddww/dwe.jpg&amp;quot;,                            //string:required, 目标链接
+              },
+              {
+                  &amp;quot;img&amp;quot;        : &amp;quot;http://qiniu.com/sdddww/dwe.jpg&amp;quot;,
+                  &amp;quot;target_type&amp;quot;: &amp;quot;web&amp;quot;,
+                  &amp;quot;target_id&amp;quot;  : &amp;quot;http://qiniu.com/sdddww/dwe.jpg&amp;quot;,
+              },
+          ],
 
-&lt;h4 id=&#34;参考文章:c2254085ba550b8986e017a4f607e2b0&#34;&gt;参考文章&lt;/h4&gt;
+          &amp;quot;apply_reason_example&amp;quot;:  &amp;quot;申请理由范例&amp;quot;,                                                   //string:required,参加活动的理由，改善建议
+          &amp;quot;front_photo_examples&amp;quot;:   [&amp;quot;http://qiniu.com/1dasdf/asdf.jpg&amp;quot;,&amp;quot;http://qiniu.com/1dasdf/asdf.jpg&amp;quot;],//[]:required,正面照
+          &amp;quot;profile_photo_examples&amp;quot;: [&amp;quot;http://qiniu.com/1dasdf/asdf.jpg&amp;quot;,&amp;quot;http://qiniu.com/1dasdf/asdf.jpg&amp;quot;],//[]:required,侧面照
+        },
 
-&lt;ol&gt;
-&lt;li&gt;&lt;a href=&#34;https://crackstation.net/hashing-security.htm&#34;&gt;Salted Password Hashing - Doing it Right&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://msdn.microsoft.com/zh-cn/library/cc488016%28v=vs.90%29.aspx&#34;&gt;ECDH 算法概述&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://en.wikipedia.org/wiki/Rainbow_table&#34;&gt;Rainbow table&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;《改变未来的九大算法》第四章：公钥加密&lt;/li&gt;
-&lt;/ol&gt;
+        &amp;quot;enroll_num&amp;quot;:            1221,                                                          //报名人数
+        &amp;quot;fund_balance&amp;quot;:          12334223.43,                                                   //string:required, 剩余基金
+        &amp;quot;update_at&amp;quot;:             45673232,   //timestamp:required, 活动信息更新时间戳
+        &amp;quot;status&amp;quot;                 1,          // int:required,活动当前的状态,{-1:下线状态,1:上线状态}
+    }
+}
+
+{
+    &amp;quot;code&amp;quot;:&amp;quot;11203&amp;quot;,
+    &amp;quot;message&amp;quot;:&amp;quot;活动不存在!&amp;quot;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;error-3:2baef82d8a5626322ee50f56601e46b3&#34;&gt;ERROR&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;ErrActivityNotExists //error code:11203&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;curl-3:2baef82d8a5626322ee50f56601e46b3&#34;&gt;CURL&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;curl\
+  -X POST\
+  -i http://localhost:3001/v1/activity/get_info \
+  -d &#39;{&amp;quot;activity_id&amp;quot;:&amp;quot;test&amp;quot;}&#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;获得活动列表:2baef82d8a5626322ee50f56601e46b3&#34;&gt;获得活动列表&lt;/h2&gt;
+
+&lt;h3 id=&#34;url-4:2baef82d8a5626322ee50f56601e46b3&#34;&gt;URL&lt;/h3&gt;
+
+&lt;p&gt;POST &lt;code&gt;/activity/get_activities&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;token-4:2baef82d8a5626322ee50f56601e46b3&#34;&gt;TOKEN&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;not required&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;input-4:2baef82d8a5626322ee50f56601e46b3&#34;&gt;INPUT&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;{
+    &amp;quot;last&amp;quot;:&amp;quot;234&amp;quot;,// 上次的num数
+    &amp;quot;limit&amp;quot;:21,  // 需要获得至少limit条数据，limit不能小于1
+    &amp;quot;extras&amp;quot;:{}, // 以后扩展功能,&amp;quot;is_brief&amp;quot;:true, 代表是简略的还是全部的信息,默认简略内容
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;output-4:2baef82d8a5626322ee50f56601e46b3&#34;&gt;OUTPUT&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;{
+    &amp;quot;code&amp;quot;:&amp;quot;00000&amp;quot;
+    &amp;quot;data&amp;quot;:{
+        &amp;quot;activities&amp;quot;: [
+        {
+                &amp;quot;title&amp;quot;: &amp;quot;第一季(仅限上海)&amp;quot;, // 本季活动的标题
+                &amp;quot;status&amp;quot;: 1,                 //-1:活动已下线，下线不显示;1:活动上线
+                &amp;quot;num&amp;quot;:1,                     // 活动次数
+                &amp;quot;activity_id&amp;quot;:&amp;quot;56789567&amp;quot;     // 报名活动的Id
+                &amp;quot;update_at&amp;quot;:  23432112     // 活动更新时间戳
+            },
+        {
+                &amp;quot;title&amp;quot;: &amp;quot;第一季(仅限上海)&amp;quot;, // 本季活动的标题
+                &amp;quot;status&amp;quot;: 1,
+                &amp;quot;activity_id&amp;quot;:&amp;quot;56789567&amp;quot;
+                &amp;quot;num&amp;quot;:2
+                &amp;quot;update_at&amp;quot;:  23432112
+            }
+        ]  
+    }
+}
+
+{
+    &amp;quot;code&amp;quot;:&amp;quot;10002&amp;quot;,
+    &amp;quot;message&amp;quot;:&amp;quot;数据参数转化错误&amp;quot;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;error-4:2baef82d8a5626322ee50f56601e46b3&#34;&gt;ERROR&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;none&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;curl-4:2baef82d8a5626322ee50f56601e46b3&#34;&gt;CURL&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;curl\
+  -X POST\
+  -d &#39;{&amp;quot;last&amp;quot;:&amp;quot;2342&amp;quot;,&amp;quot;limit&amp;quot;:2}&#39;
+  -i http://localhost:3001/v1/activity/get_activities
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;获得活动体验:2baef82d8a5626322ee50f56601e46b3&#34;&gt;获得活动体验&lt;/h2&gt;
+
+&lt;h3 id=&#34;url-5:2baef82d8a5626322ee50f56601e46b3&#34;&gt;URL&lt;/h3&gt;
+
+&lt;p&gt;POST &lt;code&gt;/activity/get_experiences&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;token-5:2baef82d8a5626322ee50f56601e46b3&#34;&gt;TOKEN&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;not required&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;input-5:2baef82d8a5626322ee50f56601e46b3&#34;&gt;INPUT&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;{
+  &amp;quot;last&amp;quot;:&amp;quot;上次的体验ID&amp;quot;,
+  &amp;quot;limit&amp;quot;:1,
+  &amp;quot;extras&amp;quot;:{},
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;output-5:2baef82d8a5626322ee50f56601e46b3&#34;&gt;OUTPUT&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;{
+    &amp;quot;code&amp;quot;:&amp;quot;00000&amp;quot;,
+    &amp;quot;data&amp;quot;:{
+       &amp;quot;experiences&amp;quot;:[
+           {
+                &amp;quot;user_id&amp;quot;:&amp;quot;23432&amp;quot;,
+                &amp;quot;activity_name&amp;quot;:&amp;quot;美白&amp;quot;,
+                &amp;quot;activity_title&amp;quot;:&amp;quot;第一季&amp;quot;,
+                &amp;quot;activity_balance&amp;quot;:12321.12,
+                &amp;quot;extras&amp;quot;:{},
+            },
+            {
+                &amp;quot;user_id&amp;quot;:&amp;quot;23432&amp;quot;,
+                &amp;quot;activity_name&amp;quot;:&amp;quot;美白&amp;quot;,
+                &amp;quot;activity_title&amp;quot;:&amp;quot;第一季&amp;quot;,
+                &amp;quot;activity_balance&amp;quot;:12321.12,
+                &amp;quot;extras&amp;quot;:{},
+            },
+        ]
+    },
+}
+
+{
+    &amp;quot;code&amp;quot;:&amp;quot;10002&amp;quot;,
+    &amp;quot;message&amp;quot;:&amp;quot;数据参数转化错误&amp;quot;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;error-5:2baef82d8a5626322ee50f56601e46b3&#34;&gt;ERROR&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;none&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;curl-5:2baef82d8a5626322ee50f56601e46b3&#34;&gt;CURL&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;curl\
+  -X POST\
+  -i http://localhost:3001/v1/activity/get_experiences\
+  -d &#39;{&amp;quot;last&amp;quot;:&amp;quot;2342&amp;quot;,&amp;quot;limit&amp;quot;:2}&#39;
+&lt;/code&gt;&lt;/pre&gt;
 </description>
         </item>
         
         <item>
-            <title>我的 2015</title>
-            <link>http://kooksee.github.io/2016/01/01/my-2015/</link>
-            <pubDate>Fri, 01 Jan 2016 00:34:08 CST</pubDate>
+            <title>API BluePrint</title>
+            <link>http://kooksee.github.io/blog/API%20BluePrint/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
             <author>CoderZh</author>
-            <guid>http://kooksee.github.io/2016/01/01/my-2015/</guid>
-            <description>&lt;p&gt;&lt;img src=&#34;http://7xlx3k.com1.z0.glb.clouddn.com/2016.jpg-wt&#34; alt=&#34;2016&#34; /&gt;&lt;/p&gt;
+            <guid>http://kooksee.github.io/blog/API%20BluePrint/</guid>
+            <description>
 
-&lt;p&gt;2015年对我来说是意义非凡的一年，这一年里，我主要干了以下几件事：&lt;/p&gt;
+&lt;h2 id=&#34;语法规范:8c28c4a64c18fe5a5d079ebc23d5493e&#34;&gt;语法规范&lt;/h2&gt;
 
-&lt;ol&gt;
-&lt;li&gt;离开游戏创业公司加入了微信。&lt;/li&gt;
-&lt;li&gt;重新开始写博客，开始写公众号：一个程序员的思考。&lt;/li&gt;
-&lt;li&gt;我可爱的儿子出生了。&lt;/li&gt;
-&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;首先, 可以查看官方提供的&lt;a href=&#34;https://github.com/apiaryio/api-blueprint/tree/master/examples&#34;&gt;例子&lt;/a&gt; . 一共也就 10 多个, 想深究的童鞋可以看一下。&lt;/p&gt;&lt;/li&gt;
 
-&lt;p&gt;可以说，2015年我收获颇多，最大的收获是我的小宝宝的到来，欣喜和激动之情难以言表。对于这个新加入的小成员，我们会好好的爱他，呵护他，陪伴他成长，宝宝加油，我们也一起加油哦。&lt;/p&gt;
+&lt;li&gt;&lt;p&gt;然后是很大概率用不太到的&lt;a href=&#34;https://github.com/apiaryio/api-blueprint/blob/master/API%20Blueprint%20Specification.md&#34;&gt;语法规范&lt;/a&gt;。&lt;/p&gt;&lt;/li&gt;
 
-&lt;p&gt;事业方面，我离开了工作4年的游戏创业公司，这里有太多千丝万缕的故事。2011年，我们从西山居出来时，也是满怀梦想，也曾激情奋斗，一起吃大叔做的菜，一起打闹玩笑，认真工作时为一个问题可以争的面红耳赤，一起玩游戏时可以在 LOL 里 High 到不能自已。&lt;/p&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;https://github.com/apiaryio/mson&#34;&gt;MSON&lt;/a&gt;语法规范，基本用不太到。&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
 
-&lt;p&gt;我努力过，也可以说还不够努力，也许当时我可以做的更好，或许当时我可以更主动去承担起一些责任，或许，我什么也改变不了。创业维艰，只有经历过的人才能体会。当时看着一个又一个最早一起的小伙伴离开，难免伤感，不过他们离开后都有了不错的去处，也是很欣慰的。&lt;/p&gt;
+&lt;h2 id=&#34;配套工具:8c28c4a64c18fe5a5d079ebc23d5493e&#34;&gt;配套工具&lt;/h2&gt;
 
-&lt;p&gt;我坚持了4年，领略了游戏行业无情的市场竞争，经历了创业公司面临的种种问题和挑战。当然，我主要工作也只是写程序，很多事情是你无法左右的。所以在我30岁的时候，&lt;strong&gt;我想应该做些改变了&lt;/strong&gt;。&lt;/p&gt;
+&lt;h3 id=&#34;编辑器插件:8c28c4a64c18fe5a5d079ebc23d5493e&#34;&gt;编辑器插件&lt;/h3&gt;
 
-&lt;p&gt;于是我加入了微信。做为在职员工，不应该在外面过多评论自己的公司。在这里我就简单说一下自己的感受。腾讯是一家值得尊敬的公司，公司文化氛围很好，活跃而且开放，同事都很优秀，我学习到很多，并且非常庆幸能加入腾讯。&lt;/p&gt;
+&lt;p&gt;对于不熟悉语法的童鞋，建议安装预览插件，相当于即时检查。从👇选一个顺手的吧！
+* &lt;a href=&#34;https://github.com/apiaryio/api-blueprint-sublime-plugin&#34;&gt;sublime&lt;/a&gt; 
+* &lt;a href=&#34;https://atom.io/packages/language-api-blueprint&#34;&gt;atom-language&lt;/a&gt; 
+* &lt;a href=&#34;https://atom.io/packages/api-blueprint-preview&#34;&gt;atom-preview&lt;/a&gt; 
+* &lt;a href=&#34;https://github.com/kylef/apiblueprint.vim&#34;&gt;vim&lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;换工作后，我也逐渐不怎么玩游戏了，把一直想戒也戒不掉的 LOL 给彻底戒掉了。我玩起游戏来很疯，很执着，喜欢专研，熬夜玩，睡觉也想。我大概经历过3次这样的过程。第一次是在大学时玩剑侠情缘一，没日没夜通宵达旦的玩，玩到早上通宵回来又饿又困，倒头睡到中午或下午，起来接着玩。第二次是工作后玩剑三，也沉迷过一段时间，第三次是创业时玩 LOL ，天天沉迷排位赛，看直播比赛，对英雄技能技巧、比赛选手如数家珍。&lt;/p&gt;
+&lt;h3 id=&#34;mock-服务:8c28c4a64c18fe5a5d079ebc23d5493e&#34;&gt;Mock 服务&lt;/h3&gt;
 
-&lt;p&gt;从游戏里跳出来后，&lt;strong&gt;我发现其实我也没有那么喜欢游戏&lt;/strong&gt;。一旦我不玩游戏后，那些游戏我碰都不碰了，APP Store 里排名靠前的我也玩不到几天。之前创业时，经常需要加班，总觉得玩游戏的时间都不够，所以业余时间也被占的满满的。现在不玩游戏后，发现其实时间是可以有很多方式来利用的，可以做很多有意义的事情，当你做的越多时，越会觉得时间其实是那么的不够用，为什么还要浪费在一局又一局重复的游戏上面呢？&lt;/p&gt;
+&lt;p&gt;这个是用来根据大家撰写的api.md来生成对应假数据的，理论上大家不需要安装，想体验一把的可以试试。
+* &lt;a href=&#34;https://github.com/localmed/api-mock&#34;&gt;api-mock&lt;/a&gt;
+* &lt;a href=&#34;https://github.com/Aconex/drakov&#34;&gt;drakov&lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;所以，我在我的博客上写了这么一句话激励自己：&lt;strong&gt;如果你没有感觉到时间不够用时，你多半正在虚度光阴。&lt;/strong&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;npm install -g api-mock
+api-mock api.md --port 3000
 
-&lt;p&gt;于是我重新捡起了荒废了3~4年的博客。这几年博客没有更新和创业公司加班及玩游戏有关，也和大环境有关。这几年微博兴起，Google Reader 关闭，博客没落，很多知名的博客都停更了。当然，这都是借口。如今，人们重新意识到了有价值的原创长文的价值，自媒体开始兴起，博客的形式也重新燃起了火花。国外的 &lt;a href=&#34;https://medium.com/&#34;&gt;Medium&lt;/a&gt; ，国内的 &lt;a href=&#34;http://www.jianshu.com/&#34;&gt;简书&lt;/a&gt; ，知乎专栏，新浪微博长文，微信公众号文章等等风生水起。&lt;/p&gt;
+npm install -g drakov
+drakov -f api.md -p 3000
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;虽然我之前在博客园的写的 Google Test 相关的文章已经有几十万的阅读量，但我还是决定从博客园搬家出来，目前使用的是 &lt;a href=&#34;gohugo.io&#34;&gt;Hugo&lt;/a&gt; 搭建的静态博客网站 &lt;a href=&#34;http://blog.coderzh.com/&#34;&gt;http://blog.coderzh.com/&lt;/a&gt; ，同时大部分文章都会在我的微信公众号（一个程序员的思考）里发布。博客起到一个备份和被搜索引擎索引的作用。&lt;/p&gt;
+&lt;h3 id=&#34;静态-html-生成:8c28c4a64c18fe5a5d079ebc23d5493e&#34;&gt;静态 HTML 生成&lt;/h3&gt;
 
-&lt;p&gt;如果算上这篇文章，今年我一共写了48篇文章了，平均一周一篇的节奏。公众号的订阅数也在持续上涨，在这里我要感谢所有订阅了我公众号和一直关注我博客的朋友，祝大家2016年新年快乐！新年新气象，无论学业、事业还是家庭都能顺顺利利。&lt;/p&gt;
+&lt;p&gt;写了一堆 markdown 文档，到了该出成果的时候了。使用&lt;a href=&#34;https://github.com/danielgtaylor/aglio&#34;&gt;aglio&lt;/a&gt;来生成我们需要的html页面吧。&lt;/p&gt;
 
-&lt;p&gt;&lt;strong&gt;2016年，我们一起努力！&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;安装与使用都非常简单，首先要确保本地装有 node 环境。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;npm install -g aglio
+
+aglio -i api.md -o api.html
+
+此时你可以选择打开api.html预览。但这个命令更多是给服务端生成页面用的。不太常用。
+
+可以直接：
+aglio -i api.md -s
+然后通过 http://127.0.0.1:3000就可以预览所生成的文件啦，这个这个页面在修改文档时是可以同步刷新的😄
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;生成html文件时可能会报错，blueprint有点类似于yaml语法，需要严格遵循语法定义（主要是空格的数量及换行约定）。错误会包含行号，请注意排查。😢，这么重要的东西，是不是应该放到顶部？&lt;/p&gt;
 </description>
         </item>
         
         <item>
-            <title>大家都应该做的 Code Review</title>
-            <link>http://kooksee.github.io/2015/12/27/code-review/</link>
-            <pubDate>Sun, 27 Dec 2015 18:49:15 CST</pubDate>
+            <title>Building Microservices: Using an API Gateway</title>
+            <link>http://kooksee.github.io/blog/Building%20Microservices:%20Using%20an%20API%20Gateway/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
             <author>CoderZh</author>
-            <guid>http://kooksee.github.io/2015/12/27/code-review/</guid>
-            <description>&lt;p&gt;代码审查（Code Review）是个老生常谈的话题了，我以前呆过的大公司也好，创业公司也好，都知道 Code Review 的好处，但真正去有效执行的却很少。有人认为“存在即合理”，大家都不愿意做 Code Review ，可能 Code Review 真的不好，影响开发效率。有的人想做，但是执行起来太困难。&lt;/p&gt;
+            <guid>http://kooksee.github.io/blog/Building%20Microservices:%20Using%20an%20API%20Gateway/</guid>
+            <description>&lt;p&gt;Blog
+Tech
+Chris Richardson
+·
+June 15, 2015
+Building Microservices: Using an API Gateway
+API gateway, microservices&lt;/p&gt;
 
-&lt;p&gt;造成大家放弃 Code Review 的原因有哪些呢？我仔细想了想，大概有这几种：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;twitter
+linkedin
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The first article in this seven-part series about designing, building, and deploying microservices introduced the Microservices Architecture pattern. It discussed the benefits and drawbacks of using microservices and how, despite the complexity of microservices, they are usually the ideal choice for complex applications. This is the second article in the series and will discuss building microservices using an API Gateway.&lt;/p&gt;
+
+&lt;p&gt;When you choose to build your application as a set of microservices, you need to decide how your application’s clients will interact with the microservices. With a monolithic application there is just one set of (typically replicated, load-balanced) endpoints. In a microservices architecture, however, each microservice exposes a set of what are typically fine-grained endpoints. In this article, we examine how this impacts client-to-application communication and proposes an approach that uses an API Gateway.&lt;/p&gt;
+
+&lt;p&gt;Editor’s note – This seven-part series of articles is now complete:&lt;/p&gt;
+
+&lt;p&gt;Blog
+Tech
+Chris Richardson
+·
+June 15, 2015
+Building Microservices: Using an API Gateway
+API gateway, microservices&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;twitter
+linkedin
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The first article in this seven-part series about designing, building, and deploying microservices introduced the Microservices Architecture pattern. It discussed the benefits and drawbacks of using microservices and how, despite the complexity of microservices, they are usually the ideal choice for complex applications. This is the second article in the series and will discuss building microservices using an API Gateway.&lt;/p&gt;
+
+&lt;p&gt;When you choose to build your application as a set of microservices, you need to decide how your application’s clients will interact with the microservices. With a monolithic application there is just one set of (typically replicated, load-balanced) endpoints. In a microservices architecture, however, each microservice exposes a set of what are typically fine-grained endpoints. In this article, we examine how this impacts client-to-application communication and proposes an approach that uses an API Gateway.&lt;/p&gt;
+
+&lt;p&gt;Editor’s note – This seven-part series of articles is now complete:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;1，Introduction to Microservices
+2，Building Microservices: Using an API Gateway (this article)
+3，Building Microservices: Inter-Process Communication in a Microservices Architecture
+4，Service Discovery in a Microservices Architecture
+5，Event-Driven Data Management for Microservices
+6，Choosing a Microservices Deployment Strategy
+7，Refactoring a Monolith into Microservices
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Blog
+Tech
+Chris Richardson
+·
+June 15, 2015
+Building Microservices: Using an API Gateway
+API gateway, microservices&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;twitter
+linkedin
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The first article in this seven-part series about designing, building, and deploying microservices introduced the Microservices Architecture pattern. It discussed the benefits and drawbacks of using microservices and how, despite the complexity of microservices, they are usually the ideal choice for complex applications. This is the second article in the series and will discuss building microservices using an API Gateway.&lt;/p&gt;
+
+&lt;p&gt;When you choose to build your application as a set of microservices, you need to decide how your application’s clients will interact with the microservices. With a monolithic application there is just one set of (typically replicated, load-balanced) endpoints. In a microservices architecture, however, each microservice exposes a set of what are typically fine-grained endpoints. In this article, we examine how this impacts client-to-application communication and proposes an approach that uses an API Gateway.&lt;/p&gt;
+
+&lt;p&gt;Editor’s note – This seven-part series of articles is now complete:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Introduction to Microservices
+Building Microservices: Using an API Gateway (this article)
+Building Microservices: Inter-Process Communication in a Microservices Architecture
+Service Discovery in a Microservices Architecture
+Event-Driven Data Management for Microservices
+Choosing a Microservices Deployment Strategy
+Refactoring a Monolith into Microservices
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Introduction&lt;/p&gt;
+
+&lt;p&gt;Let’s imagine that you are developing a native mobile client for a shopping application. It’s likely that you need to implement a product details page, which displays information about any given product.&lt;/p&gt;
+
+&lt;p&gt;For example, the following diagram shows what you will see when scrolling through the product details in Amazon’s Android mobile application.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://www.nginx.com/blog/building-microservices-using-an-api-gateway/&#34;&gt;https://www.nginx.com/blog/building-microservices-using-an-api-gateway/&lt;/a&gt;&lt;/p&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>Docker 2 -- 关于Dockerfile</title>
+            <link>http://kooksee.github.io/blog/Docker%202%20--%20%E5%85%B3%E4%BA%8EDockerf/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/Docker%202%20--%20%E5%85%B3%E4%BA%8EDockerf/</guid>
+            <description>&lt;blockquote&gt;
+&lt;p&gt;Dockerfile是一个镜像的表示，可以通过Dockerfile来描述构建镜像的步骤，并自动构建一个容器&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;所有的 Dockerfile 命令格式都是:
+INSTRUCTION arguments&lt;/p&gt;
+
+&lt;p&gt;虽然指令忽略大小写，但是建议使用大写。&lt;/p&gt;
+
+&lt;p&gt;##FROM 命令
+FROM &lt;image&gt;
+或
+FROM &lt;image&gt;:&lt;tag&gt;&lt;/p&gt;
+
+&lt;p&gt;这个设置基本的镜像，为后续的命令使用，所以应该作为Dockerfile的第一条指令。&lt;/p&gt;
+
+&lt;p&gt;比如:
+FROM ubuntu
+如果没有指定 tag ，则默认tag是latest，如果都没有则会报错。&lt;/p&gt;
+
+&lt;p&gt;##RUN 命令&lt;/p&gt;
+
+&lt;p&gt;RUN命令会在上面FROM指定的镜像里执行任何命令，然后提交(commit)结果，提交的镜像会在后面继续用到。&lt;/p&gt;
+
+&lt;p&gt;两种格式:&lt;/p&gt;
+
+&lt;p&gt;RUN &lt;command&gt; (the command is run in a shell - &lt;code&gt;/bin/sh -c&lt;/code&gt;)&lt;/p&gt;
+
+&lt;p&gt;或:&lt;/p&gt;
+
+&lt;p&gt;RUN &lt;a href=&#34;exec form&#34;&gt;&amp;ldquo;executable&amp;rdquo;, &amp;ldquo;param1&amp;rdquo;, &amp;ldquo;param2&amp;rdquo; &amp;hellip; &lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;RUN命令等价于:&lt;/p&gt;
+
+&lt;p&gt;docker run image command
+docker commit container_id&lt;/p&gt;
+
+&lt;p&gt;##注释&lt;/p&gt;
+
+&lt;p&gt;使用 # 作为注释&lt;/p&gt;
+
+&lt;p&gt;如:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# VERSION       1.0
+
+# use the ubuntu base image provided by dotCloud
+FROM ubuntu
+
+# make sure the package repository is up to date
+RUN echo &amp;quot;deb http://archive.ubuntu.com/ubuntu precise main universe&amp;quot; &amp;gt; /etc/apt/sources.list
+RUN apt-get update
+
+# install memcached
+RUN apt-get install -y memcached
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##MAINTAINER 命令&lt;/p&gt;
+
+&lt;p&gt;MAINTAINER name&lt;/p&gt;
+
+&lt;p&gt;MAINTAINER命令用来指定维护者的姓名和联系方式&lt;/p&gt;
+
+&lt;p&gt;如:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;MAINTAINER Guillaume J. Charmes, guillaume@dotcloud.com
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##ENTRYPOINT 命令
+&lt;a href=&#34;http://cloud.51cto.com/art/201411/457338.htm&#34;&gt;http://cloud.51cto.com/art/201411/457338.htm&lt;/a&gt;
+有两种语法格式，一种就是上面的(shell方式):&lt;/p&gt;
+
+&lt;p&gt;ENTRYPOINT cmd param1 param2 &amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;第二种是 exec 格式:
+ENTRYPOINT [&amp;ldquo;cmd&amp;rdquo;, &amp;ldquo;param1&amp;rdquo;, &amp;ldquo;param2&amp;rdquo;..&lt;/p&gt;
+
+&lt;p&gt;如:&lt;/p&gt;
+
+&lt;p&gt;ENTRYPOINT [&amp;ldquo;echo&amp;rdquo;, &amp;ldquo;Whale you be my container&amp;rdquo;]&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;container启动时执行的命令，但是一个Dockerfile中只能有一条ENTRYPOINT命令，如果多条，则只执行最后一条
+ENTRYPOINT 命令设置在容器启动时执行命令&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;root@tankywoo-docker:~# cat Dockerfile
+FROM ubuntu
+ENTRYPOINT echo &amp;quot;Welcome!&amp;quot;
+
+root@tankywoo-docker:~# docker run 62fda5e450d5
+Welcome!
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##USER 命令&lt;/p&gt;
+
+&lt;p&gt;比如指定 memcached 的运行用户，可以使用上面的 ENTRYPOINT 来实现:&lt;/p&gt;
+
+&lt;p&gt;ENTRYPOINT [&amp;ldquo;memcached&amp;rdquo;, &amp;ldquo;-u&amp;rdquo;, &amp;ldquo;daemon&amp;rdquo;]&lt;/p&gt;
+
+&lt;p&gt;更好的方式是：&lt;/p&gt;
+
+&lt;p&gt;ENTRYPOINT [&amp;ldquo;memcached&amp;rdquo;]
+USER daemon&lt;/p&gt;
+
+&lt;p&gt;##EXPOSE 命令&lt;/p&gt;
+
+&lt;p&gt;EXPOSE 命令可以设置一个端口在运行的镜像中暴露在外&lt;/p&gt;
+
+&lt;p&gt;EXPOSE &lt;port&gt; [&lt;port&gt;&amp;hellip;]&lt;/p&gt;
+
+&lt;p&gt;比如memcached使用端口 11211，可以把这个端口暴露在外，这样容器外可以看到这个端口并与其通信。&lt;/p&gt;
+
+&lt;p&gt;EXPOSE 11211&lt;/p&gt;
+
+&lt;p&gt;container内部服务开启的端口。主机上要用还得在启动container时，做host-container的端口映射：&lt;/p&gt;
+
+&lt;p&gt;docker run -d -p 127.0.0.1:33301:22 centos6-ssh&lt;/p&gt;
+
+&lt;p&gt;container ssh服务的22端口被映射到主机的33301端口&lt;/p&gt;
+
+&lt;p&gt;一个完整的例子:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# Memcached
+#
+# VERSION       2.2
+
+# use the ubuntu base image provided by dotCloud
+FROM ubuntu
+
+MAINTAINER Victor Coisne victor.coisne@dotcloud.com
+
+# make sure the package repository is up to date
+RUN echo &amp;quot;deb http://archive.ubuntu.com/ubuntu precise main universe&amp;quot; &amp;gt; /etc/apt/sources.list
+RUN apt-get update
+
+# install memcached
+RUN apt-get install -y memcached
+
+# Launch memcached when launching the container
+ENTRYPOINT [&amp;quot;memcached&amp;quot;]
+
+# run memcached as the daemon user
+USER daemon
+
+# expose memcached port
+EXPOSE 11211
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;上面是官方例子，国内建议换成163或sohu的源，不然太慢了。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;root@tankywoo-docker:~# docker build -t tankywoo  - &amp;lt; dck                       [38/480]
+Uploading context  2.56 kB
+Uploading context
+Step 0 : FROM ubuntu
+ ---&amp;gt; 99ec81b80c55
+Step 1 : MAINTAINER Victor Coisne victor.coisne@dotcloud.com
+ ---&amp;gt; Using cache
+ ---&amp;gt; 2b58110877f6
+Step 2 : RUN echo &amp;quot;deb http://mirrors.163.com/ubuntu/ precise main restricted universe multiverse&amp;quot; &amp;gt; /etc/apt/sources.list
+ ---&amp;gt; Running in f55a4a8bb069
+ ---&amp;gt; d48c6a965398
+Step 3 : RUN apt-get update
+ ---&amp;gt; Running in da091a1dd6e7
+Ign http://mirrors.163.com precise InRelease
+Get:1 http://mirrors.163.com precise Release.gpg [198 B]
+
+....
+
+Processing triggers for libc-bin (2.19-0ubuntu6) ...
+Processing triggers for ureadahead (0.100.0-16) ...
+ ---&amp;gt; 2886671b5b86
+Step 5 : ENTRYPOINT [&amp;quot;memcached&amp;quot;]
+ ---&amp;gt; Running in e8aeeab92cb6
+ ---&amp;gt; 7148293a4053
+Step 6 : USER daemon
+ ---&amp;gt; Running in 288766b19606
+ ---&amp;gt; 235e7f630ffa
+Step 7 : EXPOSE 11211
+ ---&amp;gt; Running in c6f881b9d51f
+ ---&amp;gt; 666c5d65f396
+Successfully built 666c5d65f396
+Removing intermediate container f55a4a8bb069
+Removing intermediate container da091a1dd6e7
+Removing intermediate container f23631d3d45a
+Removing intermediate container e8aeeab92cb6
+Removing intermediate container 288766b19606
+Removing intermediate container c6f881b9d51f
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##ENV 命令&lt;/p&gt;
+
+&lt;p&gt;用于设置环境变量&lt;/p&gt;
+
+&lt;p&gt;ENV &lt;key&gt; &lt;value&gt;
+来设置环境变量，比如：&lt;/p&gt;
+
+&lt;p&gt;ENV LANG en_US.UTF-8
+ENV LC_ALL en_US.UTF-8
+设置了后，后续的RUN命令都可以使用&lt;/p&gt;
+
+&lt;p&gt;使用此dockerfile生成的image新建container，可以通过 docker inspect 看到这个环境变量:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;root@tankywoo-docker:~# docker inspect 49bfc7a9817f
+    ...
+    &amp;quot;Env&amp;quot;: [
+        &amp;quot;name=tanky&amp;quot;,
+        &amp;quot;HOME=/&amp;quot;,
+        &amp;quot;PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin&amp;quot;
+    ],
+    ...
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;里面的name=tanky就是设置的。&lt;/p&gt;
+
+&lt;p&gt;也可以通过在docker run时设置或修改环境变量:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker run -i -t --env name=&amp;quot;tanky&amp;quot; ubuntu:newtest /bin/bash
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##ADD 命令&lt;/p&gt;
+
+&lt;p&gt;从src复制文件到container的dest路径:&lt;/p&gt;
+
+&lt;p&gt;ADD &lt;src&gt; &lt;dest&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;src&amp;gt; 是相对被构建的源目录的相对路径，可以是文件或目录的路径，也可以是一个远程的文件url
+&amp;lt;dest&amp;gt; 是container中的绝对路径
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;将文件&lt;src&gt;拷贝到container的文件系统对应的路径&lt;dest&gt;&lt;/p&gt;
+
+&lt;p&gt;所有拷贝到container中的文件和文件夹权限为0755,uid和gid为0&lt;/p&gt;
+
+&lt;p&gt;如果文件是可识别的压缩格式，则docker会帮忙解压缩&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;如果要ADD本地文件，则本地文件必须在 docker build &amp;lt;PATH&amp;gt;，指定的&amp;lt;PATH&amp;gt;目录下
+
+
+如果要ADD远程文件，则远程文件必须在 docker build &amp;lt;PATH&amp;gt;，指定的&amp;lt;PATH&amp;gt;目录下。比如:
+
+docker build github.com/creack/docker-firefox
+
+
+docker-firefox目录下必须有Dockerfile和要ADD的文件
+
+
+注意:使用docker build - &amp;lt; somefile方式进行build，是不能直接将本地文件ADD到container中。只能ADD
+ url file.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;ADD只有在build镜像的时候运行一次，后面运行container的时候不会再重新加载了。&lt;/p&gt;
+
+&lt;p&gt;##VOLUME 命令&lt;/p&gt;
+
+&lt;p&gt;VOLUME [&amp;ldquo;mountpoint&amp;rdquo;]&lt;/p&gt;
+
+&lt;p&gt;如:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;VOLUME [&amp;quot;/data&amp;quot;]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;创建一个挂载点用于共享目录&lt;/p&gt;
+
+&lt;p&gt;可以将本地文件夹或者其他container的文件夹挂载到container中。&lt;/p&gt;
+
+&lt;p&gt;具体参考 Docker 4 &amp;ndash; 总结
+##WORKDIR 命令&lt;/p&gt;
+
+&lt;p&gt;切换目录用，可以多次切换(相当于cd命令)，对RUN,CMD,ENTRYPOINT生效
+WORKDIR /path/to/workdir
+配置RUN, CMD, ENTRYPOINT 命令设置当前工作路径&lt;/p&gt;
+
+&lt;p&gt;可以设置多次，如果是相对路径，则相对前一个 WORKDIR 命令&lt;/p&gt;
+
+&lt;p&gt;比如:&lt;/p&gt;
+
+&lt;p&gt;WORKDIR /a WORKDIR b WORKDIR c RUN pwd&lt;/p&gt;
+
+&lt;p&gt;其实是在 /a/b/c 下执行 pwd
+##CMD 命令&lt;/p&gt;
+
+&lt;p&gt;有三种格式:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    CMD [&amp;quot;executable&amp;quot;,&amp;quot;param1&amp;quot;,&amp;quot;param2&amp;quot;] (like an exec, preferred form)
+    CMD [&amp;quot;param1&amp;quot;,&amp;quot;param2&amp;quot;] (as default parameters to ENTRYPOINT)
+    CMD command param1 param2 (as a shell
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;一个Dockerfile里只能有一个CMD，如果有多个，只有最后一个生效。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;The main purpose of a CMD is to provide defaults for an executing container.(为可执行的容器提供默认值) These defaults can include an executable, or they can omit the executable, in which case you must specify an ENTRYPOINT as well.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##TODO 还没搞清楚这个的作用
+##ONBUILD
+ONBUILD 指定的命令在构建镜像时并不执行，而是在它的子镜像中执行
+TODO&lt;/p&gt;
+
+&lt;p&gt;总结一下，基本常用的命令是: FROM, MAINTAINER, RUN, ENTRYPOINT, USER, PORT, ADD
+一些例子&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    docker-wordpress-nginx A Dockerfile that installs the latest wordpress, nginx and php-fpm.
+    rails-meets-docker
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>Docker 所有种类容器运行方法</title>
+            <link>http://kooksee.github.io/blog/Docker%20%E6%89%80%E6%9C%89%E7%A7%8D%E7%B1%BB%E5%AE%B9%E5%99%A8%E8%BF%90%E8%A1%8C%E6%96%B9%E6%B3%95/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/Docker%20%E6%89%80%E6%9C%89%E7%A7%8D%E7%B1%BB%E5%AE%B9%E5%99%A8%E8%BF%90%E8%A1%8C%E6%96%B9%E6%B3%95/</guid>
+            <description>
+
+&lt;h2 id=&#34;各种容器:f4861149b557706634d70e0e95ed362c&#34;&gt;各种容器&lt;/h2&gt;
 
 &lt;ol&gt;
-&lt;li&gt;&lt;strong&gt;时间紧&lt;/strong&gt;：项目赶着上线，一个人干两人的活，天天加班累成狗，哪有时间 Review ，怕影响项目进度。&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;等不了&lt;/strong&gt;：工作被阻塞，发起评审后，啥也干不了了，我是该催一催那家伙评审一下呢，还是催一催那家伙评审一下呢，什么？他休假了！WTF！&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;效果差&lt;/strong&gt;：我写的那么有气质的代码你看出来了吗？看出来了吗？！什么？！单词拼写错误？代码逻辑为什么是这样？来来来，搬个小板凳过来，我给你解释一下午。（评审者不了解被评审人工作）&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;嫌麻烦&lt;/strong&gt;：代码不能直接 commit 或 push ，必须先走评审流程，还能不能愉快的提交代码了？&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;nginx 这是对外的总服务接口&lt;code&gt;docker run -it -d --name nnn --net=prod -v /root/nginx:/etc/nginx -v /root/brew:/root/brew -p 3000:80 nginx&lt;/code&gt; 其中-v 一个是挂载配置文件，另外一个是挂载Linux通用工具用来检查内部网卡服务。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;consul 是我们的服务发现工具&lt;code&gt;docker run -it -d --name consul -p 8500:8500 -v /root/consulData:/data/ -v /bin/consul:/bin/consul ubuntu:14.04 /bin/consul agent -bind=0.0.0.0 -dev -ui -client=0.0.0.0&lt;/code&gt; 外部访问接口为8k5 /data/ 为consul 存储的位置， 第二个是挂载命令进去， 整个服务以agent 的形式运行， 绑定客户端以及服务器端为0000为所有位置均可以访问。-client最重要不然只能本地访问了。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;通用APP运行方法：&lt;code&gt;docker run -it -d --name prod-X -v /app:/aXXXpp --net=prod ubuntu:14.04 /app/XXXX.exe -flags&lt;/code&gt; 名字很重要prod为服务组，X为服务名字，与微服务名字一致， /app的位置为将要运行的app的可执行文件 &amp;ndash;net 为加入网络的组（服务网络隔离） 最后直接运行即可&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;测试用Postgres &lt;code&gt;docker run -it --name test-postgres -e POSTGRES_PASSWORD=wothing -v /app:/app -d postgres:9.5.1
+&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;p&gt;再加上，创业团队成功率本来就低，一种普遍的想法是：最重要是项目能活下去，代码写的挫一点没关系，可以以后再搞。代码写的再好，项目死了也是白搭。&lt;/p&gt;
+&lt;h3 id=&#34;李坤测试用容器-单container运行容器启动方法:f4861149b557706634d70e0e95ed362c&#34;&gt;李坤测试用容器（单Container运行容器启动方法）&lt;/h3&gt;
 
-&lt;p&gt;貌似好有道理啊，要不 Code Review 就不做了吧。不！&lt;strong&gt;我认为，不论大小什么团队，都应该做 Code Review 。&lt;/strong&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;docker run -it --name test-likun -d -p 446:22 -p 3002:3002 -v /app/likun:/app/likun -v /bin/consul:/bin/consul -e &#39;PUBKEY=ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC9YXv4T7Q0295K5fM/uCd1HxLRZztoqXUGBI/QD2wxeq8Wg/MHWC1jqDwIbU7zCvK6E2CM8NtlJSCA0D27XjRGVCJY7bYHlPL1Ah+qUwp4+6RnrDhQQaJPREUSzMhYQJRu8Fh8wxwvqkSPDQv9FZlNoCMDcisxkyTA+t9Yevr4BFHKARMFAqWmymJGtplUrHlyQIT7MzR4cWHD4xXW71sw2E6zQYO7vUQ91Qhpz8DG3VH085sQ6v4Xr3noS+sSRDX537EAdyME0LYrPb5BgK58lYBgDtJvcCD0uRFSVkJg8raNLgqt1aEmgqkKjI8Co/t3tww3utJ3wm2GCrQxl8dD likun@wothing.com&#39; index.tenxcloud.com/philo/dmonit:1.1
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;我的核心观点是，产品开发周期内，代码编写所占的时间比例其实是很小的，之后有大量的时间是花在代码调试，修复 Bug 和填之前的坑上。&lt;strong&gt;做 Code Review ，其实可以减少代码调试的时间，更快的定位和修复 Bug 和少挖一些坑。&lt;/strong&gt;在代码编写的阶段通过 Code Review 把控质量，从总的项目周期来看是划算的，甚至是事半功倍的。&lt;/p&gt;
+&lt;h3 id=&#34;如果容器缺少类库的情况-注意我是如何把类库挂载进入docker-容器的:f4861149b557706634d70e0e95ed362c&#34;&gt;如果容器缺少类库的情况 注意我是如何把类库挂载进入docker 容器的。&lt;/h3&gt;
 
-&lt;p&gt;当然，上面提到的“时间紧、等不了、效果差、嫌麻烦”也是真实存在的。要做好 Code Review ，就必须去解决这些问题。核心是提高 Code Review 效率，我的建议也很简单，&lt;strong&gt;用好的工具，做充分的沟通。&lt;/strong&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;docker run -it --name kkk -d -p 445:22 -v /usr/lib/x86_64-linux-gnu/libapparmor.so.1:/usr/lib/x86_64-linux-gnu/libapparmor.so.1 -v /lib/x86_64-linux-gnu/libsystemd-journal.so.0.10.2:/lib/x86_64-linux-gnu/libsystemd-journal.so.0 -v /usr/bin/docker:/usr/local/bin/docker -v /var/run/docker.sock:/var/run/docker.sock -e &#39;PUBKEY=ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDcTvSn5METOJUKXRr+Sa92eL2PRZlHb5tdKMublwgvHWaYNxJyXrxCARmBCy8VAo6rb/OeTsyuMWjZ7fVpxKc32ZkcBoIRL7YNkAonO8nHMSLvWUSKkwo7wfWubJhBQtDjvJ40WIcECrFkssFxbcl9YuUeZjdclmcylBkfwzdHJl7c3NtOjtCosN1RUDQZZJEJzKpSNcYtX/D1fPY9MovDWAeQ+xcLb6Gy5rnCTfyGgZDowyDpFNNe+j0a9G1zjlEww3GvOD/UUIf7hDaji+HjO8/sLfHjfAWWULStoEl/aUoofs93QVQFxCPOeYnZR/QL8MkfXQmwme7Nv7xBeqrt Li-jianying@lijianyings-MacBook-Pro.local&#39; index.tenxcloud.com/philo/dmonit:1.1
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>Docker 网络配置</title>
+            <link>http://kooksee.github.io/blog/Docker%20%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/Docker%20%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/</guid>
+            <description>
 
-&lt;p&gt;首先要避免 Code Review 工具提交过程过于复杂冗长，相关的工具有很多，不管是开源的还是商业的（比如：&lt;a href=&#34;http://phabricator.org/&#34;&gt;Phabricator&lt;/a&gt;、&lt;a href=&#34;https://www.gerritcodereview.com/&#34;&gt;Gerrit&lt;/a&gt;）。GitHub 的 Pull Request 其实是很好的 Code Review 工具。在 GitHub 上，你发现一个好项目想改进它，你只要点击 Fork ，增加你要的功能，然后通过 Pull Request 贡献你的代码。&lt;/p&gt;
+&lt;p&gt;阅读目录&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://7xlx3k.com1.z0.glb.clouddn.com/pr.jpg&#34; alt=&#34;pr&#34; /&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;摘要
+Docker选项快速指南
+配置DNS
+容器间通信
+为主机绑定容器端口
+定制 docker0
+建立你自己的桥接网络
+Docker 如何使容器连接到网络
+工具和实例
+建立点对点连接
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;“废话少说，Send me a pull request!” 是不是感觉这句话叼叼的。&lt;/p&gt;
+&lt;p&gt;摘要&lt;/p&gt;
 
-&lt;p&gt;GitHub 的 Pull Request Merge 相当于 Code Review 的过程，代码原作者 Review 代码，提出意见，最终合并只需要在 GitHub 点几个按钮就可以完成。据了解，已经有不少创业公司的代码直接托管在 GitHub，并采用 PR 的开发模式。&lt;/p&gt;
+&lt;p&gt;当docker启动时，它会在宿主机器上创建一个名为docker0的虚拟网络接口。它会从RFC 1918定义的私有地址中随机选择一个主机不用的地址和子网掩码，并将它分配给docker0。例如当我启动docker几分钟后它选择了172.17.42.1/16－一个16位的子网掩码为主机和它的容器提供了65,534个ip地址。&lt;/p&gt;
 
-&lt;p&gt;其次是要做好充分的沟通。实现某个功能时，可以指派给两人，一人负责写代码，一人负责跟踪和讨论，然后交叉进行，有点类似结对编程。如果做到这个比较难，那就需要在代码编写过程中尽可能多的和别人讨论沟通，让评审者充分了解你的工作。可行的方法是老员工带新员工，老员工对新员工的工作比较了解，可以很好的给出评审意见。另一种是老员工之间互相评审，互相交流容易擦出火花。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;注意: 本文讨论了Docker的高级网络配置和选项。通常你不会用到这些。如果你想查看一个较为简单的Docker网络介绍和容器概念介绍来着手，请参见Docker用户指南.
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;而且，做好 Code Review ，除了提高代码质量之外，还可以：&lt;/p&gt;
+&lt;p&gt;但docker0并不是正常的网络接口。它只是一个在绑定到这上面的其他网卡间自动转发数据包的虚拟以太网桥。它可以使容器与主机相互通信。每次 Docker创建一个容器，它就会创建一对对等接口(peer interface)，类似于一个管子的两端－在这边可以收到另一边发送的数据包。Docker会将对等接口中的一个做为eth0接口连接到容器上，并使 用类似于vethAQI2QT这样的惟一名称来持有另一个，该名称取决于主机的命名空间。通过将所有veth*接口绑定到docker0桥接网卡 上，Docker在主机和所有Docker容器间创建一个共享的虚拟子网。&lt;/p&gt;
+
+&lt;p&gt;本文其他部分将会讲解使用Docker选项的所有方式，并且－在高级模式下－使用纯linux网线配置命令来&lt;/p&gt;
+
+&lt;p&gt;调整，补充，或完全替代Docker的默认网络配置。
+回到顶部
+Docker选项快速指南&lt;/p&gt;
+
+&lt;p&gt;这里有一份关于Docker网络配置的命令行选项列表，省去您查找相关资料的麻烦。
+一些网络配置的命令行选项只能在服务器启动时提供给Docker服务器。并且一旦启动起来就无法改变。&lt;/p&gt;
+
+&lt;p&gt;一些网络配置命令选项只能在启动时提供给Docker服务器，并且在运行中不能改变:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;-b BRIDGE或--bridge=BRIDGE— see    建立自己的网桥
+
+--bip=CIDR— see    定制docker0
+
+-H SOCKET...或--host=SOCKET...—   它看起来像是在设置容器的网络，但实际却恰恰相反：它告诉Docker服务器要接收命令的通道，例如“run container&amp;quot;和&amp;quot;stop container&amp;quot;。
+
+--icc=true|false— see    容器间通信
+
+--ip=IP_ADDRESS— see    绑定容器端口
+
+--ip-forward=true|false— see    容器间通信
+
+--iptables=true|false— see   容器间通信
+
+--mtu=BYTES— see    定制docker0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;有两个网络配置选项可以在启动时或调用docker run时设置。当在启动时设置它会成为docker run的默认值:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;--dns=IP_ADDRESS...— see    配置DNS
+
+--dns-search=DOMAIN...— see    配置DNS
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;最后，一些网络配置选项只能在调用docker run时指出，因为它们要为每个容器做特定的配置:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;-h HOSTNAME或--hostname=HOSTNAME— see    配置DNS 和  Docker与容器连接原理
+
+--link=CONTAINER_NAME:ALIAS— see   配置DNS and    容器间通信
+
+--net=bridge|none|container:NAME_or_ID|host— see   Docker与容器连接原理
+
+-p SPECor--publish=SPEC— see    绑定容器端口
+
+-P或--publish-all=true|false— see    绑定容器端口
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;接下来的部分会对以上话题从易到难做出逐一解答。
+回到顶部
+配置DNS&lt;/p&gt;
+
+&lt;p&gt;怎样为Docker提供的每一个容器进行主机名和DNS配置，而不必建立自定义镜像并将主机名写到里面？它的诀窍是覆盖三个至关重要的在/etc下的容器内的虚拟文件，那几个文件可以写入新的信息。你可以在容器内部运行mount看到这个：&lt;/p&gt;
+
+&lt;p&gt;$$ mount&amp;hellip;/dev/disk/by-uuid/1fec&amp;hellip;ebdf on /etc/hostname type ext4 &amp;hellip;/dev/disk/by-uuid/1fec&amp;hellip;ebdf on /etc/hosts type ext4 &amp;hellip;tmpfs on /etc/resolv.conf type tmpfs &amp;hellip;&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;这样的配置允许Docker去做聪明的事情，类似于当主机接收到新的DHCP配置之后，保持resolv.conf的数据到所有的容器中。 Docker怎样维护在容器内的这些文件从Docker的一个版本到下一个版本的具体细节，你应该抛开这些单独的文件本身并且使用下面的Docker选项 代替。&lt;/p&gt;
+
+&lt;p&gt;有四种不同的选项会影响容器守护进程的服务名称。&lt;/p&gt;
 
 &lt;ol&gt;
-&lt;li&gt;把控代码的风格和规范，提高代码的可维护性。&lt;/li&gt;
-&lt;li&gt;展示自己的工作内容，让同事对你的工作成果更加了解。&lt;/li&gt;
-&lt;li&gt;从别人的代码里学习到很多编程技巧，解决问题的思路。&lt;/li&gt;
-&lt;li&gt;通过别人的评审意见发现自己的不足，优化自己的代码，扩宽自己的思路。&lt;/li&gt;
-&lt;li&gt;很好的给予新人指导，给出有建设性的意见，帮助新人成长，做好知识的传承。&lt;/li&gt;
-&lt;li&gt;通过评审摩擦火花，互相欣赏，找到心灵相惜的好基友或终身伴侣。&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;-h HOSTNAME 或者 &amp;ndash;hostname=HOSTNAME  &amp;ndash;设置容器的主机名，仅本机可见。这种方式是写到/etc/hostname ，以及/etc/hosts 文件中，作为容器主机IP的别名，并且将显示在容器的bash中。不过这种方式设置的主机名将不容易被容器之外可见。这将不会出现在 docker ps 或者 其他的容器的/etc/hosts 文件中。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&amp;ndash;link=CONTAINER_NAME:ALIAS  &amp;ndash;使用这个选项去run一个容器将在此容器的/etc/hosts文件中增加一个主机名ALIAS，这个主机名是名为CONTAINER_NAME 的容器的IP地址的别名。这使得新容器的内部进程可以访问主机名为ALIAS的容器而不用知道它的IP。&amp;ndash;link= 关于这个选项的详细讨论请看：    Communication between containers.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&amp;ndash;dns=IP_ADDRESS &amp;ndash;设置DNS服务器的IP地址，写入到容器的/etc/resolv.conf文件中。当容器中的进程尝试访问不在/etc/hosts文件中的主机A 时，容器将以53端口连接到IP_ADDRESS这个DNS服务器去搜寻主机A的IP地址。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&amp;ndash;dns-search=DOMAIN &amp;ndash;设置DNS服务器的搜索域，以防容器尝试访问不完整的主机名时从中检索相应的IP。这是写入到容器的 /etc/resolv.conf文件中的。当容器尝试访问主机 host，而DNS搜索域被设置为 example.com ,那么DNS将不仅去查寻host主机的IP，还去查询host.example.com的 IP。&lt;/p&gt;&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://7xlx3k.com1.z0.glb.clouddn.com/code-review.jpg&#34; alt=&#34;code-review&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;在docker中，如果启动容器时缺少以上最后两种选项设置时，将使得容器的/etc/resolv.conf文件看起来和宿主主机的/etc/resolv.conf文件一致。这些选项将修改默认的设置。
+回到顶部
+容器间通信&lt;/p&gt;
 
-&lt;p&gt;Code Review ，你做了就知道！&lt;/p&gt;
+&lt;p&gt;在操作系统层面上，决定两个容器间的通信能否得到控制，有以下三个因素。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;网络拓扑逻辑是否连接上了容器的网络接口。默认情况下Docker将把所有容器绑定到一个 singledocker0bridge,并为两个容器间的包传输提供路径。参见本文档后续部分---其他可能的拓扑逻辑
+
+主机是否要发送IP包？这由ip_forward系统参数控制。如果这个参数设为1，那么数据包只能在容器间传输。通常情况下，让 Docker服务器使用它的默认设置  --ip-forward=true ,   Docker在启动的时候会把ip_forwardsh.  要检查设置或手动设置参数，可以这样做：
+
+# Usually not necessary: turning on forwarding,# on the host where your Docker server is running$ cat /proc/sys/net/ipv4/ip_forward0$ sudo echo 1 &amp;gt; /proc/sys/net/ipv4/ip_forward
+$ cat /proc/sys/net/ipv4/ip_forward1
+
+iptables是否允许特殊连接?如果你把设置 --iptables=false,当守护进程启动时，Docker不会改变你的系统iptables规则。另外，如果你保留默认设置  --icc=true，Docker服务器或向FORWARD链添加一个带有全局ACCEPT策略的默认规则。如果不保留默认设置，系统会把策略设为 DROP.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;几乎所有人使用docker都希望ip_forward 是打开的，至少使容器间的通讯成为可能。但是否同意 &amp;ndash;icc=true 或者更改为 &amp;ndash;icc=false 使得iptables 可以保护容器以及宿主主机不被任意地端口扫描、避免被已经被渗透的容器所访问，这是一个策略问题。（在ubuntu，是编辑/etc/default /docker文件中的DOCKER_OPTS参数，然后重启docker服务）&lt;/p&gt;
+
+&lt;p&gt;如果你选择最安全的设置 &amp;ndash;icc=false ，那么当你想让它们彼此提供服务的时候如何让它们相互通讯？&lt;/p&gt;
+
+&lt;p&gt;答案是：使用前文提到的 &amp;ndash;link=CONTAINER_NAME:ALIAS 选项。如果docker守护进程正在以 &amp;ndash;icc=false 和 &amp;ndash;iptables=true 参数运行，当以选项 &amp;ndash;link= 执行 docker run 命令时，docker服务将插入一部分 iptables ACCEPT 规则使得新容器可以连接其他容器所暴露出来的端口（此端口指前文在 Dockerfile 中提到的EXPOSE这一行）。更多详细文档介绍请看：linking Docker containers。&lt;/p&gt;
+
+&lt;p&gt;注意: &amp;ndash;link 选项中的 CONTAINER_NAME 的值必须是 docker自动分配的容器名称，比如 stupefied_pare， 或者是在执行docker run 的时候用 &amp;ndash;name= 指定的容器名称.  这不能使一个docker无法识别的主机名。&lt;/p&gt;
+
+&lt;p&gt;你可以在你的Docker主机上运行iptables命令，来观察FORWARD链是否有默认的ACCEPT或DROP策略&lt;/p&gt;
+
+&lt;h1 id=&#34;when-icc-false-you-should-see-a-drop-rule-sudo-iptables-l-n-chain-forward-policy-accept-target-prot-opt-source-destination:b1927aed458c7b4d8f1e229af0616036&#34;&gt;When &amp;ndash;icc=false, you should see a DROP rule:$ sudo iptables -L -n&amp;hellip;Chain FORWARD (policy ACCEPT)target     prot opt source               destination&lt;/h1&gt;
+
+&lt;p&gt;DROP       all  &amp;ndash;  0.0.0.0/0            0.0.0.0/0&amp;hellip;# When a &amp;ndash;link= has been created under &amp;ndash;icc=false,# you should see port-specific ACCEPT rules overriding# the subsequent DROP policy for all other packets:$ sudo iptables -L -n&amp;hellip;Chain FORWARD (policy ACCEPT)target     prot opt source               destination
+ACCEPT     tcp  &amp;ndash;  172.17.0.2           172.17.0.3           tcp spt:80ACCEPT     tcp  &amp;ndash;  172.17.0.3           172.17.0.2           tcp dpt:80DROP       all  &amp;ndash;  0.0.0.0/0            0.0.0.0/0&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;注意: Docker的iptables规则完全显示了容器相互间的原始IP地址，所以一个容器到另一个容器的连接，需要显示地显示出第一个容器的原始IP地址。
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;回到顶部
+为主机绑定容器端口&lt;/p&gt;
+
+&lt;p&gt;默认情况下，Docker容器可以连接到外部区域，但外部区域不能连接到容器。在Docker启动时，由于它在主机上创建了一个iptables伪装规则，使得每一个输出连接看起来都是由主机IP地址建立起来的。&lt;/p&gt;
+
+&lt;h1 id=&#34;you-can-see-that-the-docker-server-creates-a-masquerade-rule-that-let-containers-connect-to-ip-addresses-in-the-outside-world-sudo-iptables-t-nat-l-n-chain-postrouting-policy-accept-target-prot-opt-source-destination:b1927aed458c7b4d8f1e229af0616036&#34;&gt;You can see that the Docker server creates a# masquerade rule that let containers connect# to IP addresses in the outside world:$ sudo iptables -t nat -L -n&amp;hellip;Chain POSTROUTING (policy ACCEPT)target     prot opt source               destination&lt;/h1&gt;
+
+&lt;p&gt;MASQUERADE  all  &amp;ndash;  172.17.0.0/16       !172.17.0.0/16&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;当调用docker run的时候，如果你想让容器接受输入连接，你需要提供特殊选项。这些选项的详细说明在 Docker User Guide.  有两种方法可以实现。&lt;/p&gt;
+
+&lt;p&gt;首先，你可以提供 -P 或者 &amp;ndash;publish-all=true|false 选项参数来执行 docker run 命令，这将会识别所有在dockerfile中暴露的端口，并且随机映射到 49000-49900 之间的主机端口。这看起来是一个很大的不便，当你要启动一个新的容器时你需要知道那个主机端口已经被映射。&lt;/p&gt;
+
+&lt;p&gt;更方便的操作是使用 -p SPEC 或者 &amp;ndash;publish=SPEC 选项，这两个选项让你明确的指定docker容器的端口映射到任意的主机端口中，不局限于49000-49900.&lt;/p&gt;
+
+&lt;p&gt;无论如何，你应该通过审查你的NAT表，去看看docker在你的网络占做了什么。&lt;/p&gt;
+
+&lt;h1 id=&#34;what-your-nat-rules-might-look-like-when-docker:b1927aed458c7b4d8f1e229af0616036&#34;&gt;What your NAT rules might look like when Docker&lt;/h1&gt;
+
+&lt;h1 id=&#34;is-finished-setting-up-a-p-forward:b1927aed458c7b4d8f1e229af0616036&#34;&gt;is finished setting up a -P forward:&lt;/h1&gt;
+
+&lt;p&gt;$ iptables -t nat -L -n
+&amp;hellip;Chain
+DOCKER (2 references)
+target     prot opt source               destination
+DNAT       tcp  &amp;ndash;  0.0.0.0/0            0.0.0.0/0            tcp dpt:49153 to:172.17.0.2:80&lt;/p&gt;
+
+&lt;h1 id=&#34;what-your-nat-rules-might-look-like-when-docker-1:b1927aed458c7b4d8f1e229af0616036&#34;&gt;What your NAT rules might look like when Docker&lt;/h1&gt;
+
+&lt;h1 id=&#34;is-finished-setting-up-a-p-80-80-forward:b1927aed458c7b4d8f1e229af0616036&#34;&gt;is finished setting up a -p 80:80 forward:&lt;/h1&gt;
+
+&lt;p&gt;Chain
+DOCKER (2 references)
+target     prot opt source               destination
+DNAT       tcp  &amp;ndash;  0.0.0.0/0            0.0.0.0/0            tcp dpt:80 to:172.17.0.2:80&lt;/p&gt;
+
+&lt;p&gt;可以看到，docker暴露了这些容器的端口到通配IP地址：0.0.0.0 ，这个通配IP地址可以匹配宿主主机上任意一个可以进入的端口。如果你希望更多的限制，并且只允许容器服务通过特殊的宿主主机的外部网络接口来相互联系， 那么你有两种选择。当你执行 docker run 命令时，你可以使用 -p IP:host_port:container_port 或者  -p IP::port 来明确地绑定外部接口。&lt;/p&gt;
+
+&lt;p&gt;或者如果你希望dokcer永远转发到一个特殊的IP地址上，你可以编辑你的docker系统设置文件（ubuntu系统的设置方法为：编辑 /etc/default/docker文件，改写DOCKER_OPTS参数），增加选项 &amp;ndash;ip=IP_ADDRESS 。修改完之后记得重启你的docker服务。&lt;/p&gt;
+
+&lt;p&gt;如果你希望更详细的指导，请参考： Docker User Guide .
+回到顶部
+定制 docker0&lt;/p&gt;
+
+&lt;p&gt;默认地，docker服务会在linux内核新建一个网络桥接docker0，使得物理主机和其他虚拟网络接口之间可以传递发送数据包，因此，这表现如一个独立的网络。&lt;/p&gt;
+
+&lt;p&gt;docker0有一个IP地址和子网掩码，使得物理主机可以从容器的桥接网络接收和发送数据包。并且给这个桥接网络一个MTU（最大传输单元）或者 说网络接口允许的最大包长度-例如1,500 bytes 或者从docker的宿主主机上的网络接口拷贝的数值。在服务启动的时候两者都是可配置的：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;--bip=CIDR— 为docker0桥接网络提供一个特殊的IP地址和一个子网掩码, 使用标准的 CIDR 记法例如192.168.1.5/24.
+
+--mtu=BYTES— 从写docker0的最大数据包长度。
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在ubuntu系统上，你可以增加以上的配置到 /etc/default/docker 文件中的DOCKER_OPTS参数中，然后重启docker服务。&lt;/p&gt;
+
+&lt;p&gt;当你有一个或多个正常运行的容器时，你可以通过在主机上运行brct1命令，观察interfaces列的输出，来确定Docker已经将这些容器正确地连接到docker0网桥。下面是一个连接了两个不同容器的主机：&lt;/p&gt;
+
+&lt;h1 id=&#34;display-bridge-info-sudo-brctl-show:b1927aed458c7b4d8f1e229af0616036&#34;&gt;Display bridge info$ sudo brctl show&lt;/h1&gt;
+
+&lt;p&gt;bridge name     bridge id               STP enabled     interfaces
+docker0         8000.3a1d7362b4ee       no              veth65f9
+                                                        vethdda6&lt;/p&gt;
+
+&lt;p&gt;如果你的Docker主机还没安装brct1命令，那么你可以在Ubuntu上运行sudo apt-get install bridge-utils来安装它。&lt;/p&gt;
+
+&lt;p&gt;最后，每次新建一个容器的时候都会用到docker0 桥接网络。每次在执行docker run命令新建一个容器的时候，docker从可利用的桥接网络中随机选择一个未被使用的IP地址，以及使用桥接网络的子网掩码，用来配置容器 eth0网络接口。docker宿主主机的IP地址被docker容器作为默认的网关。&lt;/p&gt;
+
+&lt;h1 id=&#34;the-network-as-seen-from-a-container-sudo-docker-run-i-t-rm-base-bin-bash:b1927aed458c7b4d8f1e229af0616036&#34;&gt;The network, as seen from a container$ sudo docker run -i -t &amp;ndash;rm base /bin/bash&lt;/h1&gt;
+
+&lt;p&gt;$$ ip addr show eth024: eth0: &lt;BROADCAST,UP,LOWER_UP&gt; mtu 1500 qdisc pfifo_fast state UP group default qlen 1000
+    link/ether 32:6f:e0:35:57:91 brd ff:ff:ff:ff:ff:ff
+    inet 172.17.0.&lt;sup&gt;3&lt;/sup&gt;&amp;frasl;&lt;sub&gt;16&lt;/sub&gt; scope global eth0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::306f:e0ff:fe35:&lt;sup&gt;5791&lt;/sup&gt;&amp;frasl;&lt;sub&gt;64&lt;/sub&gt; scope link
+       valid_lft forever preferred_lft forever&lt;/p&gt;
+
+&lt;p&gt;$$ ip routedefault via 172.17.42.1 dev eth0172.17.0.0/16 dev eth0  proto kernel  scope link  src 172.17.0.3$$ exit&lt;/p&gt;
+
+&lt;p&gt;记住docker的宿主主机无法转发docker容器的数据包到因特网上，除非它的ip_forward 系统设置为1，详情请看： Communication between containers 。
+回到顶部
+建立你自己的桥接网络&lt;/p&gt;
+
+&lt;p&gt;如果你希望建立完整的自己的桥接网络，你可以在启动docker之前用 -b BRIDGE 或者 &amp;ndash;bridge=BRIDGE选项参数高数docker使用你自己的桥接网络。如果你已经用docker0启动docker了，你需要停止docker服务然后移除docker0.&lt;/p&gt;
+
+&lt;h1 id=&#34;stopping-docker-and-removing-docker0-sudo-service-docker-stop:b1927aed458c7b4d8f1e229af0616036&#34;&gt;Stopping Docker and removing docker0$ sudo service docker stop&lt;/h1&gt;
+
+&lt;p&gt;$ sudo ip link set dev docker0 down
+$ sudo brctl delbr docker0&lt;/p&gt;
+
+&lt;p&gt;然后，在启动docker服务之前，新建你自己的桥接网络，写上你想要的配置。接下来我们新建一个简单的桥接网络，刚好用这些选项来定做docker0 ，这刚好足够说明这个技术。&lt;/p&gt;
+
+&lt;h1 id=&#34;create-our-own-bridge-sudo-brctl-addbr-bridge0:b1927aed458c7b4d8f1e229af0616036&#34;&gt;Create our own bridge$ sudo brctl addbr bridge0&lt;/h1&gt;
+
+&lt;p&gt;$ sudo ip addr add 192.168.5.&lt;sup&gt;1&lt;/sup&gt;&amp;frasl;&lt;sub&gt;24&lt;/sub&gt; dev bridge0
+$ sudo ip link set dev bridge0 up# Confirming that our bridge is up and running$ ip addr show bridge04: bridge0: &lt;BROADCAST,MULTICAST&gt; mtu 1500 qdisc noop state UP group default
+    link/ether 66:38:d0:0d:76:18 brd ff:ff:ff:ff:ff:ff
+    inet 192.168.5.&lt;sup&gt;1&lt;/sup&gt;&amp;frasl;&lt;sub&gt;24&lt;/sub&gt; scope global bridge0
+       valid_lft forever preferred_lft forever# Tell Docker about it and restart (on Ubuntu)$ echo &amp;lsquo;DOCKER_OPTS=&amp;ldquo;-b=bridge0&amp;rdquo;&amp;rsquo; &amp;gt;&amp;gt; /etc/default/docker
+$ sudo service docker start&lt;/p&gt;
+
+&lt;p&gt;运行结构应该是docker服务成功启动，已经准备好绑定容器到桥接网络上。当核实好桥接网络的配置之后，尝试着新建一个容器，你将看到容器的IP地址是在你的新的桥接网络范围内的，这是docker自动检测的。&lt;/p&gt;
+
+&lt;p&gt;正如前文所述，可以用 brctl show 命令查看，新增或者移除网络接口，可以在docker容器中执行 ip addr 和 ip route 命令查看IP地址是否是从网桥IP段分配的，以及docker的宿主主机的IP是否被作为默认网关。
+回到顶部
+Docker 如何使容器连接到网络&lt;/p&gt;
+
+&lt;p&gt;docker是正在发展中的，并会持续提升网络配置的逻辑。当前命令行是很难满足docker新建容器时所需要的网络配置。&lt;/p&gt;
+
+&lt;p&gt;让我们回顾一些基础知识。&lt;/p&gt;
+
+&lt;p&gt;通讯的时候使用网际协议（IP），一个机器需要访问至少一个网络接口用来发送和接收包，路由表定义了通过接口可达IP地址范围。网络接口不一定非是 物理设备。实际上，在每一个Linux机器（和每个Docker容器内部）的lo回环接口都是有效的而且完全是虚拟的——Linux内核简单地拷贝回环 （数据）包，直接从发送者的内存放入接收者的内存。&lt;/p&gt;
+
+&lt;p&gt;Docker使用特殊的虚拟接口让容器在主机间通讯——成对的虚拟接口被叫做“peers”，它被链接到主机内核的内部，因此（数据）包能在他们之间传输。他们简单创建，待会儿我们将会看到。&lt;/p&gt;
+
+&lt;p&gt;Docker配置容器的步骤是：&lt;/p&gt;
+
+&lt;p&gt;1.创建一对虚拟接口&lt;/p&gt;
+
+&lt;p&gt;2.在主Docker主机内部给它一个唯一的名称，比如veth65f9，绑定它到docker0或者Docker使用的任何网桥上&lt;/p&gt;
+
+&lt;p&gt;3.让其他的接口翻墙进入新的容器（已经提供了lo接口），在容器的独立和唯一网络接口命名空间内，重新命名它为更漂亮的名字eth0，名称不要和其他的物理接口冲突。&lt;/p&gt;
+
+&lt;p&gt;4.在网桥的网络地址访问内给容器的eth0一个新的IP地址，设置它的缺省路由为Docker主机在网桥上拥有的IP地址。&lt;/p&gt;
+
+&lt;p&gt;这些步骤结束后，容器将立即拥有一个eth0（虚拟）网卡，并会发现它自己可以和其他的容器以及互联网通讯。&lt;/p&gt;
+
+&lt;p&gt;你可以使用 &amp;ndash;net= 这个选项来执行 docker run 启动一个容器，这个选项有一下可选参数。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;--net=bridge— 默认选项，用网桥的方式来连接docker容器。
+
+--net=host— 高数docker跳过配置容器的独立网络栈。本质上来说，这个参数告诉docker不去打包容器的网络层。当然，docker 容器的进程仍然被限制在它自己独有的文件系统、进程列表以及其他资源中。一个快速命令 ip addr 将像你展示docker的网络，它是建立在docker 宿主主机上的，有完整的权限去访问宿主主机的网络接口。注意这不意味着docker容器可以去重新配置宿主主机的网络栈，重新配置是需要 --privaleged=true 这个选项参数的，但是这个选项参数会让docker容器打开大量的端口以及其他的系统的超级管理权限的进程。这也会允许容器去访问宿主主机的网络服务，比 如 D-bus。这会使docker容器里的进程有有权限去做一些意想不到的事，比如重启你的宿主主机。所以要谨慎使用这个选项参数。
+
+--net=container:NAME_or_ID— 告诉docker让这个新建的容器使用已有容器的网络配置。这个新建的容器将配置新的自己的文件系统和进程列表以及其他资源限制，但是将共享这个指定的容 器的网络IP地址以及端口号，使得这两个容器可以通过 loopback接口相互访问。
+
+--net=none— 告诉docker为新建的容器建立一个网络栈，但不对这个网络栈进行任何配置，在这个文档的最后将介绍如何让你去建立自定义的网络配置。
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;去了解以下这一步是非常必要的，如果你在建立容器的时候使用 &amp;ndash;net=none  这个选项参数。以下是一些命令去去配置自定义网络，就好像你让docker完全去自己配置一样。&lt;/p&gt;
+
+&lt;h1 id=&#34;at-one-shell-start-a-container-and-leave-its-shell-idle-and-running-sudo-docker-run-i-t-rm-net-none-base-bin-bash:b1927aed458c7b4d8f1e229af0616036&#34;&gt;At one shell, start a container and# leave its shell idle and running$ sudo docker run -i -t &amp;ndash;rm &amp;ndash;net=none base /bin/bash&lt;/h1&gt;
+
+&lt;p&gt;root@63f36fc01b5f:/#&lt;/p&gt;
+
+&lt;h1 id=&#34;at-another-shell-learn-the-container-process-id:b1927aed458c7b4d8f1e229af0616036&#34;&gt;At another shell, learn the container process ID&lt;/h1&gt;
+
+&lt;h1 id=&#34;and-create-its-namespace-entry-in-var-run-netns-for-the-ip-netns-command-we-will-be-using-below-sudo-docker-inspect-f-state-pid-63f36fc01b5f2778-pid-2778-sudo-mkdir-p-var-run-netns:b1927aed458c7b4d8f1e229af0616036&#34;&gt;and create its namespace entry in /var/run/netns/# for the &amp;ldquo;ip netns&amp;rdquo; command we will be using below$ sudo docker inspect -f &amp;lsquo;{{.State.Pid}}&amp;rsquo; 63f36fc01b5f2778$ pid=2778$ sudo mkdir -p /var/run/netns&lt;/h1&gt;
+
+&lt;p&gt;$ sudo ln -s /proc/$pid/ns/net /var/run/netns/$pid# Check the bridge&amp;rsquo;s IP address and netmask$ ip addr show docker021: docker0: &amp;hellip;inet 172.17.42.&lt;sup&gt;1&lt;/sup&gt;&amp;frasl;&lt;sub&gt;16&lt;/sub&gt; scope global docker0&amp;hellip;# Create a pair of &amp;ldquo;peer&amp;rdquo; interfaces A and B,# bind the A end to the bridge, and bring it up$ sudo ip link add A type veth peer name B
+$ sudo brctl addif docker0 A
+$ sudo ip link set A up# Place B inside the container&amp;rsquo;s network namespace,# rename to eth0, and activate it with a free IP$ sudo ip link set B netns $pid
+$ sudo ip netns exec $pid ip link set dev B name eth0
+$ sudo ip netns exec $pid ip link set eth0 up
+$ sudo ip netns exec $pid ip addr add 172.17.42.&lt;sup&gt;99&lt;/sup&gt;&amp;frasl;&lt;sub&gt;16&lt;/sub&gt; dev eth0
+$ sudo ip netns exec $pid ip route add default via 172.17.42.1&lt;/p&gt;
+
+&lt;p&gt;到这一步你的容器应该可以正常运行网络操作了。&lt;/p&gt;
+
+&lt;p&gt;当你最后退出shell以及清理掉这个容器的时候，这个容器的虚拟网络 eth0 将在网络接口A 被清除后被消除，也会自动在网桥 docker0 上销毁。所以不用你执行其他的命令，所有的东西将被清理。当然，是几乎所有的东西：&lt;/p&gt;
+
+&lt;h1 id=&#34;clean-up-dangling-symlinks-in-var-run-netnsfind-l-var-run-netns-type-l-delete:b1927aed458c7b4d8f1e229af0616036&#34;&gt;Clean up dangling symlinks in /var/run/netnsfind -L /var/run/netns -type l -delete&lt;/h1&gt;
+
+&lt;p&gt;还要注意上面的脚本使用了现代的ip命令行替代旧的弃用的封装，类似ipconfig和route，这些老的命令行还是会一直呆在我们的容器内部工作。如果你很忙碌的话，ip addr命令行也可以只键入ip a。&lt;/p&gt;
+
+&lt;p&gt;总之，注意这个ip netns exec重要的命令行，它让我们以root用户进入内部并配置一个网络命名空间。如果在容器内部运行，类似的命令行可能不会工作，因为安全容器化的部分是 Docker剥离容器的处理过程，这个过程要正确地配置自己的网络。使用ip netns exec可以让我们完成配置，还避免了运行容器自身&amp;ndash;privileged=true的危险步骤。
+回到顶部
+工具和实例&lt;/p&gt;
+
+&lt;p&gt;在把自定义网络拓扑逻辑分类成下面几个部分之前，你应该关注一些外部工具盒关于配置的实例。下面就有两个例子：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;J&amp;amp;eacute;r&amp;amp;ocirc;me Petazzoni 创建了一个pipework的shell脚本，帮助你在复杂场景下建立容器间连接:    https://github.com/jpetazzo/pipework
+
+Brandon Rhodes 为下一个版本的Python网络编程基金会创建了整个的网络拓扑逻辑，包括路由器NAT&#39;d防火墙，和提供HTTP,SMTP,POP,IMAP,Telnet,SSH,FTP的服务器:    https://github.com/brandon-rhodes/fopnp/tree/m/playground
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;两个工具都使用网络命令并和之前见到的版本很相似，在下面章节会看到。
+回到顶部
+建立点对点连接&lt;/p&gt;
+
+&lt;p&gt;缺省情况下, Docker通过docker0将所有的容器添加到虚拟子网中。你能够按照Building your own bridge中的方法创建你自己的桥让容器连接到不同的虚拟子网。启动容器时使用命令docker run &amp;ndash;net=none，然后使用shell命令添加容器到你自己的桥，方法见How Docker networks a container。&lt;/p&gt;
+
+&lt;p&gt;但是有时你想让两个特别的容器能够直接通讯，不用绑定到主机的以太网桥上。&lt;/p&gt;
+
+&lt;p&gt;解决方案是简单的。创建一对对等接口，将他们放到容器中，并将其配置为经典的点对点链接。两个容器就能够直接通讯了（当然要告诉每个容器对方的IP地址）。您可能会调整在上一节的指示去这样的事情：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# Start up two containers in two terminal windows$ sudo docker run -i -t --rm --net=none base /bin/bash
+root@1f1f4c1f931a:/#
+
+$ sudo docker run -i -t --rm --net=none base /bin/bash
+root@12e343489d2f:/#
+
+# Learn the container process IDs
+# and create their namespace entries
+
+$ sudo docker inspect -f &#39;{{.State.Pid}}&#39; 1f1f4c1f931a
+2989
+$ sudo docker inspect -f &#39;{{.State.Pid}}&#39; 12e343489d2f
+3004
+$ sudo mkdir -p /var/run/netns
+$ sudo ln -s /proc/2989/ns/net /var/run/netns/2989$ sudo ln -s /proc/3004/ns/net /var/run/netns/3004# Create the &amp;quot;peer&amp;quot; interfaces and hand them out$ sudo ip link add A type veth peer name B
+
+$ sudo ip link set A netns 2989$ sudo ip netns exec 2989 ip addr add 10.1.1.1/32 dev A
+$ sudo ip netns exec 2989 ip link set A up
+$ sudo ip netns exec 2989 ip route add 10.1.1.2/32 dev A
+
+$ sudo ip link set B netns 3004$ sudo ip netns exec 3004 ip addr add 10.1.1.2/32 dev B
+$ sudo ip netns exec 3004 ip link set B up
+$ sudo ip netns exec 3004 ip route add 10.1.1.1/32 dev B
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;两个容器应该可以相互ping通以确定连接成功。点对点链接不依赖于子网或子网掩码，但是ip route需要确认一些其他的单一IP地址是连接到了特定的网络接口。&lt;/p&gt;
+
+&lt;p&gt;请注意点对点链接可以安全的和其他类型的网络连接混合使用。如果你想用点对点链接替换容器的正常网络连接，启动的时候，不需要带参数&amp;ndash;net=none。&lt;/p&gt;
+
+&lt;p&gt;在Docker主机和容器之间创建点对点链接是这个模板最终的排列方式，它允许主机和有单一IP地址的容器通讯。除非你有很特别的网络需求，让你尝试使用这样的解决方案，正如我们前面探讨的，使用&amp;ndash;icc=false锁定跨容器的通讯是更好的方案。&lt;/p&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>Docker持续交付说明</title>
+            <link>http://kooksee.github.io/blog/Docker%E6%8C%81%E7%BB%AD%E4%BA%A4%E4%BB%98%E8%AF%B4%E6%98%8E/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/Docker%E6%8C%81%E7%BB%AD%E4%BA%A4%E4%BB%98%E8%AF%B4%E6%98%8E/</guid>
+            <description>
+
+&lt;h2 id=&#34;ci:47696ca6b8b5a6acc0634b15cdb2236a&#34;&gt;CI&lt;/h2&gt;
+
+&lt;p&gt;目前ci是通过golang环境做了一个builder Container
+方法：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker clone https://github.com/wothing/17mei.git
+cd 17mei
+make
+cd gateway/test
+go test ......  -dh prod-postgres.prod -du postgres -dpwd wothing -dn wothing -api http://prod-gw.prod:3001/v1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;注意最后test命令： 需要指定数据库位置以及gateway的位置&lt;/p&gt;
+
+&lt;h2 id=&#34;数据库重置:47696ca6b8b5a6acc0634b15cdb2236a&#34;&gt;数据库重置：&lt;/h2&gt;
+
+&lt;h3 id=&#34;pgsql-免密码配置:47696ca6b8b5a6acc0634b15cdb2236a&#34;&gt;pgsql 免密码配置&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;echo &amp;quot;prod-postgres.prod:5432:wothing:postgres:wothing&amp;quot;  &amp;gt; ~/.pgpass
+chmod 0600 ~/.pgpass
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;重置脚本执行:47696ca6b8b5a6acc0634b15cdb2236a&#34;&gt;重置脚本执行：&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;cd /go/src/github.com/wothing/17mei/sql
+psql -h prod-postgres.prod -U postgres  -d wothing -f user.sql
+psql -h prod-postgres.prod -U postgres  -d wothing -f user_example.sql
+psql -h prod-postgres.prod -U postgres  -d wothing -f activity.sql
+psql -h prod-postgres.prod -U postgres  -d wothing -f activity_example.sql
+psql -h prod-postgres.prod -U postgres  -d wothing -f diary.sql
+psql -h prod-postgres.prod -U postgres  -d wothing -f diary_samples.sql
+psql -h prod-postgres.prod -U postgres  -d wothing -f other.sql
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;generate-mei-id:47696ca6b8b5a6acc0634b15cdb2236a&#34;&gt;Generate Mei id&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;/go/src/github.com/wothing/17mei/user/meigen
+go run meigen.go  -dh prod-postgres.prod -du postgres -dpwd wothing -dn wothing
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;看到用了多少毫秒输出之后马上停下来大概就能有一千个了。&lt;/p&gt;
+
+&lt;h2 id=&#34;更新服务的容器运行:47696ca6b8b5a6acc0634b15cdb2236a&#34;&gt;更新服务的容器运行&lt;/h2&gt;
+
+&lt;p&gt;&lt;code&gt;docker restart prod-diary prod-verification prod-activity prod-push prod-other prod-mediastore prod-gw prod-user&lt;/code&gt;&lt;/p&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>Github 团队协作</title>
+            <link>http://kooksee.github.io/blog/Github%20%E5%9B%A2%E9%98%9F%E5%8D%8F%E4%BD%9C/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/Github%20%E5%9B%A2%E9%98%9F%E5%8D%8F%E4%BD%9C/</guid>
+            <description>
+
+&lt;h1 id=&#34;github-团队协作:4a8ac693e47e69c7b976131245779879&#34;&gt;Github 团队协作&lt;/h1&gt;
+
+&lt;p&gt;Git 再次将 Unix 设计哲学发挥到极致，尤其是 KISS 原则（Keep It Simple and Stupid）。&lt;/p&gt;
+
+&lt;p&gt;使用它的人（不仅是编程人员）对它的认识，可能是这样：与其说 Git 是一个分布式版本控制工具，不如说 Git 是一个分布式文件系统。正式这样看似简单粗暴的设计让 Git 从众多版本控制工具中脱颖而出。&lt;/p&gt;
+
+&lt;p&gt;Git 相比其他版本控制工具有众多优势。如分布式，任何一个仓库都是一各完整的镜像。又如创建删除分支，Git 以很低的代价让使用它的人可以随意地快速创建删除分支。&lt;/p&gt;
+
+&lt;p&gt;本文就 Git 的分布式和分支特性，结合 Github 强大的源码分享贡献平台，探讨一种简单有效的 Github 团队协作流程，实现多环境发布、Pull Request 的流程化。&lt;/p&gt;
+
+&lt;p&gt;这个流程有如下两个原则：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;任何程序都可以追踪到对应的源码；&lt;/li&gt;
+&lt;li&gt;所有代码都必须经过严格代码走查。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&#34;每个环境对应一个源码分支:4a8ac693e47e69c7b976131245779879&#34;&gt;每个环境对应一个源码分支&lt;/h2&gt;
+
+&lt;p&gt;通常 Git 仓库会有一个 master 分支，这个分支的代码应该 &lt;strong&gt;一直&lt;/strong&gt; 是最新稳定版的， &lt;strong&gt;永远&lt;/strong&gt; 对着应生产环境发布的版本，所有生产环境应用都要从这个分支上发布，所以我们不应该在这个分支上做开发。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Source branch  ===&amp;gt;   Deploy environment
+master                Production
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;我们可以创建一个 develop 分支，所有开发工作都在这个分支上进行。本地开发好，单元测试通过后，发布到开发环境和其他系统（或服务，或模块，或应用)联调测试。&lt;/p&gt;
+
+&lt;p&gt;（至于为什么不简写成 dev，答案是约定和对齐。大多数项目 develop 分支名都不缩写成 dev，所以我们也不应该缩写。对齐就是说 dev/master，一个缩写一个不缩写，很别扭，develop/master 看起来舒服点儿。）&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Source branch  ===&amp;gt;   Deploy environment
+develop               Development
+master                Production
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;开发环境只是开发人员自己的环境，开发人员可以自由发布，所以经常会有各种变化，无法稳定，这对测试人员来说，是个灾难，所以说必须搭建属于测试人员自己的测试环境。这个环境相对稳定，只会定期发布，也可以做一些压力测试等。&lt;/p&gt;
+
+&lt;p&gt;既然有了测试环境，那么测试环境对应的源码就必须被标记，我们可以建一个 testing 分支（名字为什么这么长，不再解释了）。同 master 一样，testing 分支最新代码永远对应着测试环境。&lt;/p&gt;
+
+&lt;p&gt;有了 testing 分支，那么我们开发环境联调通过的代码就可以从 develop 分支定期合并到 testing 分支了，合并完成后，从 testing 分支上编译并打包，发布到测试环境，测试，联调。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Source branch  ===&amp;gt;   Deploy environment
+develop               Development
+testing               Testing
+master                Production
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;注意，所有测试环境发布工作都要在 testing 这个分支上进行，坚决不能从 develop 上发布，这个可以在发布脚本上做严格控制。同样，生产环境发布工作也不能从 develop/testing 分支上进行。&lt;/p&gt;
+
+&lt;p&gt;测试环境积累一定的功能点，测试和联调通过后，就可以把 testing 分支的代码合并到 master 分支。这时 master 分支上的代码就是最新稳定版的，可以发布到生产环境了。但是发布前，必须更新 changelog，然后打 tag，以说明本次发布更新了哪些功能。打完 tag，才能发布，发布时只能从 master 分支编译大包，发布到生产环境。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;develop ...................................
+             \   \   \       \        \
+testing ------o---o---o-------o--------o
+                       \       \
+master  ----------------o-------o
+                        |       |
+Tags                  1.0.1   1.0.2
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这样说来，我们至少会有 3 个分支：develop/testing/master，一般项目基本够用，如果需要 UAT（Stage）环境，可以再添加其他分支。&lt;/p&gt;
+
+&lt;p&gt;这里只考虑到所有开发人员都工作在 develop 分支上这种情况，如果有需要，可以从 develop 分支上创建特性分支，开发完成后，合并到 develop 分支。&lt;/p&gt;
+
+&lt;h2 id=&#34;所有代码都必须经过代码走查:4a8ac693e47e69c7b976131245779879&#34;&gt;所有代码都必须经过代码走查&lt;/h2&gt;
+
+&lt;p&gt;Github 提供了 Fork 和 Pull request 功能，可以方便地分享代码，也可以贡献代码。&lt;/p&gt;
+
+&lt;p&gt;利用这些功能，团队可以很方便地完成代码审查，而不会影响效率和协作，而且 Github 的文件比较和批注非常强大，大大提高了代码审查和沟通效率。&lt;/p&gt;
+
+&lt;p&gt;具体流程如下：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;在 Github 组织（如 gotips）下创建项目仓库（如 test-git），此时项目地应该是  &lt;code&gt;https://github.com/gotips/test-git&lt;/code&gt;；&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;参与该项目的组织成员把这个项目 fork 到自己的账号下，此时项目地址是 &lt;code&gt;https://github.com/omigo/test-git&lt;/code&gt;（如果仓库是私有的，fork 后，在自己的账号下依然是私有的，不会泄露）；&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;然后在本机创建组织目录（如 go 语言需要创建 $GOPATH/src/github.com/gotips）；&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;把自己 Github 账号下的项目 clone 到刚创建的组织目录下 &lt;code&gt;git clone git@github.com:omigo/test-git.git&lt;/code&gt;（为什么不放到自己的目录下？代码是组织的，包路径也是组织的，不是自己的）；&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;此时本地项目只有一个远程仓库快捷方式 &lt;code&gt;origin =&amp;gt; git@github.com:omigo/test-git.git&lt;/code&gt;，再添加一个组织快捷方式，执行 &lt;code&gt;git remote add gotips git@github.com:gotips/test-git.git&lt;/code&gt;；&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;前面所有工作都是准备环境，现在可以编码了。写完一个独立逻辑，单元测试通过后，提交一次到本地仓库。同时，不定期地推送到自己的 Github 仓库；&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;直到独立的功能点完成，所有代码都在自己的 Github 仓库后，就可以提交 Pull request，请其他伙伴帮忙审查代码了。到自己的 Github 账号下，点击【New pull request】，选择分支，点击【Create pull request】，填写清晰明确的注释，再次点击【Create pull request】。提交 Pull Request 时可以选择 Labels、Assignee 等给定标记、指定由谁来做 Code Review；&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;当被人邀请做 Code Review 时，我们会得到一个 Pull Request 链接，如 &lt;code&gt;https://github.com/gotips/test-git/pull/1&lt;/code&gt;。进入后，可以看到提交人的注释和每次的提交日志，【Files changed】页面详细列出了所有的文件变更，并和修改前对比，发现问题，可以点击代码，在该行下写注释，提交人会收到通知，修改，然后再提交。如果审查没问题，就可以点击【Merge pull request】，完成合并。这样代码才到算回到组织仓库中，开发才算完成，可以测试了。&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;pre&gt;&lt;code&gt;Github workflow:
+
+                +------------+             +------------+                     +--------------+
+                |   Local    |  git push   |   Github   |    pull request     |    Github    |
+Developer       | Repository |  --------&amp;gt;  | Repository |     ---------&amp;gt;      |  Repository  |
+  1..n          |   1..n     |             |    1..n    |                     | Organization |
+                +------------+             +------------+                     +--------------+
+                      ^                                                              |
+                      |                       git pull                               |
+                      +--------------------------------------------------------------+
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;注意：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;只能 Push 到 Github 个人仓库，不能 Push 到组织仓库，可以从组织仓库 Pull 代码&lt;code&gt;git pull gotips develop&lt;/code&gt;（如果觉得不安全，可以使用 &lt;code&gt;git fetch&lt;/code&gt;）；&lt;/li&gt;
+&lt;li&gt;提交 Pull Request 之前，需要先从 &lt;strong&gt;组织&lt;/strong&gt; 仓库上拉取代码，保证代码时最新的，避免 Pull Request 代码合并时发生冲突，造成合并困难；&lt;/li&gt;
+&lt;li&gt;如果发生了冲突，最好是让提交人先更新代码，自己解决冲突，然后提交，再次 Code Review，轻松合并；&lt;/li&gt;
+&lt;li&gt;一个 Pull Request 修改的代码，最好不要超过 200 行，差不多是一天的工作量，太多，Code Review 看不过来，大多情况下草草了事，质量无法保证；&lt;/li&gt;
+&lt;li&gt;代码要符合规范，统一格式，避免琐碎问题影响 Code Review 心情；&lt;/li&gt;
+&lt;li&gt;Code Review 是一个学习的机会，但更多是监督与合作，提交人和合并人共同对代码负责，代码有问题，两人共同承担；&lt;/li&gt;
+&lt;li&gt;最好不要强制谁走查谁的代码，应该由提交人邀请，这样才能合作更友好。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&#34;分支管理与-pull-request-的结合:4a8ac693e47e69c7b976131245779879&#34;&gt;分支管理与 Pull Request 的结合&lt;/h2&gt;
+
+&lt;p&gt;上面分别探讨了分支管理和 Pull Request，下面再说说，如何把两者结合起来。&lt;/p&gt;
+
+&lt;p&gt;我们的原则依然不变：只能在 develop 分支做开发（可能也有其他特性分支），每次提交必须经过严格审查，每个分支对应一个发布环境。&lt;/p&gt;
+
+&lt;p&gt;为了方便，一般我们团队协作中，会把 develop 分支设置为默认分支。&lt;/p&gt;
+
+&lt;p&gt;在组织下创建仓库后，建好 3 个分支 master/testing/develop，然后到 Settings -&amp;gt; Branches 下面 选择 develop 为默认分支。这样所有人 fork 的项目也会默认 develop 分支，clone 也是 develop 分支，避免分支切换和忘记切换分支带来的麻烦。开发都在 develop 分支，Pull Request 也在 develop 分支，merge 也是。&lt;/p&gt;
+
+&lt;p&gt;然后就是测试环境发布了，测试环境对应 testing 分支，应该指定一人专门管理测试环境发布。所有开发人员先从组织仓库 develop 分支拉取最新（需要发布到测试环境的版本），和本地代码 develop 分支合并后，再把 develop 分支合并到 testing 分支，然后提交代码到 Github 个人仓库 testing 分支下，提交 pull request 给测试发布管理者。测试发布管理者合并后，从组织仓库更新 testing 代码，并从 testing 分支发布到测试环境。&lt;/p&gt;
+
+&lt;p&gt;如果分支不多，并且团队协作良好，合并分支的工作也可以由测试发布管理者一个人完成，以简化流程。&lt;/p&gt;
+
+&lt;p&gt;同样指定一位生产发布管理者，测试通过后，测试发布管理者就可以把 testing 分支合并到 master 分支，提交到 Github 个人仓库 master 分支，提交 Pull Request 给生产发布管理者。生产发布管理者合并代码，打 tag，完成生产环境发布。&lt;/p&gt;
+
+&lt;p&gt;ChangeLog 问题，什么时候更新 ChangeLog 呢？&lt;/p&gt;
+
+&lt;p&gt;我们如果开发时就已经知道版本号，那么开发时就可以更新，如果发布时才知道版本号，那么发布管理者可以通过 git log 了解本次发布有哪些更新，编写 ChangeLog。当然不排除有更好的 ChangeLog 更新办法，或者有更好的 Git 协作流程。&lt;/p&gt;
+
+&lt;p&gt;注意：无论是分支管理，还是 Pull Request，还是编写 ChangeLog，都需要 git log 清晰明确，粒度要细，至少不能丢掉功能点，不能把两个功能点一次 commit，log   上只写一个功能点，更加不能出现无效 log，比如 优化、修复 bug、更新了一些文档、调整算法等等。&lt;/p&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>HTTP请求错误大全</title>
+            <link>http://kooksee.github.io/blog/HTTP%E8%AF%B7%E6%B1%82%E9%94%99%E8%AF%AF%E5%A4%A7%E5%85%A8/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/HTTP%E8%AF%B7%E6%B1%82%E9%94%99%E8%AF%AF%E5%A4%A7%E5%85%A8/</guid>
+            <description>&lt;p&gt;1xx - 信息提示
+这些状态代码表示临时的响应。客户端在收到常规响应之前，应准备接收一个或多个 1xx 响应。
+100 - 继续
+101 - 切换协议&lt;/p&gt;
+
+&lt;p&gt;2xx - 成功
+这类状态代码表明服务器成功地接受了客户端请求。
+200 - 确定。客户端请求已成功
+201 - 已创建
+202 - 已接受
+203 - 非权威性信息
+204 - 无内容
+205 - 重置内容
+206 - 部分内容&lt;/p&gt;
+
+&lt;p&gt;3xx - 重定向
+客户端浏览器必须采取更多操作来实现请求。例如，浏览器可能不得不请求服务器上的不同的页面，或通过代理服务器重复该请求。
+302 - 对象已移动。
+304 - 未修改。
+307 - 临时重定向。&lt;/p&gt;
+
+&lt;p&gt;4xx - 客户端错误
+发生错误，客户端似乎有问题。例如，客户端请求不存在的页面，客户端未提供有效的身份验证信息。
+400 - 错误的请求
+401 - 访问被拒绝
+ · 401.1 - 登录失败。
+ · 401.2 - 服务器配置导致登录失败。
+ · 401.3 - 由于 ACL 对资源的限制而未获得授权。
+ · 401.4 - 筛选器授权失败。
+ · 401.5 - ISAPI/CGI 应用程序授权失败。
+ · 401.7 – 访问被 Web 服务器上的 URL 授权策略拒绝。这个错误代码为 IIS 6.0 所专用。
+403 - 禁止访问
+ · 403.1 - 执行访问被禁止。
+ · 403.2 - 读访问被禁止。
+ · 403.3 - 写访问被禁止。
+ · 403.4 - 要求 SSL。
+ · 403.5 - 要求 SSL 128。
+ · 403.6 - IP 地址被拒绝。
+ · 403.7 - 要求客户端证书。
+ · 403.8 - 站点访问被拒绝。
+ · 403.9 - 用户数过多。
+ · 403.10 - 配置无效。
+ · 403.11 - 密码更改。
+ · 403.12 - 拒绝访问映射表。
+ · 403.13 - 客户端证书被吊销。
+ · 403.14 - 拒绝目录列表。
+ · 403.15 - 超出客户端访问许可。
+ · 403.16 - 客户端证书不受信任或无效。
+ · 403.17 - 客户端证书已过期或尚未生效。
+ · 403.18 - 在当前的应用程序池中不能执行所请求的 URL。这个错误代码为 IIS 6.0 所专用。
+ · 403.19 - 不能为这个应用程序池中的客户端执行 CGI。这个错误代码为 IIS 6.0 所专用。
+ · 403.20 - Passport 登录失败。这个错误代码为 IIS 6.0 所专用。
+404 - 没有找到文件或目录
+ · 404.1 - 无法在所请求的端口上访问 Web 站点。
+ · 404.2 - Web 服务扩展锁定策略阻止本请求。
+ · 404.3 - MIME 映射策略阻止本请求。
+405 - 用来访问本页面的 HTTP 谓词不被允许（方法不被允许）
+406 - 客户端浏览器不接受所请求页面的 MIME 类型
+407 - 要求进行代理身份验证
+412 - 前提条件失败
+413 – 请求实体太大
+414 - 请求 URI 太长
+415 – 不支持的媒体类型
+416 – 所请求的范围无法满足
+417 – 执行失败
+423 – 锁定的错误&lt;/p&gt;
+
+&lt;p&gt;5xx - 服务器端错误
+服务器由于遇到错误而不能完成该请求。
+500 - 内部服务器错误
+ · 500.12 - 应用程序正忙于在 Web 服务器上重新启动。
+ · 500.13 - Web 服务器太忙。
+ · 500.15 - 不允许直接请求 Global.asa。
+ · 500.16 – UNC 授权凭据不正确。这个错误代码为 IIS 6.0 所专用。
+ · 500.18 – URL 授权存储不能打开。这个错误代码为 IIS 6.0 所专用。
+ · 500.100 - 内部 ASP 错误。
+501 - 页眉值指定了未实现的配置
+502 - Web 服务器用作网关或代理服务器时收到了无效响应。502.1 - CGI 应用程序超时
+502.2 - CGI 应用程序出错。application
+503 - 服务不可用。这个错误代码为 IIS 6.0 所专用
+504 - 网关超时
+505 - HTTP 版本不受支持&lt;/p&gt;
+
+&lt;p&gt;HTTP 304 错误介绍&lt;/p&gt;
+
+&lt;p&gt;表示请求的网页(文件)与上次对比没有更新。&lt;/p&gt;
+
+&lt;p&gt;意思是蜘蛛来到你的网站，你网站没有更新内容，并且与上次一样，就会返回304代码。如果每次蜘蛛来你的网站都有新的内容出现，就会反回200代码。因为304代码是记录网站内容是否有更新，在24小时内没有更新，那么快照就会停止。同样，如果返回的304太多，表示网站没有更新，蜘蛛也就不会经常光顾， 影响收录。&lt;/p&gt;
+
+&lt;p&gt;把蜘蛛来的时候给记录下来，算出蜘蛛每隔多久来一次网站，然后就分隔多久更新一下文章，更新文章时要原创+转载。让蜘蛛每次来都能够有新的内容，而不是无功而返。这样就会产生很多200代码。&lt;/p&gt;
+
+&lt;p&gt;如果客户端在请求一个文件的时候，发现自己缓存的文件有 Last Modified ，那么在请求中会包含 If Modified Since ，这个时间就是缓存文件的 Last Modified 。因此，如果请求中包含 If Modified Since，就说明已经有缓存在客户端。只要判断这个时间和当前请求的文件的修改时间就可以确定是返回 304 还是 200 。对于静态文件，例如：CSS、图片，服务器会自动完成 Last Modified 和 If Modified Since 的比较，完成缓存或者更新。但是对于动态页面，就是动态产生的页面，往往没有包含 Last Modified 信息，这样浏览器、网关等都不会做缓存，也就是在每次请求的时候都完成一个 200 的请求。&lt;/p&gt;
+
+&lt;p&gt;因此，对于动态页面做缓存加速，首先要在 Response 的 HTTP Header 中增加 Last Modified 定义，其次根据 Request 中的 If Modified Since 和被请求内容的更新时间来返回 200 或者 304 。虽然在返回 304 的时候已经做了一次数据库查询，但是可以避免接下来更多的数据库查询，并且没有返回页面内容而只是一个 HTTP Header，从而大大的降低带宽的消耗，对于用户的感觉也是提高。&lt;/p&gt;
+
+&lt;p&gt;304不是错误。是请求一下图片，如果图片在上次访问后没有更新过，就不用下载了，返回304，叫浏览器直接用cache里的，这个很正常的。可以打开火狐firebug使用&amp;rdquo;网络&amp;rdquo;功能查看加载一个页面时所有请求文件的状态，再F5看一下，会看到很多是304，表示直接从浏览器缓存中读取的。&lt;/p&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>Python处理JSON</title>
+            <link>http://kooksee.github.io/blog/Python%E5%A4%84%E7%90%86JSON/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/Python%E5%A4%84%E7%90%86JSON/</guid>
+            <description>&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;什么是json：
+
+JSON(JavaScript Object Notation)
+
+是一种轻量级的数据交换格式。易于人阅读和编写。同时也易于机器解析和生成。它基于JavaScript Programming Language,
+
+Standard ECMA-262 3rd Edition - December
+
+1999的一个子集。JSON采用完全独立于语言的文本格式，但是也使用了类似于C语言家族的习惯（包括C, C++, C#, Java,
+
+JavaScript, Perl, Python等）。这些特性使JSON成为理想的数据交换语言。
+
+JSON建构于两种结构：
+
+“名称/值”对的集合（A collection of name/value pairs）。不同的语言中，它被理解为对象（object），纪录（record），结构（struct），字典（dictionary），哈希表（hash table），有键列表（keyed list），或者关联数组 （associative array）。
+
+值的有序列表（An ordered list of values）。在大部分语言中，它被理解为数组（array）。
+
+这些都是常见的数据结构。事实上大部分现代计算机语言都以某种形式支持它们。这使得一种数据格式在同样基于这些结构的编程语言之间交换成为可能。
+
+jso官方说明参见：http://json.org/
+
+Python操作json的标准api库参考：http://docs.python.org/library/json.html
+
+对简单数据类型的encoding 和 decoding：
+
+使用简单的json.dumps方法对简单数据类型进行编码，例如：
+
+import json
+
+obj=[[1,2,3],123,123.123,&#39;abc&#39;,{&#39;key1&#39;:(1,2,3),&#39;key2&#39;:(4,5,6)}]
+
+encodedjson=json.dumps(obj)
+
+printrepr(obj)
+
+printencodedjson
+
+输出：
+
+[[1, 2, 3], 123, 123.123, &#39;abc&#39;, {&#39;key2&#39;: (4, 5, 6), &#39;key1&#39;: (1, 2, 3)}]
+
+[[1, 2, 3], 123, 123.123, &amp;quot;abc&amp;quot;, {&amp;quot;key2&amp;quot;: [4, 5, 6], &amp;quot;key1&amp;quot;: [1, 2, 3]}]
+
+通过输出的结果可以看出，简单类型通过encode之后跟其原始的repr()输出结果非常相似，但是有些数据类型进行了改变，例如上例中的元组则转换为了列表。在json的编码过程中，会存在从python原始类型向json类型的转化过程，具体的转化对照如下：
+
+
+json.dumps()方法返回了一个str对象encodedjson，我们接下来在对encodedjson进行decode，得到原始数据，需要使用的json.loads()函数：
+decodejson=json.loads(encodedjson)
+
+printtype(decodejson)
+
+printdecodejson[4][&#39;key1&#39;]
+
+printdecodejson
+
+输出：
+
+[1, 2, 3]
+
+[[1, 2, 3], 123, 123.123, u&#39;abc&#39;, {u&#39;key2&#39;: [4, 5, 6], u&#39;key1&#39;: [1, 2, 3]}]
+
+loads方法返回了原始的对象，但是仍然发生了一些数据类型的转化。比如，上例中‘abc’转化为了unicode类型。从json到python的类型转化对照如下：
+
+
+json.dumps方法提供了很多好用的参数可供选择，比较常用的有sort_keys（对dict对象进行排序，我们知道默认dict是无序存放的），separators，indent等参数。
+
+排序功能使得存储的数据更加有利于观察，也使得对json输出的对象进行比较，例如：
+
+data1={&#39;b&#39;:789,&#39;c&#39;:456,&#39;a&#39;:123}
+
+data2={&#39;a&#39;:123,&#39;b&#39;:789,&#39;c&#39;:456}
+
+d1=json.dumps(data1,sort_keys=True)
+
+d2=json.dumps(data2)
+
+d3=json.dumps(data2,sort_keys=True)
+
+printd1
+
+printd2
+
+printd3
+
+printd1==d2
+
+printd1==d3
+
+输出：
+
+{&amp;quot;a&amp;quot;: 123, &amp;quot;b&amp;quot;: 789, &amp;quot;c&amp;quot;: 456}
+
+{&amp;quot;a&amp;quot;: 123, &amp;quot;c&amp;quot;: 456, &amp;quot;b&amp;quot;: 789}
+
+{&amp;quot;a&amp;quot;: 123, &amp;quot;b&amp;quot;: 789, &amp;quot;c&amp;quot;: 456}
+
+False
+
+True
+
+上例中，本来data1和data2数据应该是一样的，但是由于dict存储的无序特性，造成两者无法比较。因此两者可以通过排序后的结果进行存储
+
+就避免了数据比较不一致的情况发生，但是排序后再进行存储，系统必定要多做一些事情，也一定会因此造成一定的性能消耗，所以适当排序是很重要的。
+
+indent参数是缩进的意思，它可以使得数据存储的格式变得更加优雅。
+
+data1={&#39;b&#39;:789,&#39;c&#39;:456,&#39;a&#39;:123}
+
+d1=json.dumps(data1,sort_keys=True,indent=4)
+
+printd1
+
+输出：
+
+{
+
+&amp;quot;a&amp;quot;: 123,
+
+&amp;quot;b&amp;quot;: 789,
+
+&amp;quot;c&amp;quot;: 456
+
+}
+
+输出的数据被格式化之后，变得可读性更强，但是却是通过增加一些冗余的空白格来进行填充的。json主要是作为一种数据通信的格式存在的，而网络通
+
+信是很在乎数据的大小的，无用的空格会占据很多通信带宽，所以适当时候也要对数据进行压缩。separator参数可以起到这样的作用，该参数传递是一个
+
+元组，包含分割对象的字符串。
+
+print&#39;DATA:&#39;,repr(data)
+
+print&#39;repr(data)             :&#39;,len(repr(data))
+
+print&#39;dumps(data)            :&#39;,len(json.dumps(data))
+
+print&#39;dumps(data, indent=2)  :&#39;,len(json.dumps(data, indent=4))
+
+print&#39;dumps(data, separators):&#39;,len(json.dumps(data, separators=(&#39;,&#39;,&#39;:&#39;)))
+
+输出：
+
+DATA: {&#39;a&#39;: 123, &#39;c&#39;: 456, &#39;b&#39;: 789}
+
+repr(data)             : 30
+
+dumps(data)            : 30
+
+dumps(data, indent=2)  : 46
+
+dumps(data, separators): 25
+
+通过移除多余的空白符，达到了压缩数据的目的，而且效果还是比较明显的。
+
+另一个比较有用的dumps参数是skipkeys，默认为False。 dumps方法存储dict对象时，key必须是str类型，如果出现了其他类型的话，那么会产生TypeError异常，如果开启该参数，设为True的话，则会比较优雅的过度。
+
+data={&#39;b&#39;:789,&#39;c&#39;:456,(1,2):123}
+
+printjson.dumps(data,skipkeys=True)
+
+输出：
+
+{&amp;quot;c&amp;quot;: 456, &amp;quot;b&amp;quot;: 789}
+
+处理自己的数据类型
+
+json模块不仅可以处理普通的python内置类型，也可以处理我们自定义的数据类型，而往往处理自定义的对象是很常用的。
+
+首先，我们定义一个类Person。
+
+classPerson(object):
+
+def__init__(self,name,age):
+
+self.name=name
+
+self.age=age
+
+def__repr__(self):
+
+return&#39;Person Object name : %s , age : %d&#39;%(self.name,self.age)
+
+if__name__==&#39;__main__&#39;:
+
+p=Person(&#39;Peter&#39;,22)
+
+printp
+
+如果直接通过json.dumps方法对Person的实例进行处理的话，会报错，因为json无法支持这样的自动转化。通过上面所提到的json
+
+和python的类型转化对照表，可以发现，object类型是和dict相关联的，所以我们需要把我们自定义的类型转化为dict，然后再进行处理。这
+
+里，有两种方法可以使用。
+
+方法一：自己写转化函数
+
+&#39;&#39;&#39;
+
+Created on 2011-12-14
+
+@author: Peter
+
+&#39;&#39;&#39;
+
+importPerson
+
+importjson
+
+p=Person.Person(&#39;Peter&#39;,22)
+
+defobject2dict(obj):
+
+#convert object to a dict
+
+d={}
+
+d[&#39;__class__&#39;]=obj.__class__.__name__
+
+d[&#39;__module__&#39;]=obj.__module__
+
+d.update(obj.__dict__)
+
+returnd
+
+defdict2object(d):
+
+#convert dict to object
+
+if&#39;__class__&#39;ind:
+
+class_name=d.pop(&#39;__class__&#39;)
+
+module_name=d.pop(&#39;__module__&#39;)
+
+module=__import__(module_name)
+
+class_=getattr(module,class_name)
+
+args=dict((key.encode(&#39;ascii&#39;), value)forkey, valueind.items())#get args
+
+inst=class_(**args)#create new instance
+
+else:
+
+inst=d
+
+returninst
+
+d=object2dict(p)
+
+printd
+
+#{&#39;age&#39;: 22, &#39;__module__&#39;: &#39;Person&#39;, &#39;__class__&#39;: &#39;Person&#39;, &#39;name&#39;: &#39;Peter&#39;}
+
+o=dict2object(d)
+
+printtype(o),o
+
+# Person Object name : Peter , age : 22
+
+dump=json.dumps(p,default=object2dict)
+
+printdump
+
+#{&amp;quot;age&amp;quot;: 22, &amp;quot;__module__&amp;quot;: &amp;quot;Person&amp;quot;, &amp;quot;__class__&amp;quot;: &amp;quot;Person&amp;quot;, &amp;quot;name&amp;quot;: &amp;quot;Peter&amp;quot;}
+
+load=json.loads(dump,object_hook=dict2object)
+
+printload
+
+#Person Object name : Peter , age : 22
+
+上面代码已经写的很清楚了，实质就是自定义object类型和dict类型进行转化。object2dict函数将对象模块名、类名以及
+
+__dict__存储在dict对象里，并返回。dict2object函数则是反解出模块名、类名、参数，创建新的对象并返回。在json.dumps
+
+方法中增加default参数，该参数表示在转化过程中调用指定的函数，同样在decode过程中json.loads方法增加object_hook,
+
+指定转化函数。
+
+方法二：继承JSONEncoder和JSONDecoder类，覆写相关方法
+
+JSONEncoder类负责编码，主要是通过其default函数进行转化，我们可以override该方法。同理对于JSONDecoder。
+
+&#39;&#39;&#39;
+
+Created on 2011-12-14
+
+@author: Peter
+
+&#39;&#39;&#39;
+
+importPerson
+
+importjson
+
+p=Person.Person(&#39;Peter&#39;,22)
+
+classMyEncoder(json.JSONEncoder):
+
+defdefault(self,obj):
+
+#convert object to a dict
+
+d={}
+
+d[&#39;__class__&#39;]=obj.__class__.__name__
+
+d[&#39;__module__&#39;]=obj.__module__
+
+d.update(obj.__dict__)
+
+returnd
+
+classMyDecoder(json.JSONDecoder):
+
+def__init__(self):
+
+json.JSONDecoder.__init__(self,object_hook=self.dict2object)
+
+defdict2object(self,d):
+
+#convert dict to object
+
+if&#39;__class__&#39;ind:
+
+class_name=d.pop(&#39;__class__&#39;)
+
+module_name=d.pop(&#39;__module__&#39;)
+
+module=__import__(module_name)
+
+class_=getattr(module,class_name)
+
+args=dict((key.encode(&#39;ascii&#39;), value)forkey, valueind.items())#get args
+
+inst=class_(**args)#create new instance
+
+else:
+
+inst=d
+
+returninst
+
+d=MyEncoder().encode(p)
+
+o=MyDecoder().decode(d)
+
+printd
+
+printtype(o), o
+
+对于JSONDecoder类方法，稍微有点不同，但是改写起来也不是很麻烦。看代码应该就比较清楚了。
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>Sphinx Makefile</title>
+            <link>http://kooksee.github.io/blog/Sphinx%20Makefile/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/Sphinx%20Makefile/</guid>
+            <description>&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;# Makefile for Sphinx documentation
+#
+
+# You can set these variables from the command line.
+SPHINXOPTS    ?=
+SPHINXBUILD   ?= sphinx-build
+PAPER         ?=
+BUILDDIR      ?= _build
+LANGUAGE      ?=
+
+# Internal variables.
+PAPEROPT_a4     = -D latex_paper_size=a4
+PAPEROPT_letter = -D latex_paper_size=letter
+ALLSPHINXOPTS   = -n -d $(BUILDDIR)/doctrees -D language=$(LANGUAGE) $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) .
+# the i18n builder cannot share the environment and doctrees with the others
+I18NSPHINXOPTS  = $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) .
+
+.PHONY: help clean html dirhtml singlehtml pickle json htmlhelp qthelp devhelp epub latex latexpdf text man changes linkcheck doctest gettext
+
+help:
+    @echo &amp;quot;Please use \`make &amp;lt;target&amp;gt;&#39; where &amp;lt;target&amp;gt; is one of&amp;quot;
+    @echo &amp;quot;  html       to make standalone HTML files&amp;quot;
+    @echo &amp;quot;  dirhtml    to make HTML files named index.html in directories&amp;quot;
+    @echo &amp;quot;  singlehtml to make a single large HTML file&amp;quot;
+    @echo &amp;quot;  pickle     to make pickle files&amp;quot;
+    @echo &amp;quot;  json       to make JSON files&amp;quot;
+    @echo &amp;quot;  htmlhelp   to make HTML files and a HTML help project&amp;quot;
+    @echo &amp;quot;  qthelp     to make HTML files and a qthelp project&amp;quot;
+    @echo &amp;quot;  devhelp    to make HTML files and a Devhelp project&amp;quot;
+    @echo &amp;quot;  epub       to make an epub&amp;quot;
+    @echo &amp;quot;  latex      to make LaTeX files, you can set PAPER=a4 or PAPER=letter&amp;quot;
+    @echo &amp;quot;  latexpdf   to make LaTeX files and run them through pdflatex&amp;quot;
+    @echo &amp;quot;  text       to make text files&amp;quot;
+    @echo &amp;quot;  man        to make manual pages&amp;quot;
+    @echo &amp;quot;  texinfo    to make a Texinfo source file&amp;quot;
+    @echo &amp;quot;  gettext    to make PO message catalogs&amp;quot;
+    @echo &amp;quot;  changes    to make an overview of all changed/added/deprecated items&amp;quot;
+    @echo &amp;quot;  linkcheck  to check all external links for integrity&amp;quot;
+    @echo &amp;quot;  doctest    to run all doctests embedded in the documentation (if enabled)&amp;quot;
+
+clean:
+    -rm -rf $(BUILDDIR)/*
+
+html:
+    $(SPHINXBUILD) -b djangohtml $(ALLSPHINXOPTS) $(BUILDDIR)/html
+    @echo
+    @echo &amp;quot;Build finished. The HTML pages are in $(BUILDDIR)/html.&amp;quot;
+
+dirhtml:
+    $(SPHINXBUILD) -b dirhtml $(ALLSPHINXOPTS) $(BUILDDIR)/dirhtml
+    @echo
+    @echo &amp;quot;Build finished. The HTML pages are in $(BUILDDIR)/dirhtml.&amp;quot;
+
+singlehtml:
+    $(SPHINXBUILD) -b singlehtml $(ALLSPHINXOPTS) $(BUILDDIR)/singlehtml
+    @echo
+    @echo &amp;quot;Build finished. The HTML page is in $(BUILDDIR)/singlehtml.&amp;quot;
+
+pickle:
+    $(SPHINXBUILD) -b pickle $(ALLSPHINXOPTS) $(BUILDDIR)/pickle
+    @echo
+    @echo &amp;quot;Build finished; now you can process the pickle files.&amp;quot;
+
+json:
+    $(SPHINXBUILD) -b json $(ALLSPHINXOPTS) $(BUILDDIR)/json
+    @echo
+    @echo &amp;quot;Build finished; now you can process the JSON files.&amp;quot;
+
+htmlhelp:
+    $(SPHINXBUILD) -b htmlhelp $(ALLSPHINXOPTS) $(BUILDDIR)/htmlhelp
+    @echo
+    @echo &amp;quot;Build finished; now you can run HTML Help Workshop with the&amp;quot; \
+          &amp;quot;.hhp project file in $(BUILDDIR)/htmlhelp.&amp;quot;
+
+qthelp:
+    $(SPHINXBUILD) -b qthelp $(ALLSPHINXOPTS) $(BUILDDIR)/qthelp
+    @echo
+    @echo &amp;quot;Build finished; now you can run &amp;quot;qcollectiongenerator&amp;quot; with the&amp;quot; \
+          &amp;quot;.qhcp project file in $(BUILDDIR)/qthelp, like this:&amp;quot;
+    @echo &amp;quot;# qcollectiongenerator $(BUILDDIR)/qthelp/django.qhcp&amp;quot;
+    @echo &amp;quot;To view the help file:&amp;quot;
+    @echo &amp;quot;# assistant -collectionFile $(BUILDDIR)/qthelp/django.qhc&amp;quot;
+
+devhelp:
+    $(SPHINXBUILD) -b devhelp $(ALLSPHINXOPTS) $(BUILDDIR)/devhelp
+    @echo
+    @echo &amp;quot;Build finished.&amp;quot;
+    @echo &amp;quot;To view the help file:&amp;quot;
+    @echo &amp;quot;# mkdir -p $$HOME/.local/share/devhelp/django&amp;quot;
+    @echo &amp;quot;# ln -s $(BUILDDIR)/devhelp $$HOME/.local/share/devhelp/django&amp;quot;
+    @echo &amp;quot;# devhelp&amp;quot;
+
+epub:
+    $(SPHINXBUILD) -b epub $(ALLSPHINXOPTS) $(BUILDDIR)/epub
+    @echo
+    @echo &amp;quot;Build finished. The epub file is in $(BUILDDIR)/epub.&amp;quot;
+
+latex:
+    $(SPHINXBUILD) -b latex $(ALLSPHINXOPTS) $(BUILDDIR)/latex
+    @echo
+    @echo &amp;quot;Build finished; the LaTeX files are in $(BUILDDIR)/latex.&amp;quot;
+    @echo &amp;quot;Run \`make&#39; in that directory to run these through (pdf)latex&amp;quot; \
+          &amp;quot;(use \`make latexpdf&#39; here to do that automatically).&amp;quot;
+
+latexpdf:
+    $(SPHINXBUILD) -b latex $(ALLSPHINXOPTS) $(BUILDDIR)/latex
+    @echo &amp;quot;Running LaTeX files through pdflatex...&amp;quot;
+    make -C $(BUILDDIR)/latex all-pdf
+    @echo &amp;quot;pdflatex finished; the PDF files are in $(BUILDDIR)/latex.&amp;quot;
+
+text:
+    $(SPHINXBUILD) -b text $(ALLSPHINXOPTS) $(BUILDDIR)/text
+    @echo
+    @echo &amp;quot;Build finished. The text files are in $(BUILDDIR)/text.&amp;quot;
+
+man:
+    $(SPHINXBUILD) -b man $(ALLSPHINXOPTS) $(BUILDDIR)/man
+    @echo
+    @echo &amp;quot;Build finished. The manual pages are in $(BUILDDIR)/man.&amp;quot;
+
+texinfo:
+    $(SPHINXBUILD) -b texinfo $(ALLSPHINXOPTS) $(BUILDDIR)/texinfo
+    @echo
+    @echo &amp;quot;Build finished; the Texinfo files are in $(BUILDDIR)/texinfo.&amp;quot;
+
+gettext:
+    $(SPHINXBUILD) -b gettext $(I18NSPHINXOPTS) $(BUILDDIR)/locale
+    @echo
+    @echo &amp;quot;Build finished. The message catalogs are in $(BUILDDIR)/locale.&amp;quot;
+
+changes:
+    $(SPHINXBUILD) -b changes $(ALLSPHINXOPTS) $(BUILDDIR)/changes
+    @echo
+    @echo &amp;quot;The overview file is in $(BUILDDIR)/changes.&amp;quot;
+
+linkcheck:
+    $(SPHINXBUILD) -b linkcheck $(ALLSPHINXOPTS) $(BUILDDIR)/linkcheck
+    @echo
+    @echo &amp;quot;Link check complete; look for any errors in the above output &amp;quot; \
+          &amp;quot;or in $(BUILDDIR)/linkcheck/output.txt.&amp;quot;
+
+doctest:
+    $(SPHINXBUILD) -b doctest $(ALLSPHINXOPTS) $(BUILDDIR)/doctest
+    @echo &amp;quot;Testing of doctests in the sources finished, look at the &amp;quot; \
+          &amp;quot;results in $(BUILDDIR)/doctest/output.txt.&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>UNICODE,GBK,UTF-8区别</title>
+            <link>http://kooksee.github.io/blog/UNICODE,GBK,UTF-8%E5%8C%BA%E5%88%AB/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/UNICODE,GBK,UTF-8%E5%8C%BA%E5%88%AB/</guid>
+            <description>&lt;p&gt;[TOC]&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;简单来说，unicode，gbk和大五码就是编码的值，而utf-8,uft-16之类就是这个值的表现形式．而前面那三种编码是一兼容的，同一个汉字，那三个码值是完全不一样的．如＂汉＂的uncode值与gbk就是不一样的，假设uncode为a040，gbk为b030，而uft-8码，就是把那个值表现的形式．utf-8码完全只针对uncode来组织的，如果ＧＢＫ要转ＵＴＦ－８必须先转uncode码，再转utf-8就ＯＫ了．&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;详细的就见下面转的这篇文章．&lt;/p&gt;
+
+&lt;p&gt;谈谈Unicode编码，简要解释UCS、UTF、BMP、BOM等名词&lt;/p&gt;
+
+&lt;p&gt;这是一篇程序员写给程序员的趣味读物。所谓趣味是指可以比较轻松地了解一些原来不清楚的概念，增进知识，类似于打RPG游戏的升级。整理这篇文章的动机是两个问题：&lt;/p&gt;
+
+&lt;p&gt;问题一：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    使用Windows记事本的“另存为”，可以在GBK、Unicode、Unicode big endian和UTF-8这几种编码方式间相互转换。同样是txt文件，Windows是怎样识别编码方式的呢？
+
+我很早前就发现Unicode、Unicode big endian和UTF-8编码的txt文件的开头会多出几个字节，分别是FF、FE（Unicode）,FE、FF（Unicode big endian）,EF、BB、BF（UTF-8）。但这些标记是基于什么标准呢？
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;问题二：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    最近在网上看到一个ConvertUTF.c，实现了UTF-32、UTF-16和UTF-8这三种编码方式的相互转换。对于Unicode(UCS2)、GBK、UTF-8这些编码方式，我原来就了解。但这个程序让我有些糊涂，想不起来UTF-16和UCS2有什么关系。
+
+查了查相关资料，总算将这些问题弄清楚了，顺带也了解了一些Unicode的细节。写成一篇文章，送给有过类似疑问的朋友。本文在写作时尽量做到通俗易懂，但要求读者知道什么是字节，什么是十六进制。
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##big endian和little endian&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    big endian和little endian是CPU处理多字节数的不同方式。例如“汉”字的Unicode编码是6C49。那么写到文件里时，究竟是将6C写在前面，还是将49写在前面？如果将6C写在前面，就是big endian。如果将49写在前面，就是little endian。
+
+“endian”这个词出自《格列佛游记》。小人国的内战就源于吃鸡蛋时是究竟从大头(Big-Endian)敲开还是从小头(Little-Endian)敲开，由此曾发生过六次叛乱，一个皇帝送了命，另一个丢了王位。
+
+我们一般将endian翻译成“字节序”，将big endian和little endian称作“大尾”和“小尾”。
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##字符编码、内码，顺带介绍汉字编码&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    字符必须编码后才能被计算机处理。计算机使用的缺省编码方式就是计算机的内码。早期的计算机使用7位的ASCII编码，为了处理汉字，程序员设计了用于简体中文的GB2312和用于繁体中文的big5。
+
+GB2312(1980年)一共收录了7445个字符，包括6763个汉字和682个其它符号。汉字区的内码范围高字节从B0-F7，低字节从A1-FE，占用的码位是72*94=6768。其中有5个空位是D7FA-D7FE。
+
+GB2312支持的汉字太少。1995年的汉字扩展规范GBK1.0收录了21886个符号，它分为汉字区和图形符号区。汉字区包括21003个字符。
+
+从ASCII、GB2312到GBK，这些编码方法是向下兼容的，即同一个字符在这些方案中总是有相同的编码，后面的标准支持更多的字符。在这些编码中，英文和中文可以统一地处理。区分中文编码的方法是高字节的最高位不为0。按照程序员的称呼，GB2312、GBK都属于双字节字符集 (DBCS)。
+
+2000年的GB18030是取代GBK1.0的正式国家标准。该标准收录了27484个汉字，同时还收录了藏文、蒙文、维吾尔文等主要的少数民族文字。从汉字字汇上说，GB18030在GB13000.1的20902个汉字的基础上增加了CJK扩展A的6582个汉字（Unicode码0x3400-0x4db5），一共收录了27484个汉字。
+
+CJK就是中日韩的意思。Unicode为了节省码位，将中日韩三国语言中的文字统一编码。GB13000.1就是ISO/IEC 10646-1的中文版，相当于Unicode 1.1。
+
+GB18030的编码采用单字节、双字节和4字节方案。其中单字节、双字节和GBK是完全兼容的。4字节编码的码位就是收录了CJK扩展A的6582个汉字。例如：UCS的0x3400在GB18030中的编码应该是8139EF30，UCS的0x3401在GB18030中的编码应该是8139EF31。
+
+微软提供了GB18030的升级包，但这个升级包只是提供了一套支持CJK扩展A的6582个汉字的新字体：新宋体-18030，并不改变内码。Windows 的内码仍然是GBK。
+
+这里还有一些细节：
+
+GB2312的原文还是区位码，从区位码到内码，需要在高字节和低字节上分别加上A0。
+
+对于任何字符编码，编码单元的顺序是由编码方案指定的，与endian无关。例如GBK的编码单元是字节，用两个字节表示一个汉字。这两个字节的顺序是固定的，不受CPU字节序的影响。UTF-16的编码单元是word（双字节），word之间的顺序是编码方案指定的，word内部的字节排列才会受到endian的影响。后面还会介绍UTF-16。
+
+GB2312的两个字节的最高位都是1。但符合这个条件的码位只有128*128=16384个。所以GBK和GB18030的低字节最高位都可能不是1。不过这不影响DBCS字符流的解析：在读取DBCS字符流时，只要遇到高位为1的字节，就可以将下两个字节作为一个双字节编码，而不用管低字节的高位是什么。
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##Unicode、UCS和UTF&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    前面提到从ASCII、GB2312、GBK到GB18030的编码方法是向下兼容的。而Unicode只与ASCII兼容（更准确地说，是与ISO-8859-1兼容），与GB码不兼容。例如“汉”字的Unicode编码是6C49，而GB码是BABA。
+
+Unicode也是一种字符编码方法，不过它是由国际组织设计，可以容纳全世界所有语言文字的编码方案。Unicode的学名是&amp;quot;Universal Multiple-Octet Coded Character Set&amp;quot;，简称为UCS。UCS可以看作是&amp;quot;Unicode Character Set&amp;quot;的缩写。
+
+根据维基百科全书(http://zh.wikipedia.org/wiki/)的记载：历史上存在两个试图独立设计Unicode的组织，即国际标准化组织（ISO）和一个软件制造商的协会（unicode.org）。ISO开发了ISO 10646项目，Unicode协会开发了Unicode项目。
+
+在1991年前后，双方都认识到世界不需要两个不兼容的字符集。于是它们开始合并双方的工作成果，并为创立一个单一编码表而协同工作。从Unicode2.0开始，Unicode项目采用了与ISO 10646-1相同的字库和字码。
+
+目前两个项目仍都存在，并独立地公布各自的标准。Unicode协会现在的最新版本是2005年的Unicode 4.1.0。ISO的最新标准是ISO 10646-3:2003。
+
+UCS只是规定如何编码，并没有规定如何传输、保存这个编码。例如“汉”字的UCS编码是6C49，我可以用4个ascii数字来传输、保存这个编码；也可以用utf-8编码:3个连续的字节E6 B1 89来表示它。关键在于通信双方都要认可。UTF-8、UTF-7、UTF-16都是被广泛接受的方案。UTF-8的一个特别的好处是它与ISO-8859-1完全兼容。UTF是“UCS Transformation Format”的缩写。
+
+IETF的RFC2781和RFC3629以RFC的一贯风格，清晰、明快又不失严谨地描述了UTF-16和UTF-8的编码方法。我总是记不得IETF是Internet Engineering Task Force的缩写。但IETF负责维护的RFC是Internet上一切规范的基础。
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;###内码和code page&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    目前Windows的内核已经支持Unicode字符集，这样在内核上可以支持全世界所有的语言文字。但是由于现有的大量程序和文档都采用了某种特定语言的编码，例如GBK，Windows不可能不支持现有的编码，而全部改用Unicode。
+
+Windows使用代码页(code page)来适应各个国家和地区。code page可以被理解为前面提到的内码。GBK对应的code page是CP936。
+
+微软也为GB18030定义了code page：CP54936。但是由于GB18030有一部分4字节编码，而Windows的代码页只支持单字节和双字节编码，所以这个code page是无法真正使用的。
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##UCS-2、UCS-4、BMP&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    UCS有两种格式：UCS-2和UCS-4。顾名思义，UCS-2就是用两个字节编码，UCS-4就是用4个字节（实际上只用了31位，最高位必须为0）编码。下面让我们做一些简单的数学游戏：
+
+UCS-2有2^16=65536个码位，UCS-4有2^31=2147483648个码位。
+
+UCS-4根据最高位为0的最高字节分成2^7=128个group。每个group再根据次高字节分为256个plane。每个plane根据第3个字节分为256行 (rows)，每行包含256个cells。当然同一行的cells只是最后一个字节不同，其余都相同。
+
+group 0的plane 0被称作Basic Multilingual Plane, 即BMP。或者说UCS-4中，高两个字节为0的码位被称作BMP。
+
+将UCS-4的BMP去掉前面的两个零字节就得到了UCS-2。在UCS-2的两个字节前加上两个零字节，就得到了UCS-4的BMP。而目前的UCS-4规范中还没有任何字符被分配在BMP之外。
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##UTF编码&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;UTF-8就是以8位为单元对UCS进行编码。从UCS-2到UTF-8的编码方式如下：
+
+UCS-2编码(16进制) UTF-8 字节流(二进制)
+
+0000 - 007F 0xxxxxxx
+
+0080 - 07FF 110xxxxx 10xxxxxx
+
+0800 - FFFF 1110xxxx 10xxxxxx 10xxxxxx
+
+例如“汉”字的Unicode编码是6C49。6C49在0800-FFFF之间，所以肯定要用3字节模板了：1110xxxx 10xxxxxx 10xxxxxx。将6C49写成二进制是：0110 110001 001001，用这个比特流依次代替模板中的x，得到：11100110 10110001 10001001，即E6 B1 89。
+
+读者可以用记事本测试一下我们的编码是否正确。需要注意，UltraEdit在打开utf-8编码的文本文件时会自动转换为UTF-16，可能产生混淆。你可以在设置中关掉这个选项。更好的工具是Hex Workshop。
+
+UTF-16以16位为单元对UCS进行编码。对于小于0x10000的UCS码，UTF-16编码就等于UCS码对应的16位无符号整数。对于不小于0x10000的UCS码，定义了一个算法。不过由于实际使用的UCS2，或者UCS4的BMP必然小于0x10000，所以就目前而言，可以认为UTF-16和UCS-2基本相同。但UCS-2只是一个编码方案，UTF-16却要用于实际的传输，所以就不得不考虑字节序的问题。
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##UTF的字节序和BOM&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    UTF-8以字节为编码单元，没有字节序的问题。UTF-16以两个字节为编码单元，在解释一个UTF-16文本前，首先要弄清楚每个编码单元的字节序。例如“奎”的Unicode编码是594E，“乙”的Unicode编码是4E59。如果我们收到UTF-16字节流“594E”，那么这是“奎”还是“乙”？
+
+Unicode规范中推荐的标记字节顺序的方法是BOM。BOM不是“Bill Of Material”的BOM表，而是Byte order Mark。BOM是一个有点小聪明的想法：
+
+在UCS编码中有一个叫做&amp;quot;ZERO WIDTH NO-BREAK SPACE&amp;quot;的字符，它的编码是FEFF。而FFFE在UCS中是不存在的字符，所以不应该出现在实际传输中。UCS规范建议我们在传输字节流前，先传输字符&amp;quot;ZERO WIDTH NO-BREAK SPACE&amp;quot;。
+
+这样如果接收者收到FEFF，就表明这个字节流是Big-Endian的；如果收到FFFE，就表明这个字节流是Little-Endian的。因此字符&amp;quot;ZERO WIDTH NO-BREAK SPACE&amp;quot;又被称作BOM。
+
+UTF-8不需要BOM来表明字节顺序，但可以用BOM来表明编码方式。字符&amp;quot;ZERO WIDTH NO-BREAK SPACE&amp;quot;的UTF-8编码是EF BB BF（读者可以用我们前面介绍的编码方法验证一下）。所以如果接收者收到以EF BB BF开头的字节流，就知道这是UTF-8编码了。
+
+Windows就是使用BOM来标记文本文件的编码方式的。
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##进一步的参考资料&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    本文主要参考的资料是 &amp;quot;Short overview of ISO-IEC 10646 and Unicode&amp;quot; (http://www.nada.kth.se/i18n/ucs/unicode-iso10646-oview.html)。
+
+我还找了两篇看上去不错的资料，不过因为我开始的疑问都找到了答案，所以就没有看：
+
+&amp;quot;Understanding Unicode A general introduction to the Unicode Standard&amp;quot; (http://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&amp;amp;item_id=IWS-Chapter04a)
+
+&amp;quot;Character set encoding basics Understanding character set encodings and legacy encodings&amp;quot; (http://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&amp;amp;item_id=IWS-Chapter03)
+
+我写过UTF-8、UCS-2、GBK相互转换的软件包，包括使用Windows API和不使用Windows API的版本。以后有时间的话，我会整理一下放到我的个人主页上(http://fmddlmyy.home4u.china.com)。
+
+我是想清楚所有问题后才开始写这篇文章的，原以为一会儿就能写好。没想到考虑措辞和查证细节花费了很长时间，竟然从下午1:30写到9:00。希望有读者能从中受益。
+
+附录1 再说说区位码、GB2312、内码和代码页
+
+有的朋友对文章中这句话还有疑问：
+
+“GB2312的原文还是区位码，从区位码到内码，需要在高字节和低字节上分别加上A0。”
+
+我再详细解释一下：
+
+“GB2312的原文”是指国家1980年的一个标准《中华人民共和国国家标准信息交换用汉字编码字符集 基本集 GB 2312-80》。这个标准用两个数来编码汉字和中文符号。第一个数称为“区”，第二个数称为“位”。所以也称为区位码。1-9区是中文符号，16-55区是一级汉字，56-87区是二级汉字。现在Windows也还有区位输入法，例如输入1601得到“啊”。（这个区位输入法可以自动识别16进制的GB2312和10进制的区位码，也就是说输入B0A1同样会得到“啊”。）
+
+内码是指操作系统内部的字符编码。早期操作系统的内码是与语言相关的。现在的Windows在系统内部支持Unicode，然后用代码页适应各种语言，“内码”的概念就比较模糊了。微软一般将缺省代码页指定的编码说成是内码。
+
+内码这个词汇，并没有什么官方的定义，代码页也只是微软这个公司的叫法。作为程序员，我们只要知道它们是什么东西，没有必要过多地考证这些名词。
+
+所谓代码页(code page)就是针对一种语言文字的字符编码。例如GBK的code page是CP936，BIG5的code page是CP950，GB2312的code page是CP20936。
+
+Windows中有缺省代码页的概念，即缺省用什么编码来解释字符。例如Windows的记事本打开了一个文本文件，里面的内容是字节流：BA、BA、D7、D6。Windows应该去怎么解释它呢？
+
+是按照Unicode编码解释、还是按照GBK解释、还是按照BIG5解释，还是按照ISO8859-1去解释？如果按GBK去解释，就会得到“汉字”两个字。按照其它编码解释，可能找不到对应的字符，也可能找到错误的字符。所谓“错误”是指与文本作者的本意不符，这时就产生了乱码。
+
+答案是Windows按照当前的缺省代码页去解释文本文件里的字节流。缺省代码页可以通过控制面板的区域选项设置。记事本的另存为中有一项ANSI，其实就是按照缺省代码页的编码方法保存。
+
+Windows的内码是Unicode，它在技术上可以同时支持多个代码页。只要文件能说明自己使用什么编码，用户又安装了对应的代码页，Windows就能正确显示，例如在HTML文件中就可以指定charset。
+
+有的HTML文件作者，特别是英文作者，认为世界上所有人都使用英文，在文件中不指定charset。如果他使用了0x80-0xff之间的字符，中文Windows又按照缺省的GBK去解释，就会出现乱码。这时只要在这个html文件中加上指定charset的语句，例如：
+
+如果原作者使用的代码页和ISO8859-1兼容，就不会出现乱码了。
+
+再说区位码，啊的区位码是1601，写成16进制是0x10,0x01。这和计算机广泛使用的ASCII编码冲突。为了兼容00-7f的ASCII编码，我们在区位码的高、低字节上分别加上A0。这样“啊”的编码就成为B0A1。我们将加过两个A0的编码也称为GB2312编码，虽然GB2312的原文根本没提到这一点。
+
+
+关于编码，这篇文章足矣，谢谢祥龙之子，http://www.cnblogs.com/cy163/archive/2007/05/31/766886.html
+&lt;/code&gt;&lt;/pre&gt;
 </description>
         </item>
         

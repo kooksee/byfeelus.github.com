@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Hashlib on 百里求一的博客</title>
+        <link>http://kooksee.github.io/tags/hashlib/</link>
+        <language>zh-CN</language>
+        <author>CoderZh</author>
+        <rights>Copyright (c) 2015, CoderZh; all rights reserved.</rights>
+        <updated>Mon, 01 Jan 0001 00:00:00 UTC</updated>
+        
+        <item>
+            <title>python笔记之hashlib模块</title>
+            <link>http://kooksee.github.io/blog/%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/</guid>
+            <description>&lt;blockquote&gt;
+&lt;p&gt;涉及加密服务：14. Cryptographic Services其中 hashlib是涉及安全散列和消息摘要，提供多个不同的加密算法借口，如SHA1、SHA224、SHA256、SHA384、SHA512、MD5等。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;##快速入门&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import hashlib
+m = hashlib.md5()   #创建hash对象，md5:(message-Digest Algorithm 5)消息摘要算法,得出一个128位的密文
+print m             #&amp;lt;md5 HASH object @ 000000000254ADF0&amp;gt;
+m.update(&#39;BeginMan&#39;)#更新哈希对象以字符串参数
+print m.digest()    #返回摘要，作为二进制数据字符串值
+print m.hexdigest() #返回十六进制数字字符串    0b28251e684dfbd9102f8b6f0281c0c5
+print m.digest_size #16
+print m.block_size  #64
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;###使用new()创建指定加密模式的hash对象&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;new(name, string=&#39;&#39;)
+     &amp;quot;&amp;quot;&amp;quot;
+     Return a new hashing object using the named algorithm;
+     optionally initialized with a string.
+     &amp;quot;&amp;quot;&amp;quot;
+h = hashlib.new(&#39;md5&#39;)
+print h     #&amp;lt;md5 HASH object @ 000000000260BDB0&amp;gt;
+h2 = hashlib.new(&#39;ripemd160&#39;,&#39;what&#39;)
+print h2    #&amp;lt;ripemd160 HASH object @ 000000000271B9F0&amp;gt;
+h.update(&#39;beginman&#39;)
+print h.hexdigest() #666fc5baa93a7fb207c5bfff03b67732
+#等效
+s = hashlib.md5()
+s.update(&#39;beginman&#39;)
+print s.hexdigest() #666fc5baa93a7fb207c5bfff03b67732
+print h2.hexdigest()    #9c1185a5c5e9fc54612808977ee8f548b2258d31
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##常用属性&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;print hashlib.algorithms    #(&#39;md5&#39;, &#39;sha1&#39;, &#39;sha224&#39;, &#39;sha256&#39;, &#39;sha384&#39;, &#39;sha512&#39;)    列出所有加密算法
+print h.digest_size         #16 产生的散列的字节大小。
+print h.block_size          #64 The internal block size of the hash algorithm in bytes.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##常用方法&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;hash.update(arg)
+更新哈希对象以字符串参数,如果同一个hash对象重复调用该方法，则m.update(a); m.update(b) is equivalent to m.update(a+b).
+
+hash.digest()
+返回摘要，作为二进制数据字符串值,
+
+hash.hexdigest()
+返回摘要，作为十六进制数据字符串值,
+
+hash.copy()
+复制
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##应用实例
+        注册、登录、文件上传、相册加密&amp;hellip;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import datetime
+KEY_VALUE = &#39;/BeginMan/&#39;
+now = datetime.datetime.now()
+m = hashlib.md5()
+str = &#39;%s%s&#39; %(KEY_VALUE,now.strftime(&amp;quot;%Y%m%d&amp;quot;))
+m.update(str)
+value = m.hexdigest()
+print value #8db42d3e90b41105ed061b8347a7c850
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

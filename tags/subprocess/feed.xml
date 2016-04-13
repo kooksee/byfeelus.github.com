@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Subprocess on 百里求一的博客</title>
+        <link>http://kooksee.github.io/tags/subprocess/</link>
+        <language>zh-CN</language>
+        <author>CoderZh</author>
+        <rights>Copyright (c) 2015, CoderZh; all rights reserved.</rights>
+        <updated>Mon, 01 Jan 0001 00:00:00 UTC</updated>
+        
+        <item>
+            <title>python笔记之subprocess模块</title>
+            <link>http://kooksee.github.io/blog/python%E7%AC%94%E8%AE%B0%E4%B9%8Bsubprocess%E6%A8%A1%E5%9D%97/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/python%E7%AC%94%E8%AE%B0%E4%B9%8Bsubprocess%E6%A8%A1%E5%9D%97/</guid>
+            <description>
+
+&lt;p&gt;[TOC]&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;从Python 2.4开始，Python引入subprocess模块来管理子进程，以取代一些旧模块的方法：如 os.system、os.spawn*、os.popen*、popen2.*、commands.*不但可以调用外部的命令作为子进程，而且可以连接到子进程的input/output/error管道，获取相关的返回信息&lt;/p&gt;
+
+&lt;p&gt;subprocess的目的就是启动一个新的进程并且与之通信。subprocess模块中只定义了一个类: Popen。可以使用Popen来创建进程，并与进程进行复杂的交互。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;##subprocess.Popen&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class subprocess.Popen(
+   args,
+   bufsize=0,
+   executable=None,
+   stdin=None,
+   stdout=None,
+   stderr=None,
+   preexec_fn=None,
+   close_fds=False,
+   shell=False,
+   cwd=None,
+   env=None,
+   universal_newlines=False,
+   startupinfo=None,
+   creationflags=0
+ )
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;    args：字符串或者列表，用于指定进程的可执行文件及其参数，如果是序列类型，第一个元素通常是可执行文件的路径。我们也可以显式的使用executeable参数来指定可执行文件的路径。
+
+    bufsize：0 无缓冲；1 行缓冲；其他正值 缓冲区大小；负值 采用默认系统缓冲（一般为全缓冲）
+    executable：args字符串或列表第一项表示程序名
+
+    stdin,stdout,stderr: None 没有任何重定向，继承父进程；可以是PIPE，文件描述符或文件对象；stderr：还可以设置为STDOUT
+
+    preexec_fn：钩子函数，在fork和exec之间执行（unix）
+    close_fds：unix下执行新进程前是否关闭0/1/2之外的文件
+    windows下继承或者不继承父进程的文件描述符
+
+    shell：true unix下相当于在args前面添加了&amp;quot;/bin/sh -c&amp;quot;,windows下相当于添加了&amp;quot;cmd /c&amp;quot;；程序将通过shell来执行
+
+    cwd：设置工作目录
+    env：设置环境变量，参数env是字典类型，用于指定子进程的环境变量。如果env = None，子进程的环境变量将从父进程中继承
+
+    universal_newlines：各种换行符统一处理成&#39;\n&#39;
+    startupinfo：windows下传递给CreateProcess的结构体
+    creationflags：windows下传给CREATE_NEW_CONSOLE创建自己的控制台窗口
+    subprocess.Popen([&amp;quot;gedit&amp;quot;,&amp;quot;abc.txt&amp;quot;])
+    subprocess.Popen(&amp;quot;gedit abc.txt&amp;quot;)
+    这两个之中，后者将不会工作。因为如果是一个字符串的话，必须是程序的路径才可以。(考虑unix的api函数 exec，接受的是字符串列表)
+    但是下面的可以工作
+        subprocess.Popen(&amp;quot;gedit abc.txt&amp;quot;, shell=True)
+    这是因为它相当于
+        subprocess.Popen([&amp;quot;/bin/sh&amp;quot;, &amp;quot;-c&amp;quot;, &amp;quot;gedit abc.txt&amp;quot;])
+    都成了sh的参数，就无所谓了
+
+   在Windows下，下面的却又是可以工作的
+   subprocess.Popen([&amp;quot;notepad.exe&amp;quot;, &amp;quot;abc.txt&amp;quot;])
+   subprocess.Popen(&amp;quot;notepad.exe abc.txt&amp;quot;)
+   这是由于windows下的api函数CreateProcess接受的是一个字符串。即使是列表形式的参数，也需要先合并成字符串再传递给api函数。
+   类似上面
+    subprocess.Popen(&amp;quot;notepad.exe abc.txt&amp;quot; shell=True)
+    subprocess.Popen(&amp;quot;cmd.exe /C &amp;quot;+&amp;quot;notepad.exe abc.txt&amp;quot; shell=True)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##call()
+         call() 执行程序，并等待它完成&lt;/p&gt;
+
+&lt;h2 id=&#34;check-call:39ed53c15fd98d97e6540d8f7aaa12fa&#34;&gt;check_call()&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;     check_call() 调用前面的call，如果返回值非零，则抛出异常
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;check-output:39ed53c15fd98d97e6540d8f7aaa12fa&#34;&gt;check_output()&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;     check_output() 执行程序，并返回其标准输出
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##poll()
+        检查子进程是否已经结束，设置并返回returncode属性&lt;/p&gt;
+
+&lt;p&gt;##wait()
+        等待子进程结束，设置并返回returncode属性
+##communicate()
+        communicate(input=None)参数是标准输入，返回标准输出和标准错误
+        与子进程进行交互。向stdin发送数据，或从stdout和stderr中读取数据。可选参数input指定发送到子进程的参数。Communicate()返回一个元组：(stdoutdata, stderrdata)。注意：如果希望通过进程的stdin向其发送数据，在创建Popen对象的时候，参数stdin必须被设置为PIPE。同样，如果希望从stdout和stderr获取数据，必须将stdout和stderr设置为PIPE。
+##send_signal()
+        send_signal(signal)向子进程发送信号
+##terminate()
+        停止(stop)子进程。在windows平台下，该方法将调用Windows API TerminateProcess（）来结束子进程。unix对应的SIGTERM信号
+##kill()
+        杀死子进程(unix对应的SIGKILL信号)，windows同上&lt;/p&gt;
+
+&lt;p&gt;##pid
+        获取子进程的进程ID。
+##returncode
+        获取进程的返回值。如果进程还没有结束，返回None，成功为0
+##subprocess.PIPE
+        　在创建Popen对象时，subprocess.PIPE可以初始化stdin, stdout或stderr参数。表示与子进程通信的标准流。
+##subprocess.STDOUT
+        创建Popen对象时，用于初始化stderr参数，表示将错误通过标准输出流输出。&lt;/p&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

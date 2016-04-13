@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Sqlalchemy on 百里求一的博客</title>
+        <link>http://kooksee.github.io/tags/sqlalchemy/</link>
+        <language>zh-CN</language>
+        <author>CoderZh</author>
+        <rights>Copyright (c) 2015, CoderZh; all rights reserved.</rights>
+        <updated>Mon, 01 Jan 0001 00:00:00 UTC</updated>
+        
+        <item>
+            <title>flask-sqlalchemy 关系表简单操作</title>
+            <link>http://kooksee.github.io/blog/flask-sqlalchemy%20%E5%85%B3%E7%B3%BB%E8%A1%A8%E7%AE%80%E5%8D%95%E6%93%8D%E4%BD%9C/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/flask-sqlalchemy%20%E5%85%B3%E7%B3%BB%E8%A1%A8%E7%AE%80%E5%8D%95%E6%93%8D%E4%BD%9C/</guid>
+            <description>&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;from flask import Flask
+from flask.ext.sqlalchemy import SQLAlchemy
+from flask.ext.migrate import Migrate, MigrateCommand
+from flask.ext.script import Manager
+
+
+app = Flask(__name__)
+app.config[&#39;SQLALCHEMY_DATABASE_URI&#39;] = &#39;sqlite:///test.db&#39;
+db = SQLAlchemy(app)
+
+migrate = Migrate(app, db)
+
+manager = Manager(app)
+manager.add_command(&#39;db&#39;, MigrateCommand)
+
+
+class Post(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(80))
+
+    category_id = db.Column(db.Integer, db.ForeignKey(&#39;category.id&#39;))
+    category = db.relationship(&#39;Category&#39;,
+                               backref=db.backref(&#39;posts&#39;, lazy=&#39;dynamic&#39;))
+
+
+class Category(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    password = db.Column(db.String(50))
+
+
+@manager.command
+def run():
+    app.debug = True
+    app.run()
+
+
+if __name__ == &#39;__main__&#39;:
+    manager.run()
+
+# test
+# c1 = Category(password = &#39;pass1&#39;)
+# p1 = Post(name=&#39;name1&#39;,category=c1)
+# db.session.add(p1)
+# db.session.commit()
+#
+# p1 = db.session.query(Category).one()
+# print p1.id == 1
+# print p1.posts.one().name == &#39;name1&#39;
+# print p1.posts.all()[0].name ==&#39;name1&#39;
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

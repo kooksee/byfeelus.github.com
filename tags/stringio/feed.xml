@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Stringio on 百里求一的博客</title>
+        <link>http://kooksee.github.io/tags/stringio/</link>
+        <language>zh-CN</language>
+        <author>CoderZh</author>
+        <rights>Copyright (c) 2015, CoderZh; all rights reserved.</rights>
+        <updated>Mon, 01 Jan 0001 00:00:00 UTC</updated>
+        
+        <item>
+            <title>python中的StringIO模块</title>
+            <link>http://kooksee.github.io/blog/python%E4%B8%AD%E7%9A%84StringIO%E6%A8%A1%E5%9D%97/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/python%E4%B8%AD%E7%9A%84StringIO%E6%A8%A1%E5%9D%97/</guid>
+            <description>&lt;blockquote&gt;
+&lt;p&gt;此模块主要用于在内存缓冲区中读写数据。模块是用类编写的，只有一个StringIO类，所以它的可用方法都在类中。此类中的大部分函数都与对文件的操作方法类似。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;#coding=gbk
+
+import StringIO, cStringIO, sys
+
+s = StringIO.StringIO(&amp;quot;JGood is a handsome boy&amp;quot;)
+s.write(&amp;quot;JGood is a handsome boy \r\n&amp;quot;)
+s.write(&#39;okkkk中国&#39;)
+s.seek(0)
+print s.read()
+
+#最后4个字节
+s.seek(-4, 2)
+print s.read()
+
+#---- 结果 ----
+#JGood is a handsome boy
+#okkkk中国
+#中国
+
+s=StringIO.StrngIO([buf])
+
+#此实例类似于open方法，不同的是它并不会在硬盘中生成文件，而只寄存在缓冲区；可选参数buf是一个str或unicode类型。它将会与其他后续写入的数据存放在一起。
+StringIO类中的方法：
+
+....● read
+
+....● readline
+
+....● readlines
+
+....● write
+
+....● writelines
+
+....● getvalue
+
+....● truncate
+
+....● tell
+
+....● seek
+
+....● close
+
+....● isatty
+
+....● flush
+
+----------------------
+
+s.read([n])
+
+参数n限定读取长度，int类型；缺省状态为从当前读写位置读取对象s中存储的所有数据。读取结束后，读写位置被移动。
+
+----------------------
+
+s.readline([length])
+
+参数length限定读取的结束位置，int类型，缺省状态为None：从当前读写位置读取至下一个以“\n”为结束符的当前行。读写位置被移动。
+
+----------------------
+
+s.readlines([sizehint])
+
+参数sizehint为int类型，缺省状态为读取所有行并作为列表返回，除此之外从当前读写位置读取至下一个以“\n”为结束符的当前行。读写位置被移动。
+
+----------------------
+
+s.write(s)
+
+从读写位置将参数s写入给对象s。参数s为str或unicode类型。读写位置被移动。
+
+----------------------
+
+s.writelines(list)
+
+从读写位置将list写入给对象s。参数list为一个列表，列表的成员为str或unicode类型。读写位置被移动。
+
+----------------------
+
+s.getvalue()
+
+此函数没有参数，返回对象s中的所有数据。
+
+----------------------
+
+s.truncate([size])
+
+从读写位置起切断数据，参数size限定裁剪长度，缺省值为None。
+
+----------------------
+
+s.tell()
+
+返回当前读写位置。
+
+----------------------
+
+s.seek(pos[,mode])
+
+移动当前读写位置至pos处，可选参数mode为0时将读写位置移动至pos处，为1时将读写位置从当前位置起向后移动pos个长度，为2时将读写位置置于末尾处再向后移动pos个长度；默认为0。
+
+----------------------
+
+s.close()
+
+释放缓冲区，执行此函数后，数据将被释放，也不可再进行操作。
+
+----------------------
+
+s.isatty()
+
+此函数总是返回0。不论StringIO对象是否已被close()。
+
+----------------------
+
+s.flush()
+
+刷新内部缓冲区。
+
+----------------------
+
+dir(StringIO.StringIO)的返回值中还包含有一个test函数，不过不用理睬它，它没有任何意义
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

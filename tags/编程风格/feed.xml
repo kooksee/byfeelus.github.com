@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>编程风格 on 百里求一的博客</title>
+        <link>http://kooksee.github.io/tags/%E7%BC%96%E7%A8%8B%E9%A3%8E%E6%A0%BC/</link>
+        <language>zh-CN</language>
+        <author>CoderZh</author>
+        <rights>Copyright (c) 2015, CoderZh; all rights reserved.</rights>
+        <updated>Mon, 01 Jan 0001 00:00:00 UTC</updated>
+        
+        <item>
+            <title>python笔记之编程风格大比拼</title>
+            <link>http://kooksee.github.io/blog/python%E7%AC%94%E8%AE%B0%E4%B9%8B%E7%BC%96%E7%A8%8B%E9%A3%8E%E6%A0%BC%E5%A4%A7%E6%AF%94%E6%8B%BC/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/python%E7%AC%94%E8%AE%B0%E4%B9%8B%E7%BC%96%E7%A8%8B%E9%A3%8E%E6%A0%BC%E5%A4%A7%E6%AF%94%E6%8B%BC/</guid>
+            <description>
+
+&lt;blockquote&gt;
+&lt;p&gt;虽然我的python age并不高，但我仍然愿意将我遇到的或者我写的有趣的python程序和大家一块分享，下面是我找到的一篇关于各类python程序员的编程风格的比较文章，以阶乘为例，很有意思。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&#34;新手程序员:aa85f69b3f0bfe000cb1b628195851c4&#34;&gt;新手程序员&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;def factorial(x):
+    if x == 0:
+        return 1
+    else:
+        return x * factorial(x - 1)
+print factorial(6)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;###第一年的刚学完Pascal的新手&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;def factorial(x):
+    result = 1
+    i = 2
+    while i &amp;lt;= x:
+        result = result * i
+        i = i + 1
+    return result
+print factorial(6)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;###第一年的刚学完C语言的新手&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;def fact(x): #{
+    result = i = 1;
+    while (i &amp;lt;= x): #{
+        result *= i;
+        i += 1;
+    #}
+    return result;
+#}
+print(fact(6))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;###第一年刚学完SICP的新手&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;@tailcall
+def fact(x, acc=1):
+    if (x &amp;gt; 1): return (fact((x - 1), (acc * x)))
+    else:       return acc
+print(fact(
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;###第一年刚学完Python的新手&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;def Factorial(x):
+    res = 1
+    for i in xrange(2, x + 1):
+        res *= i
+    return res
+print Factorial(6)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;###爱偷懒的程序员&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;def fact(x):
+    return x &amp;gt; 1 and x * fact(x - 1) or 1
+print fact(6)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;###更懒的 Python 程序员&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;f = lambda x: x and x * f(x - 1) or 1
+print f(6)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;###Python 专家&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import operator as op
+import functional as f
+fact = lambda x: f.foldl(op.mul, 1, xrange(2, x + 1))
+print fact(6)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;###Python 黑客&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import sys
+@tailcall
+def fact(x, acc=1):
+    if x: return fact(x.__sub__(1), acc.__mul__(x))
+    return acc
+sys.stdout.write(str(fact(6)) + &#39;\n&#39;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;###专家级程序员&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import c_math
+fact = c_math.fact
+print fact(6)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;###英语系的专家级程序员&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import c_maths
+fact = c_maths.fact
+print fact(6)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;###Web 设计者&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;def factorial(x):
+    #-------------------------------------------------
+    #--- Code snippet from The Math Vault          ---
+    #--- Calculate factorial (C) Arthur Smith 1999 ---
+    #-------------------------------------------------
+    result = str(1)
+    i = 1 #Thanks Adam
+    while i &amp;lt;= x:
+        #result = result * i  #It&#39;s faster to use *=
+        #result = str(result * result + i)
+           #result = int(result *= i) #??????
+        result str(int(result) * i)
+        #result = int(str(result) * i)
+        i = i + 1
+    return result
+print factorial(6)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;###Unix 程序员&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import os
+def fact(x):
+    os.system(&#39;factorial &#39; + str(x))
+fact(6)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;###Windows 程序员&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;NULL = None
+def CalculateAndPrintFactorialEx(dwNumber,
+                                 hOutputDevice,
+                                 lpLparam,
+                                 lpWparam,
+                                 lpsscSecurity,
+                                 *dwReserved):
+    if lpsscSecurity != NULL:
+        return NULL #Not implemented
+    dwResult = dwCounter = 1
+    while dwCounter &amp;lt;= dwNumber:
+        dwResult *= dwCounter
+        dwCounter += 1
+    hOutputDevice.write(str(dwResult))
+    hOutputDevice.write(&#39;\n&#39;)
+    return 1
+import sys
+CalculateAndPrintFactorialEx(6, sys.stdout, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;###公司里的程序员&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;def new(cls, *args, **kwargs):
+    return cls(*args, **kwargs)
+
+class Number(object):
+    pass
+
+class IntegralNumber(int, Number):
+    def toInt(self):
+        return new (int, self)
+
+class InternalBase(object):
+    def __init__(self, base):
+        self.base = base.toInt()
+
+    def getBase(self):
+        return new (IntegralNumber, self.base)
+
+class MathematicsSystem(object):
+    def __init__(self, ibase):
+        Abstract
+
+    @classmethod
+    def getInstance(cls, ibase):
+        try:
+            cls.__instance
+        except AttributeError:
+            cls.__instance = new (cls, ibase)
+        return cls.__instance
+
+class StandardMathematicsSystem(MathematicsSystem):
+    def __init__(self, ibase):
+        if ibase.getBase() != new (IntegralNumber, 2):
+            raise NotImplementedError
+        self.base = ibase.getBase()
+
+    def calculateFactorial(self, target):
+        result = new (IntegralNumber, 1)
+        i = new (IntegralNumber, 2)
+        while i &amp;lt;= target:
+            result = result * i
+            i = i + new (IntegralNumber, 1)
+        return result
+
+print StandardMathematicsSystem.getInstance(new (InternalBase, new (IntegralNumber, 2))).calculateFactorial(new (IntegralNumber, 6))
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

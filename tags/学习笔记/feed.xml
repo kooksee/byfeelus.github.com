@@ -1,0 +1,1042 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>学习笔记 on 百里求一的博客</title>
+        <link>http://kooksee.github.io/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</link>
+        <language>zh-CN</language>
+        <author>CoderZh</author>
+        <rights>Copyright (c) 2015, CoderZh; all rights reserved.</rights>
+        <updated>Mon, 01 Jan 0001 00:00:00 UTC</updated>
+        
+        <item>
+            <title>随时笔记</title>
+            <link>http://kooksee.github.io/blog/%E9%9A%8F%E6%97%B6%E7%AC%94%E8%AE%B0/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/%E9%9A%8F%E6%97%B6%E7%AC%94%E8%AE%B0/</guid>
+            <description>&lt;p&gt;ldd 命令来看到动态链接库 ldd $GOPATH/bin/helloworld&lt;/p&gt;
+
+&lt;p&gt;创建在 Go 中的可执行静态链接
+CGO_ENABLED=0 go get -a -ldflags &amp;lsquo;-s&amp;rsquo; github.com/adriaandejonge/helloworld&lt;/p&gt;
+
+&lt;p&gt;CGO_ENABLED 环境变量告诉 Go 使用 cgo 编译器而不是 go 编译器。-a 参数告诉 GO 重薪构建所有的依赖。否则的话你将以动态链接依赖结束。最后的 -ldflags &amp;lsquo;-s&amp;rsquo; 参数是一个非常好的扩展。它大概降低了可执行文件 50% 的文件大小。你也可以不通过 cgo 使用这个。尺寸缩小是去除了调试信息的结果。&lt;/p&gt;
+
+&lt;p&gt;23     tid := &amp;ldquo;&amp;rdquo;
+ 24     if md, ok := metadata.FromContext(ctx); ok {
+ 25         tid = md[&amp;ldquo;tid&amp;rdquo;][0]
+ 26     }
+ 27
+ 28     start := time.Now()
+ 29     log.Tinfof(tid, &amp;ldquo;calling User:Signup, user=%#v&amp;rdquo;, user)
+ 30     defer func() {
+ 31         log.Tinfof(tid, &amp;ldquo;finished User:Signup, took=%v&amp;rdquo;, time.Since(start))
+ 32     }()
+ 33
+ 34     if user.LoginKind == pb.UserInfo_Na || user.LoginId == &amp;ldquo;&amp;rdquo; || user.Password == &amp;ldquo;&amp;rdquo; {
+ 35         return &amp;amp;pb.UserResponse{Code: errs.ErrRequestFormat, Message: &amp;ldquo;input format error&amp;rdquo;}, nil
+ 36     }
+ 37
+ 38     // First, check if the NEW user exists in database
+ 39     var userId sql.NullString
+ 40     err := DB.QueryRow(
+ 41         &lt;code&gt;SELECT id
+ 42          FROM users
+ NORMAL ▶ user.go ▶ database/sql ▶                                                                                                             ◀ unix ❮ utf-8 ❮ go ◀   5% ◀ ⁋   7:6
+?DB
+ 85
+ 86     // Insert new user to table, and return the id
+ 87     err = DB.QueryRow(
+ 88&lt;/code&gt;INSERT INTO users (login_kind, login_id, password, mobile, mei_id)
+ 89          VALUES ($1, $2, $3, $4, $5)
+ 90          RETURNING id&lt;code&gt;,
+ 91         user.LoginKind, user.LoginId, hashedPassword, user.Mobile, meiId.String,
+ 92     ).Scan(&amp;amp;userId)
+ 93     if err != nil {
+ 94         e := pb.UserResponse{Code: errs.ErrInternal, Message: &amp;quot;error on inserting new user&amp;quot;}
+ 95         log.Terrorf(tid, &amp;quot;%s: %s&amp;quot;, e.Message, err)
+ 96         return &amp;amp;e, nil
+ 97     }
+ 98     if !userId.Valid {
+ 99         e := pb.UserResponse{Code: errs.ErrInternal, Message: &amp;quot;returning invalid user id&amp;quot;}
+100         log.Terrorf(tid, &amp;quot;%s: %s&amp;quot;, e.Message, err)
+101         return &amp;amp;e, nil
+102     }
+103
+104     // Delete mei id from mei_ids
+105     DB.Exec(&lt;/code&gt;DELETE FROM mei_ids WHERE mei_id=$1&lt;code&gt;, meiId.String)
+106
+107     return &amp;amp;pb.UserResponse{Code: errs.Ok, User: &amp;amp;pb.UserInfo{Id: userId.String, MeiId: meiId.String}}, nil
+108 }
+109
+110 func (us *userServer) LoginByWechat(ctx context.Context, user *pb.UserInfo) (*pb.UserResponse, error) {
+111     return nil, nil
+112 }
+113
+114 func (us *userServer) Verify(ctx context.Context, user *pb.UserInfo) (*pb.UserResponse, error) {
+115     return nil, nil
+116 }
+117
+118 func (us *userServer) GetUser(ctx context.Context, userId *pb.UserInfo) (*pb.UserResponse, error) {
+119     return nil, nil
+120 }
+121
+122 func (us *userServer) ResetPwd(ctx context.Context, user *pb.UserInfo) (*pb.UserResponse, error) {
+123     return nil, nil
+124 }
+125
+126 func (us *userServer) BindMobile(ctx context.Context, user *pb.UserInfo) (*pb.UserResponse, error) {
+ NORMAL ▶ user.go ▶ Signup() ▶                                                                                                                 ◀ unix ❮ utf-8 ❮ go ◀  77% ◀ ⁋ 105:5
+?D
+  1 // Copyright 2015-2016, Wothing Co., Ltd.
+  2 // All rights reserved.
+  3
+  4 package main
+  5
+  6 import (
+  7     &amp;quot;database/sql&amp;quot;
+  8     &amp;quot;time&amp;quot;
+  9
+ 10     &amp;quot;golang.org/x/crypto/bcrypt&amp;quot;
+ 11     &amp;quot;golang.org/x/net/context&amp;quot;
+ 12     &amp;quot;google.golang.org/grpc/metadata&amp;quot;
+ 13
+ 14     &amp;quot;github.com/wothing/17mei/errs&amp;quot;
+ 15     &amp;quot;github.com/wothing/17mei/pb&amp;quot;
+ 16     &amp;quot;github.com/wothing/log&amp;quot;
+ 17 )
+ 18
+ 19 type userServer struct {
+ 20 }
+ 21
+ 22 func (us *userServer) Signup(ctx context.Context, user *pb.UserInfo) (*pb.UserResponse, error) {
+ 23     tid := &amp;quot;&amp;quot;
+ 24     if md, ok := metadata.FromContext(ctx); ok {
+ 25         tid = md[&amp;quot;tid&amp;quot;][0]
+ 26     }
+ 27
+ 28     start := time.Now()
+ 29     log.Tinfof(tid, &amp;quot;calling User:Signup, user=%#v&amp;quot;, user)
+ 30     defer func() {
+ 31         log.Tinfof(tid, &amp;quot;finished User:Signup, took=%v&amp;quot;, time.Since(start))
+ 32     }()
+ 33
+ 34     if user.LoginKind == pb.UserInfo_Na || user.LoginId == &amp;quot;&amp;quot; || user.Password == &amp;quot;&amp;quot; {
+ 35         return &amp;amp;pb.UserResponse{Code: errs.ErrRequestFormat, Message: &amp;quot;input format error&amp;quot;}, nil
+ 36     }
+ 37
+ 38     // First, check if the NEW user exists in database
+ 39     var userId sql.NullString
+ 40     err := DB.QueryRow(
+ 41&lt;/code&gt;SELECT id
+ 42          FROM users
+ NORMAL ▶ user.go ▶ database/sql ▶                                                                                                             ◀ unix ❮ utf-8 ❮ go ◀   5% ◀ ⁋   7:6
+?Db
+ 37
+ 38     // First, check if the NEW user exists in database
+ 39     var userId sql.NullString
+ 40     err := DB.QueryRow(
+ 41         &lt;code&gt;SELECT id
+ 42          FROM users
+ 43          WHERE login_kind=$1 AND login_id=$2&lt;/code&gt;,
+ 44         user.LoginKind, user.LoginId,
+ 45     ).Scan(&amp;amp;userId)
+ 46     // err is nil, user exists in table
+ 47     if err == nil {
+ 48         return &amp;amp;pb.UserResponse{Code: errs.ErrUserExists, Message: &amp;ldquo;user exists already&amp;rdquo;}, nil
+ 49     }
+ 50     // err is not ErrNoRows, unexpect err when quuery database
+ 51     if err != sql.ErrNoRows {
+ 52         e := pb.UserResponse{Code: errs.ErrInternal, Message: &amp;ldquo;error on querying table &amp;lsquo;user&amp;rsquo;&amp;rdquo;}
+ 53         log.Terrorf(tid, &amp;ldquo;%s: %s&amp;rdquo;, e.Message, err)
+ 54         return &amp;amp;e, nil
+ 55     }
+ 56
+ 57     // Hash password, we only store hashed password, not the clear text, in db.
+ 58     hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
+ 59     if err != nil {
+ 60         e := pb.UserResponse{Code: errs.ErrInternal, Message: &amp;ldquo;error on generating hashed password&amp;rdquo;}
+ 61         log.Terrorf(tid, &amp;ldquo;%s: %s&amp;rdquo;, e.Message, err)
+ 62         return &amp;amp;e, nil
+ 63     }
+ 64
+ 65     // For mobile login, set the mobile to user login id
+ 66     if user.LoginKind == pb.UserInfo_Mobile {
+ 67         user.Mobile = user.LoginId
+ 68     }
+ 69
+ 70     // Get a mei id from table mei_ids
+ 71     var meiId sql.NullString
+ 72     err = DB.QueryRow(
+ 73         &lt;code&gt;UPDATE mei_ids
+ 74          SET status=$1
+ 75          WHERE mei_id=(SELECT mei_id FROM mei_ids WHERE status=$2 LIMIT 1)
+ 76          RETURNING mei_id&lt;/code&gt;,
+ 77         MeiIdReservedByUsr,
+ 78         MeiIdAvailable,
+ NORMAL ▶ user.go ▶ Signup() ▶                                                                                                                 ◀ unix ❮ utf-8 ❮ go ◀  29% ◀ ⁋  40:12
+search hit TOP, continuing at BOTTOM
+ 84     }
+[#42#root@6fcfbc69f8d0 ~/17mei/gateway]$ls
+controller  main.go  middleware  misc  pkcs8_private.pem  public.pem  README.md  router  test
+[#43#root@6fcfbc69f8d0 ~/17mei/gateway]$cd controller/
+[#44#root@6fcfbc69f8d0 ~/17mei/gateway/controller]$ls
+activity.go  diary.go  diary_test.go  handler_test.go  mediastore.go  service.go  user.go
+[#45#root@6fcfbc69f8d0 ~/17mei/gateway/controller]$vim activity.go&lt;/p&gt;
+
+&lt;p&gt;[#1#root@6fcfbc69f8d0 ~/17mei/gateway/controller]$ls
+activity.go  diary.go  diary_test.go  handler_test.go  mediastore.go  service.go  user.go
+[#2#root@6fcfbc69f8d0 ~/17mei/gateway/controller]$cd ..
+[#3#root@6fcfbc69f8d0 ~/17mei/gateway]$ls
+Press ENTER or type command to continue
+controller  main.go  middleware  misc  pkcs8_private.pem  public.pem  README.md  router  test
+[#4#root@6fcfbc69f8d0 ~/17mei/gateway]$cd ..
+[#5#root@6fcfbc69f8d0 ~/17mei]$ls
+errs  gateway  gitpull  Makefile  mediastore  pb  PULL_REQUEST_TEMPLATE.md  README.md  sql  user
+[#6#root@6fcfbc69f8d0 ~/17mei]$cd user/
+[#7#root@6fcfbc69f8d0 ~/17mei/user]$ls
+const.go  db.go  main.go  meigen  user.go  user_test.go
+[#8#root@6fcfbc69f8d0 ~/17mei/user]$vim user.go&lt;/p&gt;
+
+&lt;p&gt;[#1#root@6fcfbc69f8d0 /go/src/github.com/wothing/17mei/gateway/controller]$ls
+activity.go  diary.go  diary_test.go  handler_test.go  mediastore.go  service.go  user.go
+[#2#root@6fcfbc69f8d0 /go/src/github.com/wothing/17mei/gateway/controller]$cd ..
+[#3#root@6fcfbc69f8d0 /go/src/github.com/wothing/17mei/gateway]$ls
+controller  main.go  middleware  misc  pkcs8_private.pem  public.pem  README.md  router  test
+[#4#root@6fcfbc69f8d0 /go/src/github.com/wothing/17mei/gateway]$cd ..
+[#5#root@6fcfbc69f8d0 /go/src/github.com/wothing/17mei]$ls
+errs  gateway  gitpull  Makefile  mediastore  pb  PULL_REQUEST_TEMPLATE.md  README.md  sql  user
+[#6#root@6fcfbc69f8d0 /go/src/github.com/wothing/17mei]$cd pb/
+[#7#root@6fcfbc69f8d0 /go/src/github.com/wothing/17mei/pb]$ls
+activity.pb.go  activity.proto  diary.pb.go  diary.proto  mediastore.pb.go  mediastore.proto  user.pb.go  user.proto
+[#8#root@6fcfbc69f8d0 /go/src/github.com/wothing/17mei/pb]$vim activity.pb.go
+[#9#root@6fcfbc69f8d0 /go/src/github.com/wothing/17mei/pb]$exit&lt;/p&gt;
+
+&lt;p&gt;Press ENTER or type command to continue
+[#9#root@6fcfbc69f8d0 ~/17mei/user]$ls
+const.go  db.go  main.go  meigen  user.go  user_test.go
+[#10#root@6fcfbc69f8d0 ~/17mei/user]$cd ..
+[#11#root@6fcfbc69f8d0 ~/17mei]$ls
+errs  gateway  gitpull  Makefile  mediastore  pb  PULL_REQUEST_TEMPLATE.md  README.md  sql  user
+[#12#root@6fcfbc69f8d0 ~/17mei]$cd user/
+[#13#root@6fcfbc69f8d0 ~/17mei/user]$ls
+const.go  db.go  main.go  meigen  user.go  user_test.go
+[#14#root@6fcfbc69f8d0 ~/17mei/user]$vim user.go
+[#15#root@6fcfbc69f8d0 ~/17mei/user]$ls
+const.go  db.go  main.go  meigen  user.go  user_test.go
+[#16#root@6fcfbc69f8d0 ~/17mei/user]$ssh
+const.go      db.go         main.go       meigen/       user.go       user_test.go
+[#16#root@6fcfbc69f8d0 ~/17mei/user]$ssh dmonit
+ssh: Could not resolve hostname dmonit: Name or service not known
+[#17#root@6fcfbc69f8d0 ~/17mei/user]$cd
+[#18#root@6fcfbc69f8d0 ~]$ls
+17mei  17mei-archive  17mei-design  activity  dotfiles  FixLinux  protobuf  test
+[#19#root@6fcfbc69f8d0 ~]$exit&lt;/p&gt;
+
+&lt;p&gt;Press ENTER or type command to continue
+[#46#root@6fcfbc69f8d0 ~/17mei/gateway/controller]$exit
+[#2#root@dmonit ~]$ls
+bin
+[#3#root@dmonit ~]$ssh
+usage: ssh [-1246AaCfgKkMNnqsTtVvXxYy] [-b bind_address] [-c cipher_spec]
+           [-D [bind_address:]port] [-E log_file] [-e escape_char]
+           [-F configfile] [-I pkcs11] [-i identity_file]
+           [-L [bind_address:]port:host:hostport] [-l login_name] [-m mac_spec]
+           [-O ctl_cmd] [-o option] [-p port]
+           [-Q cipher | cipher-auth | mac | kex | key]
+           [-R [bind_address:]port:host:hostport] [-S ctl_path] [-W host:port]
+           [-w local_tun[:remote_tun]] [user@]hostname [command]
+[#4#root@dmonit ~]$ls
+bin
+[#5#root@dmonit ~]$cd bin/
+[#6#root@dmonit ~/bin]$ls
+dcreate  de  dip  dkill  pass
+[#7#root@dmonit ~/bin]$cat pass
+psql_pass:wothing17mei&lt;/p&gt;
+
+&lt;p&gt;ssh root@wothing.newb.xyz&lt;/p&gt;
+
+&lt;p&gt;docker run -dit\
+           &amp;ndash;name=dmonit\
+           -h dmonit\
+           -p 445:22\
+           -v /Users/kooksee/share:/share\
+           -v /usr/local/bin/docker:/usr/local/bin/docker\
+           -v /var/run/docker.sock:/var/run/docker.sock\
+           -e &amp;lsquo;PUBKEY=ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDZouXRF/aEB0VIyUGjDJSphklJMvriEcooqMLpQw55bbVHlWwA5gq/UGl4BI6ZAkEyk18S88RYWunsM+FbcHaaxhfwNTSQ9rXHK6Nr/J26PBLKMcYWyNtAWrgqk8vKhvXvRw6XYhUlgVC0SE1vAMpovqIhHArFu5JhDlk8C/WeE50lIc9ek9+dl8yjX5Nbujc/5V7ELzuCALLjvjcjozL0goAvn6hLO9ZXqeIC6D4MFWTxcKW4hcbdgzUAzlSNIhuXABedxg/uL5qseoi7Qm9WM0zPqDQF5xXJM34DPeHrib6NXen8K9rMKGh26PuHz5o/xGPOy/QWvfO0HAI8HdJx kooksee@kooksee.local&amp;rsquo; dmonit&lt;/p&gt;
+
+&lt;p&gt;docker run -it &amp;ndash;name kkk -d -p 445:22 -v /usr/local/bin/docker:/usr/local/bin/docker -v /var/run/docker.sock:/var/run/docker.sock -e &amp;lsquo;PUBKEY=ssh-rsa XXXX&amp;rsquo; index.tenxcloud.com/philo/dmonit:1.0
+[#8#root@dmonit ~/bin]$ssh root@wothing.newb.xyz
+The authenticity of host &amp;lsquo;wothing.newb.xyz (139.196.110.104)&amp;rsquo; can&amp;rsquo;t be established.
+ECDSA key fingerprint is 08:1d:db:e4:d2:e0:87:89:ed:ca:69:82:17:6a:83:57.
+Are you sure you want to continue connecting (yes/no)? yes&lt;/p&gt;
+
+&lt;p&gt;▽
+Warning: Permanently added &amp;lsquo;wothing.newb.xyz,139.196.110.104&amp;rsquo; (ECDSA) to the list of known hosts.
+root@wothing.newb.xyz&amp;rsquo;s password:&lt;/p&gt;
+
+&lt;p&gt;[#9#root@dmonit ~/bin]$de golang&lt;/p&gt;
+
+&lt;p&gt;▽
+[#1#root@6fcfbc69f8d0 /go]$ssh root@wothing.newb.xyz
+Welcome to Ubuntu 14.04.2 LTS (GNU/Linux 3.13.0-32-generic x86_64)&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Documentation:  &lt;a href=&#34;https://help.ubuntu.com/&#34;&gt;https://help.ubuntu.com/&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Welcome to aliyun Elastic Compute Service!&lt;/p&gt;
+
+&lt;p&gt;Last login: Mon Feb 22 19:49:52 2016 from 116.231.27.194
+root@wothingdev:~# docker  ps -a
+CONTAINER ID        IMAGE                                  COMMAND                  CREATED             STATUS              PORTS                                         NAMES
+08fa8a14b6ba        ubuntu:14.04                           &amp;ldquo;/app/mediastore.exe &amp;rdquo;   2 hours ago         Up 2 hours                                                        prod-mediastore
+4834bd094f24        index.tenxcloud.com/philo/dmonit:1.1   &amp;ldquo;/bin/sh -c &amp;lsquo;service &amp;rdquo;   3 hours ago         Up 3 hours          0.0.0.0:3003-&amp;gt;3003/tcp, 0.0.0.0:447-&amp;gt;22/tcp   test-tiancai
+38e91655788b        index.tenxcloud.com/philo/dmonit:1.1   &amp;ldquo;/bin/sh -c &amp;lsquo;service &amp;rdquo;   5 hours ago         Up 5 hours          0.0.0.0:3002-&amp;gt;3002/tcp, 0.0.0.0:446-&amp;gt;22/tcp   test-likun
+1a42097fca2e        postgres:9.5.1                         &amp;ldquo;/docker-entrypoint.s&amp;rdquo;   6 hours ago         Up 6 hours          0.0.0.0:15432-&amp;gt;5432/tcp                       test-postgres
+3b2b4811574b        redis                                  &amp;ldquo;/entrypoint.sh redis&amp;rdquo;   6 hours ago         Up 6 hours          0.0.0.0:32768-&amp;gt;6379/tcp                       test-redis
+f2f8b60aa97c        ubuntu:14.04                           &amp;ldquo;/bin/ccc&amp;rdquo;               24 hours ago        Up 24 hours         0.0.0.0:53-&amp;gt;53/tcp                            dns
+08df111a1ae8        golangdev:1.2.3                        &amp;ldquo;/bin/bash&amp;rdquo;              2 days ago          Up 2 days                                                         builder
+cec03c25c392        ubuntu:14.04                           &amp;ldquo;/app/gw.exe &amp;ndash;ch con&amp;rdquo;   3 days ago          Up About an hour                                                  prod-gw
+6884eceb53de        nginx                                  &amp;ldquo;nginx -g &amp;lsquo;daemon off&amp;rdquo;   3 days ago          Up 2 days           443/tcp, 0.0.0.0:3000-&amp;gt;80/tcp                 nnn
+8847fb7684fd        ubuntu:14.04                           &amp;ldquo;/app/user.exe -dh pr&amp;rdquo;   3 days ago          Up About an hour                                                  prod-user
+6b7cbee927f0        postgres:9.5.1                         &amp;ldquo;/docker-entrypoint.s&amp;rdquo;   3 days ago          Up 3 days           5432/tcp                                      prod-postgres
+f3432f294784        ubuntu:14.04                           &amp;ldquo;/bin/bash&amp;rdquo;              3 days ago          Up 3 days                                                         brew
+5032e0173852        ubuntu:14.04                           &amp;ldquo;/bin/consul agent -b&amp;rdquo;   4 days ago          Up 4 days           0.0.0.0:8500-&amp;gt;8500/tcp                        consul
+root@wothingdev:~# de
+de                      debconf-apt-progress    debconf-escape          deb-systemd-helper      declare                 deluser
+deallocvt               debconf-communicate     debconf-set-selections  deb-systemd-invoke      delgroup                depmod
+debconf                 debconf-copydb          debconf-show            debugfs                 delpart                 dequote
+root@wothingdev:~# ls
+17mei  brew  consulData  consulstatic  git  nginx  pac  pull.sh  sss
+root@wothingdev:~# cd sss/
+root@wothingdev:~/sss# ls
+conoha.sh  pac
+root@wothingdev:~/sss# cd pac/
+root@wothingdev:~/sss/pac# ls
+a.pac
+root@wothingdev:~/sss/pac# vim a.pac
+root@wothingdev:~/sss/pac# cd ..
+root@wothingdev:~/sss# ls&lt;/p&gt;
+
+&lt;p&gt;▽
+conoha.sh  pac
+root@wothingdev:~/sss# vim conoha.sh
+root@wothingdev:~/sss# ls
+conoha.sh  pac
+root@wothingdev:~/sss# cd ..
+Press ENTER or type command to continue
+root@wothingdev:~# ls
+17mei  brew  consulData  consulstatic  git  nginx  pac  pull.sh  sss
+root@wothingdev:~# cd 17mei/
+root@wothingdev:~/17mei# ls
+errs  gateway  Makefile  pb  PULL_REQUEST_TEMPLATE.md  README.md  sql  user
+root@wothingdev:~/17mei# cd ..
+root@wothingdev:~# ls
+17mei  brew  consulData  consulstatic  git  nginx  pac  pull.sh  sss
+root@wothingdev:~# de test-tiancai
+EOF
+root@wothingdev:~# cd sss/
+root@wothingdev:~/sss# ls
+conoha.sh  pac
+root@wothingdev:~/sss# cd
+root@wothingdev:~# which de
+root@wothingdev:~# ls
+17mei  brew  consulData  consulstatic  git  nginx  pac  pull.sh  sss
+root@wothingdev:~# ll
+total 96
+drwx&amp;mdash;&amp;mdash; 14 root root  4096 Feb 22 19:57 ./
+drwxr-xr-x 23 root root  4096 Feb 19 12:24 ../
+drwxr-xr-x  8 root root  4096 Feb 19 17:24 17mei/
+-rw&amp;mdash;&amp;mdash;-  1 root root 18239 Feb 22 18:11 .bash_history
+-rw-r&amp;ndash;r&amp;ndash;  1 root root  3146 Feb 19 12:23 .bashrc
+drwxr-xr-x 11 root root  4096 Feb 19 14:21 brew/
+drwx&amp;mdash;&amp;mdash;  2 root root  4096 Jan 30  2015 .cache/
+drwx&amp;mdash;&amp;mdash;  3 root root  4096 Feb 17 20:33 .config/
+drwxr-xr-x  2 root root  4096 Feb 18 15:11 consulData/
+drwxr-xr-x  3 root root  4096 Feb 18 15:05 consulstatic/
+drwxr-xr-x  3 root root  4096 Feb 21 19:33 git/
+drwxr-xr-x  3 root root  4096 Feb 20 12:30 nginx/
+drwxr-xr-x  2 root root  4096 Feb 22 14:35 pac/
+-rw-r&amp;ndash;r&amp;ndash;  1 root root   140 Feb 20  2014 .profile
+-rw-r&amp;ndash;r&amp;ndash;  1 root root   118 Feb 17 20:28 pull.sh
+drwx&amp;mdash;&amp;mdash;  2 root root  4096 Feb 22 16:57 .ssh/
+drwxr-xr-x  3 root root  4096 Feb 22 19:57 sss/
+drwxr-xr-x  2 root root  4096 Feb 18 14:43 .vim/
+-rw&amp;mdash;&amp;mdash;-  1 root root  4707 Feb 22 19:57 .viminfo
+root@wothingdev:~# vim .bashrc&lt;/p&gt;
+
+&lt;p&gt;root@wothingdev:~# pwd
+/root
+root@wothingdev:~# exit&lt;/p&gt;
+
+&lt;p&gt;Press ENTER or type command to continue
+root@wothingdev:~# ls
+17mei  brew  consulData  consulstatic  git  nginx  pac  pull.sh  sss&lt;/p&gt;
+
+&lt;p&gt;▽
+docker -it exec $1 bash
+root@wothingdev:~# mkdir bin
+root@wothingdev:~# touch b
+bin/  brew/
+root@wothingdev:~# touch b
+bin/  brew/
+root@wothingdev:~# touch bin/de
+root@wothingdev:~# cd brew/
+root@wothingdev:~/brew# ls
+bin  Cellar  CODEOFCONDUCT.md  CONTRIBUTING.md  etc  include  lib  lib64  Library  LICENSE.txt  opt  README.md  share  SUPPORTERS.md
+root@wothingdev:~/brew# cd bin/
+root@wothingdev:~/brew/bin# ls
+2to3       c_rehash      easy_install-2.7  gdbmtool   makedepend        openssl   pip2        python            python2-config  sqlite3  tput      wheel        xslt-config
+brew       curl          funzip            idle       mycli             patch     pip2.7      python2           python-config   tabs     tset      xml2-config  xsltproc
+captoinfo  curl-config   gdbm_dump         infocmp    ncurses6-config   patchelf  pkg-config  python2.7         reset           tic      unzip     xmlcatalog   zipgrep
+clear      easy_install  gdbm_load         infotocap  ncursesw6-config  pip       pydoc       python2.7-config  smtpd.py        toe      unzipsfx  xmllint      zipinfo
+root@wothingdev:~/brew/bin# cd
+root@wothingdev:~# ls
+17mei  bin  brew  consulData  consulstatic  git  nginx  pac  pull.sh  sss
+root@wothingdev:~# ls
+17mei  bin  brew  consulData  consulstatic  git  nginx  pac  pull.sh  sss
+root@wothingdev:~# docker ps -a
+CONTAINER ID        IMAGE                                  COMMAND                  CREATED             STATUS              PORTS                                         NAMES
+08fa8a14b6ba        ubuntu:14.04                           &amp;ldquo;/app/mediastore.exe &amp;rdquo;   2 hours ago         Up 2 hours                                                        prod-medias
+▽
+docker exec -it $1 bash
+tore
+4834bd094f24        index.tenxcloud.com/philo/dmonit:1.1   &amp;ldquo;/bin/sh -c &amp;lsquo;service &amp;rdquo;   3 hours ago         Up 3 hours          0.0.0.0:3003-&amp;gt;3003/tcp, 0.0.0.0:447-&amp;gt;22/tcp   test-tiancai
+38e91655788b        index.tenxcloud.com/philo/dmonit:1.1   &amp;ldquo;/bin/sh -c &amp;lsquo;service &amp;rdquo;   6 hours ago         Up 6 hours          0.0.0.0:3002-&amp;gt;3002/tcp, 0.0.0.0:446-&amp;gt;22/tcp   test-likun
+1a42097fca2e        postgres:9.5.1                         &amp;ldquo;/docker-entrypoint.s&amp;rdquo;   6 hours ago         Up 6 hours          0.0.0.0:15432-&amp;gt;5432/tcp                       test-postgres
+3b2b4811574b        redis                                  &amp;ldquo;/entrypoint.sh redis&amp;rdquo;   6 hours ago         Up 6 hours          0.0.0.0:32768-&amp;gt;6379/tcp                       test-redis&lt;/p&gt;
+
+&lt;p&gt;▽&lt;/p&gt;
+
+&lt;p&gt;f2f8b60aa97c        ubuntu:14.04                           &amp;ldquo;/bin/ccc&amp;rdquo;               24 hours ago        Up 24 hours         0.0.0.0:53-&amp;gt;53/tcp                            dns
+08df111a1ae8        golangdev:1.2.3                        &amp;ldquo;/bin/bash&amp;rdquo;              2 days ago          Up 2 days                                                         builder
+cec03c25c392        ubuntu:14.04                           &amp;ldquo;/app/gw.exe &amp;ndash;ch con&amp;rdquo;   3 days ago          Up 2 hours                                                        prod-gw
+6884eceb53de        nginx                                  &amp;ldquo;nginx -g &amp;lsquo;daemon off&amp;rdquo;   3 days ago          Up 2 days           443/tcp, 0.0.0.0:3000-&amp;gt;80/tcp                 nnn
+8847fb7684fd        ubuntu:14.04                           &amp;ldquo;/app/user.exe -dh pr&amp;rdquo;   3 days ago          Up 2 hours                                                        prod-user
+6b7cbee927f0        postgres:9.5.1                         &amp;ldquo;/docker-entrypoint.s&amp;rdquo;   3 days ago          Up 3 days           5432/tcp                                      prod-postgres
+f3432f294784        ubuntu:14.04                           &amp;ldquo;/bin/bash&amp;rdquo;              3 days ago          Up 3 days                                                         brew
+5032e0173852        ubuntu:14.04                           &amp;ldquo;/bin/consul agent -b&amp;rdquo;   4 days ago          Up 4 days           0.0.0.0:8500-&amp;gt;8500/tcp                        consul
+root@wothingdev:~# vim b
+bin/  brew/&lt;/p&gt;
+
+&lt;p&gt;▽
+de test-tiancai
+root@wothingdev:~# vim b
+bin/  brew/
+root@wothingdev:~# vim bin/de
+root@wothingdev:~# chmod 777 bin/de
+root@wothingdev:~# docker images
+REPOSITORY                            TAG                 IMAGE ID            CREATED             SIZE
+golangdev                             1.2.3               eda771c633cd        3 days ago          1.045 GB
+index.alauda.cn/philo/golangdev       1.2.3               eda771c633cd        3 days ago          1.045 GB
+index.alauda.cn/library/redis         latest              fb46ec1d66e0        5 days ago          151.3 MB
+redis                                 latest              fb46ec1d66e0        5 days ago          151.3 MB
+postgres                              9.5.1               da194fb234df        5 days ago          264.1 MB
+postgres                              9.5                 1986535a6597        6 days ago          264.1 MB
+nginx                                 latest              69203b7cd029        10 days ago         134.6 MB
+mongo                                 latest              a5d16d62f4cf        3 weeks ago         317.4 MB
+ubuntu                                14.04               3876b81b5a81        4 weeks ago         187.9 MB
+dmonit                                1.1                 5c03c096139b        7 weeks ago         452.7 MB
+index.tenxcloud.com/philo/dmonit      1.1                 5c03c096139b        7 weeks ago         452.7 MB
+index.tenxcloud.com/philo/golangdev   1.2.1               02fcb4788207        10 weeks ago        1.008 GB
+php                                   5.6                 6977e8a80e46        10 weeks ago        444.2 MB&lt;/p&gt;
+
+&lt;p&gt;▽
+docker exec -it test-tiancai bash
+node                                  slim                818096aa5eed        10 weeks ago        205.7 MB
+php                                   7                   c89ab23b3e82        4 months ago        484.7 MB
+root@wothingdev:~# de test-tiancai
+EOF
+root@wothingdev:~# docker  exec -it test-tiancai bash
+[#1#root@4834bd094f24 /]$exit
+root@wothingdev:~# vim bin/de
+root@wothingdev:~# ls
+17mei  bin  brew  consulData  consulstatic  git  nginx  pac  pull.sh  sss
+root@wothingdev:~# de
+de                      debconf-apt-progress    debconf-escape          deb-systemd-helper      declare                 deluser
+deallocvt               debconf-communicate     debconf-set-selections  deb-systemd-invoke      delgroup                depmod
+debconf                 debconf-copydb          debconf-show            debugfs                 delpart                 dequote
+root@wothingdev:~# vim .bashrc
+root@wothingdev:~# ls
+17mei  bin  brew  consulData  consulstatic  git  nginx  pac  pull.sh  sss
+root@wothingdev:~# ls
+17mei  bin  brew  consulData  consulstatic  git  nginx  pac  pull.sh  sss
+root@wothingdev:~# ls
+17mei  bin  brew  consulData  consulstatic  git  nginx  pac  pull.sh  sss
+root@wothingdev:~# cd bin/
+root@wothingdev:~/bin# ls
+de
+root@wothingdev:~/bin# touch tiancai
+root@wothingdev:~/bin# vim tiancai
+root@wothingdev:~/bin# chmod 777 tiancai
+root@wothingdev:~/bin# cd
+root@wothingdev:~# bash
+root@wothingdev:~# tiancai
+/root/bin/de: line 1: docker: command not found
+root@wothingdev:~# vim b
+bin/  brew/
+root@wothingdev:~# vim bin/
+de       tiancai
+root@wothingdev:~# vim bin/tiancai
+Command &amp;lsquo;vim&amp;rsquo; is available in &amp;lsquo;/usr/bin/vim&amp;rsquo;
+The command could not be located because &amp;lsquo;/usr/bin&amp;rsquo; is not included in the PATH environment variable.
+vim: command not found
+root@wothingdev:~# vim bin/tiancai
+Command &amp;lsquo;vim&amp;rsquo; is available in &amp;lsquo;/usr/bin/vim&amp;rsquo;
+The command could not be located because &amp;lsquo;/usr/bin&amp;rsquo; is not included in the PATH environment variable.
+vim: command not found
+root@wothingdev:~# exit
+root@wothingdev:~# vim bin/tiancai
+root@wothingdev:~# ls
+17mei  bin  brew  consulData  consulstatic  git  nginx  pac  pull.sh  sss
+root@wothingdev:~# chmod 777 bin/tiancai
+root@wothingdev:~# ls bin/
+de  tiancai
+root@wothingdev:~# de
+de                      debconf-apt-progress    debconf-escape          deb-systemd-helper      declare                 deluser
+deallocvt               debconf-communicate     debconf-set-selections  deb-systemd-invoke      delgroup                depmod
+debconf                 debconf-copydb          debconf-show            debugfs                 delpart                 dequote
+root@wothingdev:~# echo $0
+-bash
+root@wothingdev:~# logout
+Connection to wothing.newb.xyz closed.
+[#2#root@6fcfbc69f8d0 /go]$ssh root@wothing.newb.xyz
+Welcome to Ubuntu 14.04.2 LTS (GNU/Linux 3.13.0-32-generic x86_64)&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Documentation:  &lt;a href=&#34;https://help.ubuntu.com/&#34;&gt;https://help.ubuntu.com/&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Welcome to aliyun Elastic Compute Service!&lt;/p&gt;
+
+&lt;p&gt;Last login: Mon Feb 22 19:56:23 2016 from 116.231.27.194
+Command &amp;lsquo;mesg&amp;rsquo; is available in &amp;lsquo;/usr/bin/mesg&amp;rsquo;
+The command could not be located because &amp;lsquo;/usr/bin&amp;rsquo; is not included in the PATH environment variable.
+mesg: command not found
+root@wothingdev:~# ti
+tiancai  time     times
+root@wothingdev:~# ti
+tiancai  time     times
+root@wothingdev:~# ti
+tiancai  time     times
+root@wothingdev:~# tiancai
+/root/bin/tiancai: line 1: docker: command not found
+root@wothingdev:~# logout
+Connection to wothing.newb.xyz closed.
+[#3#root@6fcfbc69f8d0 /go]$ssh root@wothing.newb.xyz
+Welcome to Ubuntu 14.04.2 LTS (GNU/Linux 3.13.0-32-generic x86_64)&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Documentation:  &lt;a href=&#34;https://help.ubuntu.com/&#34;&gt;https://help.ubuntu.com/&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Welcome to aliyun Elastic Compute Service!&lt;/p&gt;
+
+&lt;p&gt;Last login: Mon Feb 22 20:12:00 2016 from 116.231.27.194
+Command &amp;lsquo;mesg&amp;rsquo; is available in &amp;lsquo;/usr/bin/mesg&amp;rsquo;
+The command could not be located because &amp;lsquo;/usr/bin&amp;rsquo; is not included in the PATH environment variable.
+mesg: command not found
+root@wothingdev:~# vim
+17mei/         .bashrc        brew/          .config/       consulstatic/  nginx/         .profile       .ssh/          .vim/
+.bash_history  bin/           .cache/        consulData/    git/           pac/           pull.sh        sss/           .viminfo
+root@wothingdev:~# vim
+17mei/         .bashrc        brew/          .config/       consulstatic/  nginx/         .profile       .ssh/          .vim/
+.bash_history  bin/           .cache/        consulData/    git/           pac/           pull.sh        sss/           .viminfo
+root@wothingdev:~# vim .bashrc
+Command &amp;lsquo;vim&amp;rsquo; is available in &amp;lsquo;/usr/bin/vim&amp;rsquo;
+The command could not be located because &amp;lsquo;/usr/bin&amp;rsquo; is not included in the PATH environment variable.
+vim: command not found
+root@wothingdev:~# cd /usr/
+bin/     games/   include/ lib/     local/   sbin/    share/   src/
+root@wothingdev:~# cd /usr/bin/
+root@wothingdev:/usr/bin# ls
+Command &amp;lsquo;ls&amp;rsquo; is available in &amp;lsquo;/bin/ls&amp;rsquo;
+The command could not be located because &amp;lsquo;/bin&amp;rsquo; is not included in the PATH environment variable.
+ls: command not found&lt;/p&gt;
+
+&lt;p&gt;▽
+root@wothingdev:/usr/bin# cd
+root@wothingdev:~# ls
+Command &amp;lsquo;ls&amp;rsquo; is available in &amp;lsquo;/bin/ls&amp;rsquo;
+The command could not be located because &amp;lsquo;/bin&amp;rsquo; is not included in the PATH environment variable.
+ls: command not found
+root@wothingdev:~# cat
+Command &amp;lsquo;cat&amp;rsquo; is available in &amp;lsquo;/bin/cat&amp;rsquo;
+The command could not be located because &amp;lsquo;/bin&amp;rsquo; is not included in the PATH environment variable.
+cat: command not found
+root@wothingdev:~# cat
+Command &amp;lsquo;cat&amp;rsquo; is available in &amp;lsquo;/bin/cat&amp;rsquo;
+The command could not be located because &amp;lsquo;/bin&amp;rsquo; is not included in the PATH environment variable.
+cat: command not found
+root@wothingdev:~# cat bin/
+de       tiancai
+root@wothingdev:~# cat .bash
+.bash_history  .bashrc
+root@wothingdev:~# cat .bash
+.bash_history  .bashrc
+root@wothingdev:~# cat .bashrc&lt;/p&gt;
+
+&lt;p&gt;Command &amp;lsquo;cat&amp;rsquo; is available in &amp;lsquo;/bin/cat&amp;rsquo;
+The command could not be located because &amp;lsquo;/bin&amp;rsquo; is not included in the PATH environment variable.
+cat: command not found
+root@wothingdev:~# cd /bin/
+root@wothingdev:/bin# ls
+Command &amp;lsquo;ls&amp;rsquo; is available in &amp;lsquo;/bin/ls&amp;rsquo;
+The command could not be located because &amp;lsquo;/bin&amp;rsquo; is not included in the PATH environment variable.
+ls: command not found
+root@wothingdev:/bin# ^C
+root@wothingdev:/bin# ^C
+root@wothingdev:/bin# ^C
+root@wothingdev:/bin# logout
+Connection to wothing.newb.xyz closed.
+[#4#root@6fcfbc69f8d0 /go]$
+[#4#root@6fcfbc69f8d0 /go]$
+[#4#root@6fcfbc69f8d0 /go]$ls
+bin  pkg  src
+[#5#root@6fcfbc69f8d0 /go]$exit
+[#10#root@dmonit ~/bin]$ls
+dcreate  de  dip  dkill  pass
+[#11#root@dmonit ~/bin]$cd
+[#12#root@dmonit ~]$ls
+bin
+[#13#root@dmonit ~]$vim .bashrc
+[#14#root@dmonit ~]$ls
+bin
+[#15#root@dmonit ~]$
+[#15#root@dmonit ~]$
+[#15#root@dmonit ~]$de golang
+[#1#root@golang /go]$ls
+bin  pkg  src
+[#2#root@golang /go]$cd
+[#3#root@golang ~]$ls
+17mei  17mei-archive  17mei-design  activity  dotfiles  FixLinux  protobuf  test
+[#4#root@golang ~]$cd 17mei
+[#5#root@golang ~/17mei]$ls
+errs  gateway  gitpull  Makefile  mediastore  pb  PULL_REQUEST_TEMPLATE.md  README.md  sql  user
+[#6#root@golang ~/17mei]$cd gateway/
+[#7#root@golang ~/17mei/gateway]$ls
+controller  main.go  middleware  misc  pkcs8_private.pem  public.pem  README.md  router  test
+[#8#root@golang ~/17mei/gateway]$cd misc/
+[#9#root@golang ~/17mei/gateway/misc]$ls
+key.go  request.go  respond.go  result.go
+[#10#root@golang ~/17mei/gateway/misc]$vim request.go&lt;/p&gt;
+
+&lt;p&gt;[#1#root@golang ~/17mei/gateway/misc]$
+[#1#root@golang ~/17mei/gateway/misc]$
+[#1#root@golang ~/17mei/gateway/misc]$
+[#1#root@golang ~/17mei/gateway/misc]$&lt;/p&gt;
+
+&lt;p&gt;[#1#root@golang ~/17mei/gateway/misc]$ls&lt;/p&gt;
+
+&lt;p&gt;key.go  request.go  respond.go  result.go&lt;/p&gt;
+
+&lt;p&gt;[#2#root@golang ~/17mei/gateway/misc]$l
+key.go  request.go  respond.go  result.go
+[#3#root@golang ~/17mei/gateway/misc]$cd
+[#4#root@golang ~]$cd 17mei
+[#5#root@golang ~/17mei]$ls
+errs  gateway  gitpull  Makefile  mediastore  pb  PULL_REQUEST_TEMPLATE.md  README.md  sql  user
+[#6#root@golang ~/17mei]$cd user/
+[#7#root@golang ~/17mei/user]$ls
+const.go  db.go  main.go  meigen  user.go  user_test.go
+[#8#root@golang ~/17mei/user]$cd ..
+[#9#root@golang ~/17mei]$ls
+errs  gateway  gitpull  Makefile  mediastore  pb  PULL_REQUEST_TEMPLATE.md  README.md  sql  user
+[#10#root@golang ~/17mei]$cd gateway/
+[#11#root@golang ~/17mei/gateway]$ls
+controller  main.go  middleware  misc  pkcs8_private.pem  public.pem  README.md  router  test
+[#12#root@golang ~/17mei/gateway]$cd controller/
+[#13#root@golang ~/17mei/gateway/controller]$ls
+activity.go  diary.go  diary_test.go  handler_test.go  mediastore.go  service.go  user.go
+[#14#root@golang ~/17mei/gateway/controller]$cd ..&lt;/p&gt;
+
+&lt;p&gt;[#15#root@golang ~/17mei/gateway]$cd
+[#16#root@golang ~]$cd 17mei-design/
+[#17#root@golang ~/17mei-design]$cd v1/&lt;/p&gt;
+
+&lt;p&gt;[#18#root@golang ~/17mei-design/v1]$ls
+activity.md  diary.md  token.md
+[#19#root@golang ~/17mei-design/v1]$vim activity.md
+[#20#root@golang ~/17mei-design/v1]$cd
+[#21#root@golang ~]$cd 17mei
+Press ENTER or type command to continue
+[#22#root@golang ~/17mei]$ls
+errs  gateway  gitpull  Makefile  mediastore  pb  PULL_REQUEST_TEMPLATE.md  README.md  sql  user
+[#23#root@golang ~/17mei]$cd sql/
+[#24#root@golang ~/17mei/sql]$ls
+activity.sql  user.sql
+[#25#root@golang ~/17mei/sql]$vim activity.sql
+[#26#root@golang ~/17mei/sql]$ls
+activity.sql  user.sql
+[#27#root@golang ~/17mei/sql]$cd
+[#28#root@golang ~]$cd 17mei
+[#29#root@golang ~/17mei]$ls
+errs  gateway  gitpull  Makefile  mediastore  pb  PULL_REQUEST_TEMPLATE.md  README.md  sql  user
+[#30#root@golang ~/17mei]$cd user/
+[#31#root@golang ~/17mei/user]$ls
+const.go  db.go  main.go  meigen  user.go  user_test.go
+[#32#root@golang ~/17mei/user]$vim main.go
+[#33#root@golang ~/17mei/user]$vim user.go
+[#34#root@golang ~/17mei/user]$ls
+const.go  db.go  main.go  meigen  user.go  user_test.go
+[#35#root@golang ~/17mei/user]$sl
+bash: sl: command not found
+[#36#root@golang ~/17mei/user]$ls
+const.go  db.go  main.go  meigen  user.go  user_test.go
+[#37#root@golang ~/17mei/user]$cd
+[#38#root@golang ~]$ls
+17mei  17mei-archive  17mei-design  activity  dotfiles  FixLinux  protobuf  test
+[#39#root@golang ~]$cd 17mei
+17mei/         17mei-archive/ 17mei-design/
+[#39#root@golang ~]$cd 17mei/
+activity/                 .git/                     Makefile                  PULL_REQUEST_TEMPLATE.md  user/
+errs/                     .gitignore                mediastore/               README.md
+gateway/                  gitpull                   pb/                       sql/
+[#39#root@golang ~]$cd 17mei/activity/
+[#40#root@golang ~/17mei/activity]$ls
+activity.go  activity_test.go  const.go  db.go  main.go
+[#41#root@golang ~/17mei/activity]$vim db.go
+[#42#root@golang ~/17mei/activity]$ls
+activity.go  activity_test.go  const.go  db.go  main.go
+[#43#root@golang ~/17mei/activity]$vim main.go
+[#44#root@golang ~/17mei/activity]$cd
+[#45#root@golang ~]$ls
+17mei  17mei-archive  17mei-design  activity  dotfiles  FixLinux  protobuf  test
+[#46#root@golang ~]$exit&lt;/p&gt;
+
+&lt;p&gt;Press ENTER or type command to continue
+[#11#root@golang ~/17mei/gateway/misc]$exit
+[#16#root@dmonit ~]$ls
+bin
+[#17#root@dmonit ~]$
+[#17#root@dmonit ~]$docker
+Usage: docker [OPTIONS] COMMAND [arg&amp;hellip;]
+       docker daemon [ &amp;ndash;help | &amp;hellip; ]
+       docker [ &amp;ndash;help | -v | &amp;ndash;version ]&lt;/p&gt;
+
+&lt;p&gt;A self-sufficient runtime for containers.&lt;/p&gt;
+
+&lt;p&gt;Options:&lt;/p&gt;
+
+&lt;p&gt;&amp;ndash;config=~/.docker              Location of client config files
+  -D, &amp;ndash;debug                     Enable debug mode
+  -H, &amp;ndash;host=[]                   Daemon socket(s) to connect to
+  -h, &amp;ndash;help                      Print usage
+  -l, &amp;ndash;log-level=info            Set the logging level
+  &amp;ndash;tls                           Use TLS; implied by &amp;ndash;tlsverify
+  &amp;ndash;tlscacert=~/.docker/ca.pem    Trust certs signed only by this CA
+  &amp;ndash;tlscert=~/.docker/cert.pem    Path to TLS certificate file
+  &amp;ndash;tlskey=~/.docker/key.pem      Path to TLS key file
+  &amp;ndash;tlsverify                     Use TLS and verify the remote
+  -v, &amp;ndash;version                   Print version information and quit&lt;/p&gt;
+
+&lt;p&gt;Commands:
+    attach    Attach to a running container
+    build     Build an image from a Dockerfile
+    commit    Create a new image from a container&amp;rsquo;s changes
+    cp        Copy files/folders between a container and the local filesystem&lt;/p&gt;
+
+&lt;p&gt;▽
+    create    Create a new container
+    diff      Inspect changes on a container&amp;rsquo;s filesystem
+    events    Get real time events from the server
+    exec      Run a command in a running container
+    export    Export a container&amp;rsquo;s filesystem as a tar archive
+    history   Show the history of an image
+    images    List images
+    import    Import the contents from a tarball to create a filesystem image
+    info      Display system-wide information
+    inspect   Return low-level information on a container or image
+    kill      Kill a running container
+    load      Load an image from a tar archive or STDIN
+    login     Register or log in to a Docker registry
+    logout    Log out from a Docker registry
+    logs      Fetch the logs of a container
+    network   Manage Docker networks
+    pause     Pause all processes within a container&lt;/p&gt;
+
+&lt;p&gt;▽
+    port      List port mappings or a specific mapping for the CONTAINER
+    ps        List containers
+    pull      Pull an image or a repository from a registry&lt;/p&gt;
+
+&lt;p&gt;▽
+    push      Push an image or a repository to a registry
+    rename    Rename a container
+    restart   Restart a container
+    rm        Remove one or more containers
+    rmi       Remove one or more images
+    run       Run a command in a new container
+    save      Save an image(s) to a tar archive
+    search    Search the Docker Hub for images
+    start     Start one or more stopped containers
+    stats     Display a live stream of container(s) resource usage statistics
+    stop      Stop a running container
+    tag       Tag an image into a repository
+    top       Display the running processes of a container
+    unpause   Unpause all processes within a container
+    update    Update resources of one or more containers
+    version   Show the Docker version information
+    volume    Manage Docker volumes
+    wait      Block until a container stops, then print its exit code&lt;/p&gt;
+
+&lt;p&gt;Run &amp;lsquo;docker COMMAND &amp;ndash;help&amp;rsquo; for more information on a command.
+[#18#root@dmonit ~]$
+[#18#root@dmonit ~]$
+[#18#root@dmonit ~]$
+[#18#root@dmonit ~]$vim .bashrc
+[#19#root@dmonit ~]$bash
+[#1#root@dmonit ~]$p
+pager                    pdb3.4                   pinky                    pod2man                  prove                    pwck                     pydoc3.4
+pam-auth-update          pdftexi2dvi              pivot_root               pod2texi                 ps                       pwconv                   pygettext
+pam_getenv               perl                     pkg-config               pod2text                 psed                     pwd                      pygettext2.7
+pam_tally                perl5.18.2               pkill                    pod2usage                psfaddtable              pwdx                     pygettext3
+pam_tally2               perlbug                  pl2pm                    podchecker               psfgettable              pwunconv                 pygettext3.4
+pam_timestamp_check      perldoc                  pldd                     podselect                psfstriptable            py3clean                 python
+partx                    perlivp                  plipconfig               policy-rc.d              psfxtable                py3compile               python2
+passwd                   perlthanks               plymouth                 popd                     psqlLogin                py3versions              python2.7
+paste                    pg                       plymouthd                poweroff                 pstruct                  pybuild                  python3
+patch                    pgrep                    plymouth-upstart-bridge  pr                       ptar                     pyclean                  python3.4
+pathchk                  piconv                   pmap                     prename                  ptardiff                 pycompile                python3.4m
+pdb                      pidof                    pod2html                 print                    ptargrep                 pydoc                    python3m
+pdb2.7                   ping                     pod2latex                printenv                 ptx                      pydoc2.7                 pyvenv-3.4
+pdb3                     ping6                    pod2latex.bundled        printf                   pushd                    pydoc3                   pyversions
+[#1#root@dmonit ~]$vim .bashrc
+[#2#root@dmonit ~]$psqlLogin
+bash: psql: command not found
+[#3#root@dmonit ~]$vim .bashrc
+[#4#root@dmonit ~]$ls
+bin
+[#5#root@dmonit ~]$cd bin/
+[#6#root@dmonit ~/bin]$ls
+dcreate  de  dip  dkill  pass
+[#7#root@dmonit ~/bin]$cat pass
+psql_pass:wothing17mei&lt;/p&gt;
+
+&lt;p&gt;ssh root@wothing.newb.xyz&lt;/p&gt;
+
+&lt;p&gt;docker run -dit\
+           &amp;ndash;name=dmonit\
+           -h dmonit\
+           -p 445:22\
+           -v /Users/kooksee/share:/share\
+           -v /usr/local/bin/docker:/usr/local/bin/docker\
+           -v /var/run/docker.sock:/var/run/docker.sock\
+           -e &amp;lsquo;PUBKEY=ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDZouXRF/aEB0VIyUGjDJSphklJMvriEcooqMLpQw55bbVHlWwA5gq/UGl4BI6ZAkEyk18S88RYWunsM+FbcHaaxhfwNTSQ9rXHK6Nr/J26PBLKMcYWyNtAWrgqk8vKhvXvRw6XYhUlgVC0SE1vAMpovqIhHArFu5JhDlk8C/WeE50lIc9ek9+dl8yjX5Nbujc/5V7ELzuCALLjvjcjozL0goAvn6hLO9ZXqeIC6D4MFWTxcKW4hcbdgzUAzlSNIhuXABedxg/uL5qseoi7Qm9WM0zPqDQF5xXJM34DPeHrib6NXen8K9rMKGh26PuHz5o/xGPOy/QWvfO0HAI8HdJx kooksee@kooksee.local&amp;rsquo; dmonit&lt;/p&gt;
+
+&lt;p&gt;docker run -it &amp;ndash;name kkk -d -p 445:22 -v /usr/local/bin/docker:/usr/local/bin/docker -v /var/run/docker.sock:/var/run/docker.sock -e &amp;lsquo;PUBKEY=ssh-rsa XXXX&amp;rsquo; index.tenxcloud.com/philo/dmonit:1.0&lt;/p&gt;
+
+&lt;p&gt;docker run -dit\
+           &amp;ndash;name=golang\
+           -h golang\
+           -v /Users/kooksee/share:/share\
+           golang
+[#8#root@dmonit ~/bin]$de golang
+[#1#root@golang /go]$cd
+[#2#root@golang ~]$cd bi
+bash: cd: bi: No such file or directory
+[#3#root@golang ~]$ls
+17mei  17mei-archive  17mei-design  activity  dotfiles  FixLinux  protobuf  test
+[#4#root@golang ~]$exit
+[#9#root@dmonit ~/bin]$ls
+dcreate  de  dip  dkill  pass
+[#10#root@dmonit ~/bin]$cat pas
+cat: pas: No such file or directory
+[#11#root@dmonit ~/bin]$cat pass
+psql_pass:wothing17mei&lt;/p&gt;
+
+&lt;p&gt;ssh root@wothing.newb.xyz&lt;/p&gt;
+
+&lt;p&gt;docker run -dit\
+           &amp;ndash;name=dmonit\
+           -h dmonit\
+           -p 445:22\
+           -v /Users/kooksee/share:/share\
+           -v /usr/local/bin/docker:/usr/local/bin/docker\
+           -v /var/run/docker.sock:/var/run/docker.sock\
+           -e &amp;lsquo;PUBKEY=ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDZouXRF/aEB0VIyUGjDJSphklJMvriEcooqMLpQw55bbVHlWwA5gq/UGl4BI6ZAkEyk18S88RYWunsM+FbcHaaxhfwNTSQ9rXHK6Nr/J26PBLKMcYWyNtAWrgqk8vKhvXvRw6XYhUlgVC0SE1vAMpovqIhHArFu5JhDlk8C/WeE50lIc9ek9+dl8yjX5Nbujc/5V7ELzuCALLjvjcjozL0goAvn6hLO9ZXqeIC6D4MFWTxcKW4hcbdgzUAzlSNIhuXABedxg/uL5qseoi7Qm9WM0zPqDQF5xXJM34DPeHrib6NXen8K9rMKGh26PuHz5o/xGPOy/QWvfO0HAI8HdJx kooksee@kooksee.local&amp;rsquo; dmonit&lt;/p&gt;
+
+&lt;p&gt;docker run -it &amp;ndash;name kkk -d -p 445:22 -v /usr/local/bin/docker:/usr/local/bin/docker -v /var/run/docker.sock:/var/run/docker.sock -e &amp;lsquo;PUBKEY=ssh-rsa XXXX&amp;rsquo; index.tenxcloud.com/philo/dmonit:1.0&lt;/p&gt;
+
+&lt;p&gt;docker run -dit\
+           &amp;ndash;name=golang\
+           -h golang\
+           -v /Users/kooksee/share:/share\
+           golang
+[#12#root@dmonit ~/bin]$ssh root@wothing.newb.xyz
+root@wothing.newb.xyz&amp;rsquo;s password:&lt;/p&gt;
+
+&lt;p&gt;[#13#root@dmonit ~/bin]$de golang
+[#1#root@golang /go]$ssh root@wothing.newb.xyz
+root@wothing.newb.xyz&amp;rsquo;s password:&lt;/p&gt;
+
+&lt;p&gt;[#2#root@golang /go]$exit
+[#14#root@dmonit ~/bin]$ls
+dcreate  de  dip  dkill  pass
+[#15#root@dmonit ~/bin]$cd
+[#16#root@dmonit ~]$ls
+bin
+[#17#root@dmonit ~]$dimg
+bash: dimg: command not found
+[#18#root@dmonit ~]$docker  images
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+golang              latest              f47f7ed5a075        20 hours ago        1.281 GB
+postgres            latest              1986535a6597        7 days ago          264.1 MB
+dmonit              latest              5c03c096139b        7 weeks ago         452.7 MB
+consul              latest              55a1c7ddf173        5 months ago        67.89 MB
+psql                latest              d2d82043267c        9 months ago        214 MB
+[#19#root@dmonit ~]$dps
+bash: dps: command not found
+[#20#root@dmonit ~]$docker ps -a
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                                                                                                      NAMES
+42a32af80757        golang              &amp;ldquo;bash&amp;rdquo;                   20 hours ago        Up 20 hours                                                                                                                    golang
+7548be2d1758        dmonit              &amp;ldquo;/bin/sh -c &amp;lsquo;service &amp;rdquo;   24 hours ago        Up 24 hours         0.0.0.0:445-&amp;gt;22/tcp                                                                                        dmonit
+6828db2053f9        consul              &amp;ldquo;/bin/start -server -&amp;rdquo;   6 days ago          Up 6 days           53/tcp, 0.0.0.0:8400-&amp;gt;8400/tcp, 8300-8302/tcp, 0.0.0.0:53-&amp;gt;53/udp, 8301-8302/udp, 0.0.0.0:8500-&amp;gt;8500/tcp   node1
+99d9f65816d4        psql                &amp;ldquo;/docker-entrypoint.s&amp;rdquo;   6 days ago          Up 6 days           0.0.0.0:5432-&amp;gt;5432/tcp                                                                                     elegant_kalam
+[#21#root@dmonit ~]$de consul
+Error response from daemon: No such container: consul
+[#22#root@dmonit ~]$de node1
+bash-4.3# ls
+bin      config   data     dev      etc      home     lib      lib64    linuxrc  media    mnt      proc     root     run      sbin     sys      tmp      ui       usr      var
+bash-4.3# bash
+bash-4.3# ls
+bin      config   data     dev      etc      home     lib      lib64    linuxrc  media    mnt      proc     root     run      sbin     sys      tmp      ui       usr      var
+bash-4.3# cd
+bash-4.3# ls
+bash-4.3# cd ~
+bash-4.3# ls
+bash-4.3#
+bash-4.3# con
+conspy    consul    continue
+bash-4.3# con
+conspy    consul    continue
+bash-4.3# consul &amp;ndash;help
+usage: consul [&amp;ndash;version] [&amp;ndash;help] &lt;command&gt; [&lt;args&gt;]&lt;/p&gt;
+
+&lt;p&gt;Available commands are:
+    agent          Runs a Consul agent
+    event          Fire a new event
+    exec           Executes a command on Consul nodes
+    force-leave    Forces a member of the cluster to enter the &amp;ldquo;left&amp;rdquo; state
+    info           Provides debugging information for operators
+    join           Tell Consul agent to join cluster
+    keygen         Generates a new encryption key
+    keyring        Manages gossip layer encryption keys
+    leave          Gracefully leaves the Consul cluster and shuts down
+    lock           Execute a command holding a lock
+    maint          Controls node or service maintenance mode
+    members        Lists the members of a Consul cluster
+    monitor        Stream logs from a Consul agent
+    reload         Triggers the agent to reload configuration files
+    version        Prints the Consul version
+    watch          Watch for changes in Consul&lt;/p&gt;
+
+&lt;p&gt;bash-4.3# exit
+bash-4.3# exit
+[#23#root@dmonit ~]$ls
+bin
+[#24#root@dmonit ~]$docker images
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+golang              latest              f47f7ed5a075        20 hours ago        1.281 GB
+postgres            latest              1986535a6597        7 days ago          264.1 MB
+dmonit              latest              5c03c096139b        7 weeks ago         452.7 MB
+consul              latest              55a1c7ddf173        5 months ago        67.89 MB
+psql                latest              d2d82043267c        9 months ago        214 MB
+[#25#root@dmonit ~]$docker ps -
+docker: &amp;ldquo;ps&amp;rdquo; requires 0 arguments.
+See &amp;lsquo;docker ps &amp;ndash;help&amp;rsquo;.&lt;/p&gt;
+
+&lt;p&gt;Usage:  docker ps [OPTIONS]&lt;/p&gt;
+
+&lt;p&gt;▽
+        &amp;ldquo;Node&amp;rdquo;:&amp;ldquo;docker-mongo-2&amp;rdquo;,
+        &amp;ldquo;Address&amp;rdquo;:&amp;ldquo;172.17.0.3&amp;rdquo;
+    }, {
+        &amp;ldquo;Node&amp;rdquo;:&amp;ldquo;mailgun&amp;rdquo;,
+        &amp;ldquo;Address&amp;rdquo;:&amp;ldquo;&lt;a href=&#34;http://www.mailgun.com&amp;quot;&#34;&gt;http://www.mailgun.com&amp;quot;&lt;/a&gt;
+    }, {
+        &amp;ldquo;Node&amp;rdquo;:&amp;ldquo;mongo-1&amp;rdquo;,
+        &amp;ldquo;Address&amp;rdquo;:&amp;ldquo;172.17.0.2&amp;rdquo;
+    }
+]&lt;/p&gt;
+
+&lt;p&gt;太棒了！将 Docker 结合到服务发现流程中，效果非常好！&lt;/p&gt;
+
+&lt;p&gt;我们可以按照 清单 6 中所述查询 $CONSUL_IP:8500/v1/catalog/service/mongo，找到服务端口，从而获得更多详情。Consul 可以提供容器 IP，以此作为服务地址。即便 Docker 将其映射到主机上一个随机值上，只要是容器提供端口，该方法都适用。不过，在多主机拓扑中，您需要明确地将容器的端口映射到主机的相同端口上。为了避免这一限制，我们可以考虑采用 Weave。&lt;/p&gt;
+
+&lt;p&gt;总的来说，在提供多个数据中心的服务信息时，大致步骤如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;至少启动 1 个 Consul 服务器，并存储其地址。
+在每个节点上：
+    下载 Consul 二进制库。
+    写入服务并检查其在 Consul 配置目录中的定义。
+    启动应用。
+    使用另一代理或服务器的地址启动 Consul 代理。
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;创建基础架构感知应用
+0&lt;/p&gt;
+
+&lt;p&gt;现在，您已经构建了一个简便的非侵入式工作流，用来部署和注册新服务。下一步是将这些知识导出到依赖性应用之中。&lt;/p&gt;
+
+&lt;p&gt;Twelve-Factor App 是一种构建软件即服务应用的方法，适用于在环境中的存储配置。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;维持配置与不断变化的代码的严格分离。
+避免在资料库中签入（check in）敏感信息。
+确保语言和操作系统不可知。
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;阅读：Twelve-Factor App&lt;/p&gt;
+
+&lt;p&gt;现在，我们需要编写一个打包程序，用以查询 Consul 终端设备是否能够提供服务，并将其连接属性导出到环境中，然后执行给定的命令。选择 Go 语言，不仅可为您提供一个潜在的交叉平台二进制库（如&amp;gt;同其他工具），还可以使您访问正式客户端的 API（请参阅 清单 11）。
+清单 11. 将服务打包到可复写的自注册容器中&lt;/p&gt;
+
+&lt;p&gt;pa
+&amp;ndash; INSERT &amp;ndash;                                                                                                                                                       513,3         Bot
+清单 14. 模板化配置文件示例&lt;/p&gt;
+
+&lt;p&gt;// app.ctmpl&lt;/p&gt;
+
+&lt;p&gt;// store third-party service information in the environment
+db:&amp;lsquo;mongodb://&amp;lsquo;+ process.env.MONGO_HOST + &amp;lsquo;:&amp;lsquo;+ process.env.MONGO_PORT + &amp;lsquo;/test&amp;rsquo;,&lt;/p&gt;
+
+&lt;p&gt;// or you can leverage consul-template built-in service discovery
+{{ range service &amp;ldquo;mongo&amp;rdquo; }}
+      db2:&amp;lsquo;mongodb://{{ .Address }}:{{ .Port }}/test&amp;rsquo;,
+{{ end}}&lt;/p&gt;
+
+&lt;p&gt;// Use consul-template to fetch information from consul kv store
+// curl -X PUT &amp;ldquo;http://$CONSUL/v1/kv/hackathon/mailgun_user&amp;rdquo; -d &amp;ldquo;xavier&amp;rdquo;
+mailgun:{
+    user:&amp;lsquo;{{ key &amp;ldquo;hackathon/mailgun_user&amp;rdquo; }}&amp;lsquo;,
+    password:&amp;lsquo;{{ key &amp;ldquo;hackathon/mailgun_password&amp;rdquo; }}&amp;rsquo;
+}&lt;/p&gt;
+
+&lt;p&gt;这种体验需要更多的考虑。可能具有一些策略性，例如通过重启应用来更新服务知识。我们可以通过发送特定信息，使其能够轻松地处理变更。 不过，这要求我们进入到应用代码库中；到现在为止，我们无需了解任何知识便可实现这一点。此外，随着不可靠云服务提供商推出了越来越多的微服务，这更有利于我们运行无状态的容错应用。&lt;/p&gt;
+
+&lt;p&gt;阅读：Martin Fowler 发表的有关 Phoenix 服务器的文章&lt;/p&gt;
+
+&lt;p&gt;无论如何，强大的工具连同清晰的服务契约，有助于您将分布式应用集成到复杂的基础架构中，而不会使您局限于某个特定提供商或应用堆栈。
+结论
+0&lt;/p&gt;
+
+&lt;p&gt;服务发现以及更广泛的服务统筹安排，是目前开发过程中最重要的挑战之一。资深开发人员以及开发人员社区，都正在迈入并推动着技术与理念时代的发展。&lt;/p&gt;
+
+&lt;p&gt;举例来说，IBM Bluemix™ 能够通过工作负载规划、智能数据库、监控、成本管理、数据同步、REST、API 等诸多功能应对这一挑战。唯有通过丰富的工具，才能使开发人员更加专注于这些应用中松散连接的模块。&lt;/p&gt;
+
+&lt;p&gt;借助于 Consul 和 Go，您便可朝着这个方向迈出一大步，并构建具有以下功能的系列服务：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;自注册
+自更新
+堆栈不可知
+普适型部署
+容器友好性
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;本教程介绍了生产部署的基本知识，并展示了如何采用即插即用式方法进行服务发现，释放您的精力，使您能够更多地思考当前部署流程中的其他环节，同时也免去了所有的常规限制。 后续步骤可能包括：通过加密扩展打包程序、提供统一的集成，以便安全地提供服务令牌等证书。我希望本教程能够帮助您轻松应对超敏捷云部署过程中所遇到的挑战。
+&amp;ldquo;pass&amp;rdquo; 668L, 32298C written                                                                                                                                        668,464-310   Bot&lt;/p&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

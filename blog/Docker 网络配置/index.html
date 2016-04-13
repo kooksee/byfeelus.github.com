@@ -1,0 +1,1161 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <base href="http://kooksee.github.io/">
+  <title>Docker 网络配置 - 百里求一的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+  
+  <meta name="description" content="阅读目录 摘要 Docker选项快速指南 配置DNS 容器间通信 为主机绑定容器端口 定制 docker0 建立你自己的桥接网络 Docker 如何使容器连接到网络 工具和实例 建立点对">
+  <meta name="author" content="kooksee">
+  <meta itemprop="name" content="Docker 网络配置 - 百里求一的博客">
+  <meta itemprop="description" content="阅读目录 摘要 Docker选项快速指南 配置DNS 容器间通信 为主机绑定容器端口 定制 docker0 建立你自己的桥接网络 Docker 如何使容器连接到网络 工具和实例 建立点对">
+  <meta itemprop="image" content="http://kooksee.github.io/img/author.jpg">
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@kooksee" />
+  <meta name="twitter:title" content="Docker 网络配置 - 百里求一的博客" />
+  
+  <meta name="twitter:description" content="dfgffcfcffcfgvhbjgfdcgv">
+  
+  <link rel="shortcut icon" href="img/favicon.ico"/>
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+  <link rel="apple-touch-icon-precomposed" href="apple-touch-icon.png" />
+  <link rel="stylesheet" href="highlight/styles/github.css">
+  <script src="highlight/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <link rel="stylesheet" href="font/hack/css/hack.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+  <header>
+    <div>
+  
+  <div id="imglogo">
+    <a href="http://kooksee.github.io/"><img src="http://kooksee.github.io/img/logo.svg" alt="百里求一的博客" title="百里求一的博客"/></a>
+  </div>
+  
+  <div id="textlogo">
+    <h1 class="site-name"><a href="http://kooksee.github.io/" title="百里求一的博客">百里求一的博客</a></h1>
+    <h2 class="blog-motto">观察，思考，学习</h2>
+  </div>
+  <div class="navbar"><a class="navbutton navmobile" href="#" title="menu"></a></div>
+  <nav class="animated">
+    <ul>
+      
+      <li><a href="/">首页</a></li>
+      
+      <li><a href="/about/">关于</a></li>
+      
+      <li><a href="/tags/">标签</a></li>
+      
+      <li>
+        <form class="search" method="get" action="https://www.google.com/search">
+          <div>
+            <input type="text" id="search" name="q" placeholder="搜索">
+          </div>
+        </form>
+      </li>
+    </ul>
+  </nav>
+</div>
+
+  </header>
+  <div id="container">
+    <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody">
+    <header class="article-info clearfix">
+  <h1 itemprop="name">
+      <a href="http://kooksee.github.io/blog/Docker%20%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/" title="Docker 网络配置" itemprop="url">Docker 网络配置</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://kooksee.github.io" title="kooksee">kooksee</a>
+    
+  </p>
+  <p class="article-time">
+    <time datetime="0001-01-01 00:00:00 &#43;0000 UTC" itemprop="datePublished">0001年01月01日</time>
+  </p>
+</header>
+
+	<div class="article-content">
+    
+    
+
+<p>阅读目录</p>
+
+<pre><code>摘要
+Docker选项快速指南
+配置DNS
+容器间通信
+为主机绑定容器端口
+定制 docker0
+建立你自己的桥接网络
+Docker 如何使容器连接到网络
+工具和实例
+建立点对点连接
+</code></pre>
+
+<p>摘要</p>
+
+<p>当docker启动时，它会在宿主机器上创建一个名为docker0的虚拟网络接口。它会从RFC 1918定义的私有地址中随机选择一个主机不用的地址和子网掩码，并将它分配给docker0。例如当我启动docker几分钟后它选择了172.17.42.1/16－一个16位的子网掩码为主机和它的容器提供了65,534个ip地址。</p>
+
+<pre><code>注意: 本文讨论了Docker的高级网络配置和选项。通常你不会用到这些。如果你想查看一个较为简单的Docker网络介绍和容器概念介绍来着手，请参见Docker用户指南.
+</code></pre>
+
+<p>但docker0并不是正常的网络接口。它只是一个在绑定到这上面的其他网卡间自动转发数据包的虚拟以太网桥。它可以使容器与主机相互通信。每次 Docker创建一个容器，它就会创建一对对等接口(peer interface)，类似于一个管子的两端－在这边可以收到另一边发送的数据包。Docker会将对等接口中的一个做为eth0接口连接到容器上，并使 用类似于vethAQI2QT这样的惟一名称来持有另一个，该名称取决于主机的命名空间。通过将所有veth*接口绑定到docker0桥接网卡 上，Docker在主机和所有Docker容器间创建一个共享的虚拟子网。</p>
+
+<p>本文其他部分将会讲解使用Docker选项的所有方式，并且－在高级模式下－使用纯linux网线配置命令来</p>
+
+<p>调整，补充，或完全替代Docker的默认网络配置。
+回到顶部
+Docker选项快速指南</p>
+
+<p>这里有一份关于Docker网络配置的命令行选项列表，省去您查找相关资料的麻烦。
+一些网络配置的命令行选项只能在服务器启动时提供给Docker服务器。并且一旦启动起来就无法改变。</p>
+
+<p>一些网络配置命令选项只能在启动时提供给Docker服务器，并且在运行中不能改变:</p>
+
+<pre><code>-b BRIDGE或--bridge=BRIDGE— see    建立自己的网桥
+
+--bip=CIDR— see    定制docker0
+
+-H SOCKET...或--host=SOCKET...—   它看起来像是在设置容器的网络，但实际却恰恰相反：它告诉Docker服务器要接收命令的通道，例如“run container&quot;和&quot;stop container&quot;。
+
+--icc=true|false— see    容器间通信
+
+--ip=IP_ADDRESS— see    绑定容器端口
+
+--ip-forward=true|false— see    容器间通信
+
+--iptables=true|false— see   容器间通信
+
+--mtu=BYTES— see    定制docker0
+</code></pre>
+
+<p>有两个网络配置选项可以在启动时或调用docker run时设置。当在启动时设置它会成为docker run的默认值:</p>
+
+<pre><code>--dns=IP_ADDRESS...— see    配置DNS
+
+--dns-search=DOMAIN...— see    配置DNS
+</code></pre>
+
+<p>最后，一些网络配置选项只能在调用docker run时指出，因为它们要为每个容器做特定的配置:</p>
+
+<pre><code>-h HOSTNAME或--hostname=HOSTNAME— see    配置DNS 和  Docker与容器连接原理
+
+--link=CONTAINER_NAME:ALIAS— see   配置DNS and    容器间通信
+
+--net=bridge|none|container:NAME_or_ID|host— see   Docker与容器连接原理
+
+-p SPECor--publish=SPEC— see    绑定容器端口
+
+-P或--publish-all=true|false— see    绑定容器端口
+</code></pre>
+
+<p>接下来的部分会对以上话题从易到难做出逐一解答。
+回到顶部
+配置DNS</p>
+
+<p>怎样为Docker提供的每一个容器进行主机名和DNS配置，而不必建立自定义镜像并将主机名写到里面？它的诀窍是覆盖三个至关重要的在/etc下的容器内的虚拟文件，那几个文件可以写入新的信息。你可以在容器内部运行mount看到这个：</p>
+
+<p>$$ mount&hellip;/dev/disk/by-uuid/1fec&hellip;ebdf on /etc/hostname type ext4 &hellip;/dev/disk/by-uuid/1fec&hellip;ebdf on /etc/hosts type ext4 &hellip;tmpfs on /etc/resolv.conf type tmpfs &hellip;&hellip;</p>
+
+<p>这样的配置允许Docker去做聪明的事情，类似于当主机接收到新的DHCP配置之后，保持resolv.conf的数据到所有的容器中。 Docker怎样维护在容器内的这些文件从Docker的一个版本到下一个版本的具体细节，你应该抛开这些单独的文件本身并且使用下面的Docker选项 代替。</p>
+
+<p>有四种不同的选项会影响容器守护进程的服务名称。</p>
+
+<ol>
+<li><p>-h HOSTNAME 或者 &ndash;hostname=HOSTNAME  &ndash;设置容器的主机名，仅本机可见。这种方式是写到/etc/hostname ，以及/etc/hosts 文件中，作为容器主机IP的别名，并且将显示在容器的bash中。不过这种方式设置的主机名将不容易被容器之外可见。这将不会出现在 docker ps 或者 其他的容器的/etc/hosts 文件中。</p></li>
+
+<li><p>&ndash;link=CONTAINER_NAME:ALIAS  &ndash;使用这个选项去run一个容器将在此容器的/etc/hosts文件中增加一个主机名ALIAS，这个主机名是名为CONTAINER_NAME 的容器的IP地址的别名。这使得新容器的内部进程可以访问主机名为ALIAS的容器而不用知道它的IP。&ndash;link= 关于这个选项的详细讨论请看：    Communication between containers.</p></li>
+
+<li><p>&ndash;dns=IP_ADDRESS &ndash;设置DNS服务器的IP地址，写入到容器的/etc/resolv.conf文件中。当容器中的进程尝试访问不在/etc/hosts文件中的主机A 时，容器将以53端口连接到IP_ADDRESS这个DNS服务器去搜寻主机A的IP地址。</p></li>
+
+<li><p>&ndash;dns-search=DOMAIN &ndash;设置DNS服务器的搜索域，以防容器尝试访问不完整的主机名时从中检索相应的IP。这是写入到容器的 /etc/resolv.conf文件中的。当容器尝试访问主机 host，而DNS搜索域被设置为 example.com ,那么DNS将不仅去查寻host主机的IP，还去查询host.example.com的 IP。</p></li>
+</ol>
+
+<p>在docker中，如果启动容器时缺少以上最后两种选项设置时，将使得容器的/etc/resolv.conf文件看起来和宿主主机的/etc/resolv.conf文件一致。这些选项将修改默认的设置。
+回到顶部
+容器间通信</p>
+
+<p>在操作系统层面上，决定两个容器间的通信能否得到控制，有以下三个因素。</p>
+
+<pre><code>网络拓扑逻辑是否连接上了容器的网络接口。默认情况下Docker将把所有容器绑定到一个 singledocker0bridge,并为两个容器间的包传输提供路径。参见本文档后续部分---其他可能的拓扑逻辑
+
+主机是否要发送IP包？这由ip_forward系统参数控制。如果这个参数设为1，那么数据包只能在容器间传输。通常情况下，让 Docker服务器使用它的默认设置  --ip-forward=true ,   Docker在启动的时候会把ip_forwardsh.  要检查设置或手动设置参数，可以这样做：
+
+# Usually not necessary: turning on forwarding,# on the host where your Docker server is running$ cat /proc/sys/net/ipv4/ip_forward0$ sudo echo 1 &gt; /proc/sys/net/ipv4/ip_forward
+$ cat /proc/sys/net/ipv4/ip_forward1
+
+iptables是否允许特殊连接?如果你把设置 --iptables=false,当守护进程启动时，Docker不会改变你的系统iptables规则。另外，如果你保留默认设置  --icc=true，Docker服务器或向FORWARD链添加一个带有全局ACCEPT策略的默认规则。如果不保留默认设置，系统会把策略设为 DROP.
+</code></pre>
+
+<p>几乎所有人使用docker都希望ip_forward 是打开的，至少使容器间的通讯成为可能。但是否同意 &ndash;icc=true 或者更改为 &ndash;icc=false 使得iptables 可以保护容器以及宿主主机不被任意地端口扫描、避免被已经被渗透的容器所访问，这是一个策略问题。（在ubuntu，是编辑/etc/default /docker文件中的DOCKER_OPTS参数，然后重启docker服务）</p>
+
+<p>如果你选择最安全的设置 &ndash;icc=false ，那么当你想让它们彼此提供服务的时候如何让它们相互通讯？</p>
+
+<p>答案是：使用前文提到的 &ndash;link=CONTAINER_NAME:ALIAS 选项。如果docker守护进程正在以 &ndash;icc=false 和 &ndash;iptables=true 参数运行，当以选项 &ndash;link= 执行 docker run 命令时，docker服务将插入一部分 iptables ACCEPT 规则使得新容器可以连接其他容器所暴露出来的端口（此端口指前文在 Dockerfile 中提到的EXPOSE这一行）。更多详细文档介绍请看：linking Docker containers。</p>
+
+<p>注意: &ndash;link 选项中的 CONTAINER_NAME 的值必须是 docker自动分配的容器名称，比如 stupefied_pare， 或者是在执行docker run 的时候用 &ndash;name= 指定的容器名称.  这不能使一个docker无法识别的主机名。</p>
+
+<p>你可以在你的Docker主机上运行iptables命令，来观察FORWARD链是否有默认的ACCEPT或DROP策略</p>
+
+<h1 id="when-icc-false-you-should-see-a-drop-rule-sudo-iptables-l-n-chain-forward-policy-accept-target-prot-opt-source-destination:b1927aed458c7b4d8f1e229af0616036">When &ndash;icc=false, you should see a DROP rule:$ sudo iptables -L -n&hellip;Chain FORWARD (policy ACCEPT)target     prot opt source               destination</h1>
+
+<p>DROP       all  &ndash;  0.0.0.0/0            0.0.0.0/0&hellip;# When a &ndash;link= has been created under &ndash;icc=false,# you should see port-specific ACCEPT rules overriding# the subsequent DROP policy for all other packets:$ sudo iptables -L -n&hellip;Chain FORWARD (policy ACCEPT)target     prot opt source               destination
+ACCEPT     tcp  &ndash;  172.17.0.2           172.17.0.3           tcp spt:80ACCEPT     tcp  &ndash;  172.17.0.3           172.17.0.2           tcp dpt:80DROP       all  &ndash;  0.0.0.0/0            0.0.0.0/0</p>
+
+<pre><code>注意: Docker的iptables规则完全显示了容器相互间的原始IP地址，所以一个容器到另一个容器的连接，需要显示地显示出第一个容器的原始IP地址。
+</code></pre>
+
+<p>回到顶部
+为主机绑定容器端口</p>
+
+<p>默认情况下，Docker容器可以连接到外部区域，但外部区域不能连接到容器。在Docker启动时，由于它在主机上创建了一个iptables伪装规则，使得每一个输出连接看起来都是由主机IP地址建立起来的。</p>
+
+<h1 id="you-can-see-that-the-docker-server-creates-a-masquerade-rule-that-let-containers-connect-to-ip-addresses-in-the-outside-world-sudo-iptables-t-nat-l-n-chain-postrouting-policy-accept-target-prot-opt-source-destination:b1927aed458c7b4d8f1e229af0616036">You can see that the Docker server creates a# masquerade rule that let containers connect# to IP addresses in the outside world:$ sudo iptables -t nat -L -n&hellip;Chain POSTROUTING (policy ACCEPT)target     prot opt source               destination</h1>
+
+<p>MASQUERADE  all  &ndash;  172.17.0.0/16       !172.17.0.0/16&hellip;</p>
+
+<p>当调用docker run的时候，如果你想让容器接受输入连接，你需要提供特殊选项。这些选项的详细说明在 Docker User Guide.  有两种方法可以实现。</p>
+
+<p>首先，你可以提供 -P 或者 &ndash;publish-all=true|false 选项参数来执行 docker run 命令，这将会识别所有在dockerfile中暴露的端口，并且随机映射到 49000-49900 之间的主机端口。这看起来是一个很大的不便，当你要启动一个新的容器时你需要知道那个主机端口已经被映射。</p>
+
+<p>更方便的操作是使用 -p SPEC 或者 &ndash;publish=SPEC 选项，这两个选项让你明确的指定docker容器的端口映射到任意的主机端口中，不局限于49000-49900.</p>
+
+<p>无论如何，你应该通过审查你的NAT表，去看看docker在你的网络占做了什么。</p>
+
+<h1 id="what-your-nat-rules-might-look-like-when-docker:b1927aed458c7b4d8f1e229af0616036">What your NAT rules might look like when Docker</h1>
+
+<h1 id="is-finished-setting-up-a-p-forward:b1927aed458c7b4d8f1e229af0616036">is finished setting up a -P forward:</h1>
+
+<p>$ iptables -t nat -L -n
+&hellip;Chain
+DOCKER (2 references)
+target     prot opt source               destination
+DNAT       tcp  &ndash;  0.0.0.0/0            0.0.0.0/0            tcp dpt:49153 to:172.17.0.2:80</p>
+
+<h1 id="what-your-nat-rules-might-look-like-when-docker-1:b1927aed458c7b4d8f1e229af0616036">What your NAT rules might look like when Docker</h1>
+
+<h1 id="is-finished-setting-up-a-p-80-80-forward:b1927aed458c7b4d8f1e229af0616036">is finished setting up a -p 80:80 forward:</h1>
+
+<p>Chain
+DOCKER (2 references)
+target     prot opt source               destination
+DNAT       tcp  &ndash;  0.0.0.0/0            0.0.0.0/0            tcp dpt:80 to:172.17.0.2:80</p>
+
+<p>可以看到，docker暴露了这些容器的端口到通配IP地址：0.0.0.0 ，这个通配IP地址可以匹配宿主主机上任意一个可以进入的端口。如果你希望更多的限制，并且只允许容器服务通过特殊的宿主主机的外部网络接口来相互联系， 那么你有两种选择。当你执行 docker run 命令时，你可以使用 -p IP:host_port:container_port 或者  -p IP::port 来明确地绑定外部接口。</p>
+
+<p>或者如果你希望dokcer永远转发到一个特殊的IP地址上，你可以编辑你的docker系统设置文件（ubuntu系统的设置方法为：编辑 /etc/default/docker文件，改写DOCKER_OPTS参数），增加选项 &ndash;ip=IP_ADDRESS 。修改完之后记得重启你的docker服务。</p>
+
+<p>如果你希望更详细的指导，请参考： Docker User Guide .
+回到顶部
+定制 docker0</p>
+
+<p>默认地，docker服务会在linux内核新建一个网络桥接docker0，使得物理主机和其他虚拟网络接口之间可以传递发送数据包，因此，这表现如一个独立的网络。</p>
+
+<p>docker0有一个IP地址和子网掩码，使得物理主机可以从容器的桥接网络接收和发送数据包。并且给这个桥接网络一个MTU（最大传输单元）或者 说网络接口允许的最大包长度-例如1,500 bytes 或者从docker的宿主主机上的网络接口拷贝的数值。在服务启动的时候两者都是可配置的：</p>
+
+<pre><code>--bip=CIDR— 为docker0桥接网络提供一个特殊的IP地址和一个子网掩码, 使用标准的 CIDR 记法例如192.168.1.5/24.
+
+--mtu=BYTES— 从写docker0的最大数据包长度。
+</code></pre>
+
+<p>在ubuntu系统上，你可以增加以上的配置到 /etc/default/docker 文件中的DOCKER_OPTS参数中，然后重启docker服务。</p>
+
+<p>当你有一个或多个正常运行的容器时，你可以通过在主机上运行brct1命令，观察interfaces列的输出，来确定Docker已经将这些容器正确地连接到docker0网桥。下面是一个连接了两个不同容器的主机：</p>
+
+<h1 id="display-bridge-info-sudo-brctl-show:b1927aed458c7b4d8f1e229af0616036">Display bridge info$ sudo brctl show</h1>
+
+<p>bridge name     bridge id               STP enabled     interfaces
+docker0         8000.3a1d7362b4ee       no              veth65f9
+                                                        vethdda6</p>
+
+<p>如果你的Docker主机还没安装brct1命令，那么你可以在Ubuntu上运行sudo apt-get install bridge-utils来安装它。</p>
+
+<p>最后，每次新建一个容器的时候都会用到docker0 桥接网络。每次在执行docker run命令新建一个容器的时候，docker从可利用的桥接网络中随机选择一个未被使用的IP地址，以及使用桥接网络的子网掩码，用来配置容器 eth0网络接口。docker宿主主机的IP地址被docker容器作为默认的网关。</p>
+
+<h1 id="the-network-as-seen-from-a-container-sudo-docker-run-i-t-rm-base-bin-bash:b1927aed458c7b4d8f1e229af0616036">The network, as seen from a container$ sudo docker run -i -t &ndash;rm base /bin/bash</h1>
+
+<p>$$ ip addr show eth024: eth0: <BROADCAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP group default qlen 1000
+    link/ether 32:6f:e0:35:57:91 brd ff:ff:ff:ff:ff:ff
+    inet 172.17.0.<sup>3</sup>&frasl;<sub>16</sub> scope global eth0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::306f:e0ff:fe35:<sup>5791</sup>&frasl;<sub>64</sub> scope link
+       valid_lft forever preferred_lft forever</p>
+
+<p>$$ ip routedefault via 172.17.42.1 dev eth0172.17.0.0/16 dev eth0  proto kernel  scope link  src 172.17.0.3$$ exit</p>
+
+<p>记住docker的宿主主机无法转发docker容器的数据包到因特网上，除非它的ip_forward 系统设置为1，详情请看： Communication between containers 。
+回到顶部
+建立你自己的桥接网络</p>
+
+<p>如果你希望建立完整的自己的桥接网络，你可以在启动docker之前用 -b BRIDGE 或者 &ndash;bridge=BRIDGE选项参数高数docker使用你自己的桥接网络。如果你已经用docker0启动docker了，你需要停止docker服务然后移除docker0.</p>
+
+<h1 id="stopping-docker-and-removing-docker0-sudo-service-docker-stop:b1927aed458c7b4d8f1e229af0616036">Stopping Docker and removing docker0$ sudo service docker stop</h1>
+
+<p>$ sudo ip link set dev docker0 down
+$ sudo brctl delbr docker0</p>
+
+<p>然后，在启动docker服务之前，新建你自己的桥接网络，写上你想要的配置。接下来我们新建一个简单的桥接网络，刚好用这些选项来定做docker0 ，这刚好足够说明这个技术。</p>
+
+<h1 id="create-our-own-bridge-sudo-brctl-addbr-bridge0:b1927aed458c7b4d8f1e229af0616036">Create our own bridge$ sudo brctl addbr bridge0</h1>
+
+<p>$ sudo ip addr add 192.168.5.<sup>1</sup>&frasl;<sub>24</sub> dev bridge0
+$ sudo ip link set dev bridge0 up# Confirming that our bridge is up and running$ ip addr show bridge04: bridge0: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state UP group default
+    link/ether 66:38:d0:0d:76:18 brd ff:ff:ff:ff:ff:ff
+    inet 192.168.5.<sup>1</sup>&frasl;<sub>24</sub> scope global bridge0
+       valid_lft forever preferred_lft forever# Tell Docker about it and restart (on Ubuntu)$ echo &lsquo;DOCKER_OPTS=&ldquo;-b=bridge0&rdquo;&rsquo; &gt;&gt; /etc/default/docker
+$ sudo service docker start</p>
+
+<p>运行结构应该是docker服务成功启动，已经准备好绑定容器到桥接网络上。当核实好桥接网络的配置之后，尝试着新建一个容器，你将看到容器的IP地址是在你的新的桥接网络范围内的，这是docker自动检测的。</p>
+
+<p>正如前文所述，可以用 brctl show 命令查看，新增或者移除网络接口，可以在docker容器中执行 ip addr 和 ip route 命令查看IP地址是否是从网桥IP段分配的，以及docker的宿主主机的IP是否被作为默认网关。
+回到顶部
+Docker 如何使容器连接到网络</p>
+
+<p>docker是正在发展中的，并会持续提升网络配置的逻辑。当前命令行是很难满足docker新建容器时所需要的网络配置。</p>
+
+<p>让我们回顾一些基础知识。</p>
+
+<p>通讯的时候使用网际协议（IP），一个机器需要访问至少一个网络接口用来发送和接收包，路由表定义了通过接口可达IP地址范围。网络接口不一定非是 物理设备。实际上，在每一个Linux机器（和每个Docker容器内部）的lo回环接口都是有效的而且完全是虚拟的——Linux内核简单地拷贝回环 （数据）包，直接从发送者的内存放入接收者的内存。</p>
+
+<p>Docker使用特殊的虚拟接口让容器在主机间通讯——成对的虚拟接口被叫做“peers”，它被链接到主机内核的内部，因此（数据）包能在他们之间传输。他们简单创建，待会儿我们将会看到。</p>
+
+<p>Docker配置容器的步骤是：</p>
+
+<p>1.创建一对虚拟接口</p>
+
+<p>2.在主Docker主机内部给它一个唯一的名称，比如veth65f9，绑定它到docker0或者Docker使用的任何网桥上</p>
+
+<p>3.让其他的接口翻墙进入新的容器（已经提供了lo接口），在容器的独立和唯一网络接口命名空间内，重新命名它为更漂亮的名字eth0，名称不要和其他的物理接口冲突。</p>
+
+<p>4.在网桥的网络地址访问内给容器的eth0一个新的IP地址，设置它的缺省路由为Docker主机在网桥上拥有的IP地址。</p>
+
+<p>这些步骤结束后，容器将立即拥有一个eth0（虚拟）网卡，并会发现它自己可以和其他的容器以及互联网通讯。</p>
+
+<p>你可以使用 &ndash;net= 这个选项来执行 docker run 启动一个容器，这个选项有一下可选参数。</p>
+
+<pre><code>--net=bridge— 默认选项，用网桥的方式来连接docker容器。
+
+--net=host— 高数docker跳过配置容器的独立网络栈。本质上来说，这个参数告诉docker不去打包容器的网络层。当然，docker 容器的进程仍然被限制在它自己独有的文件系统、进程列表以及其他资源中。一个快速命令 ip addr 将像你展示docker的网络，它是建立在docker 宿主主机上的，有完整的权限去访问宿主主机的网络接口。注意这不意味着docker容器可以去重新配置宿主主机的网络栈，重新配置是需要 --privaleged=true 这个选项参数的，但是这个选项参数会让docker容器打开大量的端口以及其他的系统的超级管理权限的进程。这也会允许容器去访问宿主主机的网络服务，比 如 D-bus。这会使docker容器里的进程有有权限去做一些意想不到的事，比如重启你的宿主主机。所以要谨慎使用这个选项参数。
+
+--net=container:NAME_or_ID— 告诉docker让这个新建的容器使用已有容器的网络配置。这个新建的容器将配置新的自己的文件系统和进程列表以及其他资源限制，但是将共享这个指定的容 器的网络IP地址以及端口号，使得这两个容器可以通过 loopback接口相互访问。
+
+--net=none— 告诉docker为新建的容器建立一个网络栈，但不对这个网络栈进行任何配置，在这个文档的最后将介绍如何让你去建立自定义的网络配置。
+</code></pre>
+
+<p>去了解以下这一步是非常必要的，如果你在建立容器的时候使用 &ndash;net=none  这个选项参数。以下是一些命令去去配置自定义网络，就好像你让docker完全去自己配置一样。</p>
+
+<h1 id="at-one-shell-start-a-container-and-leave-its-shell-idle-and-running-sudo-docker-run-i-t-rm-net-none-base-bin-bash:b1927aed458c7b4d8f1e229af0616036">At one shell, start a container and# leave its shell idle and running$ sudo docker run -i -t &ndash;rm &ndash;net=none base /bin/bash</h1>
+
+<p>root@63f36fc01b5f:/#</p>
+
+<h1 id="at-another-shell-learn-the-container-process-id:b1927aed458c7b4d8f1e229af0616036">At another shell, learn the container process ID</h1>
+
+<h1 id="and-create-its-namespace-entry-in-var-run-netns-for-the-ip-netns-command-we-will-be-using-below-sudo-docker-inspect-f-state-pid-63f36fc01b5f2778-pid-2778-sudo-mkdir-p-var-run-netns:b1927aed458c7b4d8f1e229af0616036">and create its namespace entry in /var/run/netns/# for the &ldquo;ip netns&rdquo; command we will be using below$ sudo docker inspect -f &lsquo;{{.State.Pid}}&rsquo; 63f36fc01b5f2778$ pid=2778$ sudo mkdir -p /var/run/netns</h1>
+
+<p>$ sudo ln -s /proc/$pid/ns/net /var/run/netns/$pid# Check the bridge&rsquo;s IP address and netmask$ ip addr show docker021: docker0: &hellip;inet 172.17.42.<sup>1</sup>&frasl;<sub>16</sub> scope global docker0&hellip;# Create a pair of &ldquo;peer&rdquo; interfaces A and B,# bind the A end to the bridge, and bring it up$ sudo ip link add A type veth peer name B
+$ sudo brctl addif docker0 A
+$ sudo ip link set A up# Place B inside the container&rsquo;s network namespace,# rename to eth0, and activate it with a free IP$ sudo ip link set B netns $pid
+$ sudo ip netns exec $pid ip link set dev B name eth0
+$ sudo ip netns exec $pid ip link set eth0 up
+$ sudo ip netns exec $pid ip addr add 172.17.42.<sup>99</sup>&frasl;<sub>16</sub> dev eth0
+$ sudo ip netns exec $pid ip route add default via 172.17.42.1</p>
+
+<p>到这一步你的容器应该可以正常运行网络操作了。</p>
+
+<p>当你最后退出shell以及清理掉这个容器的时候，这个容器的虚拟网络 eth0 将在网络接口A 被清除后被消除，也会自动在网桥 docker0 上销毁。所以不用你执行其他的命令，所有的东西将被清理。当然，是几乎所有的东西：</p>
+
+<h1 id="clean-up-dangling-symlinks-in-var-run-netnsfind-l-var-run-netns-type-l-delete:b1927aed458c7b4d8f1e229af0616036">Clean up dangling symlinks in /var/run/netnsfind -L /var/run/netns -type l -delete</h1>
+
+<p>还要注意上面的脚本使用了现代的ip命令行替代旧的弃用的封装，类似ipconfig和route，这些老的命令行还是会一直呆在我们的容器内部工作。如果你很忙碌的话，ip addr命令行也可以只键入ip a。</p>
+
+<p>总之，注意这个ip netns exec重要的命令行，它让我们以root用户进入内部并配置一个网络命名空间。如果在容器内部运行，类似的命令行可能不会工作，因为安全容器化的部分是 Docker剥离容器的处理过程，这个过程要正确地配置自己的网络。使用ip netns exec可以让我们完成配置，还避免了运行容器自身&ndash;privileged=true的危险步骤。
+回到顶部
+工具和实例</p>
+
+<p>在把自定义网络拓扑逻辑分类成下面几个部分之前，你应该关注一些外部工具盒关于配置的实例。下面就有两个例子：</p>
+
+<pre><code>J&amp;eacute;r&amp;ocirc;me Petazzoni 创建了一个pipework的shell脚本，帮助你在复杂场景下建立容器间连接:    https://github.com/jpetazzo/pipework
+
+Brandon Rhodes 为下一个版本的Python网络编程基金会创建了整个的网络拓扑逻辑，包括路由器NAT'd防火墙，和提供HTTP,SMTP,POP,IMAP,Telnet,SSH,FTP的服务器:    https://github.com/brandon-rhodes/fopnp/tree/m/playground
+</code></pre>
+
+<p>两个工具都使用网络命令并和之前见到的版本很相似，在下面章节会看到。
+回到顶部
+建立点对点连接</p>
+
+<p>缺省情况下, Docker通过docker0将所有的容器添加到虚拟子网中。你能够按照Building your own bridge中的方法创建你自己的桥让容器连接到不同的虚拟子网。启动容器时使用命令docker run &ndash;net=none，然后使用shell命令添加容器到你自己的桥，方法见How Docker networks a container。</p>
+
+<p>但是有时你想让两个特别的容器能够直接通讯，不用绑定到主机的以太网桥上。</p>
+
+<p>解决方案是简单的。创建一对对等接口，将他们放到容器中，并将其配置为经典的点对点链接。两个容器就能够直接通讯了（当然要告诉每个容器对方的IP地址）。您可能会调整在上一节的指示去这样的事情：</p>
+
+<pre><code># Start up two containers in two terminal windows$ sudo docker run -i -t --rm --net=none base /bin/bash
+root@1f1f4c1f931a:/#
+
+$ sudo docker run -i -t --rm --net=none base /bin/bash
+root@12e343489d2f:/#
+
+# Learn the container process IDs
+# and create their namespace entries
+
+$ sudo docker inspect -f '{{.State.Pid}}' 1f1f4c1f931a
+2989
+$ sudo docker inspect -f '{{.State.Pid}}' 12e343489d2f
+3004
+$ sudo mkdir -p /var/run/netns
+$ sudo ln -s /proc/2989/ns/net /var/run/netns/2989$ sudo ln -s /proc/3004/ns/net /var/run/netns/3004# Create the &quot;peer&quot; interfaces and hand them out$ sudo ip link add A type veth peer name B
+
+$ sudo ip link set A netns 2989$ sudo ip netns exec 2989 ip addr add 10.1.1.1/32 dev A
+$ sudo ip netns exec 2989 ip link set A up
+$ sudo ip netns exec 2989 ip route add 10.1.1.2/32 dev A
+
+$ sudo ip link set B netns 3004$ sudo ip netns exec 3004 ip addr add 10.1.1.2/32 dev B
+$ sudo ip netns exec 3004 ip link set B up
+$ sudo ip netns exec 3004 ip route add 10.1.1.1/32 dev B
+</code></pre>
+
+<p>两个容器应该可以相互ping通以确定连接成功。点对点链接不依赖于子网或子网掩码，但是ip route需要确认一些其他的单一IP地址是连接到了特定的网络接口。</p>
+
+<p>请注意点对点链接可以安全的和其他类型的网络连接混合使用。如果你想用点对点链接替换容器的正常网络连接，启动的时候，不需要带参数&ndash;net=none。</p>
+
+<p>在Docker主机和容器之间创建点对点链接是这个模板最终的排列方式，它允许主机和有单一IP地址的容器通讯。除非你有很特别的网络需求，让你尝试使用这样的解决方案，正如我们前面探讨的，使用&ndash;icc=false锁定跨容器的通讯是更好的方案。</p>
+
+	</div>
+  <footer class="article-footer clearfix">
+  
+  
+    <div class="article-tags">
+      <span></span>
+      
+      <a href="/tags/docker">docker</a>
+      
+    </div>
+  
+
+
+
+
+  <div class="article-share" id="share">
+    <div data-url="http://kooksee.github.io/blog/Docker%20%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/" data-title="Docker 网络配置" data-tsina="1816308191" class="share clearfix">
+    </div>
+  </div>
+</footer>
+
+	</article>
+  
+<section class="comment">
+  <div class="ds-thread" data-thread-key="http://kooksee.github.io/blog/Docker%20%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/"
+   data-title="Docker 网络配置" data-url="http://kooksee.github.io/blog/Docker%20%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/"></div>
+</section>
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"kooksee"};
+(function() {
+  var ds = document.createElement('script');
+  ds.type = 'text/javascript';ds.async = true;
+  ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+  ds.charset = 'UTF-8';
+  (document.getElementsByTagName('head')[0]
+  || document.getElementsByTagName('body')[0]).appendChild(ds);
+})();
+</script>
+
+
+
+
+</div>
+
+    <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+  
+
+<div class="categorieslist">
+  <p class="asidetitle">分类</p>
+  <ul>
+    
+    <li><a href="http://kooksee.github.io/categories/%e6%8a%80%e6%9c%af%e6%96%87%e7%ab%a0" title="技术文章">技术文章<sup>2</sup></a></li>
+    
+  </ul>
+</div>
+
+
+
+  
+
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+      
+			<li><a href="http://kooksee.github.io/tags/api" title="api">api<sup>2</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/api%e8%ae%be%e8%ae%a1%e8%bd%af%e4%bb%b6" title="api设计软件">api设计软件<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/bhnhbhbh" title="bhnhbhbh">bhnhbhbh<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/bools.py" title="bools.py">bools.py<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/ceo" title="ceo">ceo<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/cmd" title="cmd">cmd<sup>2</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/cmd%e6%a8%a1%e5%9d%97" title="cmd模块">cmd模块<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/consul" title="consul">consul<sup>3</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/ddd" title="ddd">ddd<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/docker" title="docker">docker<sup>13</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/docker-machine" title="docker-machine">docker-machine<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/dockerfile" title="dockerfile">dockerfile<sup>2</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/error" title="error">error<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/fish" title="fish">fish<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/flask" title="flask">flask<sup>3</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/gbk" title="gbk">gbk<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/groovy" title="groovy">groovy<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/hashlib" title="hashlib">hashlib<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/ipc" title="ipc">ipc<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/itertools" title="itertools">itertools<sup>2</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/javascript" title="javascript">javascript<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/jquery" title="jquery">jquery<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/json" title="json">json<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/knn" title="knn">knn<sup>2</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/linux" title="linux">linux<sup>2</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/lpc" title="lpc">lpc<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/makefile" title="makefile">makefile<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/mesos" title="mesos">mesos<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/mht" title="mht">mht<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/mongodb" title="mongodb">mongodb<sup>5</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/nodejs" title="nodejs">nodejs<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/openvpn" title="openvpn">openvpn<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/pipetools" title="pipetools">pipetools<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/plan_morning" title="plan_morning">plan_morning<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/postgresql" title="postgresql">postgresql<sup>2</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/pyshell" title="pyshell">pyshell<sup>2</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/python" title="python">python<sup>36</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/python%e6%a8%a1%e5%9d%97" title="python模块">python模块<sup>8</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/pyv8" title="pyv8">pyv8<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/rpc" title="rpc">rpc<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/shell" title="shell">shell<sup>2</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/shutil" title="shutil">shutil<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/simplejson" title="simplejson">simplejson<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/smb" title="smb">smb<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/software" title="software">software<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/sphinx" title="sphinx">sphinx<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/spyder" title="spyder">spyder<sup>2</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/sql" title="sql">sql<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/sqlalchemy" title="sqlalchemy">sqlalchemy<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/ssh" title="ssh">ssh<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/stringio" title="stringio">stringio<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/sublime" title="sublime">sublime<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/subprocess" title="subprocess">subprocess<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/ubuntu" title="ubuntu">ubuntu<sup>4</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/utf-8" title="utf-8">utf-8<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/webpack" title="webpack">webpack<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/wiki" title="wiki">wiki<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/wtf" title="wtf">wtf<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/zipfile" title="zipfile">zipfile<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/zmq" title="zmq">zmq<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e4%b8%89%e5%85%83%e8%a1%a8%e8%be%be%e5%bc%8f" title="三元表达式">三元表达式<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e4%b8%8b%e8%bd%bd%e5%99%a8" title="下载器">下载器<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e4%b8%ad%e7%bc%80%e8%af%ad%e6%b3%95" title="中缀语法">中缀语法<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e4%b9%a6%e7%b1%8d%e6%8e%a8%e8%8d%90" title="书籍推荐">书籍推荐<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e4%bb%a3%e7%90%86" title="代理">代理<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e4%bb%a3%e7%a0%81%e5%88%86%e6%9e%90" title="代码分析">代码分析<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e4%bb%bb%e5%8a%a1%e5%8f%91%e5%b8%83%e5%b9%b3%e5%8f%b0" title="任务发布平台">任务发布平台<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%85%bb%e7%94%9f" title="养生">养生<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%86%85%e6%a0%b8%e5%8d%87%e7%ba%a7" title="内核升级">内核升级<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%8d%9a%e5%ae%a2" title="博客">博客<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%90%8d%e8%af%8d%e5%ae%9a%e4%b9%89" title="名词定义">名词定义<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%91%bd%e4%bb%a4" title="命令">命令<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%9b%a2%e9%98%9f%e5%90%88%e4%bd%9c" title="团队合作">团队合作<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%a4%87%e5%bf%98%e5%bd%95" title="备忘录">备忘录<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%a4%9a%e8%bf%9b%e7%a8%8b%e4%b8%8b%e8%bd%bd%e5%99%a8" title="多进程下载器">多进程下载器<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%ad%a6%e4%b9%a0%e7%ac%94%e8%ae%b0" title="学习笔记">学习笔记<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%ae%9e%e4%b9%a0" title="实习">实习<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%b7%a5%e5%85%b7" title="工具">工具<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%b8%b8%e7%94%a8%e6%a8%a1%e5%9d%97" title="常用模块">常用模块<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%b9%bf%e5%91%8a" title="广告">广告<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%be%ae%e6%9c%8d%e5%8a%a1" title="微服务">微服务<sup>2</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%bf%83%e7%90%86%e5%ad%a6" title="心理学">心理学<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%bf%ab%e9%80%9f%e5%8e%9f%e5%9e%8b" title="快速原型">快速原型<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%bf%ab%e9%80%9f%e5%bc%80%e5%8f%91" title="快速开发">快速开发<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e5%bf%ab%e9%80%9f%e6%8e%92%e5%ba%8f" title="快速排序">快速排序<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%80%bb%e8%a3%81" title="总裁">总裁<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%8a%80%e6%9c%af" title="技术">技术<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%8f%92%e4%bb%b6" title="插件">插件<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%95%b0%e6%8d%ae%e5%ba%93" title="数据库">数据库<sup>2</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%95%b0%e6%8d%ae%e5%ba%93%e8%ae%a4%e8%af%81" title="数据库认证">数据库认证<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%96%87%e6%a1%a3%e8%a7%84%e8%8c%83" title="文档规范">文档规范<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%96%87%e6%a1%a3%e9%a9%b1%e5%8a%a8%e5%bc%80%e5%8f%91" title="文档驱动开发">文档驱动开发<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%96%b0%e6%a6%82%e5%bf%b5" title="新概念">新概念<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%96%b9%e4%be%bf" title="方便">方便<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%97%a5%e8%ae%b0" title="日记">日记<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%98%be%e7%a4%ba%e6%9c%8d%e5%8a%a1%e5%99%a8%e9%94%99%e8%af%af%e4%bf%a1%e6%81%af" title="显示服务器错误信息">显示服务器错误信息<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%9c%80%e4%bd%b3%e6%93%8d%e4%bd%9c" title="最佳操作">最佳操作<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%9c%ba%e6%a2%b0%e5%ad%a6%e4%b9%a0" title="机械学习">机械学习<sup>2</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%9d%83%e9%99%90" title="权限">权限<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%af%95%e4%b8%9a%e8%ae%be%e8%ae%a1" title="毕业设计">毕业设计<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%b4%bb%e5%8a%a8" title="活动">活动<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e6%b7%b7%e8%9b%8b%e9%80%bb%e8%be%91" title="混蛋逻辑">混蛋逻辑<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e7%83%ad%e7%82%b9%e9%97%ae%e9%a2%98" title="热点问题">热点问题<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e7%88%ac%e8%99%ab" title="爬虫">爬虫<sup>4</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e7%ae%97%e6%b3%95" title="算法">算法<sup>4</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e7%ae%a1%e9%81%93" title="管道">管道<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e7%b1%bb%e5%ba%93%e6%8e%a8%e8%8d%90" title="类库推荐">类库推荐<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e7%b3%bb%e7%bb%9f%e5%91%bd%e4%bb%a4" title="系统命令">系统命令<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e7%bc%96%e7%a0%81" title="编码">编码<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e7%bc%96%e7%a8%8b%e8%a7%84%e8%8c%83" title="编程规范">编程规范<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e7%bc%96%e7%a8%8b%e9%a3%8e%e6%a0%bc" title="编程风格">编程风格<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e7%bd%91%e7%bb%9c%e9%93%be%e6%8e%a5" title="网络链接">网络链接<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e8%81%8a%e5%a4%a9%e5%ae%a4" title="聊天室">聊天室<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e8%85%b9%e5%bc%8f%e5%91%bc%e5%90%b8" title="腹式呼吸">腹式呼吸<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e8%91%a3%e4%ba%8b%e9%95%bf" title="董事长">董事长<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e8%a1%a8%e5%8d%95%e9%aa%8c%e8%af%81" title="表单验证">表单验证<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e8%af%b7%e6%b1%82%e9%94%99%e8%af%af" title="请求错误">请求错误<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e8%bf%9b%e7%a8%8b%e9%80%9a%e4%bf%a1" title="进程通信">进程通信<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e9%82%bb%e9%87%8c%e9%97%ae%e9%a2%98" title="邻里问题">邻里问题<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e9%94%99%e8%af%af%e9%9b%86%e9%94%a6" title="错误集锦">错误集锦<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e9%97%ad%e5%8c%85" title="闭包">闭包<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e9%9c%80%e6%b1%82%e5%88%86%e6%9e%90" title="需求分析">需求分析<sup>1</sup></a></li>
+      
+			<li><a href="http://kooksee.github.io/tags/%e9%9d%a2%e8%af%95" title="面试">面试<sup>1</sup></a></li>
+      
+		</ul>
+</div>
+
+
+
+  
+  <div class="archiveslist">
+    <p class="asidetitle">归档</p>
+    <ul class="archive-list">
+      
+      
+      <li class="archive-list-item">
+        <a class="archive-list-link" href="http://kooksee.github.io/post/#2015-01">2015年01月</a><span class="archive-list-count">1</span>
+      </li>
+      
+      
+      <li class="archive-list-item">
+        <a class="archive-list-link" href="http://kooksee.github.io/post/#0001-01">0001年01月</a><span class="archive-list-count">108</span>
+      </li>
+      
+    </ul>
+
+  </div>
+
+
+  
+
+<div class="tagcloudlist">
+  <p class="asidetitle">标签云</p>
+  <div class="tagcloudlist clearfix">
+    
+    <a href="http://kooksee.github.io/tags/api" style="font-size: 12px;">api</a>
+    
+    <a href="http://kooksee.github.io/tags/api%e8%ae%be%e8%ae%a1%e8%bd%af%e4%bb%b6" style="font-size: 12px;">api设计软件</a>
+    
+    <a href="http://kooksee.github.io/tags/bhnhbhbh" style="font-size: 12px;">bhnhbhbh</a>
+    
+    <a href="http://kooksee.github.io/tags/bools.py" style="font-size: 12px;">bools.py</a>
+    
+    <a href="http://kooksee.github.io/tags/ceo" style="font-size: 12px;">ceo</a>
+    
+    <a href="http://kooksee.github.io/tags/cmd" style="font-size: 12px;">cmd</a>
+    
+    <a href="http://kooksee.github.io/tags/cmd%e6%a8%a1%e5%9d%97" style="font-size: 12px;">cmd模块</a>
+    
+    <a href="http://kooksee.github.io/tags/consul" style="font-size: 12px;">consul</a>
+    
+    <a href="http://kooksee.github.io/tags/ddd" style="font-size: 12px;">ddd</a>
+    
+    <a href="http://kooksee.github.io/tags/docker" style="font-size: 12px;">docker</a>
+    
+    <a href="http://kooksee.github.io/tags/docker-machine" style="font-size: 12px;">docker-machine</a>
+    
+    <a href="http://kooksee.github.io/tags/dockerfile" style="font-size: 12px;">dockerfile</a>
+    
+    <a href="http://kooksee.github.io/tags/error" style="font-size: 12px;">error</a>
+    
+    <a href="http://kooksee.github.io/tags/fish" style="font-size: 12px;">fish</a>
+    
+    <a href="http://kooksee.github.io/tags/flask" style="font-size: 12px;">flask</a>
+    
+    <a href="http://kooksee.github.io/tags/gbk" style="font-size: 12px;">gbk</a>
+    
+    <a href="http://kooksee.github.io/tags/groovy" style="font-size: 12px;">groovy</a>
+    
+    <a href="http://kooksee.github.io/tags/hashlib" style="font-size: 12px;">hashlib</a>
+    
+    <a href="http://kooksee.github.io/tags/ipc" style="font-size: 12px;">ipc</a>
+    
+    <a href="http://kooksee.github.io/tags/itertools" style="font-size: 12px;">itertools</a>
+    
+    <a href="http://kooksee.github.io/tags/javascript" style="font-size: 12px;">javascript</a>
+    
+    <a href="http://kooksee.github.io/tags/jquery" style="font-size: 12px;">jquery</a>
+    
+    <a href="http://kooksee.github.io/tags/json" style="font-size: 12px;">json</a>
+    
+    <a href="http://kooksee.github.io/tags/knn" style="font-size: 12px;">knn</a>
+    
+    <a href="http://kooksee.github.io/tags/linux" style="font-size: 12px;">linux</a>
+    
+    <a href="http://kooksee.github.io/tags/lpc" style="font-size: 12px;">lpc</a>
+    
+    <a href="http://kooksee.github.io/tags/makefile" style="font-size: 12px;">makefile</a>
+    
+    <a href="http://kooksee.github.io/tags/mesos" style="font-size: 12px;">mesos</a>
+    
+    <a href="http://kooksee.github.io/tags/mht" style="font-size: 12px;">mht</a>
+    
+    <a href="http://kooksee.github.io/tags/mongodb" style="font-size: 12px;">mongodb</a>
+    
+    <a href="http://kooksee.github.io/tags/nodejs" style="font-size: 12px;">nodejs</a>
+    
+    <a href="http://kooksee.github.io/tags/openvpn" style="font-size: 12px;">openvpn</a>
+    
+    <a href="http://kooksee.github.io/tags/pipetools" style="font-size: 12px;">pipetools</a>
+    
+    <a href="http://kooksee.github.io/tags/plan_morning" style="font-size: 12px;">plan_morning</a>
+    
+    <a href="http://kooksee.github.io/tags/postgresql" style="font-size: 12px;">postgresql</a>
+    
+    <a href="http://kooksee.github.io/tags/pyshell" style="font-size: 12px;">pyshell</a>
+    
+    <a href="http://kooksee.github.io/tags/python" style="font-size: 12px;">python</a>
+    
+    <a href="http://kooksee.github.io/tags/python%e6%a8%a1%e5%9d%97" style="font-size: 12px;">python模块</a>
+    
+    <a href="http://kooksee.github.io/tags/pyv8" style="font-size: 12px;">pyv8</a>
+    
+    <a href="http://kooksee.github.io/tags/rpc" style="font-size: 12px;">rpc</a>
+    
+    <a href="http://kooksee.github.io/tags/shell" style="font-size: 12px;">shell</a>
+    
+    <a href="http://kooksee.github.io/tags/shutil" style="font-size: 12px;">shutil</a>
+    
+    <a href="http://kooksee.github.io/tags/simplejson" style="font-size: 12px;">simplejson</a>
+    
+    <a href="http://kooksee.github.io/tags/smb" style="font-size: 12px;">smb</a>
+    
+    <a href="http://kooksee.github.io/tags/software" style="font-size: 12px;">software</a>
+    
+    <a href="http://kooksee.github.io/tags/sphinx" style="font-size: 12px;">sphinx</a>
+    
+    <a href="http://kooksee.github.io/tags/spyder" style="font-size: 12px;">spyder</a>
+    
+    <a href="http://kooksee.github.io/tags/sql" style="font-size: 12px;">sql</a>
+    
+    <a href="http://kooksee.github.io/tags/sqlalchemy" style="font-size: 12px;">sqlalchemy</a>
+    
+    <a href="http://kooksee.github.io/tags/ssh" style="font-size: 12px;">ssh</a>
+    
+    <a href="http://kooksee.github.io/tags/stringio" style="font-size: 12px;">stringio</a>
+    
+    <a href="http://kooksee.github.io/tags/sublime" style="font-size: 12px;">sublime</a>
+    
+    <a href="http://kooksee.github.io/tags/subprocess" style="font-size: 12px;">subprocess</a>
+    
+    <a href="http://kooksee.github.io/tags/ubuntu" style="font-size: 12px;">ubuntu</a>
+    
+    <a href="http://kooksee.github.io/tags/utf-8" style="font-size: 12px;">utf-8</a>
+    
+    <a href="http://kooksee.github.io/tags/webpack" style="font-size: 12px;">webpack</a>
+    
+    <a href="http://kooksee.github.io/tags/wiki" style="font-size: 12px;">wiki</a>
+    
+    <a href="http://kooksee.github.io/tags/wtf" style="font-size: 12px;">wtf</a>
+    
+    <a href="http://kooksee.github.io/tags/zipfile" style="font-size: 12px;">zipfile</a>
+    
+    <a href="http://kooksee.github.io/tags/zmq" style="font-size: 12px;">zmq</a>
+    
+    <a href="http://kooksee.github.io/tags/%e4%b8%89%e5%85%83%e8%a1%a8%e8%be%be%e5%bc%8f" style="font-size: 12px;">三元表达式</a>
+    
+    <a href="http://kooksee.github.io/tags/%e4%b8%8b%e8%bd%bd%e5%99%a8" style="font-size: 12px;">下载器</a>
+    
+    <a href="http://kooksee.github.io/tags/%e4%b8%ad%e7%bc%80%e8%af%ad%e6%b3%95" style="font-size: 12px;">中缀语法</a>
+    
+    <a href="http://kooksee.github.io/tags/%e4%b9%a6%e7%b1%8d%e6%8e%a8%e8%8d%90" style="font-size: 12px;">书籍推荐</a>
+    
+    <a href="http://kooksee.github.io/tags/%e4%bb%a3%e7%90%86" style="font-size: 12px;">代理</a>
+    
+    <a href="http://kooksee.github.io/tags/%e4%bb%a3%e7%a0%81%e5%88%86%e6%9e%90" style="font-size: 12px;">代码分析</a>
+    
+    <a href="http://kooksee.github.io/tags/%e4%bb%bb%e5%8a%a1%e5%8f%91%e5%b8%83%e5%b9%b3%e5%8f%b0" style="font-size: 12px;">任务发布平台</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%85%bb%e7%94%9f" style="font-size: 12px;">养生</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%86%85%e6%a0%b8%e5%8d%87%e7%ba%a7" style="font-size: 12px;">内核升级</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%8d%9a%e5%ae%a2" style="font-size: 12px;">博客</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%90%8d%e8%af%8d%e5%ae%9a%e4%b9%89" style="font-size: 12px;">名词定义</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%91%bd%e4%bb%a4" style="font-size: 12px;">命令</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%9b%a2%e9%98%9f%e5%90%88%e4%bd%9c" style="font-size: 12px;">团队合作</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%a4%87%e5%bf%98%e5%bd%95" style="font-size: 12px;">备忘录</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%a4%9a%e8%bf%9b%e7%a8%8b%e4%b8%8b%e8%bd%bd%e5%99%a8" style="font-size: 12px;">多进程下载器</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%ad%a6%e4%b9%a0%e7%ac%94%e8%ae%b0" style="font-size: 12px;">学习笔记</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%ae%9e%e4%b9%a0" style="font-size: 12px;">实习</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%b7%a5%e5%85%b7" style="font-size: 12px;">工具</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%b8%b8%e7%94%a8%e6%a8%a1%e5%9d%97" style="font-size: 12px;">常用模块</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%b9%bf%e5%91%8a" style="font-size: 12px;">广告</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%be%ae%e6%9c%8d%e5%8a%a1" style="font-size: 12px;">微服务</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%bf%83%e7%90%86%e5%ad%a6" style="font-size: 12px;">心理学</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%bf%ab%e9%80%9f%e5%8e%9f%e5%9e%8b" style="font-size: 12px;">快速原型</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%bf%ab%e9%80%9f%e5%bc%80%e5%8f%91" style="font-size: 12px;">快速开发</a>
+    
+    <a href="http://kooksee.github.io/tags/%e5%bf%ab%e9%80%9f%e6%8e%92%e5%ba%8f" style="font-size: 12px;">快速排序</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%80%bb%e8%a3%81" style="font-size: 12px;">总裁</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%8a%80%e6%9c%af" style="font-size: 12px;">技术</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%8f%92%e4%bb%b6" style="font-size: 12px;">插件</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%95%b0%e6%8d%ae%e5%ba%93" style="font-size: 12px;">数据库</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%95%b0%e6%8d%ae%e5%ba%93%e8%ae%a4%e8%af%81" style="font-size: 12px;">数据库认证</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%96%87%e6%a1%a3%e8%a7%84%e8%8c%83" style="font-size: 12px;">文档规范</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%96%87%e6%a1%a3%e9%a9%b1%e5%8a%a8%e5%bc%80%e5%8f%91" style="font-size: 12px;">文档驱动开发</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%96%b0%e6%a6%82%e5%bf%b5" style="font-size: 12px;">新概念</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%96%b9%e4%be%bf" style="font-size: 12px;">方便</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%97%a5%e8%ae%b0" style="font-size: 12px;">日记</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%98%be%e7%a4%ba%e6%9c%8d%e5%8a%a1%e5%99%a8%e9%94%99%e8%af%af%e4%bf%a1%e6%81%af" style="font-size: 12px;">显示服务器错误信息</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%9c%80%e4%bd%b3%e6%93%8d%e4%bd%9c" style="font-size: 12px;">最佳操作</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%9c%ba%e6%a2%b0%e5%ad%a6%e4%b9%a0" style="font-size: 12px;">机械学习</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%9d%83%e9%99%90" style="font-size: 12px;">权限</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%af%95%e4%b8%9a%e8%ae%be%e8%ae%a1" style="font-size: 12px;">毕业设计</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%b4%bb%e5%8a%a8" style="font-size: 12px;">活动</a>
+    
+    <a href="http://kooksee.github.io/tags/%e6%b7%b7%e8%9b%8b%e9%80%bb%e8%be%91" style="font-size: 12px;">混蛋逻辑</a>
+    
+    <a href="http://kooksee.github.io/tags/%e7%83%ad%e7%82%b9%e9%97%ae%e9%a2%98" style="font-size: 12px;">热点问题</a>
+    
+    <a href="http://kooksee.github.io/tags/%e7%88%ac%e8%99%ab" style="font-size: 12px;">爬虫</a>
+    
+    <a href="http://kooksee.github.io/tags/%e7%ae%97%e6%b3%95" style="font-size: 12px;">算法</a>
+    
+    <a href="http://kooksee.github.io/tags/%e7%ae%a1%e9%81%93" style="font-size: 12px;">管道</a>
+    
+    <a href="http://kooksee.github.io/tags/%e7%b1%bb%e5%ba%93%e6%8e%a8%e8%8d%90" style="font-size: 12px;">类库推荐</a>
+    
+    <a href="http://kooksee.github.io/tags/%e7%b3%bb%e7%bb%9f%e5%91%bd%e4%bb%a4" style="font-size: 12px;">系统命令</a>
+    
+    <a href="http://kooksee.github.io/tags/%e7%bc%96%e7%a0%81" style="font-size: 12px;">编码</a>
+    
+    <a href="http://kooksee.github.io/tags/%e7%bc%96%e7%a8%8b%e8%a7%84%e8%8c%83" style="font-size: 12px;">编程规范</a>
+    
+    <a href="http://kooksee.github.io/tags/%e7%bc%96%e7%a8%8b%e9%a3%8e%e6%a0%bc" style="font-size: 12px;">编程风格</a>
+    
+    <a href="http://kooksee.github.io/tags/%e7%bd%91%e7%bb%9c%e9%93%be%e6%8e%a5" style="font-size: 12px;">网络链接</a>
+    
+    <a href="http://kooksee.github.io/tags/%e8%81%8a%e5%a4%a9%e5%ae%a4" style="font-size: 12px;">聊天室</a>
+    
+    <a href="http://kooksee.github.io/tags/%e8%85%b9%e5%bc%8f%e5%91%bc%e5%90%b8" style="font-size: 12px;">腹式呼吸</a>
+    
+    <a href="http://kooksee.github.io/tags/%e8%91%a3%e4%ba%8b%e9%95%bf" style="font-size: 12px;">董事长</a>
+    
+    <a href="http://kooksee.github.io/tags/%e8%a1%a8%e5%8d%95%e9%aa%8c%e8%af%81" style="font-size: 12px;">表单验证</a>
+    
+    <a href="http://kooksee.github.io/tags/%e8%af%b7%e6%b1%82%e9%94%99%e8%af%af" style="font-size: 12px;">请求错误</a>
+    
+    <a href="http://kooksee.github.io/tags/%e8%bf%9b%e7%a8%8b%e9%80%9a%e4%bf%a1" style="font-size: 12px;">进程通信</a>
+    
+    <a href="http://kooksee.github.io/tags/%e9%82%bb%e9%87%8c%e9%97%ae%e9%a2%98" style="font-size: 12px;">邻里问题</a>
+    
+    <a href="http://kooksee.github.io/tags/%e9%94%99%e8%af%af%e9%9b%86%e9%94%a6" style="font-size: 12px;">错误集锦</a>
+    
+    <a href="http://kooksee.github.io/tags/%e9%97%ad%e5%8c%85" style="font-size: 12px;">闭包</a>
+    
+    <a href="http://kooksee.github.io/tags/%e9%9c%80%e6%b1%82%e5%88%86%e6%9e%90" style="font-size: 12px;">需求分析</a>
+    
+    <a href="http://kooksee.github.io/tags/%e9%9d%a2%e8%af%95" style="font-size: 12px;">面试</a>
+    
+  </div>
+</div>
+
+
+
+  
+
+</aside>
+</div>
+
+  </div>
+  <footer>
+<div id="footer" >
+
+  
+  <div class="line">
+    <span></span>
+    <div style='background:no-repeat url("http://kooksee.github.io/img/author.jpg") left top;-webkit-background-size:6.875em 6.875em;-moz-background-size:6.875em 6.875em;background-size:6.875em 6.875em;' class="author" ></div>
+  </div>
+  
+
+
+  <div class="social-font clearfix">
+    
+    <a href="http://weibo.com/kooksee" target="_blank" title="weibo"></a>
+    
+    
+    <a href="https://twitter.com/kooksee" target="_blank" title="twitter"></a>
+    
+    
+    <a href="https://github.com/kooksee" target="_blank" title="github"></a>
+    
+    
+    <a href="https://www.facebook.com/kooksee" target="_blank" title="facebook"></a>
+    
+    
+    <a href="https://www.linkedin.com/kooksee" target="_blank" title="linkedin"></a>
+    
+  </div>
+  <p class="copyright">Powered by <a href="http://gohugo.io" target="_blank" title="hugo">hugo</a> and Theme by <a href="https://github.com/coderzh/hugo-pacman-theme" target="_blank" title="hugo-pacman-theme">hugo-pacman-theme</a> © 2016
+    
+    <a href="http://kooksee.github.io/" target="_blank" title="kooksee">kooksee</a>
+    
+  </p>
+</div>
+</footer>
+  <script src="http://kooksee.github.io/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+done = false;
+$(document).ready(function(){
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize();
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  $('form.search').on('submit', function (event) {
+    if (false === done) {
+      event.preventDefault();
+      var orgVal = $(this).find('#search').val();
+      $(this).find('#search').val('site:http:\/\/kooksee.github.io\/} ' + orgVal);
+      done = true;
+      $(this).submit();
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});
+</script>
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-10147768-2', 'auto');
+  ga('send', 'pageview');
+  $('#messagesbsb').remove();
+</script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,508 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Flask on 百里求一的博客</title>
+        <link>http://kooksee.github.io/tags/flask/</link>
+        <language>zh-CN</language>
+        <author>CoderZh</author>
+        <rights>Copyright (c) 2015, CoderZh; all rights reserved.</rights>
+        <updated>Mon, 01 Jan 0001 00:00:00 UTC</updated>
+        
+        <item>
+            <title>flask 后台表单验证模块</title>
+            <link>http://kooksee.github.io/blog/encoding=utf-8/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/encoding=utf-8/</guid>
+            <description>&lt;blockquote&gt;
+&lt;p&gt;我不想直接用flask的wtf模块，太大，功能太多，用不了。但后台也不能不做验证吧，我比较懒，不想一行一行写代码验证，所以就写了一个验证模块，对于小项目也够用了&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# encoding=utf-8
+
+# 这是一个简单的后台验证框架,因为前台的话要用ajax处理,那么后台就不需要复杂的表单处理了
+
+
+# 基础表单类,具体验证表单继承它
+from flask import session
+
+
+class BaseForm(object):
+    def __init__(self,form=None):
+
+        self.form = form
+        self.fields = []
+        self.errors = []  # 错误信息存放的地方
+        self.init()
+
+    def init(self):
+        if not self.form:
+            return False
+
+        # 给表单赋值
+        for field_name in dir(self):
+            field = self.__getattribute__(field_name)
+            if isinstance(field,Field):
+                if field_name in self.form:
+                    field.data = self.form[field_name]
+                    self.fields.append((field_name,field.validate))
+
+        # 验证自定义的以validate_开头的方法
+        for validate_method in dir(self):
+            if validate_method.startswith(&#39;validate_&#39;):
+                self.fields.append((validate_method,self.__getattribute__(validate_method)))
+
+
+    # 验证入口
+    def validate(self):
+        status = True
+        for field_name,validate_method in self.fields:
+            status = validate_method() and status
+            if not status:
+                print field_name,status
+                return False
+        return status
+
+# 字段类,主要提供字段的各种验证和约束
+class Field(object):
+    def __init__(self,label=None,type=&#39;text&#39;,validators={},description=None,data=&#39;&#39;):
+        self.data = data
+        self.label = label
+        self.type = type
+        self.validators = validators
+        self.description = description
+
+    # 验证入口,验证该字段所有的约束条件
+    def validate(self):
+        status = True
+        for method_name,param in self.validators.items():
+            status = self.__getattribute__(method_name)(param) and status
+            if not status:
+                print method_name,status
+                return True
+        return status
+
+    # 验证数据是否复合正则表达式
+    def __rule(self,re_str):
+        import re
+
+        pattern = re.compile(re_str)
+        match = pattern.match(self.data)
+        if match:
+            return True
+        return False
+
+    # 对开提供的正则表达式模块
+    def regex(self,re_str):
+        return self.__rule(re_str)
+
+    # 是否为数字
+    def digits(self,status=True):
+        return self.__rule(r&amp;quot;\d+&amp;quot;)
+
+    # 是否是链接
+    def url(self,status=True):
+        re_str = r&amp;quot;^(https?|s?ftp):\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&amp;amp;&#39;\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&amp;amp;&#39;\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&amp;amp;&#39;\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&amp;amp;&#39;\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&amp;amp;&#39;\(\)\*\+,;=]|:|@)|\/|\?)*)?$&amp;quot;
+        return self.__rule(re_str)
+
+    # 是否是邮箱
+    def email(self,status=True):
+        re_str = r&amp;quot;^[a-zA-Z0-9.!#$%&amp;amp;&#39;*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$&amp;quot;
+        return self.__rule(re_str)
+
+    # 是否为空
+    def not_null(self,status):
+        if not status:
+            return True
+        if not self.data:
+            return False
+        if hasattr(self.data,&#39;replace&#39;) and len(self.data.replace(&#39; &#39;,&#39;&#39;)) &amp;lt; 0:
+            return False
+        if len(self.data) == 0:
+            return False
+        return True
+
+    # 最小长度
+    def min_length(self,min=-1):
+        return self.not_null(True) and len(self.data) &amp;gt;= min
+
+    # 长度范围
+    def length_range(self,range=[]):
+        if self.not_null(True) and len(range) == 2:
+            data_length = len(self.data)
+            return data_length &amp;gt;= range[0] and data_length &amp;lt;= range[1]
+        return False
+
+    # 最大长度
+    def max_length(self,max):
+        return self.not_null(True) and len(self.data) &amp;lt;= max
+
+    # 最小值
+    def min(self,min):
+        try:
+            return int(self.data) &amp;gt;= min
+        except Exception,e:
+            print e
+            return False
+
+    # 最大值
+    def max(self,max):
+        try:
+            return int(self.data) &amp;lt;= max
+        except Exception,e:
+            print e
+            return False
+
+    # 值范围
+    def data_range(self,range=[]):
+        try:
+            data = int(self.data)
+            if len(range) == 2:
+                return data &amp;gt;= range[0] and data &amp;lt;= range[1]
+            return False
+        except Exception,e:
+            print e
+            return False
+
+    # 是否等于field
+    def equal_to(self,field):
+        return self.data == field.data
+
+    # 是否为规定的值
+    def choices(self,args=[]):
+        return self.data in args
+
+    # 检查多选框
+    def checked(self,status=True):
+        if not status:
+            return True
+        return self.data in [1,&#39;y&#39;,&#39;yes&#39;,&#39;true&#39;]
+if __name__ == &#39;__main__&#39;:
+    class Test(BaseForm):
+        name = Field()
+        password = Field()
+        email = Field()
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>flask-sqlalchemy 关系表简单操作</title>
+            <link>http://kooksee.github.io/blog/flask-sqlalchemy%20%E5%85%B3%E7%B3%BB%E8%A1%A8%E7%AE%80%E5%8D%95%E6%93%8D%E4%BD%9C/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/flask-sqlalchemy%20%E5%85%B3%E7%B3%BB%E8%A1%A8%E7%AE%80%E5%8D%95%E6%93%8D%E4%BD%9C/</guid>
+            <description>&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;from flask import Flask
+from flask.ext.sqlalchemy import SQLAlchemy
+from flask.ext.migrate import Migrate, MigrateCommand
+from flask.ext.script import Manager
+
+
+app = Flask(__name__)
+app.config[&#39;SQLALCHEMY_DATABASE_URI&#39;] = &#39;sqlite:///test.db&#39;
+db = SQLAlchemy(app)
+
+migrate = Migrate(app, db)
+
+manager = Manager(app)
+manager.add_command(&#39;db&#39;, MigrateCommand)
+
+
+class Post(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(80))
+
+    category_id = db.Column(db.Integer, db.ForeignKey(&#39;category.id&#39;))
+    category = db.relationship(&#39;Category&#39;,
+                               backref=db.backref(&#39;posts&#39;, lazy=&#39;dynamic&#39;))
+
+
+class Category(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    password = db.Column(db.String(50))
+
+
+@manager.command
+def run():
+    app.debug = True
+    app.run()
+
+
+if __name__ == &#39;__main__&#39;:
+    manager.run()
+
+# test
+# c1 = Category(password = &#39;pass1&#39;)
+# p1 = Post(name=&#39;name1&#39;,category=c1)
+# db.session.add(p1)
+# db.session.commit()
+#
+# p1 = db.session.query(Category).one()
+# print p1.id == 1
+# print p1.posts.one().name == &#39;name1&#39;
+# print p1.posts.all()[0].name ==&#39;name1&#39;
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>python表单校验摘录</title>
+            <link>http://kooksee.github.io/blog/python%E8%A1%A8%E5%8D%95%E6%A0%A1%E9%AA%8C%E6%91%98%E5%BD%95/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/python%E8%A1%A8%E5%8D%95%E6%A0%A1%E9%AA%8C%E6%91%98%E5%BD%95/</guid>
+            <description>&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# encoding=utf-8
+from app.models import Student
+from flask import g
+
+import re
+from flask.ext.wtf import Form
+from wtforms import StringField, RadioField, PasswordField, TextAreaField, BooleanField, DateField, ValidationError, \
+    IntegerField
+from wtforms.validators import DataRequired, Length, Regexp, Email, EqualTo
+from wtforms.widgets import ListWidget, HTMLString
+
+
+class BSListWidget(ListWidget):
+    def __call__(self, field, **kwargs):
+        kwargs.setdefault(&#39;id&#39;, field.id)
+        html = &amp;quot;&amp;quot;
+        for subfield in field:
+            html += u&#39;&amp;lt;label class=&amp;quot;radio-inline&amp;quot;&amp;gt; %s%s &amp;lt;/label&amp;gt;&#39; % (subfield(), subfield.label.text)
+        return HTMLString(html)
+
+
+class Fields(object):
+    notnull = u&#39;该项输入不能为空&#39;
+
+    def get_len_str(min=None, max=None):
+        if min and not max:
+            return u&amp;quot;该项输入的最小长度必须是%d&amp;quot; % min
+        elif max and not min:
+            return u&amp;quot;该项输入的最大长度必须是%d&amp;quot; % max
+        else:
+            return u&#39;该输入的长度必须大于%d,小于%d&#39; % (min, max)
+
+    username = StringField(label=u&#39;请输入您的用户名&#39;,
+                           validators=[DataRequired(message=notnull),
+                                       Length(min=0, max=15, message=get_len_str(0, 16)),
+                                       ])
+
+    password = PasswordField(label=u&#39;请输入密码&#39;, description=u&#39;请输入密码&#39;,
+                             validators=[DataRequired(message=notnull),
+                                         Length(min=0, max=60, message=get_len_str(min=0, max=61)),
+                                         ])
+    confirm_password = PasswordField(label=u&#39;请确认密码&#39;,
+                                     description=u&#39;请确认密码&#39;,
+
+                                     validators=[DataRequired(message=notnull),
+                                                 Length(min=5, max=60, message=get_len_str(min=4, max=61)),
+                                                 EqualTo(u&#39;confirm_password&#39;, message=u&#39;两次输入的密码不一致&#39;), ]
+                                     )
+    student_amount = StringField(label=u&#39;请输入您指导的学生数量&#39;,
+                                 validators=[Regexp(re.compile(r&amp;quot;\d&amp;quot;))])
+
+    is_active = RadioField(label=u&#39;是否激活账户&#39;,
+                           coerce=int,
+                           choices=[(0, u&#39;否&#39;), (1, u&#39;是&#39;)],
+                           default=0,
+                           widget=BSListWidget())
+
+    notice = TextAreaField(label=u&#39;请填写对学生的通知&#39;)
+
+    attachment = StringField(label=u&#39;添加附加&#39;,
+                             validators=[Length(min=0, max=32, message=get_len_str(min=0, max=33))], )
+
+    is_comment_teacher = RadioField(label=u&#39;是否有评价功能&#39;,
+                                    coerce=int,
+                                    choices=[(0, u&#39;否&#39;), (1, u&#39;是&#39;)],
+                                    default=0,
+                                    widget=BSListWidget())
+
+    student_name = StringField(label=u&#39;请输入您的姓名&#39;,
+                               description=&#39;&#39;,
+                               validators=[DataRequired(message=notnull),
+                                           Length(min=0, max=15, message=get_len_str(0, 16)),
+                                           ])
+
+    sex = RadioField(label=u&#39;您的性别&#39;,
+                     coerce=int,
+                     choices=[(0, u&#39;男&#39;), (1, u&#39;女&#39;)],
+                     default=0,
+                     widget=BSListWidget())
+
+    user_type = RadioField(label=u&#39;您是&#39;,
+                           coerce=str,
+                           choices=[(u&#39;student&#39;, u&#39;学生&#39;), (u&#39;teacher&#39;, u&#39;老师&#39;), (u&#39;admin&#39;, u&#39;管理员&#39;)],
+                           default=u&#39;student&#39;,
+                           widget=BSListWidget())
+
+    mark = StringField(label=u&#39;您的分数&#39;,
+                       default=0,
+                       validators=[DataRequired(message=notnull),
+                                   Length(min=0, max=100, message=get_len_str(0, 101)),
+                                   ])
+    comment = TextAreaField(label=u&#39;请填写您对学生的评语&#39;,
+                            validators=[
+                                Length(min=0, max=128, message=get_len_str(0, 129)),
+                            ])
+
+    title = StringField(label=u&#39;请填写毕业设计的题目&#39;,
+                        validators=[
+                            Length(min=0, max=128, message=get_len_str(0, 129)),
+                        ])
+    description = TextAreaField(label=u&#39;请填写毕业设计的描述&#39;)
+
+    task_start_date = DateField(label=u&#39;开始时间&#39;)
+    task_end_date = DateField(label=u&#39;结束时间&#39;)
+
+    comment_start_date = DateField(label=u&#39;开始时间&#39;)
+    comment_end_date = DateField(label=u&#39;结束时间&#39;)
+
+
+class LoginForm(Form):
+    username = Fields.username
+    password = Fields.password
+
+    user_type = Fields.user_type
+
+    remember_me = BooleanField(label=u&#39;记住我&#39;, default=u&#39;y&#39;)
+
+    errors = {}
+
+
+    def validate_fields(self):
+        status = True
+        status = status and self.username.validate(self)
+        status = status and self.username.validate(self)
+        self.password.validate()
+
+        # def validate(self):
+        self._fields
+        self.validate_on_submit()
+        return self.username.validate(self)
+
+        # def validate_username(self, field):
+        # user = Student.get_user(field.data)
+        # if not user:
+        # print &#39;not user&#39;
+        # self.errors[&#39;username&#39;] = u&#39;用户名不存在&#39;
+        # raise ValidationError(message=u&#39;该用户名已被注册&#39;)
+        # else:
+        # print &#39;user&#39;
+        # return True
+
+        #
+        # def validate_password(self,field):
+        # if g.user:
+        # if field.data != g.user.username:
+        # field.errors.append(message=u&#39;用户密码不正确&#39;)
+        # return False
+        #
+        # def validate_user_type(self, field):
+        # print field.data
+        #
+        # def validate_remember_me(self,field):
+        # if field.data:
+        # print field.data
+
+
+class StuInfo(Form):
+    username = Fields.username
+    student_name = Fields.student_name
+    sex = Fields.sex
+    attachment = Fields.attachment
+    mark = Fields.mark
+    comment = Fields.comment
+
+
+class BaseForm(object):
+    def __init__(self, form):
+        self.username = Field(label=u&#39;用户名&#39;, type=&#39;text&#39;, validators={&#39;min_length&#39;: 5})
+
+        for field_name, data in form.items():
+            getattr(self, field_name).data = data
+
+    def validate(self):
+        status = True
+        for field_name in self.__dict__:
+            status = status and getattr(self, field_name).validate()
+        return status
+
+
+class Field(object):
+    def __init__(self, label=None, type=&#39;text&#39;, validators={}, description=None, data=&#39;&#39;):
+        self.data = data
+        self.label = label
+        self.type = type
+        self.validators = validators
+        self.description = description
+
+    def validate(self):
+        status = True
+        for method_name, param in self.validators.items():
+            print method_name, param
+            status = status and getattr(self, method_name)(param)
+        return status
+
+    def is_null(self, status):
+        if status:
+            return True
+        if not self.data:
+            return False
+        if hasattr(self.data, &#39;replace&#39;) and len(self.data.replace(&#39; &#39;, &#39;&#39;)) &amp;gt; 0:
+            return False
+        if len(self.data) == 0:
+            return False
+        return True
+
+    def min_length(self, min=-1):
+        if not self.is_null(False) and len(self.data) &amp;lt; min:
+            return False
+        return True
+
+    def max_length(self, max):
+        if not self.is_null(False) and len(self.data) &amp;gt; max:
+            return False
+        return True
+
+    def min(self, min):
+        try:
+            if int(self.data) &amp;lt; min:
+                return False
+            return True
+        except Exception, e:
+            print e
+            return False
+
+    def max(self, max):
+        try:
+            if int(self.data) &amp;gt; max:
+                return False
+            return True
+        except Exception, e:
+            print e
+            return False
+
+    def equal_to(self, data):
+        if self.data != data:
+            return False
+        return True
+
+    def select_from(self, *args):
+        if self.data not in args:
+            return False
+        return True
+
+
+if __name__ == &#39;__main__&#39;:
+    b = BaseForm({&#39;username&#39;: &#39;o&#39;})
+    print b.validate()
+    print &#39;ok&#39;
+
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

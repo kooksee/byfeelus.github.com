@@ -1,0 +1,2419 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Docker on 百里求一的博客</title>
+        <link>http://kooksee.github.io/tags/docker/</link>
+        <language>zh-CN</language>
+        <author>CoderZh</author>
+        <rights>Copyright (c) 2015, CoderZh; all rights reserved.</rights>
+        <updated>Mon, 01 Jan 0001 00:00:00 UTC</updated>
+        
+        <item>
+            <title>Docker 2 -- 关于Dockerfile</title>
+            <link>http://kooksee.github.io/blog/Docker%202%20--%20%E5%85%B3%E4%BA%8EDockerf/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/Docker%202%20--%20%E5%85%B3%E4%BA%8EDockerf/</guid>
+            <description>&lt;blockquote&gt;
+&lt;p&gt;Dockerfile是一个镜像的表示，可以通过Dockerfile来描述构建镜像的步骤，并自动构建一个容器&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;所有的 Dockerfile 命令格式都是:
+INSTRUCTION arguments&lt;/p&gt;
+
+&lt;p&gt;虽然指令忽略大小写，但是建议使用大写。&lt;/p&gt;
+
+&lt;p&gt;##FROM 命令
+FROM &lt;image&gt;
+或
+FROM &lt;image&gt;:&lt;tag&gt;&lt;/p&gt;
+
+&lt;p&gt;这个设置基本的镜像，为后续的命令使用，所以应该作为Dockerfile的第一条指令。&lt;/p&gt;
+
+&lt;p&gt;比如:
+FROM ubuntu
+如果没有指定 tag ，则默认tag是latest，如果都没有则会报错。&lt;/p&gt;
+
+&lt;p&gt;##RUN 命令&lt;/p&gt;
+
+&lt;p&gt;RUN命令会在上面FROM指定的镜像里执行任何命令，然后提交(commit)结果，提交的镜像会在后面继续用到。&lt;/p&gt;
+
+&lt;p&gt;两种格式:&lt;/p&gt;
+
+&lt;p&gt;RUN &lt;command&gt; (the command is run in a shell - &lt;code&gt;/bin/sh -c&lt;/code&gt;)&lt;/p&gt;
+
+&lt;p&gt;或:&lt;/p&gt;
+
+&lt;p&gt;RUN &lt;a href=&#34;exec form&#34;&gt;&amp;ldquo;executable&amp;rdquo;, &amp;ldquo;param1&amp;rdquo;, &amp;ldquo;param2&amp;rdquo; &amp;hellip; &lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;RUN命令等价于:&lt;/p&gt;
+
+&lt;p&gt;docker run image command
+docker commit container_id&lt;/p&gt;
+
+&lt;p&gt;##注释&lt;/p&gt;
+
+&lt;p&gt;使用 # 作为注释&lt;/p&gt;
+
+&lt;p&gt;如:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# VERSION       1.0
+
+# use the ubuntu base image provided by dotCloud
+FROM ubuntu
+
+# make sure the package repository is up to date
+RUN echo &amp;quot;deb http://archive.ubuntu.com/ubuntu precise main universe&amp;quot; &amp;gt; /etc/apt/sources.list
+RUN apt-get update
+
+# install memcached
+RUN apt-get install -y memcached
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##MAINTAINER 命令&lt;/p&gt;
+
+&lt;p&gt;MAINTAINER name&lt;/p&gt;
+
+&lt;p&gt;MAINTAINER命令用来指定维护者的姓名和联系方式&lt;/p&gt;
+
+&lt;p&gt;如:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;MAINTAINER Guillaume J. Charmes, guillaume@dotcloud.com
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##ENTRYPOINT 命令
+&lt;a href=&#34;http://cloud.51cto.com/art/201411/457338.htm&#34;&gt;http://cloud.51cto.com/art/201411/457338.htm&lt;/a&gt;
+有两种语法格式，一种就是上面的(shell方式):&lt;/p&gt;
+
+&lt;p&gt;ENTRYPOINT cmd param1 param2 &amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;第二种是 exec 格式:
+ENTRYPOINT [&amp;ldquo;cmd&amp;rdquo;, &amp;ldquo;param1&amp;rdquo;, &amp;ldquo;param2&amp;rdquo;..&lt;/p&gt;
+
+&lt;p&gt;如:&lt;/p&gt;
+
+&lt;p&gt;ENTRYPOINT [&amp;ldquo;echo&amp;rdquo;, &amp;ldquo;Whale you be my container&amp;rdquo;]&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;container启动时执行的命令，但是一个Dockerfile中只能有一条ENTRYPOINT命令，如果多条，则只执行最后一条
+ENTRYPOINT 命令设置在容器启动时执行命令&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;root@tankywoo-docker:~# cat Dockerfile
+FROM ubuntu
+ENTRYPOINT echo &amp;quot;Welcome!&amp;quot;
+
+root@tankywoo-docker:~# docker run 62fda5e450d5
+Welcome!
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##USER 命令&lt;/p&gt;
+
+&lt;p&gt;比如指定 memcached 的运行用户，可以使用上面的 ENTRYPOINT 来实现:&lt;/p&gt;
+
+&lt;p&gt;ENTRYPOINT [&amp;ldquo;memcached&amp;rdquo;, &amp;ldquo;-u&amp;rdquo;, &amp;ldquo;daemon&amp;rdquo;]&lt;/p&gt;
+
+&lt;p&gt;更好的方式是：&lt;/p&gt;
+
+&lt;p&gt;ENTRYPOINT [&amp;ldquo;memcached&amp;rdquo;]
+USER daemon&lt;/p&gt;
+
+&lt;p&gt;##EXPOSE 命令&lt;/p&gt;
+
+&lt;p&gt;EXPOSE 命令可以设置一个端口在运行的镜像中暴露在外&lt;/p&gt;
+
+&lt;p&gt;EXPOSE &lt;port&gt; [&lt;port&gt;&amp;hellip;]&lt;/p&gt;
+
+&lt;p&gt;比如memcached使用端口 11211，可以把这个端口暴露在外，这样容器外可以看到这个端口并与其通信。&lt;/p&gt;
+
+&lt;p&gt;EXPOSE 11211&lt;/p&gt;
+
+&lt;p&gt;container内部服务开启的端口。主机上要用还得在启动container时，做host-container的端口映射：&lt;/p&gt;
+
+&lt;p&gt;docker run -d -p 127.0.0.1:33301:22 centos6-ssh&lt;/p&gt;
+
+&lt;p&gt;container ssh服务的22端口被映射到主机的33301端口&lt;/p&gt;
+
+&lt;p&gt;一个完整的例子:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# Memcached
+#
+# VERSION       2.2
+
+# use the ubuntu base image provided by dotCloud
+FROM ubuntu
+
+MAINTAINER Victor Coisne victor.coisne@dotcloud.com
+
+# make sure the package repository is up to date
+RUN echo &amp;quot;deb http://archive.ubuntu.com/ubuntu precise main universe&amp;quot; &amp;gt; /etc/apt/sources.list
+RUN apt-get update
+
+# install memcached
+RUN apt-get install -y memcached
+
+# Launch memcached when launching the container
+ENTRYPOINT [&amp;quot;memcached&amp;quot;]
+
+# run memcached as the daemon user
+USER daemon
+
+# expose memcached port
+EXPOSE 11211
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;上面是官方例子，国内建议换成163或sohu的源，不然太慢了。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;root@tankywoo-docker:~# docker build -t tankywoo  - &amp;lt; dck                       [38/480]
+Uploading context  2.56 kB
+Uploading context
+Step 0 : FROM ubuntu
+ ---&amp;gt; 99ec81b80c55
+Step 1 : MAINTAINER Victor Coisne victor.coisne@dotcloud.com
+ ---&amp;gt; Using cache
+ ---&amp;gt; 2b58110877f6
+Step 2 : RUN echo &amp;quot;deb http://mirrors.163.com/ubuntu/ precise main restricted universe multiverse&amp;quot; &amp;gt; /etc/apt/sources.list
+ ---&amp;gt; Running in f55a4a8bb069
+ ---&amp;gt; d48c6a965398
+Step 3 : RUN apt-get update
+ ---&amp;gt; Running in da091a1dd6e7
+Ign http://mirrors.163.com precise InRelease
+Get:1 http://mirrors.163.com precise Release.gpg [198 B]
+
+....
+
+Processing triggers for libc-bin (2.19-0ubuntu6) ...
+Processing triggers for ureadahead (0.100.0-16) ...
+ ---&amp;gt; 2886671b5b86
+Step 5 : ENTRYPOINT [&amp;quot;memcached&amp;quot;]
+ ---&amp;gt; Running in e8aeeab92cb6
+ ---&amp;gt; 7148293a4053
+Step 6 : USER daemon
+ ---&amp;gt; Running in 288766b19606
+ ---&amp;gt; 235e7f630ffa
+Step 7 : EXPOSE 11211
+ ---&amp;gt; Running in c6f881b9d51f
+ ---&amp;gt; 666c5d65f396
+Successfully built 666c5d65f396
+Removing intermediate container f55a4a8bb069
+Removing intermediate container da091a1dd6e7
+Removing intermediate container f23631d3d45a
+Removing intermediate container e8aeeab92cb6
+Removing intermediate container 288766b19606
+Removing intermediate container c6f881b9d51f
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##ENV 命令&lt;/p&gt;
+
+&lt;p&gt;用于设置环境变量&lt;/p&gt;
+
+&lt;p&gt;ENV &lt;key&gt; &lt;value&gt;
+来设置环境变量，比如：&lt;/p&gt;
+
+&lt;p&gt;ENV LANG en_US.UTF-8
+ENV LC_ALL en_US.UTF-8
+设置了后，后续的RUN命令都可以使用&lt;/p&gt;
+
+&lt;p&gt;使用此dockerfile生成的image新建container，可以通过 docker inspect 看到这个环境变量:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;root@tankywoo-docker:~# docker inspect 49bfc7a9817f
+    ...
+    &amp;quot;Env&amp;quot;: [
+        &amp;quot;name=tanky&amp;quot;,
+        &amp;quot;HOME=/&amp;quot;,
+        &amp;quot;PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin&amp;quot;
+    ],
+    ...
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;里面的name=tanky就是设置的。&lt;/p&gt;
+
+&lt;p&gt;也可以通过在docker run时设置或修改环境变量:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker run -i -t --env name=&amp;quot;tanky&amp;quot; ubuntu:newtest /bin/bash
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##ADD 命令&lt;/p&gt;
+
+&lt;p&gt;从src复制文件到container的dest路径:&lt;/p&gt;
+
+&lt;p&gt;ADD &lt;src&gt; &lt;dest&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;src&amp;gt; 是相对被构建的源目录的相对路径，可以是文件或目录的路径，也可以是一个远程的文件url
+&amp;lt;dest&amp;gt; 是container中的绝对路径
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;将文件&lt;src&gt;拷贝到container的文件系统对应的路径&lt;dest&gt;&lt;/p&gt;
+
+&lt;p&gt;所有拷贝到container中的文件和文件夹权限为0755,uid和gid为0&lt;/p&gt;
+
+&lt;p&gt;如果文件是可识别的压缩格式，则docker会帮忙解压缩&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;如果要ADD本地文件，则本地文件必须在 docker build &amp;lt;PATH&amp;gt;，指定的&amp;lt;PATH&amp;gt;目录下
+
+
+如果要ADD远程文件，则远程文件必须在 docker build &amp;lt;PATH&amp;gt;，指定的&amp;lt;PATH&amp;gt;目录下。比如:
+
+docker build github.com/creack/docker-firefox
+
+
+docker-firefox目录下必须有Dockerfile和要ADD的文件
+
+
+注意:使用docker build - &amp;lt; somefile方式进行build，是不能直接将本地文件ADD到container中。只能ADD
+ url file.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;ADD只有在build镜像的时候运行一次，后面运行container的时候不会再重新加载了。&lt;/p&gt;
+
+&lt;p&gt;##VOLUME 命令&lt;/p&gt;
+
+&lt;p&gt;VOLUME [&amp;ldquo;mountpoint&amp;rdquo;]&lt;/p&gt;
+
+&lt;p&gt;如:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;VOLUME [&amp;quot;/data&amp;quot;]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;创建一个挂载点用于共享目录&lt;/p&gt;
+
+&lt;p&gt;可以将本地文件夹或者其他container的文件夹挂载到container中。&lt;/p&gt;
+
+&lt;p&gt;具体参考 Docker 4 &amp;ndash; 总结
+##WORKDIR 命令&lt;/p&gt;
+
+&lt;p&gt;切换目录用，可以多次切换(相当于cd命令)，对RUN,CMD,ENTRYPOINT生效
+WORKDIR /path/to/workdir
+配置RUN, CMD, ENTRYPOINT 命令设置当前工作路径&lt;/p&gt;
+
+&lt;p&gt;可以设置多次，如果是相对路径，则相对前一个 WORKDIR 命令&lt;/p&gt;
+
+&lt;p&gt;比如:&lt;/p&gt;
+
+&lt;p&gt;WORKDIR /a WORKDIR b WORKDIR c RUN pwd&lt;/p&gt;
+
+&lt;p&gt;其实是在 /a/b/c 下执行 pwd
+##CMD 命令&lt;/p&gt;
+
+&lt;p&gt;有三种格式:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    CMD [&amp;quot;executable&amp;quot;,&amp;quot;param1&amp;quot;,&amp;quot;param2&amp;quot;] (like an exec, preferred form)
+    CMD [&amp;quot;param1&amp;quot;,&amp;quot;param2&amp;quot;] (as default parameters to ENTRYPOINT)
+    CMD command param1 param2 (as a shell
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;一个Dockerfile里只能有一个CMD，如果有多个，只有最后一个生效。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;The main purpose of a CMD is to provide defaults for an executing container.(为可执行的容器提供默认值) These defaults can include an executable, or they can omit the executable, in which case you must specify an ENTRYPOINT as well.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##TODO 还没搞清楚这个的作用
+##ONBUILD
+ONBUILD 指定的命令在构建镜像时并不执行，而是在它的子镜像中执行
+TODO&lt;/p&gt;
+
+&lt;p&gt;总结一下，基本常用的命令是: FROM, MAINTAINER, RUN, ENTRYPOINT, USER, PORT, ADD
+一些例子&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    docker-wordpress-nginx A Dockerfile that installs the latest wordpress, nginx and php-fpm.
+    rails-meets-docker
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>Docker 所有种类容器运行方法</title>
+            <link>http://kooksee.github.io/blog/Docker%20%E6%89%80%E6%9C%89%E7%A7%8D%E7%B1%BB%E5%AE%B9%E5%99%A8%E8%BF%90%E8%A1%8C%E6%96%B9%E6%B3%95/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/Docker%20%E6%89%80%E6%9C%89%E7%A7%8D%E7%B1%BB%E5%AE%B9%E5%99%A8%E8%BF%90%E8%A1%8C%E6%96%B9%E6%B3%95/</guid>
+            <description>
+
+&lt;h2 id=&#34;各种容器:f4861149b557706634d70e0e95ed362c&#34;&gt;各种容器&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;nginx 这是对外的总服务接口&lt;code&gt;docker run -it -d --name nnn --net=prod -v /root/nginx:/etc/nginx -v /root/brew:/root/brew -p 3000:80 nginx&lt;/code&gt; 其中-v 一个是挂载配置文件，另外一个是挂载Linux通用工具用来检查内部网卡服务。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;consul 是我们的服务发现工具&lt;code&gt;docker run -it -d --name consul -p 8500:8500 -v /root/consulData:/data/ -v /bin/consul:/bin/consul ubuntu:14.04 /bin/consul agent -bind=0.0.0.0 -dev -ui -client=0.0.0.0&lt;/code&gt; 外部访问接口为8k5 /data/ 为consul 存储的位置， 第二个是挂载命令进去， 整个服务以agent 的形式运行， 绑定客户端以及服务器端为0000为所有位置均可以访问。-client最重要不然只能本地访问了。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;通用APP运行方法：&lt;code&gt;docker run -it -d --name prod-X -v /app:/aXXXpp --net=prod ubuntu:14.04 /app/XXXX.exe -flags&lt;/code&gt; 名字很重要prod为服务组，X为服务名字，与微服务名字一致， /app的位置为将要运行的app的可执行文件 &amp;ndash;net 为加入网络的组（服务网络隔离） 最后直接运行即可&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;测试用Postgres &lt;code&gt;docker run -it --name test-postgres -e POSTGRES_PASSWORD=wothing -v /app:/app -d postgres:9.5.1
+&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&#34;李坤测试用容器-单container运行容器启动方法:f4861149b557706634d70e0e95ed362c&#34;&gt;李坤测试用容器（单Container运行容器启动方法）&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;docker run -it --name test-likun -d -p 446:22 -p 3002:3002 -v /app/likun:/app/likun -v /bin/consul:/bin/consul -e &#39;PUBKEY=ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC9YXv4T7Q0295K5fM/uCd1HxLRZztoqXUGBI/QD2wxeq8Wg/MHWC1jqDwIbU7zCvK6E2CM8NtlJSCA0D27XjRGVCJY7bYHlPL1Ah+qUwp4+6RnrDhQQaJPREUSzMhYQJRu8Fh8wxwvqkSPDQv9FZlNoCMDcisxkyTA+t9Yevr4BFHKARMFAqWmymJGtplUrHlyQIT7MzR4cWHD4xXW71sw2E6zQYO7vUQ91Qhpz8DG3VH085sQ6v4Xr3noS+sSRDX537EAdyME0LYrPb5BgK58lYBgDtJvcCD0uRFSVkJg8raNLgqt1aEmgqkKjI8Co/t3tww3utJ3wm2GCrQxl8dD likun@wothing.com&#39; index.tenxcloud.com/philo/dmonit:1.1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;如果容器缺少类库的情况-注意我是如何把类库挂载进入docker-容器的:f4861149b557706634d70e0e95ed362c&#34;&gt;如果容器缺少类库的情况 注意我是如何把类库挂载进入docker 容器的。&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;docker run -it --name kkk -d -p 445:22 -v /usr/lib/x86_64-linux-gnu/libapparmor.so.1:/usr/lib/x86_64-linux-gnu/libapparmor.so.1 -v /lib/x86_64-linux-gnu/libsystemd-journal.so.0.10.2:/lib/x86_64-linux-gnu/libsystemd-journal.so.0 -v /usr/bin/docker:/usr/local/bin/docker -v /var/run/docker.sock:/var/run/docker.sock -e &#39;PUBKEY=ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDcTvSn5METOJUKXRr+Sa92eL2PRZlHb5tdKMublwgvHWaYNxJyXrxCARmBCy8VAo6rb/OeTsyuMWjZ7fVpxKc32ZkcBoIRL7YNkAonO8nHMSLvWUSKkwo7wfWubJhBQtDjvJ40WIcECrFkssFxbcl9YuUeZjdclmcylBkfwzdHJl7c3NtOjtCosN1RUDQZZJEJzKpSNcYtX/D1fPY9MovDWAeQ+xcLb6Gy5rnCTfyGgZDowyDpFNNe+j0a9G1zjlEww3GvOD/UUIf7hDaji+HjO8/sLfHjfAWWULStoEl/aUoofs93QVQFxCPOeYnZR/QL8MkfXQmwme7Nv7xBeqrt Li-jianying@lijianyings-MacBook-Pro.local&#39; index.tenxcloud.com/philo/dmonit:1.1
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>Docker 网络配置</title>
+            <link>http://kooksee.github.io/blog/Docker%20%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/Docker%20%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/</guid>
+            <description>
+
+&lt;p&gt;阅读目录&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;摘要
+Docker选项快速指南
+配置DNS
+容器间通信
+为主机绑定容器端口
+定制 docker0
+建立你自己的桥接网络
+Docker 如何使容器连接到网络
+工具和实例
+建立点对点连接
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;摘要&lt;/p&gt;
+
+&lt;p&gt;当docker启动时，它会在宿主机器上创建一个名为docker0的虚拟网络接口。它会从RFC 1918定义的私有地址中随机选择一个主机不用的地址和子网掩码，并将它分配给docker0。例如当我启动docker几分钟后它选择了172.17.42.1/16－一个16位的子网掩码为主机和它的容器提供了65,534个ip地址。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;注意: 本文讨论了Docker的高级网络配置和选项。通常你不会用到这些。如果你想查看一个较为简单的Docker网络介绍和容器概念介绍来着手，请参见Docker用户指南.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;但docker0并不是正常的网络接口。它只是一个在绑定到这上面的其他网卡间自动转发数据包的虚拟以太网桥。它可以使容器与主机相互通信。每次 Docker创建一个容器，它就会创建一对对等接口(peer interface)，类似于一个管子的两端－在这边可以收到另一边发送的数据包。Docker会将对等接口中的一个做为eth0接口连接到容器上，并使 用类似于vethAQI2QT这样的惟一名称来持有另一个，该名称取决于主机的命名空间。通过将所有veth*接口绑定到docker0桥接网卡 上，Docker在主机和所有Docker容器间创建一个共享的虚拟子网。&lt;/p&gt;
+
+&lt;p&gt;本文其他部分将会讲解使用Docker选项的所有方式，并且－在高级模式下－使用纯linux网线配置命令来&lt;/p&gt;
+
+&lt;p&gt;调整，补充，或完全替代Docker的默认网络配置。
+回到顶部
+Docker选项快速指南&lt;/p&gt;
+
+&lt;p&gt;这里有一份关于Docker网络配置的命令行选项列表，省去您查找相关资料的麻烦。
+一些网络配置的命令行选项只能在服务器启动时提供给Docker服务器。并且一旦启动起来就无法改变。&lt;/p&gt;
+
+&lt;p&gt;一些网络配置命令选项只能在启动时提供给Docker服务器，并且在运行中不能改变:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;-b BRIDGE或--bridge=BRIDGE— see    建立自己的网桥
+
+--bip=CIDR— see    定制docker0
+
+-H SOCKET...或--host=SOCKET...—   它看起来像是在设置容器的网络，但实际却恰恰相反：它告诉Docker服务器要接收命令的通道，例如“run container&amp;quot;和&amp;quot;stop container&amp;quot;。
+
+--icc=true|false— see    容器间通信
+
+--ip=IP_ADDRESS— see    绑定容器端口
+
+--ip-forward=true|false— see    容器间通信
+
+--iptables=true|false— see   容器间通信
+
+--mtu=BYTES— see    定制docker0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;有两个网络配置选项可以在启动时或调用docker run时设置。当在启动时设置它会成为docker run的默认值:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;--dns=IP_ADDRESS...— see    配置DNS
+
+--dns-search=DOMAIN...— see    配置DNS
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;最后，一些网络配置选项只能在调用docker run时指出，因为它们要为每个容器做特定的配置:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;-h HOSTNAME或--hostname=HOSTNAME— see    配置DNS 和  Docker与容器连接原理
+
+--link=CONTAINER_NAME:ALIAS— see   配置DNS and    容器间通信
+
+--net=bridge|none|container:NAME_or_ID|host— see   Docker与容器连接原理
+
+-p SPECor--publish=SPEC— see    绑定容器端口
+
+-P或--publish-all=true|false— see    绑定容器端口
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;接下来的部分会对以上话题从易到难做出逐一解答。
+回到顶部
+配置DNS&lt;/p&gt;
+
+&lt;p&gt;怎样为Docker提供的每一个容器进行主机名和DNS配置，而不必建立自定义镜像并将主机名写到里面？它的诀窍是覆盖三个至关重要的在/etc下的容器内的虚拟文件，那几个文件可以写入新的信息。你可以在容器内部运行mount看到这个：&lt;/p&gt;
+
+&lt;p&gt;$$ mount&amp;hellip;/dev/disk/by-uuid/1fec&amp;hellip;ebdf on /etc/hostname type ext4 &amp;hellip;/dev/disk/by-uuid/1fec&amp;hellip;ebdf on /etc/hosts type ext4 &amp;hellip;tmpfs on /etc/resolv.conf type tmpfs &amp;hellip;&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;这样的配置允许Docker去做聪明的事情，类似于当主机接收到新的DHCP配置之后，保持resolv.conf的数据到所有的容器中。 Docker怎样维护在容器内的这些文件从Docker的一个版本到下一个版本的具体细节，你应该抛开这些单独的文件本身并且使用下面的Docker选项 代替。&lt;/p&gt;
+
+&lt;p&gt;有四种不同的选项会影响容器守护进程的服务名称。&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;-h HOSTNAME 或者 &amp;ndash;hostname=HOSTNAME  &amp;ndash;设置容器的主机名，仅本机可见。这种方式是写到/etc/hostname ，以及/etc/hosts 文件中，作为容器主机IP的别名，并且将显示在容器的bash中。不过这种方式设置的主机名将不容易被容器之外可见。这将不会出现在 docker ps 或者 其他的容器的/etc/hosts 文件中。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&amp;ndash;link=CONTAINER_NAME:ALIAS  &amp;ndash;使用这个选项去run一个容器将在此容器的/etc/hosts文件中增加一个主机名ALIAS，这个主机名是名为CONTAINER_NAME 的容器的IP地址的别名。这使得新容器的内部进程可以访问主机名为ALIAS的容器而不用知道它的IP。&amp;ndash;link= 关于这个选项的详细讨论请看：    Communication between containers.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&amp;ndash;dns=IP_ADDRESS &amp;ndash;设置DNS服务器的IP地址，写入到容器的/etc/resolv.conf文件中。当容器中的进程尝试访问不在/etc/hosts文件中的主机A 时，容器将以53端口连接到IP_ADDRESS这个DNS服务器去搜寻主机A的IP地址。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&amp;ndash;dns-search=DOMAIN &amp;ndash;设置DNS服务器的搜索域，以防容器尝试访问不完整的主机名时从中检索相应的IP。这是写入到容器的 /etc/resolv.conf文件中的。当容器尝试访问主机 host，而DNS搜索域被设置为 example.com ,那么DNS将不仅去查寻host主机的IP，还去查询host.example.com的 IP。&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;在docker中，如果启动容器时缺少以上最后两种选项设置时，将使得容器的/etc/resolv.conf文件看起来和宿主主机的/etc/resolv.conf文件一致。这些选项将修改默认的设置。
+回到顶部
+容器间通信&lt;/p&gt;
+
+&lt;p&gt;在操作系统层面上，决定两个容器间的通信能否得到控制，有以下三个因素。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;网络拓扑逻辑是否连接上了容器的网络接口。默认情况下Docker将把所有容器绑定到一个 singledocker0bridge,并为两个容器间的包传输提供路径。参见本文档后续部分---其他可能的拓扑逻辑
+
+主机是否要发送IP包？这由ip_forward系统参数控制。如果这个参数设为1，那么数据包只能在容器间传输。通常情况下，让 Docker服务器使用它的默认设置  --ip-forward=true ,   Docker在启动的时候会把ip_forwardsh.  要检查设置或手动设置参数，可以这样做：
+
+# Usually not necessary: turning on forwarding,# on the host where your Docker server is running$ cat /proc/sys/net/ipv4/ip_forward0$ sudo echo 1 &amp;gt; /proc/sys/net/ipv4/ip_forward
+$ cat /proc/sys/net/ipv4/ip_forward1
+
+iptables是否允许特殊连接?如果你把设置 --iptables=false,当守护进程启动时，Docker不会改变你的系统iptables规则。另外，如果你保留默认设置  --icc=true，Docker服务器或向FORWARD链添加一个带有全局ACCEPT策略的默认规则。如果不保留默认设置，系统会把策略设为 DROP.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;几乎所有人使用docker都希望ip_forward 是打开的，至少使容器间的通讯成为可能。但是否同意 &amp;ndash;icc=true 或者更改为 &amp;ndash;icc=false 使得iptables 可以保护容器以及宿主主机不被任意地端口扫描、避免被已经被渗透的容器所访问，这是一个策略问题。（在ubuntu，是编辑/etc/default /docker文件中的DOCKER_OPTS参数，然后重启docker服务）&lt;/p&gt;
+
+&lt;p&gt;如果你选择最安全的设置 &amp;ndash;icc=false ，那么当你想让它们彼此提供服务的时候如何让它们相互通讯？&lt;/p&gt;
+
+&lt;p&gt;答案是：使用前文提到的 &amp;ndash;link=CONTAINER_NAME:ALIAS 选项。如果docker守护进程正在以 &amp;ndash;icc=false 和 &amp;ndash;iptables=true 参数运行，当以选项 &amp;ndash;link= 执行 docker run 命令时，docker服务将插入一部分 iptables ACCEPT 规则使得新容器可以连接其他容器所暴露出来的端口（此端口指前文在 Dockerfile 中提到的EXPOSE这一行）。更多详细文档介绍请看：linking Docker containers。&lt;/p&gt;
+
+&lt;p&gt;注意: &amp;ndash;link 选项中的 CONTAINER_NAME 的值必须是 docker自动分配的容器名称，比如 stupefied_pare， 或者是在执行docker run 的时候用 &amp;ndash;name= 指定的容器名称.  这不能使一个docker无法识别的主机名。&lt;/p&gt;
+
+&lt;p&gt;你可以在你的Docker主机上运行iptables命令，来观察FORWARD链是否有默认的ACCEPT或DROP策略&lt;/p&gt;
+
+&lt;h1 id=&#34;when-icc-false-you-should-see-a-drop-rule-sudo-iptables-l-n-chain-forward-policy-accept-target-prot-opt-source-destination:b1927aed458c7b4d8f1e229af0616036&#34;&gt;When &amp;ndash;icc=false, you should see a DROP rule:$ sudo iptables -L -n&amp;hellip;Chain FORWARD (policy ACCEPT)target     prot opt source               destination&lt;/h1&gt;
+
+&lt;p&gt;DROP       all  &amp;ndash;  0.0.0.0/0            0.0.0.0/0&amp;hellip;# When a &amp;ndash;link= has been created under &amp;ndash;icc=false,# you should see port-specific ACCEPT rules overriding# the subsequent DROP policy for all other packets:$ sudo iptables -L -n&amp;hellip;Chain FORWARD (policy ACCEPT)target     prot opt source               destination
+ACCEPT     tcp  &amp;ndash;  172.17.0.2           172.17.0.3           tcp spt:80ACCEPT     tcp  &amp;ndash;  172.17.0.3           172.17.0.2           tcp dpt:80DROP       all  &amp;ndash;  0.0.0.0/0            0.0.0.0/0&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;注意: Docker的iptables规则完全显示了容器相互间的原始IP地址，所以一个容器到另一个容器的连接，需要显示地显示出第一个容器的原始IP地址。
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;回到顶部
+为主机绑定容器端口&lt;/p&gt;
+
+&lt;p&gt;默认情况下，Docker容器可以连接到外部区域，但外部区域不能连接到容器。在Docker启动时，由于它在主机上创建了一个iptables伪装规则，使得每一个输出连接看起来都是由主机IP地址建立起来的。&lt;/p&gt;
+
+&lt;h1 id=&#34;you-can-see-that-the-docker-server-creates-a-masquerade-rule-that-let-containers-connect-to-ip-addresses-in-the-outside-world-sudo-iptables-t-nat-l-n-chain-postrouting-policy-accept-target-prot-opt-source-destination:b1927aed458c7b4d8f1e229af0616036&#34;&gt;You can see that the Docker server creates a# masquerade rule that let containers connect# to IP addresses in the outside world:$ sudo iptables -t nat -L -n&amp;hellip;Chain POSTROUTING (policy ACCEPT)target     prot opt source               destination&lt;/h1&gt;
+
+&lt;p&gt;MASQUERADE  all  &amp;ndash;  172.17.0.0/16       !172.17.0.0/16&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;当调用docker run的时候，如果你想让容器接受输入连接，你需要提供特殊选项。这些选项的详细说明在 Docker User Guide.  有两种方法可以实现。&lt;/p&gt;
+
+&lt;p&gt;首先，你可以提供 -P 或者 &amp;ndash;publish-all=true|false 选项参数来执行 docker run 命令，这将会识别所有在dockerfile中暴露的端口，并且随机映射到 49000-49900 之间的主机端口。这看起来是一个很大的不便，当你要启动一个新的容器时你需要知道那个主机端口已经被映射。&lt;/p&gt;
+
+&lt;p&gt;更方便的操作是使用 -p SPEC 或者 &amp;ndash;publish=SPEC 选项，这两个选项让你明确的指定docker容器的端口映射到任意的主机端口中，不局限于49000-49900.&lt;/p&gt;
+
+&lt;p&gt;无论如何，你应该通过审查你的NAT表，去看看docker在你的网络占做了什么。&lt;/p&gt;
+
+&lt;h1 id=&#34;what-your-nat-rules-might-look-like-when-docker:b1927aed458c7b4d8f1e229af0616036&#34;&gt;What your NAT rules might look like when Docker&lt;/h1&gt;
+
+&lt;h1 id=&#34;is-finished-setting-up-a-p-forward:b1927aed458c7b4d8f1e229af0616036&#34;&gt;is finished setting up a -P forward:&lt;/h1&gt;
+
+&lt;p&gt;$ iptables -t nat -L -n
+&amp;hellip;Chain
+DOCKER (2 references)
+target     prot opt source               destination
+DNAT       tcp  &amp;ndash;  0.0.0.0/0            0.0.0.0/0            tcp dpt:49153 to:172.17.0.2:80&lt;/p&gt;
+
+&lt;h1 id=&#34;what-your-nat-rules-might-look-like-when-docker-1:b1927aed458c7b4d8f1e229af0616036&#34;&gt;What your NAT rules might look like when Docker&lt;/h1&gt;
+
+&lt;h1 id=&#34;is-finished-setting-up-a-p-80-80-forward:b1927aed458c7b4d8f1e229af0616036&#34;&gt;is finished setting up a -p 80:80 forward:&lt;/h1&gt;
+
+&lt;p&gt;Chain
+DOCKER (2 references)
+target     prot opt source               destination
+DNAT       tcp  &amp;ndash;  0.0.0.0/0            0.0.0.0/0            tcp dpt:80 to:172.17.0.2:80&lt;/p&gt;
+
+&lt;p&gt;可以看到，docker暴露了这些容器的端口到通配IP地址：0.0.0.0 ，这个通配IP地址可以匹配宿主主机上任意一个可以进入的端口。如果你希望更多的限制，并且只允许容器服务通过特殊的宿主主机的外部网络接口来相互联系， 那么你有两种选择。当你执行 docker run 命令时，你可以使用 -p IP:host_port:container_port 或者  -p IP::port 来明确地绑定外部接口。&lt;/p&gt;
+
+&lt;p&gt;或者如果你希望dokcer永远转发到一个特殊的IP地址上，你可以编辑你的docker系统设置文件（ubuntu系统的设置方法为：编辑 /etc/default/docker文件，改写DOCKER_OPTS参数），增加选项 &amp;ndash;ip=IP_ADDRESS 。修改完之后记得重启你的docker服务。&lt;/p&gt;
+
+&lt;p&gt;如果你希望更详细的指导，请参考： Docker User Guide .
+回到顶部
+定制 docker0&lt;/p&gt;
+
+&lt;p&gt;默认地，docker服务会在linux内核新建一个网络桥接docker0，使得物理主机和其他虚拟网络接口之间可以传递发送数据包，因此，这表现如一个独立的网络。&lt;/p&gt;
+
+&lt;p&gt;docker0有一个IP地址和子网掩码，使得物理主机可以从容器的桥接网络接收和发送数据包。并且给这个桥接网络一个MTU（最大传输单元）或者 说网络接口允许的最大包长度-例如1,500 bytes 或者从docker的宿主主机上的网络接口拷贝的数值。在服务启动的时候两者都是可配置的：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;--bip=CIDR— 为docker0桥接网络提供一个特殊的IP地址和一个子网掩码, 使用标准的 CIDR 记法例如192.168.1.5/24.
+
+--mtu=BYTES— 从写docker0的最大数据包长度。
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在ubuntu系统上，你可以增加以上的配置到 /etc/default/docker 文件中的DOCKER_OPTS参数中，然后重启docker服务。&lt;/p&gt;
+
+&lt;p&gt;当你有一个或多个正常运行的容器时，你可以通过在主机上运行brct1命令，观察interfaces列的输出，来确定Docker已经将这些容器正确地连接到docker0网桥。下面是一个连接了两个不同容器的主机：&lt;/p&gt;
+
+&lt;h1 id=&#34;display-bridge-info-sudo-brctl-show:b1927aed458c7b4d8f1e229af0616036&#34;&gt;Display bridge info$ sudo brctl show&lt;/h1&gt;
+
+&lt;p&gt;bridge name     bridge id               STP enabled     interfaces
+docker0         8000.3a1d7362b4ee       no              veth65f9
+                                                        vethdda6&lt;/p&gt;
+
+&lt;p&gt;如果你的Docker主机还没安装brct1命令，那么你可以在Ubuntu上运行sudo apt-get install bridge-utils来安装它。&lt;/p&gt;
+
+&lt;p&gt;最后，每次新建一个容器的时候都会用到docker0 桥接网络。每次在执行docker run命令新建一个容器的时候，docker从可利用的桥接网络中随机选择一个未被使用的IP地址，以及使用桥接网络的子网掩码，用来配置容器 eth0网络接口。docker宿主主机的IP地址被docker容器作为默认的网关。&lt;/p&gt;
+
+&lt;h1 id=&#34;the-network-as-seen-from-a-container-sudo-docker-run-i-t-rm-base-bin-bash:b1927aed458c7b4d8f1e229af0616036&#34;&gt;The network, as seen from a container$ sudo docker run -i -t &amp;ndash;rm base /bin/bash&lt;/h1&gt;
+
+&lt;p&gt;$$ ip addr show eth024: eth0: &lt;BROADCAST,UP,LOWER_UP&gt; mtu 1500 qdisc pfifo_fast state UP group default qlen 1000
+    link/ether 32:6f:e0:35:57:91 brd ff:ff:ff:ff:ff:ff
+    inet 172.17.0.&lt;sup&gt;3&lt;/sup&gt;&amp;frasl;&lt;sub&gt;16&lt;/sub&gt; scope global eth0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::306f:e0ff:fe35:&lt;sup&gt;5791&lt;/sup&gt;&amp;frasl;&lt;sub&gt;64&lt;/sub&gt; scope link
+       valid_lft forever preferred_lft forever&lt;/p&gt;
+
+&lt;p&gt;$$ ip routedefault via 172.17.42.1 dev eth0172.17.0.0/16 dev eth0  proto kernel  scope link  src 172.17.0.3$$ exit&lt;/p&gt;
+
+&lt;p&gt;记住docker的宿主主机无法转发docker容器的数据包到因特网上，除非它的ip_forward 系统设置为1，详情请看： Communication between containers 。
+回到顶部
+建立你自己的桥接网络&lt;/p&gt;
+
+&lt;p&gt;如果你希望建立完整的自己的桥接网络，你可以在启动docker之前用 -b BRIDGE 或者 &amp;ndash;bridge=BRIDGE选项参数高数docker使用你自己的桥接网络。如果你已经用docker0启动docker了，你需要停止docker服务然后移除docker0.&lt;/p&gt;
+
+&lt;h1 id=&#34;stopping-docker-and-removing-docker0-sudo-service-docker-stop:b1927aed458c7b4d8f1e229af0616036&#34;&gt;Stopping Docker and removing docker0$ sudo service docker stop&lt;/h1&gt;
+
+&lt;p&gt;$ sudo ip link set dev docker0 down
+$ sudo brctl delbr docker0&lt;/p&gt;
+
+&lt;p&gt;然后，在启动docker服务之前，新建你自己的桥接网络，写上你想要的配置。接下来我们新建一个简单的桥接网络，刚好用这些选项来定做docker0 ，这刚好足够说明这个技术。&lt;/p&gt;
+
+&lt;h1 id=&#34;create-our-own-bridge-sudo-brctl-addbr-bridge0:b1927aed458c7b4d8f1e229af0616036&#34;&gt;Create our own bridge$ sudo brctl addbr bridge0&lt;/h1&gt;
+
+&lt;p&gt;$ sudo ip addr add 192.168.5.&lt;sup&gt;1&lt;/sup&gt;&amp;frasl;&lt;sub&gt;24&lt;/sub&gt; dev bridge0
+$ sudo ip link set dev bridge0 up# Confirming that our bridge is up and running$ ip addr show bridge04: bridge0: &lt;BROADCAST,MULTICAST&gt; mtu 1500 qdisc noop state UP group default
+    link/ether 66:38:d0:0d:76:18 brd ff:ff:ff:ff:ff:ff
+    inet 192.168.5.&lt;sup&gt;1&lt;/sup&gt;&amp;frasl;&lt;sub&gt;24&lt;/sub&gt; scope global bridge0
+       valid_lft forever preferred_lft forever# Tell Docker about it and restart (on Ubuntu)$ echo &amp;lsquo;DOCKER_OPTS=&amp;ldquo;-b=bridge0&amp;rdquo;&amp;rsquo; &amp;gt;&amp;gt; /etc/default/docker
+$ sudo service docker start&lt;/p&gt;
+
+&lt;p&gt;运行结构应该是docker服务成功启动，已经准备好绑定容器到桥接网络上。当核实好桥接网络的配置之后，尝试着新建一个容器，你将看到容器的IP地址是在你的新的桥接网络范围内的，这是docker自动检测的。&lt;/p&gt;
+
+&lt;p&gt;正如前文所述，可以用 brctl show 命令查看，新增或者移除网络接口，可以在docker容器中执行 ip addr 和 ip route 命令查看IP地址是否是从网桥IP段分配的，以及docker的宿主主机的IP是否被作为默认网关。
+回到顶部
+Docker 如何使容器连接到网络&lt;/p&gt;
+
+&lt;p&gt;docker是正在发展中的，并会持续提升网络配置的逻辑。当前命令行是很难满足docker新建容器时所需要的网络配置。&lt;/p&gt;
+
+&lt;p&gt;让我们回顾一些基础知识。&lt;/p&gt;
+
+&lt;p&gt;通讯的时候使用网际协议（IP），一个机器需要访问至少一个网络接口用来发送和接收包，路由表定义了通过接口可达IP地址范围。网络接口不一定非是 物理设备。实际上，在每一个Linux机器（和每个Docker容器内部）的lo回环接口都是有效的而且完全是虚拟的——Linux内核简单地拷贝回环 （数据）包，直接从发送者的内存放入接收者的内存。&lt;/p&gt;
+
+&lt;p&gt;Docker使用特殊的虚拟接口让容器在主机间通讯——成对的虚拟接口被叫做“peers”，它被链接到主机内核的内部，因此（数据）包能在他们之间传输。他们简单创建，待会儿我们将会看到。&lt;/p&gt;
+
+&lt;p&gt;Docker配置容器的步骤是：&lt;/p&gt;
+
+&lt;p&gt;1.创建一对虚拟接口&lt;/p&gt;
+
+&lt;p&gt;2.在主Docker主机内部给它一个唯一的名称，比如veth65f9，绑定它到docker0或者Docker使用的任何网桥上&lt;/p&gt;
+
+&lt;p&gt;3.让其他的接口翻墙进入新的容器（已经提供了lo接口），在容器的独立和唯一网络接口命名空间内，重新命名它为更漂亮的名字eth0，名称不要和其他的物理接口冲突。&lt;/p&gt;
+
+&lt;p&gt;4.在网桥的网络地址访问内给容器的eth0一个新的IP地址，设置它的缺省路由为Docker主机在网桥上拥有的IP地址。&lt;/p&gt;
+
+&lt;p&gt;这些步骤结束后，容器将立即拥有一个eth0（虚拟）网卡，并会发现它自己可以和其他的容器以及互联网通讯。&lt;/p&gt;
+
+&lt;p&gt;你可以使用 &amp;ndash;net= 这个选项来执行 docker run 启动一个容器，这个选项有一下可选参数。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;--net=bridge— 默认选项，用网桥的方式来连接docker容器。
+
+--net=host— 高数docker跳过配置容器的独立网络栈。本质上来说，这个参数告诉docker不去打包容器的网络层。当然，docker 容器的进程仍然被限制在它自己独有的文件系统、进程列表以及其他资源中。一个快速命令 ip addr 将像你展示docker的网络，它是建立在docker 宿主主机上的，有完整的权限去访问宿主主机的网络接口。注意这不意味着docker容器可以去重新配置宿主主机的网络栈，重新配置是需要 --privaleged=true 这个选项参数的，但是这个选项参数会让docker容器打开大量的端口以及其他的系统的超级管理权限的进程。这也会允许容器去访问宿主主机的网络服务，比 如 D-bus。这会使docker容器里的进程有有权限去做一些意想不到的事，比如重启你的宿主主机。所以要谨慎使用这个选项参数。
+
+--net=container:NAME_or_ID— 告诉docker让这个新建的容器使用已有容器的网络配置。这个新建的容器将配置新的自己的文件系统和进程列表以及其他资源限制，但是将共享这个指定的容 器的网络IP地址以及端口号，使得这两个容器可以通过 loopback接口相互访问。
+
+--net=none— 告诉docker为新建的容器建立一个网络栈，但不对这个网络栈进行任何配置，在这个文档的最后将介绍如何让你去建立自定义的网络配置。
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;去了解以下这一步是非常必要的，如果你在建立容器的时候使用 &amp;ndash;net=none  这个选项参数。以下是一些命令去去配置自定义网络，就好像你让docker完全去自己配置一样。&lt;/p&gt;
+
+&lt;h1 id=&#34;at-one-shell-start-a-container-and-leave-its-shell-idle-and-running-sudo-docker-run-i-t-rm-net-none-base-bin-bash:b1927aed458c7b4d8f1e229af0616036&#34;&gt;At one shell, start a container and# leave its shell idle and running$ sudo docker run -i -t &amp;ndash;rm &amp;ndash;net=none base /bin/bash&lt;/h1&gt;
+
+&lt;p&gt;root@63f36fc01b5f:/#&lt;/p&gt;
+
+&lt;h1 id=&#34;at-another-shell-learn-the-container-process-id:b1927aed458c7b4d8f1e229af0616036&#34;&gt;At another shell, learn the container process ID&lt;/h1&gt;
+
+&lt;h1 id=&#34;and-create-its-namespace-entry-in-var-run-netns-for-the-ip-netns-command-we-will-be-using-below-sudo-docker-inspect-f-state-pid-63f36fc01b5f2778-pid-2778-sudo-mkdir-p-var-run-netns:b1927aed458c7b4d8f1e229af0616036&#34;&gt;and create its namespace entry in /var/run/netns/# for the &amp;ldquo;ip netns&amp;rdquo; command we will be using below$ sudo docker inspect -f &amp;lsquo;{{.State.Pid}}&amp;rsquo; 63f36fc01b5f2778$ pid=2778$ sudo mkdir -p /var/run/netns&lt;/h1&gt;
+
+&lt;p&gt;$ sudo ln -s /proc/$pid/ns/net /var/run/netns/$pid# Check the bridge&amp;rsquo;s IP address and netmask$ ip addr show docker021: docker0: &amp;hellip;inet 172.17.42.&lt;sup&gt;1&lt;/sup&gt;&amp;frasl;&lt;sub&gt;16&lt;/sub&gt; scope global docker0&amp;hellip;# Create a pair of &amp;ldquo;peer&amp;rdquo; interfaces A and B,# bind the A end to the bridge, and bring it up$ sudo ip link add A type veth peer name B
+$ sudo brctl addif docker0 A
+$ sudo ip link set A up# Place B inside the container&amp;rsquo;s network namespace,# rename to eth0, and activate it with a free IP$ sudo ip link set B netns $pid
+$ sudo ip netns exec $pid ip link set dev B name eth0
+$ sudo ip netns exec $pid ip link set eth0 up
+$ sudo ip netns exec $pid ip addr add 172.17.42.&lt;sup&gt;99&lt;/sup&gt;&amp;frasl;&lt;sub&gt;16&lt;/sub&gt; dev eth0
+$ sudo ip netns exec $pid ip route add default via 172.17.42.1&lt;/p&gt;
+
+&lt;p&gt;到这一步你的容器应该可以正常运行网络操作了。&lt;/p&gt;
+
+&lt;p&gt;当你最后退出shell以及清理掉这个容器的时候，这个容器的虚拟网络 eth0 将在网络接口A 被清除后被消除，也会自动在网桥 docker0 上销毁。所以不用你执行其他的命令，所有的东西将被清理。当然，是几乎所有的东西：&lt;/p&gt;
+
+&lt;h1 id=&#34;clean-up-dangling-symlinks-in-var-run-netnsfind-l-var-run-netns-type-l-delete:b1927aed458c7b4d8f1e229af0616036&#34;&gt;Clean up dangling symlinks in /var/run/netnsfind -L /var/run/netns -type l -delete&lt;/h1&gt;
+
+&lt;p&gt;还要注意上面的脚本使用了现代的ip命令行替代旧的弃用的封装，类似ipconfig和route，这些老的命令行还是会一直呆在我们的容器内部工作。如果你很忙碌的话，ip addr命令行也可以只键入ip a。&lt;/p&gt;
+
+&lt;p&gt;总之，注意这个ip netns exec重要的命令行，它让我们以root用户进入内部并配置一个网络命名空间。如果在容器内部运行，类似的命令行可能不会工作，因为安全容器化的部分是 Docker剥离容器的处理过程，这个过程要正确地配置自己的网络。使用ip netns exec可以让我们完成配置，还避免了运行容器自身&amp;ndash;privileged=true的危险步骤。
+回到顶部
+工具和实例&lt;/p&gt;
+
+&lt;p&gt;在把自定义网络拓扑逻辑分类成下面几个部分之前，你应该关注一些外部工具盒关于配置的实例。下面就有两个例子：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;J&amp;amp;eacute;r&amp;amp;ocirc;me Petazzoni 创建了一个pipework的shell脚本，帮助你在复杂场景下建立容器间连接:    https://github.com/jpetazzo/pipework
+
+Brandon Rhodes 为下一个版本的Python网络编程基金会创建了整个的网络拓扑逻辑，包括路由器NAT&#39;d防火墙，和提供HTTP,SMTP,POP,IMAP,Telnet,SSH,FTP的服务器:    https://github.com/brandon-rhodes/fopnp/tree/m/playground
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;两个工具都使用网络命令并和之前见到的版本很相似，在下面章节会看到。
+回到顶部
+建立点对点连接&lt;/p&gt;
+
+&lt;p&gt;缺省情况下, Docker通过docker0将所有的容器添加到虚拟子网中。你能够按照Building your own bridge中的方法创建你自己的桥让容器连接到不同的虚拟子网。启动容器时使用命令docker run &amp;ndash;net=none，然后使用shell命令添加容器到你自己的桥，方法见How Docker networks a container。&lt;/p&gt;
+
+&lt;p&gt;但是有时你想让两个特别的容器能够直接通讯，不用绑定到主机的以太网桥上。&lt;/p&gt;
+
+&lt;p&gt;解决方案是简单的。创建一对对等接口，将他们放到容器中，并将其配置为经典的点对点链接。两个容器就能够直接通讯了（当然要告诉每个容器对方的IP地址）。您可能会调整在上一节的指示去这样的事情：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# Start up two containers in two terminal windows$ sudo docker run -i -t --rm --net=none base /bin/bash
+root@1f1f4c1f931a:/#
+
+$ sudo docker run -i -t --rm --net=none base /bin/bash
+root@12e343489d2f:/#
+
+# Learn the container process IDs
+# and create their namespace entries
+
+$ sudo docker inspect -f &#39;{{.State.Pid}}&#39; 1f1f4c1f931a
+2989
+$ sudo docker inspect -f &#39;{{.State.Pid}}&#39; 12e343489d2f
+3004
+$ sudo mkdir -p /var/run/netns
+$ sudo ln -s /proc/2989/ns/net /var/run/netns/2989$ sudo ln -s /proc/3004/ns/net /var/run/netns/3004# Create the &amp;quot;peer&amp;quot; interfaces and hand them out$ sudo ip link add A type veth peer name B
+
+$ sudo ip link set A netns 2989$ sudo ip netns exec 2989 ip addr add 10.1.1.1/32 dev A
+$ sudo ip netns exec 2989 ip link set A up
+$ sudo ip netns exec 2989 ip route add 10.1.1.2/32 dev A
+
+$ sudo ip link set B netns 3004$ sudo ip netns exec 3004 ip addr add 10.1.1.2/32 dev B
+$ sudo ip netns exec 3004 ip link set B up
+$ sudo ip netns exec 3004 ip route add 10.1.1.1/32 dev B
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;两个容器应该可以相互ping通以确定连接成功。点对点链接不依赖于子网或子网掩码，但是ip route需要确认一些其他的单一IP地址是连接到了特定的网络接口。&lt;/p&gt;
+
+&lt;p&gt;请注意点对点链接可以安全的和其他类型的网络连接混合使用。如果你想用点对点链接替换容器的正常网络连接，启动的时候，不需要带参数&amp;ndash;net=none。&lt;/p&gt;
+
+&lt;p&gt;在Docker主机和容器之间创建点对点链接是这个模板最终的排列方式，它允许主机和有单一IP地址的容器通讯。除非你有很特别的网络需求，让你尝试使用这样的解决方案，正如我们前面探讨的，使用&amp;ndash;icc=false锁定跨容器的通讯是更好的方案。&lt;/p&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>Docker持续交付说明</title>
+            <link>http://kooksee.github.io/blog/Docker%E6%8C%81%E7%BB%AD%E4%BA%A4%E4%BB%98%E8%AF%B4%E6%98%8E/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/Docker%E6%8C%81%E7%BB%AD%E4%BA%A4%E4%BB%98%E8%AF%B4%E6%98%8E/</guid>
+            <description>
+
+&lt;h2 id=&#34;ci:47696ca6b8b5a6acc0634b15cdb2236a&#34;&gt;CI&lt;/h2&gt;
+
+&lt;p&gt;目前ci是通过golang环境做了一个builder Container
+方法：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker clone https://github.com/wothing/17mei.git
+cd 17mei
+make
+cd gateway/test
+go test ......  -dh prod-postgres.prod -du postgres -dpwd wothing -dn wothing -api http://prod-gw.prod:3001/v1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;注意最后test命令： 需要指定数据库位置以及gateway的位置&lt;/p&gt;
+
+&lt;h2 id=&#34;数据库重置:47696ca6b8b5a6acc0634b15cdb2236a&#34;&gt;数据库重置：&lt;/h2&gt;
+
+&lt;h3 id=&#34;pgsql-免密码配置:47696ca6b8b5a6acc0634b15cdb2236a&#34;&gt;pgsql 免密码配置&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;echo &amp;quot;prod-postgres.prod:5432:wothing:postgres:wothing&amp;quot;  &amp;gt; ~/.pgpass
+chmod 0600 ~/.pgpass
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;重置脚本执行:47696ca6b8b5a6acc0634b15cdb2236a&#34;&gt;重置脚本执行：&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;cd /go/src/github.com/wothing/17mei/sql
+psql -h prod-postgres.prod -U postgres  -d wothing -f user.sql
+psql -h prod-postgres.prod -U postgres  -d wothing -f user_example.sql
+psql -h prod-postgres.prod -U postgres  -d wothing -f activity.sql
+psql -h prod-postgres.prod -U postgres  -d wothing -f activity_example.sql
+psql -h prod-postgres.prod -U postgres  -d wothing -f diary.sql
+psql -h prod-postgres.prod -U postgres  -d wothing -f diary_samples.sql
+psql -h prod-postgres.prod -U postgres  -d wothing -f other.sql
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;generate-mei-id:47696ca6b8b5a6acc0634b15cdb2236a&#34;&gt;Generate Mei id&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;/go/src/github.com/wothing/17mei/user/meigen
+go run meigen.go  -dh prod-postgres.prod -du postgres -dpwd wothing -dn wothing
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;看到用了多少毫秒输出之后马上停下来大概就能有一千个了。&lt;/p&gt;
+
+&lt;h2 id=&#34;更新服务的容器运行:47696ca6b8b5a6acc0634b15cdb2236a&#34;&gt;更新服务的容器运行&lt;/h2&gt;
+
+&lt;p&gt;&lt;code&gt;docker restart prod-diary prod-verification prod-activity prod-push prod-other prod-mediastore prod-gw prod-user&lt;/code&gt;&lt;/p&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>docker MongoDB搭建</title>
+            <link>http://kooksee.github.io/blog/docker%20MongoDB%E6%90%AD%E5%BB%BA/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/docker%20MongoDB%E6%90%AD%E5%BB%BA/</guid>
+            <description>&lt;p&gt;##dockerfile&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#
+# MongoDB Dockerfile
+#
+# https://github.com/dockerfile/mongodb
+#
+
+# Pull base image.
+FROM dockerfile/ubuntu
+
+# Install MongoDB.
+RUN \
+  apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10 &amp;amp;&amp;amp; \
+  echo &#39;deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen&#39; &amp;gt; /etc/apt/sources.list.d/mongodb.list &amp;amp;&amp;amp; \
+  apt-get update &amp;amp;&amp;amp; \
+  apt-get install -y mongodb-org &amp;amp;&amp;amp; \
+  rm -rf /var/lib/apt/lists/*
+
+# Define mountable directories.
+VOLUME [&amp;quot;/data/db&amp;quot;]
+
+# Define working directory.
+WORKDIR /data
+
+# Define default command
+CMD [&amp;quot;mongod&amp;quot;]
+
+# Expose ports.
+#   - 27017: process
+#   - 28017: http
+EXPOSE 27017
+EXPOSE 2801
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;#Run mongod&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker run -d -p 27017:27017 --name mongodb dockerfile/mongod
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##Run mongod w/ persistent/shared directory&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker run -d -p 27017:27017 -v &amp;lt;db-dir&amp;gt;:/data/db --name mongodb dockerfile/mongod
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Run mongod w/ HTTP support&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker run -d -p 27017:27017 -p 28017:28017 --name mongodb dockerfile/mongodb mongod --rest --httpinterface
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##Run mongod w/ Smaller default file size&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker run -d -p 27017:27017 --name mongodb dockerfile/mongodb mongod --smallfiles
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;###Run mongo&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker run -it --rm --link mongodb:mongodb dockerfile/mongodb bash -c &#39;mongo --host mongodb&#39;
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>docker mongodb集群搭</title>
+            <link>http://kooksee.github.io/blog/docker%20mongodb%E9%9B%86%E7%BE%A4%E6%90%AD/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/docker%20mongodb%E9%9B%86%E7%BE%A4%E6%90%AD/</guid>
+            <description>&lt;p&gt;MongoDB是一个介于关系数据库和非关系数据库之间的产品，是非关系数据库当中最像关系数据库的。支持类似于面向对象的查询语言，几乎可以实现类似关系数据库单表查询的绝大部分功能，而且还支持对数据建立索引。本文介绍了如何使用Docker搭建MongoDB集群。&lt;/p&gt;
+
+&lt;p&gt;本文我会向大家介绍如何使用Docker部署一个MongoDB集群，具体如下：&lt;/p&gt;
+
+&lt;p&gt;2.6.5版本的MongoDB
+有3个节点的副本集（Replica set）
+身份验证
+持久化数据到本地文件系统
+首先要准备三个运行的Docker服务器，这意味着你要准备一安装了Docker的本地Vagrant Box虚拟机（系统可以使用CoreOS）或者使用AWS或者其它的你喜欢的方式。&lt;/p&gt;
+
+&lt;p&gt;步骤&lt;/p&gt;
+
+&lt;p&gt;Step1：你要拿到3台Docker服务器的IP地址，并且将下面给出的IP地址配置到所有的服务器上面，每一台服务器都要执行如下命令（记得要替换掉IP地址哦）：&lt;/p&gt;
+
+&lt;p&gt;root@node *:/# export node1=10.11.32.174
+root@node *:/# export node2=10.11.33.37
+root@node *:/# export node3=10.11.31.176
+理想情况下你并不需要这么做，这些IP都是可以通过DNS自动配置好的。但是这样会更加简单，毕竟这只是一次安装测试。&lt;/p&gt;
+
+&lt;p&gt;Step2：为每个节点创建密钥文件。在其中某一台服务器上面执行如下的命令，然后把密钥文件复制到其余两个服务器的同样的位置。&lt;/p&gt;
+
+&lt;p&gt;在这个教程中，我将把所有的东西都放在“/home/core”文件夹中。&lt;/p&gt;
+
+&lt;p&gt;root@node *:/# mkdir -p /home/core
+root@node *:/# cd /home/core
+root@node *:/# openssl rand -base64 741 &amp;gt; mongodb-keyfile
+root@node *:/# chmod 600 mongodb-keyfile
+root@node *:/# sudo chown 999 mongodb-keyfile
+这个密钥文件的所有者被设置成id为“999”的用户了，因为在MongoDB的Docker容器中，这个用户需要有操作密钥文件的权限。&lt;/p&gt;
+
+&lt;p&gt;Step3:启动node1（即第一台Docker服务器）的MongoDB容器。它会启动一个没有身份验证机制的容器，所以我们要设置一个用户。&lt;/p&gt;
+
+&lt;p&gt;root@node1:/# docker run &amp;ndash;name mongo \
+-v /home/core/mongo-files/data:/data/db \
+-v /home/core/mongo-files:/opt/keyfile \
+&amp;ndash;hostname=&amp;ldquo;node1.example.com&amp;rdquo; \
+-p 27017:27017 \
+-d mongo:2.6.5 &amp;ndash;smallfiles
+现在创建一个admin用户。我们可以连接到刚刚启动的mongoDB容器，并进入一个交互式的shell环境.&lt;/p&gt;
+
+&lt;p&gt;root@node1:/# docker exec -it mongo /bin/bash
+这时候，我们就进到MongoDB的Docker容器里面了，然后我们要打开一个mongo shell环境：&lt;/p&gt;
+
+&lt;p&gt;root@node1:/# mongo
+上面的命令可以打开mongo shell环境。执行后你会看到这样的输出：&lt;/p&gt;
+
+&lt;p&gt;MongoDB shell version: 2.6.5
+connecting to: test
+Welcome to the MongoDB shell.
+For interactive help, type &amp;ldquo;help&amp;rdquo;.
+For more comprehensive documentation, see&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://docs.mongodb.org/&#34;&gt;http://docs.mongodb.org/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Questions? Try the support group&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://groups.google.com/group/mongodb-user&#34;&gt;http://groups.google.com/group/mongodb-user&lt;/a&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;切换到admin用户：&lt;/p&gt;
+
+&lt;p&gt;use admin
+switched to db admin
+创建一个新的site admin 用户&lt;/p&gt;
+
+&lt;p&gt;db.createUser( {
+ user: &amp;ldquo;siteUserAdmin&amp;rdquo;,
+ pwd: &amp;ldquo;password&amp;rdquo;,
+ roles: [ { role: &amp;ldquo;userAdminAnyDatabase&amp;rdquo;, db: &amp;ldquo;admin&amp;rdquo; } ]
+});
+创建成功的话你会看到如下的成功信息:&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Successfully added user: {
+&amp;ldquo;user&amp;rdquo; : &amp;ldquo;siteUserAdmin&amp;rdquo;,
+&amp;ldquo;roles&amp;rdquo; : [
+     {
+          &amp;ldquo;role&amp;rdquo; : &amp;ldquo;userAdminAnyDatabase&amp;rdquo;,
+          &amp;ldquo;db&amp;rdquo; : &amp;ldquo;admin&amp;rdquo;
+     }
+  ]
+}
+创建一个root用户：&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;db.createUser( {
+ user: &amp;ldquo;siteRootAdmin&amp;rdquo;,
+ pwd: &amp;ldquo;password&amp;rdquo;,
+ roles: [ { role: &amp;ldquo;root&amp;rdquo;, db: &amp;ldquo;admin&amp;rdquo; } ]
+});
+你会看到如下的成功信息：&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Successfully added user: {
+        &amp;ldquo;user&amp;rdquo; : &amp;ldquo;siteRootAdmin&amp;rdquo;,
+              &amp;ldquo;roles&amp;rdquo; : [
+        {
+        &amp;ldquo;role&amp;rdquo; : &amp;ldquo;root&amp;rdquo;,
+              &amp;ldquo;db&amp;rdquo; : &amp;ldquo;admin&amp;rdquo;
+        }
+    ]
+}
+我们已经创建好了我们以后要使用的几个用户，现在我们不会退出交互式shell环境（mongo和Docker容器的环境）。&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;exit
+bye
+root@node1:/# exit
+Step4：停止第一个MongoDB实例：&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;root@node1:/# docker stop mongo
+Step5：这次使用密钥文件启动第一台MongoDB实例（还是在node1上面操作的）。&lt;/p&gt;
+
+&lt;p&gt;root@node1:/# docker rm mongo
+root@node1:/# docker run \
+&amp;ndash;name mongo \
+-v /home/core/mongo-files/data:/data/db \
+-v /home/core/mongo-files:/opt/keyfile \
+&amp;ndash;hostname=&amp;ldquo;node1.example.com&amp;rdquo; \
+&amp;ndash;add-host node1.example.com:${node1} \
+&amp;ndash;add-host node2.example.com:${node2} \
+&amp;ndash;add-host node3.example.com:${node3} \
+-p 27017:27017 -d mongo:2.6.5 \
+&amp;ndash;smallfiles \
+&amp;ndash;keyFile /opt/keyfile/mongodb-keyfile \
+&amp;ndash;replSet &amp;ldquo;rs0&amp;rdquo;
+注意：&lt;/p&gt;
+
+&lt;p&gt;&amp;ndash;keyFile的路径是/opt/keyfile/mongodb-keyfile，这是正确的。这是密钥文件在Docker内部的地址，我们用-v选项将密钥文件映射到容器内部的那个路径上（即：/opt/keyfile/mongodb-keyfile）。
+&amp;ndash;add-host把这些信息添加到Docker容器的/etc/hosts文件中，所以我们可以使用域名而不是IP地址了。在实际的生产环境中这些信息都是DNS，这些参数都可以忽略。
+Step6：连接到副本集上并且安装配置好它。这还是在node1上面进行的。我们要开启另外一个新的交互式shell环境进入mongo容器，同时开启一个mongo shell环境：&lt;/p&gt;
+
+&lt;p&gt;root@node1:/# docker exec -it mongo /bin/bash
+root@node1:/# mongo
+MongoDB shell version: 2.6.5
+&amp;gt;
+切换到admin用户下：&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;use admin
+switched to db admin
+因为我们已经设置了一个密码，所以这次我们不得不做身份验证。我们把密码设置为：password。&lt;/p&gt;
+
+&lt;p&gt;db.auth(&amp;ldquo;siteRootAdmin&amp;rdquo;, &amp;ldquo;password&amp;rdquo;);
+1
+现在我们可以开启副本集：&lt;/p&gt;
+
+&lt;p&gt;rs.initiate()
+{
+     &amp;ldquo;info2&amp;rdquo; : &amp;ldquo;no configuration explicitly specified &amp;ndash; making one&amp;rdquo;,
+     &amp;ldquo;me&amp;rdquo; : &amp;ldquo;node1.example.com:27017&amp;rdquo;,
+     &amp;ldquo;info&amp;rdquo; : &amp;ldquo;Config now saved locally.  Should come online in about a minute.&amp;rdquo;,
+     &amp;ldquo;ok&amp;rdquo; : 1
+}&lt;/p&gt;
+
+&lt;p&gt;Step7：验证已经初始化的副本集的配置：&lt;/p&gt;
+
+&lt;p&gt;rs0:PRIMARY&amp;gt; rs.conf()
+{
+    &amp;ldquo;_id&amp;rdquo; : &amp;ldquo;rs0&amp;rdquo;,
+    &amp;ldquo;version&amp;rdquo; : 1,r
+    &amp;ldquo;members&amp;rdquo; : [
+          {
+              &amp;ldquo;_id&amp;rdquo; : 0,
+              &amp;ldquo;host&amp;rdquo; : &amp;ldquo;node1.example.com:27017&amp;rdquo;
+          }
+    ]
+}&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Step8：在其余的两个节点启动MongoDB。&lt;/p&gt;
+
+&lt;p&gt;在node2上面执行命令：&lt;/p&gt;
+
+&lt;p&gt;root@node2:/# docker run \
+&amp;ndash;name mongo \
+-v /home/core/mongo-files/data:/data/db \
+-v /home/core/mongo-files:/opt/keyfile \
+&amp;ndash;hostname=&amp;ldquo;node2.example.com&amp;rdquo; \
+&amp;ndash;add-host node1.example.com:${node1} \
+&amp;ndash;add-host node2.example.com:${node2} \
+&amp;ndash;add-host node3.example.com:${node3} \
+-p 27017:27017 -d mongo:2.6.5 \
+&amp;ndash;smallfiles \
+&amp;ndash;keyFile /opt/keyfile/mongodb-keyfile \
+&amp;ndash;replSet &amp;ldquo;rs0&amp;rdquo;
+在node3上面执行命令：&lt;/p&gt;
+
+&lt;p&gt;root@node3:/# docker run \
+&amp;ndash;name mongo \
+-v /home/core/mongo-files/data:/data/db \
+-v /home/core/mongo-files:/opt/keyfile \
+&amp;ndash;hostname=&amp;ldquo;node3.example.com&amp;rdquo; \
+&amp;ndash;add-host node1.example.com:${node1} \
+&amp;ndash;add-host node2.example.com:${node2} \
+&amp;ndash;add-host node3.example.com:${node3} \
+-p 27017:27017 -d mongo:2.6.5 \
+&amp;ndash;smallfiles \
+&amp;ndash;keyFile /opt/keyfile/mongodb-keyfile \
+&amp;ndash;replSet &amp;ldquo;rs0&amp;rdquo;
+Step 9：将那两个节点加到副本集上。&lt;/p&gt;
+
+&lt;p&gt;回到node1节点，如果你在这里按了几次回车键（enter）的话，你会看到下面的提示：“rs0:PRIMARY”。这是因为这个节点是副本集“rso”的主节点。&lt;/p&gt;
+
+&lt;p&gt;rs0:PRIMARY&amp;gt; rs.add(&amp;ldquo;node2.example.com&amp;rdquo;)
+rs0:PRIMARY&amp;gt; rs.add(&amp;ldquo;node3.example.com&amp;rdquo;)
+我们可以通过执行下面的命令来验证其它两个节点是否正确的加到这个副本集当中：&lt;/p&gt;
+
+&lt;p&gt;rs0:PRIMARY&amp;gt; rs.status()
+可能会花几分钟的时间来将node1上面的数据同步到其余的两个节点上面。你可以通过查看日志来观察每一个MongoDB的Docker容器里面发生了什么。在任意一个服务器上面执行下面的命令就可以了：&lt;/p&gt;
+
+&lt;p&gt;root@node*:/# docker logs -ft mongo
+结论&lt;/p&gt;
+
+&lt;p&gt;现在你拥有了一个MongoDB集群。你可以自由的在任何时刻添加节点到这个集群上。你甚至可以关闭其中的一个节点，包括主节点，然后观察一个另外一个节点重新变成了主节点。由于这些数据都被写在了你的本机文件系统当中了，所以重启任何一个节点都不是什么大问题。&lt;/p&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>docker 后台进程参</title>
+            <link>http://kooksee.github.io/blog/%EF%BC%A4ocker%20%E5%90%8E%E5%8F%B0%E8%BF%9B%E7%A8%8B%E5%8F%82/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/%EF%BC%A4ocker%20%E5%90%8E%E5%8F%B0%E8%BF%9B%E7%A8%8B%E5%8F%82/</guid>
+            <description>&lt;p&gt;&lt;a href=&#34;http://www.widuu.com/docker/&#34;&gt;docker中文文档&lt;/a&gt;
+&lt;a href=&#34;http://www.linuxeye.com/Linux/2019.html&#34;&gt;docker详细教程&lt;/a&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;参数 	介绍
+--api-enable-cors=false 	远程API调用。
+-b, --bridge=&amp;quot;&amp;quot; 	桥接一个系统上的网桥设备到 Docker 容器里，当使用 none 可以停用容器里的网络
+--bip=&amp;quot;&amp;quot; 	使用 CIDR 地址来设定网络桥的 IP。此参数和 -b 不能一起使用。
+-D, --debug=false 	开启Debug模式。例如：docker -d -D
+-d, --daemon=false 	开启Daemon模式。
+--dns=[] 	设置容器使用DNS服务器。例如： docker -d --dns 8.8.8.8
+-dns-search=[] 	设置容器使用指定的DNS搜索域名。如： docker -d --dns-search example.com
+--exec-driver=&amp;quot;native&amp;quot; 	设置容器使用指定的运行时驱动。如：docker -d -e lxc
+-G, --group=&amp;quot;docker&amp;quot; 	在后台运行模式下，赋予指定的Group到相应的unix socket上。注意，当此参数 --group 赋予空字符串时，将去除组信息
+-g, --graph=&amp;quot;/var/lib/docker&amp;quot; 	设置Docker运行时根目录
+-H, --host=[] 	设置后台模式下指定socket绑定，可以绑定一个或多个 tcp://host:port, unix:///path/to/socket, fd://* 或 fd://socketfd。如：$ docker -H tcp://0.0.0.0:2375 ps 或者$ export DOCKER_HOST=&amp;quot;tcp://0.0.0.0:2375&amp;quot;$ docker ps
+-icc=true 	设置启用内联容器的通信。
+--ip=&amp;quot;0.0.0.0&amp;quot; 	设置容器绑定IP时使用的默认IP地址
+--ip-forward=true 	设置启动容器的 net.ipv4.ip_forward
+--iptables=true 	设置启动Docker容器自定义的iptable规则
+--mtu=0 	设置容器网络的MTU值，如果没有这个参数，选用默认 route MTU，如果没有默认route，就设置成常量值 1500。
+-p, --pidfile=&amp;quot;/var/run/docker.pid&amp;quot; 	设置后台进程PID文件路径。
+-r, --restart=true 	设置重启之前运行中的容器
+-s, --storage-driver=&amp;quot;&amp;quot; 	设置容器运行时使用指定的存储驱动，如,指定使用devicemapper,可以这样：docker -d -s devicemapper
+--selinux-enabled=false 	设置启用selinux支持
+--storage-opt=[] 	设置存储驱动的参数
+Docker 配置文件位置
+
+Ｄocker 的配置文件可以设置大部分的后台进程参数，在各个操作系统中的存放位置不一致
+
+在 ubuntu 中的位置是：/etc/default/docker
+
+在 centos 中的位置是：/etc/sysconfig/docker
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>docker备份</title>
+            <link>http://kooksee.github.io/blog/docker%E5%A4%87%E4%BB%BD/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/docker%E5%A4%87%E4%BB%BD/</guid>
+            <description>&lt;p&gt;##安装Docker&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# 检查一下AUFS是否已安装
+sudo apt-get update
+sudo apt-get install linux-image-extra-`uname -r`
+# 添加Docker repository key
+sudo sh -c &amp;quot;wget -qO- https://get.docker.io/gpg | apt-key add -&amp;quot;
+# 添加Docker repository，并安装Docker
+sudo sh -c &amp;quot;echo deb http://get.docker.io/ubuntu docker main &amp;gt; /etc/apt/sources.list.d/docker.list&amp;quot;
+sudo apt-get update
+sudo apt-get install lxc-docker
+# 检查Docker是否已安装成功
+sudo docker version
+# 终端输出 Client version: 0.7.1
+Go version (client): go1.2
+Git commit (client): 88df052
+Server version: 0.7.1
+Git commit (server): 88df052
+Go version (server): go1.2
+Last stable version: 0.7.1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##去除掉sudo&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# 添加一个新的docker用户组
+sudo groupadd docker
+# 添加当前用户到docker用户组里，注意这里的yongboy为ubuntu server登录用户名
+sudo gpasswd -a yongboy docker
+# 重启Docker后台监护进程
+sudo service docker restart
+# 重启之后，尝试一下，是否生效
+docker version
+#若还未生效，则系统重启，则生效
+sudo reboot
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##安装SSH终端服务器，便于我们外部使用SSH客户端登陆访问&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;apt-get update
+apt-get install openssh-server
+which sshd
+/usr/sbin/sshd
+mkdir /var/run/sshd
+passwd #输入用户密码，我这里设置为123456，便于SSH客户端登陆使用
+exit #退出
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##以后台进程方式长期运行此镜像实例&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker run -d -p 22 -p 80:8080 learn/tutorial /usr/sbin/sshd -D
+buntu容器内运行着的SSH Server占用22端口，-p 22进行指定。-p 80:8080 指的是，我们ubuntu将会以8080端口运行tomcat，但对外（容器外）映射的端口为80。
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这时，查看一下，是否成功运行。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#docker ps
+CONTAINER ID IMAGE COMMAND CREATED STATUS PORTS NAMES
+871769a4f5ea learn/tutorial:latest /usr/sbin/sshd -D About a minute ago Up About a minute 0.0.0.0:49154-&amp;gt;22/tcp, 0.0.0.0:80-&amp;gt;8080/tcp focused_poincare
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##注意这里的分配随机的SSH连接端口号为49154：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ssh root@127.0.0.1 -p 49154
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##输入可以口令，是不是可以进入了？你一旦控制了SSH，剩下的事情就很简单了，安装JDK，安装tomcat等，随你所愿了。以下为安装脚本：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# 在ubuntu 12.04上安装oracle jdk 7
+apt-get install python-software-properties
+add-apt-repository ppa:webupd8team/java
+apt-get update
+apt-get install -y wget
+apt-get install oracle-java7-installer
+java -version
+# 下载tomcat 7.0.47
+wget http://mirror.bit.edu.cn/apache/tomcat/tomcat-7/v7.0.47/bin/apache-tomcat-7.0.47.tar.gz
+# 解压，运行
+tar xvf apache-tomcat-7.0.47.tar.gz
+cd apache-tomcat-7.0.47
+bin/startup.sh
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;默认情况下，tomcat会占用8080端口，刚才在启动镜像实例的时候，指定了 -p 80:8080，ubuntu镜像实例/容器，开放8080端口，映射到宿主机端口就是80。知道宿主机IP地址，那就可以自由访问了。在宿主机上，通过curl测试一下即可：&lt;/p&gt;
+
+&lt;p&gt;curl &lt;a href=&#34;http://192.168.190.131&#34;&gt;http://192.168.190.131&lt;/a&gt;
+当然，你也可以使用浏览器访问啦。&lt;/p&gt;
+
+&lt;p&gt;真实情况，可能不会让tomcat直接对外开放80端口，一般都会位于nginx/apache或者防火墙的后面，上面仅为演示。&lt;/p&gt;
+
+&lt;p&gt;小结&lt;/p&gt;
+
+&lt;p&gt;在Docker帮助下搭建一个Tomcat运行时环境，总体很简单，让我们看到了PAAS的身影。不错，使用Docker作为PAAS底层服务，本身就不复杂。 下面有时间，会谈一谈如何使用脚本文件构建一个镜像实例，同时会谈一谈Docker的实现原理和机制等。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://www.blogjava.net/yongboy/archive/2013/12/12/407498.html&#34;&gt;http://www.blogjava.net/yongboy/archive/2013/12/12/407498.html&lt;/a&gt;&lt;/p&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>docker安装</title>
+            <link>http://kooksee.github.io/blog/docker%E5%AE%89%E8%A3%85/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/docker%E5%AE%89%E8%A3%85/</guid>
+            <description>&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;升级内核
+docker要求linux3.8以上内核，如果你的电脑内核低于3.8（一般情况下是低于的），那么就要把内核升级到高版本。我已经写了关于ubuntu内核升级的&lt;a href=&#34;http://www.jianshu.com/p/bc211bad50b1&#34;&gt;文章&lt;/a&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;docker安装
+docker的官网已经表明了ubuntu为官方授权系统之一，所以ubuntu系统自带了docker，只是可能有时候版本有点低，不过我安装的时候版本已经超过1.0，可以了&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;在ubuntu上安装了docker.io后，在使用“sudo docker.io -d”启动的时候报如下错误&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;2015/01/07 18:52:17 docker daemon: 1.0.1 990021a; execdriver: native; graphdriver:
+[1e467eaf] +job serveapi(unix:///var/run/docker.sock)
+[1e467eaf] +job initserver()
+[1e467eaf.initserver()] Creating server
+2015/01/07 18:52:17 Listening for HTTP on unix (/var/run/docker.sock)
+[1e467eaf] +job init_networkdriver()
+[1e467eaf] -job init_networkdriver() = OK (0)
+Error loadin
+g docker apparmor profile: exec: &amp;quot;/sbin/apparmor_parser&amp;quot;: stat /sbin/apparmor_parser: no such file or directory ()
+[1e467eaf] -job initserver() = ERR (1)
+2015/01/07 18:52:17 Error loading docker apparmor profile: exec: &amp;quot;/sbin/apparmor_parser&amp;quot;: stat /sbin/apparmor_parser: no such file or directory ()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这是因为在ubuntu上Docker依赖apparmor包，此时可以使用下面的命令来安装&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;sudo apt-get install apparmor
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;安装后再启动Docker问题消失。&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;如果各位看官熟悉 Git 和 GitHub ，可与 Docker 做个类比，可更加容易理解 Docker 和 Docker Hub 及两者关系。
+1. docker version&lt;/p&gt;
+
+&lt;p&gt;显示 Docker 版本信息。
+2. docker info&lt;/p&gt;
+
+&lt;p&gt;显示 Docker 系统信息，包括镜像和容器数。
+3. docker search
+docker search [options &amp;ldquo;o&amp;rdquo;&amp;gt;] term
+docker search -s  django&lt;/p&gt;
+
+&lt;p&gt;从 Docker Hub 中搜索符合条件的镜像。&lt;/p&gt;
+
+&lt;p&gt;&amp;ndash;automated 只列出 automated build
+类型的镜像；&lt;/p&gt;
+
+&lt;p&gt;&amp;ndash;no-trunc 可显示完整的镜像描述；&lt;/p&gt;
+
+&lt;p&gt;-s 40 列出收藏数不小于40的镜像。&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;docker pull
+docker pull [-a &amp;ldquo;o&amp;rdquo;&amp;gt;] [user/ &amp;ldquo;o&amp;rdquo;&amp;gt;]name[:tag &amp;ldquo;o&amp;rdquo;&amp;gt;]
+docker pull laozhu/telescope:latest&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;从 Docker Hub 中拉取或者更新指定镜像。&lt;/p&gt;
+
+&lt;p&gt;-a 拉取所有 tagged 镜像 。&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;docker login
+root@moon:~# docker login
+Username: username
+Password: ****
+Email: user@domain.com
+Login Succeeded&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;按步骤输入在 Docker Hub 注册的用户名、密码和邮箱即可完成登录。
+6. docker logout&lt;/p&gt;
+
+&lt;p&gt;运行后从指定服务器登出，默认为官方服务器。
+7. docker images
+docker images [options &amp;ldquo;o&amp;rdquo;&amp;gt;] [name]&lt;/p&gt;
+
+&lt;p&gt;列出本地所有镜像。其中 [name] 对镜像名称进行关键词查询。&lt;/p&gt;
+
+&lt;p&gt;-a 列出所有镜像（含过程镜像）；&lt;/p&gt;
+
+&lt;p&gt;-f 过滤镜像，如： -f [&amp;lsquo;dangling=true&amp;rsquo;] 只列出满足
+dangling=true 条件的镜像；&lt;/p&gt;
+
+&lt;p&gt;&amp;ndash;no-trunc 可显示完整的镜像ID；&lt;/p&gt;
+
+&lt;p&gt;-q 仅列出镜像ID。&lt;/p&gt;
+
+&lt;p&gt;&amp;ndash;tree 以树状结构列出镜像的所有提交历史。&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;docker ps&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;列出所有运行中容器。&lt;/p&gt;
+
+&lt;p&gt;-a 列出所有容器（含沉睡镜像）；&lt;/p&gt;
+
+&lt;p&gt;&amp;ndash;before=&amp;ldquo;nginx&amp;rdquo; 列出在某一容器之前创建的容器，接受容器名称和ID作为参数；&lt;/p&gt;
+
+&lt;p&gt;&amp;ndash;since=&amp;ldquo;nginx&amp;rdquo; 列出在某一容器之后创建的容器，接受容器名称和ID作为参数；&lt;/p&gt;
+
+&lt;p&gt;-f [exited=&lt;int&gt;] 列出满足
+exited=&lt;int&gt; 条件的容器；&lt;/p&gt;
+
+&lt;p&gt;-l 仅列出最新创建的一个容器；&lt;/p&gt;
+
+&lt;p&gt;&amp;ndash;no-trunc 显示完整的容器ID；&lt;/p&gt;
+
+&lt;p&gt;-n=4 列出最近创建的4个容器；&lt;/p&gt;
+
+&lt;p&gt;-q 仅列出容器ID；&lt;/p&gt;
+
+&lt;p&gt;-s 显示容器大小。&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;docker rmi
+docker rmi [options &amp;ldquo;o&amp;rdquo;&amp;gt;] &lt;image&gt;  &amp;ldquo;o&amp;rdquo;&amp;gt;[image&amp;hellip;]
+docker rmi nginx:latest postgres:latest python:latest&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;从本地移除一个或多个指定的镜像。&lt;/p&gt;
+
+&lt;p&gt;-f 强行移除该镜像，即使其正被使用；&lt;/p&gt;
+
+&lt;p&gt;&amp;ndash;no-prune 不移除该镜像的过程镜像，默认移除。&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;docker rm
+docker rm [options &amp;ldquo;o&amp;rdquo;&amp;gt;] &lt;container&gt;  &amp;ldquo;o&amp;rdquo;&amp;gt;[container&amp;hellip;]
+docker rm nginx-01 nginx-02 db-01 db-02
+sudo docker rm -l /webapp/redis&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;-f 强行移除该容器，即使其正在运行；&lt;/p&gt;
+
+&lt;p&gt;-l 移除容器间的网络连接，而非容器本身；&lt;/p&gt;
+
+&lt;p&gt;-v 移除与容器关联的空间。&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;docker history
+docker history  &amp;ldquo;o&amp;rdquo;&amp;gt;[options] &lt;image&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;查看指定镜像的创建历史。&lt;/p&gt;
+
+&lt;p&gt;&amp;ndash;no-trunc 显示完整的提交记录；&lt;/p&gt;
+
+&lt;p&gt;-q 仅列出提交记录ID。&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;docker start|stop|restart
+docker start|stop &amp;ldquo;p&amp;rdquo;&amp;gt;|restart [options &amp;ldquo;o&amp;rdquo;&amp;gt;] &lt;container&gt;  &amp;ldquo;o&amp;rdquo;&amp;gt;[container&amp;hellip;]&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;启动、停止和重启一个或多个指定容器。&lt;/p&gt;
+
+&lt;p&gt;-a 待完成&lt;/p&gt;
+
+&lt;p&gt;-i 启动一个容器并进入交互模式；&lt;/p&gt;
+
+&lt;p&gt;-t 10 停止或者重启容器的超时时间（秒），超时后系统将杀死进程。&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;docker kill
+docker kill  &amp;ldquo;o&amp;rdquo;&amp;gt;[options &amp;ldquo;o&amp;rdquo;&amp;gt;] &lt;container&gt;  &amp;ldquo;o&amp;rdquo;&amp;gt;[container&amp;hellip;]&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;杀死一个或多个指定容器进程。&lt;/p&gt;
+
+&lt;p&gt;-s &amp;ldquo;KILL&amp;rdquo; 自定义发送至容器的信号。&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;docker events
+docker events [options &amp;ldquo;o&amp;rdquo;&amp;gt;]
+docker events &amp;ndash;since= &amp;ldquo;s2&amp;rdquo;&amp;gt;&amp;ldquo;20141020&amp;rdquo;
+docker events &amp;ndash;until= &amp;ldquo;s2&amp;rdquo;&amp;gt;&amp;ldquo;20120310&amp;rdquo;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;从服务器拉取个人动态，可选择时间区间。
+15. docker save
+docker save -i &amp;ldquo;debian.tar&amp;rdquo;
+docker save &amp;gt; &amp;ldquo;debian.tar&amp;rdquo;&lt;/p&gt;
+
+&lt;p&gt;将指定镜像保存成 tar 归档文件， docker load 的逆操作。保存后再加载（saved-loaded）的镜像不会丢失提交历史和层，可以回滚。&lt;/p&gt;
+
+&lt;p&gt;-o &amp;ldquo;debian.tar&amp;rdquo; 指定保存的镜像归档。&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;docker load
+docker load [options]
+docker load &amp;lt; debian.tar
+docker load -i &amp;ldquo;debian.tar&amp;rdquo;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;从 tar 镜像归档中载入镜像， docker save 的逆操作。保存后再加载（saved-loaded）的镜像不会丢失提交历史和层，可以回滚。&lt;/p&gt;
+
+&lt;p&gt;-i &amp;ldquo;debian.tar&amp;rdquo; 指定载入的镜像归档。&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;docker export
+docker export &lt;container&gt;
+docker export nginx-01 &amp;gt; export.tar&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;将指定的容器保存成 tar 归档文件， docker import 的逆操作。导出后导入（exported-imported)）的容器会丢失所有的提交历史，无法回滚。
+18. docker import
+docker import url|-  &amp;ldquo;o&amp;rdquo;&amp;gt;[repository[:tag &amp;ldquo;o&amp;rdquo;&amp;gt;]]
+cat export.tar  &amp;ldquo;p&amp;rdquo;&amp;gt;| docker import - imported-nginx:latest
+docker import &lt;a href=&#34;http://example.com/export.tar&#34;&gt;http://example.com/export.tar&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;从归档文件（支持远程文件）创建一个镜像， export 的逆操作，可为导入镜像打上标签。导出后导入（exported-imported)）的容器会丢失所有的提交历史，无法回滚。
+19. docker top
+docker top &lt;running_container&gt;  &amp;ldquo;o&amp;rdquo;&amp;gt;[ps options]&lt;/p&gt;
+
+&lt;p&gt;查看一个正在运行容器进程，支持 ps 命令参数。
+20. docker inspect
+docker instpect nginx:latest
+docker inspect nginx-container&lt;/p&gt;
+
+&lt;p&gt;检查镜像或者容器的参数，默认返回 JSON 格式。&lt;/p&gt;
+
+&lt;p&gt;-f 指定返回值的模板文件。&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;docker pause&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;暂停某一容器的所有进程。
+22. docker unpause
+docker unpause &lt;container&gt;&lt;/p&gt;
+
+&lt;p&gt;恢复某一容器的所有进程。
+23. docker tag
+docker tag [options &amp;ldquo;o&amp;rdquo;&amp;gt;] &lt;image&gt;[:tag &amp;ldquo;o&amp;rdquo;&amp;gt;] [repository/ &amp;ldquo;o&amp;rdquo;&amp;gt;][username/]name &amp;ldquo;o&amp;rdquo;&amp;gt;[:tag]&lt;/p&gt;
+
+&lt;p&gt;标记本地镜像，将其归入某一仓库。&lt;/p&gt;
+
+&lt;p&gt;-f 覆盖已有标记。&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;docker push
+docker push name[:tag &amp;ldquo;o&amp;rdquo;&amp;gt;]
+docker push laozhu/nginx:latest&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;将镜像推送至远程仓库，默认为 Docker Hub 。
+25. docker logs
+docker logs [options &amp;ldquo;o&amp;rdquo;&amp;gt;] &lt;container&gt;
+docker logs -f -t &amp;ndash;tail= &amp;ldquo;s2&amp;rdquo;&amp;gt;&amp;ldquo;10&amp;rdquo; insane_babbage&lt;/p&gt;
+
+&lt;p&gt;获取容器运行时的输出日志。&lt;/p&gt;
+
+&lt;p&gt;-f 跟踪容器日志的最近更新；&lt;/p&gt;
+
+&lt;p&gt;-t 显示容器日志的时间戳；&lt;/p&gt;
+
+&lt;p&gt;&amp;ndash;tail=&amp;ldquo;10&amp;rdquo; 仅列出最新10条容器日志。&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;docker run
+docker run [options &amp;ldquo;o&amp;rdquo;&amp;gt;] &lt;image&gt; [ &amp;ldquo;nb&amp;rdquo;&amp;gt;command]  &amp;ldquo;o&amp;rdquo;&amp;gt;[arg&amp;hellip;]&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;启动一个容器，在其中运行指定命令。&lt;/p&gt;
+
+&lt;p&gt;-a stdin 指定标准输入输出内容类型，可选 STDIN/
+STDOUT / STDERR 三项；&lt;/p&gt;
+
+&lt;p&gt;-d 后台运行容器，并返回容器ID；&lt;/p&gt;
+
+&lt;p&gt;-i 以交互模式运行容器，通常与 -t 同时使用；&lt;/p&gt;
+
+&lt;p&gt;-t 为容器重新分配一个伪输入终端，通常与 -i 同时使用；&lt;/p&gt;
+
+&lt;p&gt;&amp;ndash;name=&amp;ldquo;nginx-lb&amp;rdquo; 为容器指定一个名称；&lt;/p&gt;
+
+&lt;p&gt;&amp;ndash;dns 8.8.8.8 指定容器使用的DNS服务器，默认和宿主一致；&lt;/p&gt;
+
+&lt;p&gt;&amp;ndash;dns-search example.com 指定容器DNS搜索域名，默认和宿主一致；&lt;/p&gt;
+
+&lt;p&gt;-h &amp;ldquo;mars&amp;rdquo; 指定容器的hostname；&lt;/p&gt;
+
+&lt;p&gt;-e username=&amp;ldquo;ritchie&amp;rdquo; 设置环境变量；&lt;/p&gt;
+
+&lt;p&gt;&amp;ndash;env-file=[] 从指定文件读入环境变量；&lt;/p&gt;
+
+&lt;p&gt;&amp;ndash;cpuset=&amp;ldquo;0-2&amp;rdquo; or &amp;ndash;cpuset=&amp;ldquo;0,1,2&amp;rdquo;
+绑定容器到指定CPU运行；&lt;/p&gt;
+
+&lt;p&gt;-c 待完成&lt;/p&gt;
+
+&lt;p&gt;-m 待完成&lt;/p&gt;
+
+&lt;p&gt;&amp;ndash;net=&amp;ldquo;bridge&amp;rdquo; 指定容器的网络连接类型，支持 bridge /
+host / none
+container:&lt;name|id&gt; 四种类型；&lt;/p&gt;
+
+&lt;p&gt;&amp;ndash;link=[] 待完成&lt;/p&gt;
+
+&lt;p&gt;&amp;ndash;expose=[] 待完成&lt;/p&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>docker平台搭建</title>
+            <link>http://kooksee.github.io/blog/docker%E5%B9%B3%E5%8F%B0%E6%90%AD/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/docker%E5%B9%B3%E5%8F%B0%E6%90%AD/</guid>
+            <description>&lt;p&gt;#docker搭建mysql环境&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#Dockerfile
+
+#
+# MySQL Dockerfile
+#
+# https://github.com/dockerfile/mysql
+#
+
+# Pull base image.
+FROM ubuntu:14.04
+
+# Install MySQL.
+RUN \
+  apt-get update &amp;amp;&amp;amp; \
+  DEBIAN_FRONTEND=noninteractive apt-get install -y mysql-server &amp;amp;&amp;amp; \
+  rm -rf /var/lib/apt/lists/* &amp;amp;&amp;amp; \
+  sed -i &#39;s/^\(bind-address\s.*\)/# \1/&#39; /etc/mysql/my.cnf &amp;amp;&amp;amp; \
+  sed -i &#39;s/^\(log_error\s.*\)/# \1/&#39; /etc/mysql/my.cnf &amp;amp;&amp;amp; \
+  echo &amp;quot;mysqld_safe &amp;amp;&amp;quot; &amp;gt; /tmp/config &amp;amp;&amp;amp; \
+  echo &amp;quot;mysqladmin --silent --wait=30 ping || exit 1&amp;quot; &amp;gt;&amp;gt; /tmp/config &amp;amp;&amp;amp; \
+  echo &amp;quot;mysql -e &#39;GRANT ALL PRIVILEGES ON *.* TO \&amp;quot;root\&amp;quot;@\&amp;quot;%\&amp;quot; WITH GRANT OPTION;&#39;&amp;quot; &amp;gt;&amp;gt; /tmp/config &amp;amp;&amp;amp; \
+  bash /tmp/config &amp;amp;&amp;amp; \
+  rm -f /tmp/config
+
+# Define mountable directories.
+VOLUME [&amp;quot;/etc/mysql&amp;quot;, &amp;quot;/var/lib/mysql&amp;quot;]
+
+# Define working directory.
+WORKDIR /data
+
+# Define default command.
+CMD [&amp;quot;mysqld_safe&amp;quot;]
+
+# Expose ports.
+EXPOSE 3306
+
+
+#shell
+docker build -t ubuntu:mysql .
+
+#Run mysqld-saf
+docker run -d --name mysql -p 3306:3306 ubuntu:mysql
+
+#Run mysql
+docker run -it --rm --link mysql:mysql ubuntu:mysql bash -c &#39;mysql -h $MYSQL_PORT_3306_TCP_AD
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;zookeeper下载地址
+&lt;a href=&#34;http://apache.mirrors.pair.com/zookeeper/&#34;&gt;http://apache.mirrors.pair.com/zookeeper/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;docker与精彩的shell
+0x1:删除所有标签为none的镜像&lt;/p&gt;
+
+&lt;p&gt;for i in &lt;code&gt;sudo docker images|grep \&amp;lt;none\&amp;gt;|awk &#39;{print $3}&#39;&lt;/code&gt;;do sudo docker rmi $i;done
+或者&lt;/p&gt;
+
+&lt;p&gt;docker images|grep &amp;lt;none&amp;gt;|awk &amp;lsquo;{print $3}&amp;rsquo; | xargs docker rmi
+0x2:Dockerfile换源的简单方法&lt;/p&gt;
+
+&lt;p&gt;Ubuntu添加：&lt;/p&gt;
+
+&lt;p&gt;RUN sed -i &amp;rsquo;s/http:\/\/archive.ubuntu.com\/ubuntu\//http:\/\/mirrors.163.com\/ubuntu\//g&amp;rsquo; /etc/apt/sources.list
+0x3:查看docker的运行情况&lt;/p&gt;
+
+&lt;p&gt;docker stats $(docker ps | awk &amp;lsquo;{if(NR&amp;gt;1) print $NF}&amp;rsquo;)
+分享到评
+``&lt;/p&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>postgresql数据库</title>
+            <link>http://kooksee.github.io/blog/postgresql%E6%95%B0%E6%8D%AE%E5%BA%93/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/postgresql%E6%95%B0%E6%8D%AE%E5%BA%93/</guid>
+            <description>&lt;p&gt;##安装&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#安装PostgreSQL客户端
+sudo apt-get install postgresql-client
+
+#安装PostgreSQL服务
+sudo apt-get install postgresql
+
+#安装图形管理界面
+sudo apt-get install pgadmin
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;初次安装后，默认生成一个名为postgres的数据库和一个名为postgres的数据库用户。这里需要注意的是，同时还生成了一个名为postgres的Linux系统用户。下面，我们使用postgres用户，来生成其他用户和新数据库。好几种方法可以达到这个目的，这里介绍两种。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;##添加新用户和新数据库&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#首先，新建一个Linux新用户，可以取你想要的名字，这里为dbuser
+sudo adduser dbuser   
+#然后，切换到postgres用户。
+sudo su - postgr
+#下一步，使用psql命令登录PostgreSQL控制台。
+psql
+#这时相当于系统用户postgres以同名数据库用户的身份，登录数据库，这是不用输入密码的。如果一切正常，系统提示符会变为”postgres=#”，表示这时已经进入了数据库控制台。以下的命令都在控制台内完成。
+
+#第一件事是使用\password命令，为postgres用户设置一个密码。
+\password postgres
+#第二件事是创建数据库用户dbuser（刚才创建的是Linux系统用户），并设置密码。
+CREATE USER dbuser WITH PASSWORD &#39;password&#39;;
+#第三件事是创建用户数据库，这里为exampledb，并指定所有者为dbuser。
+CREATE DATABASE exampledb OWNER dbuser;
+第四件事是将exampledb数据库的所有权限都赋予dbuser，否则dbuser只能登录控制台，没有任何数据库操作权限。
+GRANT ALL PRIVILEGES ON DATABASE exampledb to dbuser;
+最后，使用\q命令退出控制台（也可以直接按ctrl+D）。
+\q
+
+第二种方法，使用shell命令行。
+添加新用户和新数据库，除了在PostgreSQL控制台内，还可以在shell命令行下完成。这是因为PostgreSQL提供了命令行程序createuser和createdb。还是以新建用户dbuser和数据库exampledb为例。
+首先，创建数据库用户dbuser，并指定其为超级用户。
+sudo -u postgres createuser --superuser dbuser
+然后，登录数据库控制台，设置dbuser用户的密码，完成后退出控制台。
+sudo -u postgres psql
+\password dbuser
+\q
+接着，在shell命令行下，创建数据库exampledb，并指定所有者为dbuser。
+sudo -u postgres createdb -O dbuser exampledb
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##登录数据库&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;添加新用户和新数据库以后，就要以新用户的名义登录数据库，这时使用的是psql命令。
+psql -U dbuser -d exampledb -h 127.0.0.1 -p 5432
+上面命令的参数含义如下：
+-U指定用户，
+-d指定数据库，
+-h指定服务器，
+-p指定端口。
+
+输入上面命令以后，系统会提示输入dbuser用户的密码。输入正确，就可以登录控制台了。
+psql命令存在简写形式。如果当前Linux系统用户，同时也是PostgreSQL用户，则可以省略用户名（-U参数的部分）。举例来说，我的 Linux系统用户名为ruanyf，且PostgreSQL数据库存在同名用户，则我以ruanyf身份登录Linux系统后，可以直接使用下面的命令 登录数据库，且不需要密码。
+psql exampledb
+此时，如果PostgreSQL内部还存在与当前系统用户同名的数据库，则连数据库名都可以省略。比如，假定存在一个叫做ruanyf的数据库，则直接键入psql就可以登录该数据库。
+psql
+另外，如果要恢复外部数据，可以使用下面的命令。
+psql exampledb &amp;lt; exampledb.sql
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##控制台命令&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;除了前面已经用到的\password命令（设置密码）和\q命令（退出）以外，控制台还提供一系列其他命令。
+\h：查看SQL命令的解释，比如\h select。
+\?：查看psql命令列表。\l：列出所有数据库。
+\c [database_name]：连接其他数据库。
+\d：列出当前数据库的所有表格。
+\d [table_name]：列出某一张表格的结构。
+\du：列出所有用户。
+\e：打开文本编辑器。
+\conninfo：列出当前数据库和连接的信息。
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##数据库操作&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;基本的数据库操作，就是使用一般的SQL语言。
+# 创建新表
+CREATE TABLE usertbl(name VARCHAR(20), signupdate DATE);
+# 插入数据
+INSERT INTO usertbl(name, signupdate) VALUES(&#39;张三&#39;, &#39;2013-12-22&#39;);
+# 选择记录
+SELECT * FROM user_tbl;
+# 更新数据
+UPDATE user_tbl set name = &#39;李四&#39; WHERE name = &#39;张三&#39;;
+# 删除记录
+DELETE FROM user_tbl WHERE name = &#39;李四&#39; ;
+# 添加栏位
+ALTER TABLE user_tbl ADD email VARCHAR(40);
+# 更新结构
+ALTER TABLE usertbl ALTER COLUMN signupdate SET NOT NULL;
+# 更名栏位
+ALTER TABLE usertbl RENAME COLUMN signupdate TO signup;
+# 删除栏位
+ALTER TABLE user_tbl DROP COLUMN email;
+# 表格更名
+ALTER TABLE usertbl RENAME TO backuptbl;
+# 删除表格
+DROP TABLE IF EXISTS backup_tbl;
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>搭建基于Docker的MongoDB复制集群环境</title>
+            <link>http://kooksee.github.io/blog/%E6%90%AD%E5%BB%BA%E5%9F%BA%E4%BA%8EDocker%E7%9A%84MongoDB%E5%A4%8D%E5%88%B6%E9%9B%86%E7%BE%A4%E7%8E%AF%E5%A2%83/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/%E6%90%AD%E5%BB%BA%E5%9F%BA%E4%BA%8EDocker%E7%9A%84MongoDB%E5%A4%8D%E5%88%B6%E9%9B%86%E7%BE%A4%E7%8E%AF%E5%A2%83/</guid>
+            <description>&lt;p&gt;ygeR
+TEAM ZWT
+03-73-233357
+12-31-2015
+ABJUK9 XZ5A9A Z95XYV Q6VEKJ ACKW69 WTBH95 8JMFV6 5K9BUW&lt;/p&gt;
+
+&lt;p&gt;一步一步教你搭建基于Docker的MongoDB复制集群环境&lt;/p&gt;
+
+&lt;p&gt;1.安装docker
+2.创建MongoDB的Image
+3.搭建MongoDB的集群&lt;/p&gt;
+
+&lt;p&gt;Docker 是一个开源的应用容器引擎，让开发者可以打包他们的应用以及依赖包到一个可移植的容器中。&lt;/p&gt;
+
+&lt;p&gt;1.Ubuntu14.04安装docker
+参考文档 &lt;a href=&#34;http://docs.docker.com/installation/ubuntulinux/&#34;&gt;http://docs.docker.com/installation/ubuntulinux/&lt;/a&gt;
+参考文档 &lt;a href=&#34;http://docs.docker.com/mac/started/&#34;&gt;http://docs.docker.com/mac/started/&lt;/a&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;linuxidc@linuxidc:~$ wget -qO-https://get.docker.com/ | sh
+linuxidc@linuxidc:~$ sudo usermod -aG docker pc
+linuxidc@linuxidc:~$ sudo reboot
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;如果是其他（更早）版本的Linux参考
+安装Docker使用apt-get命令:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    $ apt-get install docker.
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;启动服务和守护进程&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    $ service docker.io status
+    $ service docker.io start
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;创建软连接：ln -sf /usr/bin/docker.io /usr/local/bin/docker
+    如没有提示错误则说明你已经在Ubuntu14.04上面快速安装Docker成功了。&lt;/p&gt;
+
+&lt;p&gt;卸载Uninstallation&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    $ sudo apt-get purge lxc-docker
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To uninstall the Docker package and dependencies that are no longer needed:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    $ sudo apt-get autoremove --purge lxc-docker
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;2.创建MongoDB的Image&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;linuxidc@linuxidc:~$ docker pull ubuntu:14.04
+linuxidc@linuxidc:~$ sudo docker images
+REPOSITORY          TAG                IMAGE ID            CREATED            VIRTUAL SIZE
+ubuntu              14.04              6d4946999d4f        3 weeks ago        188.3 MB
+linuxidc@linuxidc:~$
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;编写dockerfile&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;linuxidc@linuxidc:~$ vim Dockerfile
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Dockerfile内容如下&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#VERSION 0.1.0
+FROM ubuntu:14.04
+
+#Install some
+RUN apt-get clean
+RUN apt-get update
+RUN apt-get install -y g++
+RUN apt-get install -y openssh-server
+RUN mkdir -p /var/run/sshd
+
+#open port 22
+EXPOSE 22
+#CMD [&amp;quot;/usr/sbin/sshd&amp;quot;, &amp;quot;-D&amp;quot;]
+
+
+RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
+ENV MONGO_MAJOR 3.0
+RUN echo &amp;quot;deb http://repo.mongodb.org/apt/debian wheezy/mongodb-org/$MONGO_MAJOR main&amp;quot; &amp;gt; /etc/apt/sources.list.d/mongodb-org.list
+# Install MongoDB
+RUN apt-get update
+RUN sudo apt-get install -y mongodb-org=3.0.4 mongodb-org-server=3.0.4 mongodb-org-shell=3.0.4 mongodb-org-mongos=3.0.4 mongodb-org-tools=3.0.4
+
+# Create the MongoDB data directory
+RUN mkdir -p /data/db
+
+#open port 27017
+EXPOSE 27017
+ENTRYPOINT [&amp;quot;usr/bin/mongod&amp;quot;]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;写好了Dockerfile 就可以生成带有mongodb的image ：后面是flag .表示当前路径的Dockerfile&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;linuxidc@linuxidc:~$ sudo docker build -t pc/mongos:master .
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;再次查看一下docker image&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;linuxidc@linuxidc:~$ sudo docker images
+REPOSITORY          TAG                IMAGE ID            CREATED            VIRTUAL SIZE
+pc/mongod          master              6fcc1b62e091        54 minutes ago      542 MB
+ubuntu              14.04              6d4946999d4f        4 weeks ago        188.3 MB
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;3.搭建MongoDB的集群
+下面我们就启动3个基于mongod：master的container&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;linuxidc@linuxidc:~$ sudo docker run --name rs_server1 -p 21117:27017 -d pc/mongod:master --noprealloc --smallfiles --replSet rs1
+操作成功之后返回的就是容器的id
+6306bf3057f8ebca79d7bd130ba35e260da7177925a85a1c9a3d5d21c551e0aa
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;后面两个容器同理&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;linuxidc@linuxidc:~$ sudo docker run --name rs_server2 -p 22117:27017 -d pc/mongod:master --noprealloc --smallfiles --replSet rs1
+b60c977313e1b6143c0346e1c6138c3ad4831818f6349fc98181fa76edbd2eff
+linuxidc@linuxidc:~$ sudo docker run --name rs_server3 -p 23117:27017 -d pc/mongod:master --noprealloc --smallfiles --replSet rs1
+cebebc142a1bfed7162a06441ad841f4173c3f71c97f3dded8d5c3833ea9fa78
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;选择一个容器执行一下ifconfig 查看ip 一般都是同网段中递增的&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;linuxidc@linuxidc:~$ sudo docker exec 6306bf3057f8ebca79d7bd130ba35e260da7177925a85a1c9a3d5d21c551e0aa ifconfig
+eth0      Link encap:Ethernet  HWaddr 02:42:ac:11:00:01
+          inet addr:172.17.0.1  Bcast:0.0.0.0  Mask:255.255.0.0
+          inet6 addr: fe80::42:acff:fe11:1/64 Scope:Link
+          UP BROADCAST RUNNING  MTU:1500  Metric:1
+          RX packets:26 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:10 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0
+          RX bytes:2124 (2.1 KB)  TX bytes:828 (828.0 B)
+
+lo        Link encap:Local Loopback
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          inet6 addr: ::1/128 Scope:Host
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0
+          RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;可以想象 3个容器的ip应该是172.17.0.1 172.17.0.2 172.17.0.3&lt;/p&gt;
+
+&lt;p&gt;查看运行的容器&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;linuxidc@linuxidc:~$ sudo docker ps -a
+CONTAINER ID        IMAGE              COMMAND                CREATED              STATUS              PORTS                              NAMES
+cebebc142a1b        pc/mongod:master    &amp;quot;usr/bin/mongod --no  About a minute ago  Up About a minute  22/tcp, 0.0.0.0:23117-&amp;gt;27017/tcp  rs_server3         
+b60c977313e1        pc/mongod:master    &amp;quot;usr/bin/mongod --no  About a minute ago  Up About a minute  22/tcp, 0.0.0.0:22117-&amp;gt;27017/tcp  rs_server2         
+6306bf3057f8        pc/mongod:master    &amp;quot;usr/bin/mongod --no  About a minute ago  Up About a minute  22/tcp, 0.0.0.0:21117-&amp;gt;27017/tcp  rs_server1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;从上述信息可以看出本机的21117 22117 23117  映射到docker的容器的端口上去了&lt;/p&gt;
+
+&lt;p&gt;使用本机mongo客户端连接到21117&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;linuxidc@linuxidc:~$ mongo --port 21117
+MongoDB shell version: 3.0.4
+connecting to: 127.0.0.1:21117/test
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;开始配置 复制集的成员信息&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt; myconf = {&amp;quot;_id&amp;quot;:&amp;quot;rs1&amp;quot;,&amp;quot;members&amp;quot;:[
+... {&amp;quot;_id&amp;quot;:0,&amp;quot;host&amp;quot;:&amp;quot;172.17.0.1:27017&amp;quot;},
+... {&amp;quot;_id&amp;quot;:1,&amp;quot;host&amp;quot;:&amp;quot;172.17.0.2:27017&amp;quot;},
+... {&amp;quot;_id&amp;quot;:2,&amp;quot;host&amp;quot;:&amp;quot;172.17.0.3:27017&amp;quot;}
+... ]
+... }
+{
+    &amp;quot;_id&amp;quot; : &amp;quot;rs1&amp;quot;,
+    &amp;quot;members&amp;quot; : [
+        {
+            &amp;quot;_id&amp;quot; : 0,
+            &amp;quot;host&amp;quot; : &amp;quot;172.17.0.1:27017&amp;quot;
+        },
+        {
+            &amp;quot;_id&amp;quot; : 1,
+            &amp;quot;host&amp;quot; : &amp;quot;172.17.0.2:27017&amp;quot;
+        },
+        {
+            &amp;quot;_id&amp;quot; : 2,
+            &amp;quot;host&amp;quot; : &amp;quot;172.17.0.3:27017&amp;quot;
+        }
+    ]
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;初始化同步复制集群&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt; rs.initiate(myconf)
+{ &amp;quot;ok&amp;quot; : 1 }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;查看当前复制集的节点信息&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;rs1:OTHER&amp;gt; rs.isMaster()
+{
+    &amp;quot;setName&amp;quot; : &amp;quot;rs1&amp;quot;,
+    &amp;quot;setVersion&amp;quot; : 1,
+    &amp;quot;ismaster&amp;quot; : true,
+    &amp;quot;secondary&amp;quot; : false,
+    &amp;quot;hosts&amp;quot; : [
+        &amp;quot;172.17.0.1:27017&amp;quot;,
+        &amp;quot;172.17.0.2:27017&amp;quot;,
+        &amp;quot;172.17.0.3:27017&amp;quot;
+    ],
+    &amp;quot;primary&amp;quot; : &amp;quot;172.17.0.1:27017&amp;quot;,
+    &amp;quot;me&amp;quot; : &amp;quot;172.17.0.1:27017&amp;quot;,
+    &amp;quot;electionId&amp;quot; : ObjectId(&amp;quot;55a5cc505f7c25c88ad58e77&amp;quot;),
+    &amp;quot;maxBsonObjectSize&amp;quot; : 16777216,
+    &amp;quot;maxMessageSizeBytes&amp;quot; : 48000000,
+    &amp;quot;maxWriteBatchSize&amp;quot; : 1000,
+    &amp;quot;localTime&amp;quot; : ISODate(&amp;quot;2015-07-15T02:58:30.831Z&amp;quot;),
+    &amp;quot;maxWireVersion&amp;quot; : 3,
+    &amp;quot;minWireVersion&amp;quot; : 0,
+    &amp;quot;ok&amp;quot; : 1
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;可以看出连接到的容器ip是172.17.0.1
+也可以看见谁是主节点&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;rs1:PRIMARY&amp;gt; rs.status()
+{
+    &amp;quot;set&amp;quot; : &amp;quot;rs1&amp;quot;,
+    &amp;quot;date&amp;quot; : ISODate(&amp;quot;2015-07-15T02:58:44.390Z&amp;quot;),
+    &amp;quot;myState&amp;quot; : 1,
+    &amp;quot;members&amp;quot; : [
+        {
+            &amp;quot;_id&amp;quot; : 0,
+            &amp;quot;name&amp;quot; : &amp;quot;172.17.0.1:27017&amp;quot;,
+            &amp;quot;health&amp;quot; : 1,
+            &amp;quot;state&amp;quot; : 1,
+            &amp;quot;stateStr&amp;quot; : &amp;quot;PRIMARY&amp;quot;,
+            &amp;quot;uptime&amp;quot; : 540,
+            &amp;quot;optime&amp;quot; : Timestamp(1436929097, 1),
+            &amp;quot;optimeDate&amp;quot; : ISODate(&amp;quot;2015-07-15T02:58:17Z&amp;quot;),
+            &amp;quot;electionTime&amp;quot; : Timestamp(1436929104, 1),
+            &amp;quot;electionDate&amp;quot; : ISODate(&amp;quot;2015-07-15T02:58:24Z&amp;quot;),
+            &amp;quot;configVersion&amp;quot; : 1,
+            &amp;quot;self&amp;quot; : true
+        },
+        {
+            &amp;quot;_id&amp;quot; : 1,
+            &amp;quot;name&amp;quot; : &amp;quot;172.17.0.2:27017&amp;quot;,
+            &amp;quot;health&amp;quot; : 1,
+            &amp;quot;state&amp;quot; : 2,
+            &amp;quot;stateStr&amp;quot; : &amp;quot;SECONDARY&amp;quot;,
+            &amp;quot;uptime&amp;quot; : 57,
+            &amp;quot;optime&amp;quot; : Timestamp(1436929097, 1),
+            &amp;quot;optimeDate&amp;quot; : ISODate(&amp;quot;2015-07-15T02:58:17Z&amp;quot;),
+            &amp;quot;lastHeartbeat&amp;quot; : ISODate(&amp;quot;2015-07-15T02:58:44.133Z&amp;quot;),
+            &amp;quot;lastHeartbeatRecv&amp;quot; : ISODate(&amp;quot;2015-07-15T02:58:44.133Z&amp;quot;),
+            &amp;quot;pingMs&amp;quot; : 0,
+            &amp;quot;configVersion&amp;quot; : 1
+        },
+        {
+            &amp;quot;_id&amp;quot; : 2,
+            &amp;quot;name&amp;quot; : &amp;quot;172.17.0.3:27017&amp;quot;,
+            &amp;quot;health&amp;quot; : 1,
+            &amp;quot;state&amp;quot; : 2,
+            &amp;quot;stateStr&amp;quot; : &amp;quot;SECONDARY&amp;quot;,
+            &amp;quot;uptime&amp;quot; : 57,
+            &amp;quot;optime&amp;quot; : Timestamp(1436929097, 1),
+            &amp;quot;optimeDate&amp;quot; : ISODate(&amp;quot;2015-07-15T02:58:17Z&amp;quot;),
+            &amp;quot;lastHeartbeat&amp;quot; : ISODate(&amp;quot;2015-07-15T02:58:43.169Z&amp;quot;),
+            &amp;quot;lastHeartbeatRecv&amp;quot; : ISODate(&amp;quot;2015-07-15T02:58:44.134Z&amp;quot;),
+            &amp;quot;pingMs&amp;quot; : 0,
+            &amp;quot;lastHeartbeatMessage&amp;quot; : &amp;quot;could not find member to sync from&amp;quot;,
+            &amp;quot;configVersion&amp;quot; : 1
+        }
+    ],
+    &amp;quot;ok&amp;quot; : 1
+}
+rs1:PRIMARY&amp;gt; rs.conf()
+{
+    &amp;quot;_id&amp;quot; : &amp;quot;rs1&amp;quot;,
+    &amp;quot;version&amp;quot; : 1,
+    &amp;quot;members&amp;quot; : [
+        {
+            &amp;quot;_id&amp;quot; : 0,
+            &amp;quot;host&amp;quot; : &amp;quot;172.17.0.1:27017&amp;quot;,
+            &amp;quot;arbiterOnly&amp;quot; : false,
+            &amp;quot;buildIndexes&amp;quot; : true,
+            &amp;quot;hidden&amp;quot; : false,
+            &amp;quot;priority&amp;quot; : 1,
+            &amp;quot;tags&amp;quot; : {
+
+            },
+            &amp;quot;slaveDelay&amp;quot; : 0,
+            &amp;quot;votes&amp;quot; : 1
+        },
+        {
+            &amp;quot;_id&amp;quot; : 1,
+            &amp;quot;host&amp;quot; : &amp;quot;172.17.0.2:27017&amp;quot;,
+            &amp;quot;arbiterOnly&amp;quot; : false,
+            &amp;quot;buildIndexes&amp;quot; : true,
+            &amp;quot;hidden&amp;quot; : false,
+            &amp;quot;priority&amp;quot; : 1,
+            &amp;quot;tags&amp;quot; : {
+
+            },
+            &amp;quot;slaveDelay&amp;quot; : 0,
+            &amp;quot;votes&amp;quot; : 1
+        },
+        {
+            &amp;quot;_id&amp;quot; : 2,
+            &amp;quot;host&amp;quot; : &amp;quot;172.17.0.3:27017&amp;quot;,
+            &amp;quot;arbiterOnly&amp;quot; : false,
+            &amp;quot;buildIndexes&amp;quot; : true,
+            &amp;quot;hidden&amp;quot; : false,
+            &amp;quot;priority&amp;quot; : 1,
+            &amp;quot;tags&amp;quot; : {
+
+            },
+            &amp;quot;slaveDelay&amp;quot; : 0,
+            &amp;quot;votes&amp;quot; : 1
+        }
+    ],
+    &amp;quot;settings&amp;quot; : {
+        &amp;quot;chainingAllowed&amp;quot; : true,
+        &amp;quot;heartbeatTimeoutSecs&amp;quot; : 10,
+        &amp;quot;getLastErrorModes&amp;quot; : {
+
+        },
+        &amp;quot;getLastErrorDefaults&amp;quot; : {
+            &amp;quot;w&amp;quot; : 1,
+            &amp;quot;wtimeout&amp;quot; : 0
+        }
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;另外开一个终端 连接到第二个容器&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;linuxidc@linuxidc:~$ mongo --port 22117
+MongoDB shell version: 3.0.4
+
+rs1:SECONDARY&amp;gt; rs.isMaster()
+{
+    &amp;quot;setName&amp;quot; : &amp;quot;rs1&amp;quot;,
+    &amp;quot;setVersion&amp;quot; : 1,
+    &amp;quot;ismaster&amp;quot; : false,
+    &amp;quot;secondary&amp;quot; : true,
+    &amp;quot;hosts&amp;quot; : [
+        &amp;quot;172.17.0.1:27017&amp;quot;,
+        &amp;quot;172.17.0.2:27017&amp;quot;,
+        &amp;quot;172.17.0.3:27017&amp;quot;
+    ],
+    &amp;quot;primary&amp;quot; : &amp;quot;172.17.0.1:27017&amp;quot;,
+    &amp;quot;me&amp;quot; : &amp;quot;172.17.0.2:27017&amp;quot;,
+    &amp;quot;maxBsonObjectSize&amp;quot; : 16777216,
+    &amp;quot;maxMessageSizeBytes&amp;quot; : 48000000,
+    &amp;quot;maxWriteBatchSize&amp;quot; : 1000,
+    &amp;quot;localTime&amp;quot; : ISODate(&amp;quot;2015-07-15T02:59:27.121Z&amp;quot;),
+    &amp;quot;maxWireVersion&amp;quot; : 3,
+    &amp;quot;minWireVersion&amp;quot; : 0,
+    &amp;quot;ok&amp;quot; : 1
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;可以看到主节点的信息 和上个容器的信息一致&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;rs1:SECONDARY&amp;gt; rs.status()
+{
+    &amp;quot;set&amp;quot; : &amp;quot;rs1&amp;quot;,
+    &amp;quot;date&amp;quot; : ISODate(&amp;quot;2015-07-15T03:14:10.512Z&amp;quot;),
+    &amp;quot;myState&amp;quot; : 2,
+    &amp;quot;members&amp;quot; : [
+        {
+            &amp;quot;_id&amp;quot; : 0,
+            &amp;quot;name&amp;quot; : &amp;quot;172.17.0.1:27017&amp;quot;,
+            &amp;quot;health&amp;quot; : 1,
+            &amp;quot;state&amp;quot; : 1,
+            &amp;quot;stateStr&amp;quot; : &amp;quot;PRIMARY&amp;quot;,
+            &amp;quot;uptime&amp;quot; : 981,
+            &amp;quot;optime&amp;quot; : Timestamp(1436929097, 1),
+            &amp;quot;optimeDate&amp;quot; : ISODate(&amp;quot;2015-07-15T02:58:17Z&amp;quot;),
+            &amp;quot;lastHeartbeat&amp;quot; : ISODate(&amp;quot;2015-07-15T03:14:10.478Z&amp;quot;),
+            &amp;quot;lastHeartbeatRecv&amp;quot; : ISODate(&amp;quot;2015-07-15T03:14:10.478Z&amp;quot;),
+            &amp;quot;pingMs&amp;quot; : 0,
+            &amp;quot;electionTime&amp;quot; : Timestamp(1436929104, 1),
+            &amp;quot;electionDate&amp;quot; : ISODate(&amp;quot;2015-07-15T02:58:24Z&amp;quot;),
+            &amp;quot;configVersion&amp;quot; : 1
+        },
+        {
+            &amp;quot;_id&amp;quot; : 1,
+            &amp;quot;name&amp;quot; : &amp;quot;172.17.0.2:27017&amp;quot;,
+            &amp;quot;health&amp;quot; : 1,
+            &amp;quot;state&amp;quot; : 2,
+            &amp;quot;stateStr&amp;quot; : &amp;quot;SECONDARY&amp;quot;,
+            &amp;quot;uptime&amp;quot; : 1452,
+            &amp;quot;optime&amp;quot; : Timestamp(1436929097, 1),
+            &amp;quot;optimeDate&amp;quot; : ISODate(&amp;quot;2015-07-15T02:58:17Z&amp;quot;),
+            &amp;quot;infoMessage&amp;quot; : &amp;quot;could not find member to sync from&amp;quot;,
+            &amp;quot;configVersion&amp;quot; : 1,
+            &amp;quot;self&amp;quot; : true
+        },
+        {
+            &amp;quot;_id&amp;quot; : 2,
+            &amp;quot;name&amp;quot; : &amp;quot;172.17.0.3:27017&amp;quot;,
+            &amp;quot;health&amp;quot; : 1,
+            &amp;quot;state&amp;quot; : 2,
+            &amp;quot;stateStr&amp;quot; : &amp;quot;SECONDARY&amp;quot;,
+            &amp;quot;uptime&amp;quot; : 981,
+            &amp;quot;optime&amp;quot; : Timestamp(1436929097, 1),
+            &amp;quot;optimeDate&amp;quot; : ISODate(&amp;quot;2015-07-15T02:58:17Z&amp;quot;),
+            &amp;quot;lastHeartbeat&amp;quot; : ISODate(&amp;quot;2015-07-15T03:14:09.523Z&amp;quot;),
+            &amp;quot;lastHeartbeatRecv&amp;quot; : ISODate(&amp;quot;2015-07-15T03:14:09.523Z&amp;quot;),
+            &amp;quot;pingMs&amp;quot; : 0,
+            &amp;quot;configVersion&amp;quot; : 1
+        }
+    ],
+    &amp;quot;ok&amp;quot; : 1
+}
+
+linuxidc@linuxidc:~$ mongo --port 23117
+MongoDB shell version: 3.0.4
+connecting to: 127.0.0.1:23117/test
+rs1:SECONDARY&amp;gt; rs.status()
+{
+    &amp;quot;set&amp;quot; : &amp;quot;rs1&amp;quot;,
+    &amp;quot;date&amp;quot; : ISODate(&amp;quot;2015-07-15T03:13:25.167Z&amp;quot;),
+    &amp;quot;myState&amp;quot; : 2,
+    &amp;quot;members&amp;quot; : [
+        {
+            &amp;quot;_id&amp;quot; : 0,
+            &amp;quot;name&amp;quot; : &amp;quot;172.17.0.1:27017&amp;quot;,
+            &amp;quot;health&amp;quot; : 1,
+            &amp;quot;state&amp;quot; : 1,
+            &amp;quot;stateStr&amp;quot; : &amp;quot;PRIMARY&amp;quot;,
+            &amp;quot;uptime&amp;quot; : 936,
+            &amp;quot;optime&amp;quot; : Timestamp(1436929097, 1),
+            &amp;quot;optimeDate&amp;quot; : ISODate(&amp;quot;2015-07-15T02:58:17Z&amp;quot;),
+            &amp;quot;lastHeartbeat&amp;quot; : ISODate(&amp;quot;2015-07-15T03:13:24.479Z&amp;quot;),
+            &amp;quot;lastHeartbeatRecv&amp;quot; : ISODate(&amp;quot;2015-07-15T03:13:23.531Z&amp;quot;),
+            &amp;quot;pingMs&amp;quot; : 0,
+            &amp;quot;electionTime&amp;quot; : Timestamp(1436929104, 1),
+            &amp;quot;electionDate&amp;quot; : ISODate(&amp;quot;2015-07-15T02:58:24Z&amp;quot;),
+            &amp;quot;configVersion&amp;quot; : 1
+        },
+        {
+            &amp;quot;_id&amp;quot; : 1,
+            &amp;quot;name&amp;quot; : &amp;quot;172.17.0.2:27017&amp;quot;,
+            &amp;quot;health&amp;quot; : 1,
+            &amp;quot;state&amp;quot; : 2,
+            &amp;quot;stateStr&amp;quot; : &amp;quot;SECONDARY&amp;quot;,
+            &amp;quot;uptime&amp;quot; : 936,
+            &amp;quot;optime&amp;quot; : Timestamp(1436929097, 1),
+            &amp;quot;optimeDate&amp;quot; : ISODate(&amp;quot;2015-07-15T02:58:17Z&amp;quot;),
+            &amp;quot;lastHeartbeat&amp;quot; : ISODate(&amp;quot;2015-07-15T03:13:23.507Z&amp;quot;),
+            &amp;quot;lastHeartbeatRecv&amp;quot; : ISODate(&amp;quot;2015-07-15T03:13:23.506Z&amp;quot;),
+            &amp;quot;pingMs&amp;quot; : 0,
+            &amp;quot;configVersion&amp;quot; : 1
+        },
+        {
+            &amp;quot;_id&amp;quot; : 2,
+            &amp;quot;name&amp;quot; : &amp;quot;172.17.0.3:27017&amp;quot;,
+            &amp;quot;health&amp;quot; : 1,
+            &amp;quot;state&amp;quot; : 2,
+            &amp;quot;stateStr&amp;quot; : &amp;quot;SECONDARY&amp;quot;,
+            &amp;quot;uptime&amp;quot; : 1392,
+            &amp;quot;optime&amp;quot; : Timestamp(1436929097, 1),
+            &amp;quot;optimeDate&amp;quot; : ISODate(&amp;quot;2015-07-15T02:58:17Z&amp;quot;),
+            &amp;quot;configVersion&amp;quot; : 1,
+            &amp;quot;self&amp;quot; : true
+        }
+    ],
+    &amp;quot;ok&amp;quot; : 1
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;如果在从节点此时查看数据库会出错 ，信息显示不是主节点&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;rs1:SECONDARY&amp;gt; show dbs;
+××××××××××××××××××××××××××××××××××××
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;设置从节点可以读&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;rs1:SECONDARY&amp;gt; db.getMongo().setSlaveOk();
+rs1:SECONDARY&amp;gt; show dbs;
+local  1.031GB
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;打开先前与主节点的终端  插入点数据&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;rs1:PRIMARY&amp;gt; show dbs;
+local  1.031GB
+
+rs1:PRIMARY&amp;gt; use tt;
+switched to db tt
+rs1:PRIMARY&amp;gt; db.user.insert({&amp;quot;name&amp;quot;:&amp;quot;mongodb is greate!!!!&amp;quot;})
+WriteResult({ &amp;quot;nInserted&amp;quot; : 1 })
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;打开与备份节点的终端&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;rs1:SECONDARY&amp;gt; show dbs;
+local  1.031GB
+tt    0.031GB
+rs1:SECONDARY&amp;gt; use tt
+switched to db tt
+rs1:SECONDARY&amp;gt; show collections;
+system.indexes
+user
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;多了个数据库 ，还多了条文档&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;rs1:SECONDARY&amp;gt; db.user.find()
+{ &amp;quot;_id&amp;quot; : ObjectId(&amp;quot;55a5d1390d49c20962937b52&amp;quot;), &amp;quot;name&amp;quot; : &amp;quot;mongodb is greate!!!!&amp;quot; }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://www.linuxidc.com/Linux/2015-07/119596.htm&#34;&gt;MongoDB常用操作命令整理 &lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://www.linuxidc.com/Linux/2015-03/114414.htm&#34;&gt;MongoDB 3.0 正式版发布下载 &lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://www.linuxidc.com/Linux/2012-02/53834.htm&#34;&gt;CentOS编译安装MongoDB&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://www.linuxidc.com/Linux/2012-02/53833.htm&#34;&gt;CentOS 编译安装 MongoDB与mongoDB的php扩展&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://www.linuxidc.com/Linux/2012-08/68196.htm&#34;&gt;CentOS 6 使用 yum 安装MongoDB及服务器端配置&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://www.linuxidc.com/Linux/2013-05/84227.htm&#34;&gt;Ubuntu 13.04下安装MongoDB2.4.3&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://www.linuxidc.com/Linux/2013-07/87105.htm&#34;&gt;MongoDB入门必读(概念与实战并重)&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://www.linuxidc.com/Linux/2014-08/105364.htm&#34;&gt;Ubunu 14.04下MongoDB的安装指南&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://www.linuxidc.com/Linux/2012-07/66735.htm&#34;&gt;《MongoDB 权威指南》(MongoDB: The Definitive Guide)英文文字版[PDF]&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://www.linuxidc.com/Linux/2014-10/107826.htm&#34;&gt;Nagios监控MongoDB分片集群服务实战&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://www.linuxidc.com/Linux/2014-11/108900.htm&#34;&gt;基于CentOS 6.5操作系统搭建MongoDB服务&lt;/a&gt;
+&lt;a href=&#34;http://www.linuxidc.com/Linux/2015-07/120008.htm&#34;&gt;本文永久更新链接地址&lt;/a&gt;&lt;/p&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>测试环境使用方案</title>
+            <link>http://kooksee.github.io/blog/%E6%B5%8B%E8%AF%95%E7%8E%AF%E5%A2%83%E4%BD%BF%E7%94%A8%E6%96%B9%E6%A1%88/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/%E6%B5%8B%E8%AF%95%E7%8E%AF%E5%A2%83%E4%BD%BF%E7%94%A8%E6%96%B9%E6%A1%88/</guid>
+            <description>
+
+&lt;h1 id=&#34;测试环境使用方案:9599f5b770b13383e233ef1438d5bf2a&#34;&gt;测试环境使用方案&lt;/h1&gt;
+
+&lt;h2 id=&#34;1-方案总体解释:9599f5b770b13383e233ef1438d5bf2a&#34;&gt;1. 方案总体解释&lt;/h2&gt;
+
+&lt;p&gt;我们整个运行方案使用Linux操作系统来执行。底层操作系统为&lt;a href=&#34;http://www.ubuntu.com/&#34;&gt;ubuntu:14.04&lt;/a&gt;。如果您不熟悉Linux操作系统推荐阅读&lt;a href=&#34;http://vbird.dic.ksu.edu.tw/&#34;&gt;鸟哥Linux教程&lt;/a&gt;。您需要重点掌握如下知识： 远程登录Linux服务器的方法。查看文件系统文件的方法，运行可执行文件的方法，文件重定向的方法。&lt;/p&gt;
+
+&lt;h3 id=&#34;1-1-命令执行的方法:9599f5b770b13383e233ef1438d5bf2a&#34;&gt;1.1 命令执行的方法&lt;/h3&gt;
+
+&lt;p&gt;首先您需要一个Terminal 可以在gnome-terminal中打开。也可以在Mac下使用Iterm2也可以在windows下使用putty登录您的Linux。&lt;/p&gt;
+
+&lt;p&gt;复制文档中的命令之后请您键入回车（return）键执行命令。&lt;/p&gt;
+
+&lt;h2 id=&#34;2-环境导读:9599f5b770b13383e233ef1438d5bf2a&#34;&gt;2. 环境导读&lt;/h2&gt;
+
+&lt;p&gt;在本章节中您会查看到所有环境提供的内容的大体解释在以后的章节中会详细解释所有服务的操作。&lt;/p&gt;
+
+&lt;h3 id=&#34;2-1-环境提供内容:9599f5b770b13383e233ef1438d5bf2a&#34;&gt;2.1 环境提供内容：&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;consul 本地实例。&lt;/li&gt;
+&lt;li&gt;所有微服务的运行&lt;/li&gt;
+&lt;li&gt;环境变量自动管理&lt;/li&gt;
+&lt;li&gt;redis-server&lt;/li&gt;
+&lt;li&gt;从外部容器提供postgres&lt;/li&gt;
+&lt;li&gt;psql客户端（其实服务端也提供了）&lt;/li&gt;
+&lt;li&gt;环境为大家&lt;code&gt;公有&lt;/code&gt;环境请请不要随意修改配置。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&#34;2-2-环境登录方法:9599f5b770b13383e233ef1438d5bf2a&#34;&gt;2.2 环境登录方法&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;ssh root@dev.17mei.cn -p 550&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;2-3-查看所有微服务:9599f5b770b13383e233ef1438d5bf2a&#34;&gt;2.3 查看所有微服务&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;ps -aux&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;2-4-约定日志位置:9599f5b770b13383e233ef1438d5bf2a&#34;&gt;2.4 约定日志位置&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;/var/log/&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;2-5-环境变量管理:9599f5b770b13383e233ef1438d5bf2a&#34;&gt;2.5 环境变量管理&lt;/h3&gt;
+
+&lt;p&gt;位置：&lt;code&gt;~/.bashrc&lt;/code&gt;
+默认运行脚本：&lt;code&gt;~/runsample.sh&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;2-6-binary更新方法:9599f5b770b13383e233ef1438d5bf2a&#34;&gt;2.6 binary更新方法&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;scp&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;2-7-pgsql远程登录方法:9599f5b770b13383e233ef1438d5bf2a&#34;&gt;2.7 pgsql远程登录方法&lt;/h3&gt;
+
+&lt;p&gt;PORT: 16433
+User: postgres
+DB: wothing
+pwd: wothing&lt;/p&gt;
+
+&lt;h3 id=&#34;2-8-redis查看方法:9599f5b770b13383e233ef1438d5bf2a&#34;&gt;2.8 redis查看方法&lt;/h3&gt;
+
+&lt;p&gt;登录后 &lt;code&gt;redis-cli&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;2-9-自动化测试脚本运行:9599f5b770b13383e233ef1438d5bf2a&#34;&gt;2.9 自动化测试脚本运行&lt;/h3&gt;
+
+&lt;p&gt;从您开发的计算机上直接运行&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;go test -v * -dh dev.17mei.cn -dp 16433 -du postgres -dpwd wothing -dn wothing -host http://dev.17mei.cn -cert /cert/public.pem -key /cert/mykey.pem&lt;/code&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;3-consul:9599f5b770b13383e233ef1438d5bf2a&#34;&gt;3. Consul&lt;/h2&gt;
+
+&lt;h3 id=&#34;3-1-什么是consul:9599f5b770b13383e233ef1438d5bf2a&#34;&gt;3.1 什么是Consul&lt;/h3&gt;
+
+&lt;p&gt;服务发现，KV存储工具。有三个操作接口： RPC（内部自己调用），HTTP REST ， DNS（服务查询用）&lt;a href=&#34;https://github.com/wothing/17mei-design/wiki/Consul&#34;&gt;详细&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;3-2-如何注册服务:9599f5b770b13383e233ef1438d5bf2a&#34;&gt;3.2 如何注册服务&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;curl -X PUT -d &#39;{&amp;quot;Name&amp;quot;:&amp;quot;authority&amp;quot;,&amp;quot;Port&amp;quot;:13009}&#39; -i http://localhost:8500/v1/agent/service/register&lt;/code&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;curl 为Linux常用的发送http数据的命令&lt;/li&gt;
+&lt;li&gt;curl -X 为http报文发送的方法详情查看&lt;a href=&#34;http://www.cnblogs.com/shanyou/archive/2012/05/12/2496959.html&#34;&gt;REST&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;-d 为发送报文的内容 ，报文的格式为&lt;a href=&#34;http://baike.baidu.com/view/136475.htm&#34;&gt;JSON&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;-i 显示所有返回状态码，因此您可以在返回的详细信息&lt;/li&gt;
+&lt;li&gt;最后一个是目标访问地址。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;4-微服务的运行:9599f5b770b13383e233ef1438d5bf2a&#34;&gt;4. 微服务的运行&lt;/h2&gt;
+
+&lt;p&gt;需求说明： 首先我们需要一个不间断能够运行的程序，其次是我们可以指定微服务的版本，然后是我们需要能够指定微服务运行的参数，最后是日志的管理。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;不间断运行： nohup ， 此命令后面跟上所需执行的命令参数加上日志重定向到&lt;/li&gt;
+&lt;li&gt;执行不同的Linux命令可以指定不同的运行版本。&lt;/li&gt;
+&lt;li&gt;参数管理是通过环境变量管理来实现的，具体的环境变量的位置为：&lt;code&gt;/root/.bashrc&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;在nohup执行过程中有一个重定向的位置为日志的位置，无论您是添加新的微服务还是更新您的微服务都可以随时随地指定日志的位置，或者append到一个旧的日志。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;基于此我们有了如下的命令
+&lt;code&gt;nohup /app/gw.exe -ch $CH -cp $CP -ss $SS &amp;gt;&amp;gt; /var/log/gw.log &amp;amp;&lt;/code&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;5-环境变量的管理:9599f5b770b13383e233ef1438d5bf2a&#34;&gt;5. 环境变量的管理&lt;/h2&gt;
+
+&lt;p&gt;环境变量为Linux shell 下的变量。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;设置方法： 按照格式修改&lt;code&gt;/root/.bashrc&lt;/code&gt; , 变量名=value 注意等号前面不要有空格。 变量需要export 为全局变量。&lt;/li&gt;
+&lt;li&gt;例子： &lt;code&gt;export DU=postgres&lt;/code&gt; 全局设置DU变量为postgres&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;6-redis-server:9599f5b770b13383e233ef1438d5bf2a&#34;&gt;6. REDIS server&lt;/h2&gt;
+
+&lt;p&gt;redis 安装为服务器本地安装运行&lt;a href=&#34;http://www.yiibai.com/redis/redis_quick_guide.html&#34;&gt;教程&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;7-postgresql:9599f5b770b13383e233ef1438d5bf2a&#34;&gt;7. Postgresql&lt;/h2&gt;
+
+&lt;p&gt;从服务端连接postgresql： &lt;code&gt;psql -U postgres -h pgaaa.aaa  -d wothing&lt;/code&gt; 无需密码自动登录。&lt;/p&gt;
+
+&lt;h2 id=&#34;8-更新服务流程:9599f5b770b13383e233ef1438d5bf2a&#34;&gt;8. 更新服务流程&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;上传可执行文件
+
+&lt;ul&gt;
+&lt;li&gt;参考命令： &lt;code&gt;scp gw.exe root@dev.17mei.cn:/app/gw.exe -P 550&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;运行可执行文件
+
+&lt;ul&gt;
+&lt;li&gt;参考命令&lt;code&gt;nohup /app/gw.exe -ch $CH -cp $CP -ss $SS &amp;gt;&amp;gt; /var/log/gw.log &amp;amp;&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;当然在文件&lt;code&gt;/root/runsample.sh&lt;/code&gt;中有所有的参考执行命令。&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;查看日志
+
+&lt;ul&gt;
+&lt;li&gt;参考方法：&lt;code&gt;tail -F /var/log/gw.log&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&#34;9-注意事项:9599f5b770b13383e233ef1438d5bf2a&#34;&gt;9. 注意事项&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;consul运行在登陆服务本地。在localhost:8500 需要修改什么curl到本地即可&lt;/li&gt;
+&lt;li&gt;调试结束后不要忘记查看进程运行状态。&lt;code&gt;ps -uax&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;我在这里提供的是最简单的nohup进程管理方式需要手动kill进程，其实还有 systemd systemv screen tmux supervisor docker等等进程管理方式，大家可以根据自己的口味来解决进程管理的问题。&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

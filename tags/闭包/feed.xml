@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>闭包 on 百里求一的博客</title>
+        <link>http://kooksee.github.io/tags/%E9%97%AD%E5%8C%85/</link>
+        <language>zh-CN</language>
+        <author>CoderZh</author>
+        <rights>Copyright (c) 2015, CoderZh; all rights reserved.</rights>
+        <updated>Mon, 01 Jan 0001 00:00:00 UTC</updated>
+        
+        <item>
+            <title>闭包</title>
+            <link>http://kooksee.github.io/blog/%E9%97%AD%E5%8C%85/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/%E9%97%AD%E5%8C%85/</guid>
+            <description>&lt;blockquote&gt;
+&lt;p&gt;在计算机科学中，闭包（Closure）是词法闭包（Lexical Closure）的简称，是引用了自由变量的函数。这个被引用的自由变量将和这个函数一同存在，即使已经离开了创造它的环境也不例外。所以，有另一种说法认为闭包是由函数和与其相关的引用环境组合而成的实体。Peter J. Landin 在1964年将术语闭包定义为一种包含环境成分和控制成分的实体。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;pre&gt;&lt;code&gt;    我们来分析一下概念，首先闭包应该是一个函数(在groovy中至少也应该是一个代码块)，其次该函数引用了，就是调用了环境中的自由变量。对于一个正常的函数来说，执行完毕后，超出函数本身的的变量都会被销毁，而闭包不会。
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##用计数器举例来说吧&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;//Groovy的闭包
+def get_count(_count=0){
+    def count = _count
+    return { count += 1；return count }
+}
+//首先get_count中的自由变量count被代码块`{ count += 1；return count }`引用，所以该函数就是一个闭包
+count = get_count(1)
+println count()
+println count()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;def get_count(_count=0):
+    count = _count
+    def _wrap_count():
+        count += 1
+        return count
+    return _wrap_count
+
+count = get_count(1)
+print count()
+print count()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;function get_count(_count){
+    let count = _count;
+    return function(){
+        count += 1;
+        return count
+    }
+}
+count = get_count(1)
+console.log(count())
+console.log(count())
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://g.hiphotos.baidu.com/baike/c0=baike80,5,5,80,26/sign=034361ab922397ddc274905638ebd9d2/d31b0ef41bd5ad6ebbbf3ca682cb39dbb6fd3c33.jpg&#34; alt=&#34;闭包图&#34; /&gt;&lt;/p&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

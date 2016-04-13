@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>数据库认证 on 百里求一的博客</title>
+        <link>http://kooksee.github.io/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E8%AE%A4%E8%AF%81/</link>
+        <language>zh-CN</language>
+        <author>CoderZh</author>
+        <rights>Copyright (c) 2015, CoderZh; all rights reserved.</rights>
+        <updated>Mon, 01 Jan 0001 00:00:00 UTC</updated>
+        
+        <item>
+            <title>mongodb3 权限认证问题总结</title>
+            <link>http://kooksee.github.io/blog/mongodb3%20%E6%9D%83%E9%99%90%E8%AE%A4%E8%AF%81%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/mongodb3%20%E6%9D%83%E9%99%90%E8%AE%A4%E8%AF%81%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93/</guid>
+            <description>&lt;p&gt;##ubuntu用户安装最新版本mongodb&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt; 1. 添加key
+sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
+
+
+ 2. 写进ubuntu软件源
+echo &amp;quot;deb http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.0 multiverse&amp;quot; | sudo tee /etc/apt/sources.list.d/mongodb-org-3.0.list
+ 3. 更新系统
+ sudo apt-get update
+
+ 4. 安装mongodb
+ sudo apt-get install mongodb-org
+
+ 5. 查看mongodb服务是否开启
+ ps -ef | grep mongod
+
+ 6. 没有开启的话你就自己开启吧
+ sudo service mongod start
+ 查看服务的状态：sudo service mongod status
+ 实在不行的话就用这种方式： sudo mongod -f /etc/mongod.conf
+
+ 7. 创建管理员角色
+ 管理员角色必须在你添加--auth认证参数之前创建，不然之后你就没有权限可操作了。如果你之前已经有了用户，那么就删除用户吧。
+use admin
+db.system.users.remove({}) --&amp;gt; 删除所有用户
+db.system.version.find() --&amp;gt; 查看当前的authSchema(认证模式)，默认的为5是SCRAM-SHA-1模式，当然你可以改为3是MONGODB-CR模式
+
+    更改认证模式：
+    db.system.version.remove({}) --&amp;gt; 删除当前认证模式。
+    db.system.version.insert({ &amp;quot;_id&amp;quot; : &amp;quot;authSchema&amp;quot;, &amp;quot;currentVersion&amp;quot; : 3 }) --&amp;gt; 添加当前的认证模式为3
+
+    然后添加管理员角色吧
+    use admin
+    db.createUser({
+        user: &amp;quot;root&amp;quot;,
+        pwd: &amp;quot;root&amp;quot;,
+        roles: [ { role: &amp;quot;userAdminAnyDatabase&amp;quot;, db:                &amp;quot;admin&amp;quot;} ]})
+
+ 8. 重启服务登录认证
+ sudo pkill mongod --&amp;gt; 杀死服务，很方便。
+ sudo mongod -f /etc/mongod.conf --fork  --auth --&amp;gt; 以认证模式启动服务
+然后ps -ef | grep mongod查看服务是否启动
+
+ 9. 用户登录
+ mongo
+use admin
+show dbs; --&amp;gt; 出错，因为你没有权限
+db.auth(&#39;root&#39;,&#39;root&#39;); --&amp;gt; 登录认证
+show dbs; --&amp;gt; ok
+db.system.users.find() --&amp;gt; 显示用户信息，你可以看看authSchema后面事那种模式
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

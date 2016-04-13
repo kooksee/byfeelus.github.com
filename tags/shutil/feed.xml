@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Shutil on 百里求一的博客</title>
+        <link>http://kooksee.github.io/tags/shutil/</link>
+        <language>zh-CN</language>
+        <author>CoderZh</author>
+        <rights>Copyright (c) 2015, CoderZh; all rights reserved.</rights>
+        <updated>Mon, 01 Jan 0001 00:00:00 UTC</updated>
+        
+        <item>
+            <title>python shutil模块</title>
+            <link>http://kooksee.github.io/blog/python%20shutil%E6%A8%A1%E5%9D%97/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/python%20shutil%E6%A8%A1%E5%9D%97/</guid>
+            <description>&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# encoding=utf-8
+
+# /home/bergus/tongbu/360共享/编程语言
+# /home/bergus/桌面
+#     /home/bergus/test/hh
+
+import os
+import shutil
+
+
+# 把文件src_file移动到目录dest_file
+def move(src_file, dest_file):
+    for src in src_file:
+        for dest in dest_file:
+            try:
+                shutil.move(src, dest)
+            except Exception, e:
+                print e
+
+
+# 得到关键字的路径
+def get_keyworld_paths(key_word, path):
+    dest_dirs = []
+    if os.path.exists(path):
+        for f in os.listdir(path):
+            # print f
+            if key_word in f.lower():
+                dest_dirs.append(os.path.join(path, f).replace(&#39;\\&#39;, &#39;/&#39;))
+        return dest_dirs
+
+
+def my_move():
+    src_dir = &#39;/home/bergus/桌面&#39;
+    dest_dir = &#39;/home/bergus/tongbu/360共享/编程语言&#39;
+    key_word = [&#39;python&#39;, &#39;flask&#39;, &#39;sqlalchemy&#39;]
+
+    for key in key_word:
+        try:
+            a1 = get_keyworld_paths(key, src_dir)
+            a2 = get_keyworld_paths(key, dest_dir)
+            move(a1, a2)
+            print &amp;quot;移动完成&amp;quot;
+        except Exception, e:
+            print e
+
+if __name__ == &#39;__main__&#39;:
+    my_move()
+
+
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

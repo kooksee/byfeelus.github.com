@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Smb on 百里求一的博客</title>
+        <link>http://kooksee.github.io/tags/smb/</link>
+        <language>zh-CN</language>
+        <author>CoderZh</author>
+        <rights>Copyright (c) 2015, CoderZh; all rights reserved.</rights>
+        <updated>Mon, 01 Jan 0001 00:00:00 UTC</updated>
+        
+        <item>
+            <title>搭建简单的smb服务器</title>
+            <link>http://kooksee.github.io/blog/%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84smb%E6%9C%8D%E5%8A%A1%E5%99%A8/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84smb%E6%9C%8D%E5%8A%A1%E5%99%A8/</guid>
+            <description>
+
+&lt;h2 id=&#34;dockerfile:cad18f67ed31b054e0b277d987c746cd&#34;&gt;Dockerfile&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;FROM debian:jessie
+MAINTAINER Jens Erat &amp;lt;email@jenserat.de&amp;gt;
+
+VOLUME /srv
+EXPOSE 137 138 139 445
+
+ENV DEBIAN_FRONTEND noninteractive
+
+RUN \
+	apt-get update &amp;amp;&amp;amp; \
+	apt-get install --no-install-recommends -y samba &amp;amp;&amp;amp; \
+	apt-get clean &amp;amp;&amp;amp; rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/
+
+COPY smb.conf /etc/samba/smb.conf
+
+# Pregenerate password database to prevent warning messages on container startup
+RUN /usr/sbin/smbd &amp;amp;&amp;amp; sleep 10 &amp;amp;&amp;amp; smbcontrol smbd shutdown
+
+ENTRYPOINT /usr/sbin/smbd -FSD -d1 --option=workgroup=${workgroup:-workgroup}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##smb.conf&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;[global]
+	load printers = n
+	printing = bs
+	printcap name = /dev/null
+	disable spoolss = yes
+	map to guest = bad user
+
+[public]
+	path = /root/share
+	guest ok = yes
+	writeable = yes
+	browseable = yes
+	create mask = 0666
+	directory mask = 0777
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##run&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker run -d \
+    --publish 445:445 \
+    --publish 137:137 \
+    --publish 138:138 \
+    --publish 139:139
+    --volume /tmp:/root/share \
+    --name smb \
+    samba:v1
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

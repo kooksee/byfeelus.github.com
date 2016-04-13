@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Jquery on 百里求一的博客</title>
+        <link>http://kooksee.github.io/tags/jquery/</link>
+        <language>zh-CN</language>
+        <author>CoderZh</author>
+        <rights>Copyright (c) 2015, CoderZh; all rights reserved.</rights>
+        <updated>Mon, 01 Jan 0001 00:00:00 UTC</updated>
+        
+        <item>
+            <title>修改jquery的remote让前段显示服务器错误信息</title>
+            <link>http://kooksee.github.io/blog/%E4%BF%AE%E6%94%B9jquery%E7%9A%84remote%E8%AE%A9%E5%89%8D%E6%AE%B5%E6%98%BE%E7%A4%BA%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%94%99%E8%AF%AF%E4%BF%A1%E6%81%AF/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/%E4%BF%AE%E6%94%B9jquery%E7%9A%84remote%E8%AE%A9%E5%89%8D%E6%AE%B5%E6%98%BE%E7%A4%BA%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%94%99%E8%AF%AF%E4%BF%A1%E6%81%AF/</guid>
+            <description>&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;remote: function (value, element, param) {
+    //param 是你的rules中规定的参数，在这里肯定是remote中的参数了
+    //value是你输入的值
+    //element是你操作的元素，标签
+
+    if (this.optional(element)) {
+        return &amp;quot;dependency-mismatch&amp;quot;;
+    }
+
+    var previous = this.previousValue(element),
+        validator, data;
+
+    if (!this.settings.messages[element.name]) {
+        this.settings.messages[element.name] = {};
+    }
+    previous.originalMessage = this.settings.messages[element.name].remote;
+    this.settings.messages[element.name].remote = previous.message;
+
+    param = typeof param === &amp;quot;string&amp;quot; &amp;amp;&amp;amp; {url: param} || param;
+
+    if (previous.old !== value) {
+        previous.old = value;
+        validator = this;
+        this.startRequest(element);
+        data = {};
+        data[element.name] = value;//输入框中的数据
+
+
+        $.ajax($.extend(true, {
+            url: param,
+            mode: &amp;quot;abort&amp;quot;,
+            port: &amp;quot;validate&amp;quot; + element.name,
+            dataType: &amp;quot;json&amp;quot;,
+            data: data,
+            context: validator.currentForm,
+            success: function (response) {
+
+
+                var valid = response[&#39;value&#39;] === true || response[&#39;value&#39;] === &amp;quot;true&amp;quot;, errors, message, submitted;
+
+                validator.settings.messages[element.name].remote = previous.originalMessage;
+                if (valid) {
+                    submitted = validator.formSubmitted;
+                    validator.prepareElement(element);
+                    validator.formSubmitted = submitted;
+                    validator.successList.push(element);
+                    delete validator.invalid[element.name];
+                    validator.showErrors();
+                } else {
+                    errors = {};
+                    message = response[&#39;msg&#39;] || validator.defaultMessage(element, &amp;quot;remote&amp;quot;);
+                    errors[element.name] = previous.message = $.isFunction(message) ? message(value) : message;
+                    validator.invalid[element.name] = true;
+                    validator.showErrors(errors);
+                }
+                previous.valid = valid;
+                validator.stopRequest(element, valid);
+            }
+        }, param));
+        return &amp;quot;pending&amp;quot;;
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

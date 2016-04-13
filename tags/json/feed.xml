@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Json on 百里求一的博客</title>
+        <link>http://kooksee.github.io/tags/json/</link>
+        <language>zh-CN</language>
+        <author>CoderZh</author>
+        <rights>Copyright (c) 2015, CoderZh; all rights reserved.</rights>
+        <updated>Mon, 01 Jan 0001 00:00:00 UTC</updated>
+        
+        <item>
+            <title>Python处理JSON</title>
+            <link>http://kooksee.github.io/blog/Python%E5%A4%84%E7%90%86JSON/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/Python%E5%A4%84%E7%90%86JSON/</guid>
+            <description>&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;什么是json：
+
+JSON(JavaScript Object Notation)
+
+是一种轻量级的数据交换格式。易于人阅读和编写。同时也易于机器解析和生成。它基于JavaScript Programming Language,
+
+Standard ECMA-262 3rd Edition - December
+
+1999的一个子集。JSON采用完全独立于语言的文本格式，但是也使用了类似于C语言家族的习惯（包括C, C++, C#, Java,
+
+JavaScript, Perl, Python等）。这些特性使JSON成为理想的数据交换语言。
+
+JSON建构于两种结构：
+
+“名称/值”对的集合（A collection of name/value pairs）。不同的语言中，它被理解为对象（object），纪录（record），结构（struct），字典（dictionary），哈希表（hash table），有键列表（keyed list），或者关联数组 （associative array）。
+
+值的有序列表（An ordered list of values）。在大部分语言中，它被理解为数组（array）。
+
+这些都是常见的数据结构。事实上大部分现代计算机语言都以某种形式支持它们。这使得一种数据格式在同样基于这些结构的编程语言之间交换成为可能。
+
+jso官方说明参见：http://json.org/
+
+Python操作json的标准api库参考：http://docs.python.org/library/json.html
+
+对简单数据类型的encoding 和 decoding：
+
+使用简单的json.dumps方法对简单数据类型进行编码，例如：
+
+import json
+
+obj=[[1,2,3],123,123.123,&#39;abc&#39;,{&#39;key1&#39;:(1,2,3),&#39;key2&#39;:(4,5,6)}]
+
+encodedjson=json.dumps(obj)
+
+printrepr(obj)
+
+printencodedjson
+
+输出：
+
+[[1, 2, 3], 123, 123.123, &#39;abc&#39;, {&#39;key2&#39;: (4, 5, 6), &#39;key1&#39;: (1, 2, 3)}]
+
+[[1, 2, 3], 123, 123.123, &amp;quot;abc&amp;quot;, {&amp;quot;key2&amp;quot;: [4, 5, 6], &amp;quot;key1&amp;quot;: [1, 2, 3]}]
+
+通过输出的结果可以看出，简单类型通过encode之后跟其原始的repr()输出结果非常相似，但是有些数据类型进行了改变，例如上例中的元组则转换为了列表。在json的编码过程中，会存在从python原始类型向json类型的转化过程，具体的转化对照如下：
+
+
+json.dumps()方法返回了一个str对象encodedjson，我们接下来在对encodedjson进行decode，得到原始数据，需要使用的json.loads()函数：
+decodejson=json.loads(encodedjson)
+
+printtype(decodejson)
+
+printdecodejson[4][&#39;key1&#39;]
+
+printdecodejson
+
+输出：
+
+[1, 2, 3]
+
+[[1, 2, 3], 123, 123.123, u&#39;abc&#39;, {u&#39;key2&#39;: [4, 5, 6], u&#39;key1&#39;: [1, 2, 3]}]
+
+loads方法返回了原始的对象，但是仍然发生了一些数据类型的转化。比如，上例中‘abc’转化为了unicode类型。从json到python的类型转化对照如下：
+
+
+json.dumps方法提供了很多好用的参数可供选择，比较常用的有sort_keys（对dict对象进行排序，我们知道默认dict是无序存放的），separators，indent等参数。
+
+排序功能使得存储的数据更加有利于观察，也使得对json输出的对象进行比较，例如：
+
+data1={&#39;b&#39;:789,&#39;c&#39;:456,&#39;a&#39;:123}
+
+data2={&#39;a&#39;:123,&#39;b&#39;:789,&#39;c&#39;:456}
+
+d1=json.dumps(data1,sort_keys=True)
+
+d2=json.dumps(data2)
+
+d3=json.dumps(data2,sort_keys=True)
+
+printd1
+
+printd2
+
+printd3
+
+printd1==d2
+
+printd1==d3
+
+输出：
+
+{&amp;quot;a&amp;quot;: 123, &amp;quot;b&amp;quot;: 789, &amp;quot;c&amp;quot;: 456}
+
+{&amp;quot;a&amp;quot;: 123, &amp;quot;c&amp;quot;: 456, &amp;quot;b&amp;quot;: 789}
+
+{&amp;quot;a&amp;quot;: 123, &amp;quot;b&amp;quot;: 789, &amp;quot;c&amp;quot;: 456}
+
+False
+
+True
+
+上例中，本来data1和data2数据应该是一样的，但是由于dict存储的无序特性，造成两者无法比较。因此两者可以通过排序后的结果进行存储
+
+就避免了数据比较不一致的情况发生，但是排序后再进行存储，系统必定要多做一些事情，也一定会因此造成一定的性能消耗，所以适当排序是很重要的。
+
+indent参数是缩进的意思，它可以使得数据存储的格式变得更加优雅。
+
+data1={&#39;b&#39;:789,&#39;c&#39;:456,&#39;a&#39;:123}
+
+d1=json.dumps(data1,sort_keys=True,indent=4)
+
+printd1
+
+输出：
+
+{
+
+&amp;quot;a&amp;quot;: 123,
+
+&amp;quot;b&amp;quot;: 789,
+
+&amp;quot;c&amp;quot;: 456
+
+}
+
+输出的数据被格式化之后，变得可读性更强，但是却是通过增加一些冗余的空白格来进行填充的。json主要是作为一种数据通信的格式存在的，而网络通
+
+信是很在乎数据的大小的，无用的空格会占据很多通信带宽，所以适当时候也要对数据进行压缩。separator参数可以起到这样的作用，该参数传递是一个
+
+元组，包含分割对象的字符串。
+
+print&#39;DATA:&#39;,repr(data)
+
+print&#39;repr(data)             :&#39;,len(repr(data))
+
+print&#39;dumps(data)            :&#39;,len(json.dumps(data))
+
+print&#39;dumps(data, indent=2)  :&#39;,len(json.dumps(data, indent=4))
+
+print&#39;dumps(data, separators):&#39;,len(json.dumps(data, separators=(&#39;,&#39;,&#39;:&#39;)))
+
+输出：
+
+DATA: {&#39;a&#39;: 123, &#39;c&#39;: 456, &#39;b&#39;: 789}
+
+repr(data)             : 30
+
+dumps(data)            : 30
+
+dumps(data, indent=2)  : 46
+
+dumps(data, separators): 25
+
+通过移除多余的空白符，达到了压缩数据的目的，而且效果还是比较明显的。
+
+另一个比较有用的dumps参数是skipkeys，默认为False。 dumps方法存储dict对象时，key必须是str类型，如果出现了其他类型的话，那么会产生TypeError异常，如果开启该参数，设为True的话，则会比较优雅的过度。
+
+data={&#39;b&#39;:789,&#39;c&#39;:456,(1,2):123}
+
+printjson.dumps(data,skipkeys=True)
+
+输出：
+
+{&amp;quot;c&amp;quot;: 456, &amp;quot;b&amp;quot;: 789}
+
+处理自己的数据类型
+
+json模块不仅可以处理普通的python内置类型，也可以处理我们自定义的数据类型，而往往处理自定义的对象是很常用的。
+
+首先，我们定义一个类Person。
+
+classPerson(object):
+
+def__init__(self,name,age):
+
+self.name=name
+
+self.age=age
+
+def__repr__(self):
+
+return&#39;Person Object name : %s , age : %d&#39;%(self.name,self.age)
+
+if__name__==&#39;__main__&#39;:
+
+p=Person(&#39;Peter&#39;,22)
+
+printp
+
+如果直接通过json.dumps方法对Person的实例进行处理的话，会报错，因为json无法支持这样的自动转化。通过上面所提到的json
+
+和python的类型转化对照表，可以发现，object类型是和dict相关联的，所以我们需要把我们自定义的类型转化为dict，然后再进行处理。这
+
+里，有两种方法可以使用。
+
+方法一：自己写转化函数
+
+&#39;&#39;&#39;
+
+Created on 2011-12-14
+
+@author: Peter
+
+&#39;&#39;&#39;
+
+importPerson
+
+importjson
+
+p=Person.Person(&#39;Peter&#39;,22)
+
+defobject2dict(obj):
+
+#convert object to a dict
+
+d={}
+
+d[&#39;__class__&#39;]=obj.__class__.__name__
+
+d[&#39;__module__&#39;]=obj.__module__
+
+d.update(obj.__dict__)
+
+returnd
+
+defdict2object(d):
+
+#convert dict to object
+
+if&#39;__class__&#39;ind:
+
+class_name=d.pop(&#39;__class__&#39;)
+
+module_name=d.pop(&#39;__module__&#39;)
+
+module=__import__(module_name)
+
+class_=getattr(module,class_name)
+
+args=dict((key.encode(&#39;ascii&#39;), value)forkey, valueind.items())#get args
+
+inst=class_(**args)#create new instance
+
+else:
+
+inst=d
+
+returninst
+
+d=object2dict(p)
+
+printd
+
+#{&#39;age&#39;: 22, &#39;__module__&#39;: &#39;Person&#39;, &#39;__class__&#39;: &#39;Person&#39;, &#39;name&#39;: &#39;Peter&#39;}
+
+o=dict2object(d)
+
+printtype(o),o
+
+# Person Object name : Peter , age : 22
+
+dump=json.dumps(p,default=object2dict)
+
+printdump
+
+#{&amp;quot;age&amp;quot;: 22, &amp;quot;__module__&amp;quot;: &amp;quot;Person&amp;quot;, &amp;quot;__class__&amp;quot;: &amp;quot;Person&amp;quot;, &amp;quot;name&amp;quot;: &amp;quot;Peter&amp;quot;}
+
+load=json.loads(dump,object_hook=dict2object)
+
+printload
+
+#Person Object name : Peter , age : 22
+
+上面代码已经写的很清楚了，实质就是自定义object类型和dict类型进行转化。object2dict函数将对象模块名、类名以及
+
+__dict__存储在dict对象里，并返回。dict2object函数则是反解出模块名、类名、参数，创建新的对象并返回。在json.dumps
+
+方法中增加default参数，该参数表示在转化过程中调用指定的函数，同样在decode过程中json.loads方法增加object_hook,
+
+指定转化函数。
+
+方法二：继承JSONEncoder和JSONDecoder类，覆写相关方法
+
+JSONEncoder类负责编码，主要是通过其default函数进行转化，我们可以override该方法。同理对于JSONDecoder。
+
+&#39;&#39;&#39;
+
+Created on 2011-12-14
+
+@author: Peter
+
+&#39;&#39;&#39;
+
+importPerson
+
+importjson
+
+p=Person.Person(&#39;Peter&#39;,22)
+
+classMyEncoder(json.JSONEncoder):
+
+defdefault(self,obj):
+
+#convert object to a dict
+
+d={}
+
+d[&#39;__class__&#39;]=obj.__class__.__name__
+
+d[&#39;__module__&#39;]=obj.__module__
+
+d.update(obj.__dict__)
+
+returnd
+
+classMyDecoder(json.JSONDecoder):
+
+def__init__(self):
+
+json.JSONDecoder.__init__(self,object_hook=self.dict2object)
+
+defdict2object(self,d):
+
+#convert dict to object
+
+if&#39;__class__&#39;ind:
+
+class_name=d.pop(&#39;__class__&#39;)
+
+module_name=d.pop(&#39;__module__&#39;)
+
+module=__import__(module_name)
+
+class_=getattr(module,class_name)
+
+args=dict((key.encode(&#39;ascii&#39;), value)forkey, valueind.items())#get args
+
+inst=class_(**args)#create new instance
+
+else:
+
+inst=d
+
+returninst
+
+d=MyEncoder().encode(p)
+
+o=MyDecoder().decode(d)
+
+printd
+
+printtype(o), o
+
+对于JSONDecoder类方法，稍微有点不同，但是改写起来也不是很麻烦。看代码应该就比较清楚了。
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>文档驱动开发 on 百里求一的博客</title>
+        <link>http://kooksee.github.io/tags/%E6%96%87%E6%A1%A3%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91/</link>
+        <language>zh-CN</language>
+        <author>CoderZh</author>
+        <rights>Copyright (c) 2015, CoderZh; all rights reserved.</rights>
+        <updated>Mon, 01 Jan 0001 00:00:00 UTC</updated>
+        
+        <item>
+            <title>文档驱动开发编程规范</title>
+            <link>http://kooksee.github.io/blog/%E6%96%87%E6%A1%A3%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91%E7%BC%96%E7%A8%8B%E8%A7%84%E8%8C%83/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/%E6%96%87%E6%A1%A3%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91%E7%BC%96%E7%A8%8B%E8%A7%84%E8%8C%83/</guid>
+            <description>&lt;p&gt;API文档管理，项目接口管理(单独模块管理，文档化完善)&lt;/p&gt;
+
+&lt;p&gt;状态管理：创建状态，删除状态(真删除假删除问题)，编辑状态
+权限管理：匿名用户权限，管理员权限，普通用户权限&lt;/p&gt;
+
+&lt;p&gt;字段校验：参数和返回值为空校验，长度校验，类型校验等
+逻辑校验：开始时间比结束时间大等&lt;/p&gt;
+
+&lt;p&gt;时间处理：时间戳，time，data，string，时间加减
+code review:代码审查是一项很有意义的工作，尤其是在团队合作当中&lt;/p&gt;
+
+&lt;p&gt;风格统一问题：大小写，驼峰式&lt;/p&gt;
+
+&lt;p&gt;测试：控制变量，边界值
+错误码定义规范：数字加上表述&lt;/p&gt;
+
+&lt;p&gt;关于代码风格统一的问题，关于函数封装代码可读性的问题&lt;/p&gt;
+
+&lt;p&gt;闭环原则
+谁难受谁推进原则
+Think bigger&lt;/p&gt;
+
+&lt;p&gt;代码上传规范
+函数入口出口类型－－API接口设计
+先定义空接口
+复杂条件查询和返回复杂数据接口，json空类型不显示，可以定义完整类型，附空值控制显示。&lt;/p&gt;
+
+&lt;p&gt;组织一下代码审查或者技术分享会&lt;/p&gt;
+
+&lt;p&gt;项目成果交付不完备&lt;/p&gt;
+
+&lt;p&gt;项目团队成员投入度不足&lt;/p&gt;
+
+&lt;p&gt;职责权利不清   对项目里做事的人即项目成员的管理是决定项目成败的最重要因素
+指产品面向用户的成败，而非面向老板的成败。因为按照老板的意向做成功的产品，当面向用户时往往是失败的。&lt;/p&gt;
+
+&lt;p&gt;哪一模块，或者来说哪一方向会遇到那些问题，怎么解决的，在具体生活中怎么实现的。&lt;/p&gt;
+
+&lt;p&gt;沟通问题仍然是开发过程中遇到的最大的问题&lt;/p&gt;
+
+&lt;p&gt;不同平台调用同一接口的时候通过平台余名或者端口号&lt;/p&gt;
+
+&lt;p&gt;公共函数或者公共接口问什么没人用，或者用的人比较少？&lt;/p&gt;
+
+&lt;p&gt;router-&amp;gt;web接口(多平台接口)-&amp;gt;controller(调用微服务接口,控制微服务的入口，以及数据校验)-&amp;gt;微服务(对返回数据进行校验，调用数据库操作)-&amp;gt;数据库操作&lt;/p&gt;
+
+&lt;p&gt;前后端关于逻辑上面的处理该怎么划分，遵循什么样的规范，最佳实践，设计模式，规则&lt;/p&gt;
+
+&lt;p&gt;增加，删除，修改也都要把ID返回&lt;/p&gt;
+
+&lt;p&gt;把NormalResp改为NormalIdResp之后都修改了那些东西？
+1，pb中所有相关的改过来，20个位置左右
+2，db中更改exec未queryrow，更改数据库返回值
+3，service更改返回结果，添加返回内容&lt;/p&gt;
+
+&lt;p&gt;微服务原子性操作问题，是在调用微服务的时候保证还是在微服务内部保证，我觉得微服务调用的时候没办法保证原子性操作&lt;/p&gt;
+
+&lt;p&gt;？？？？
+微服务用golang，高效
+业务逻辑用python编写
+？？？？
+微服务高內聚，原子性&lt;/p&gt;
+
+&lt;p&gt;最喜欢的go类库
+go依赖管理－－&lt;a href=&#34;https://gopm.io/&#34;&gt;https://gopm.io/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;web&amp;ndash;&lt;a href=&#34;https://github.com/zenazn/goji&#34;&gt;https://github.com/zenazn/goji&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;网络请求,超酷－－&lt;a href=&#34;https://github.com/mozillazg/request&#34;&gt;https://github.com/mozillazg/request&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;system and process utilities －－ &lt;a href=&#34;https://github.com/shirou/gopsutil&#34;&gt;https://github.com/shirou/gopsutil&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;go json handle &amp;ndash; &lt;a href=&#34;https://github.com/donnie4w/json4g&#34;&gt;https://github.com/donnie4w/json4g&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;基于Twisted实现的智能dns系统 &amp;ndash; &lt;a href=&#34;https://github.com/xiaomi-sa/smartdns&#34;&gt;https://github.com/xiaomi-sa/smartdns&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;go logger &amp;ndash; &lt;a href=&#34;https://github.com/donnie4w/go-logger&#34;&gt;https://github.com/donnie4w/go-logger&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;技术－－产品－－运营
+百度问题：技术驱动遭到了产品运营驱动的市场；链接人和服务；李彦宏说，我们信仰技术&lt;/p&gt;
+
+&lt;p&gt;godao &amp;ndash; &lt;a href=&#34;https://github.com/donnie4w/gdao&#34;&gt;https://github.com/donnie4w/gdao&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;go time from  TIMEFORMAT = &amp;ldquo;2006-01-02 15:04:05&amp;rdquo;&lt;/p&gt;
+
+&lt;p&gt;goquery,网页解析 &amp;ndash; &lt;a href=&#34;https://github.com/PuerkitoBio/goquery&#34;&gt;https://github.com/PuerkitoBio/goquery&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;gossdb &amp;ndash; &lt;a href=&#34;https://github.com/seefan/gossdb&#34;&gt;https://github.com/seefan/gossdb&lt;/a&gt;
+&lt;a href=&#34;https://github.com/Terry-Mao/goconf&#34;&gt;https://github.com/Terry-Mao/goconf&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;bat，类curl工具 －－ &lt;a href=&#34;http://git.oschina.net/astaxie/bat&#34;&gt;http://git.oschina.net/astaxie/bat&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;python requests &amp;ndash; &lt;a href=&#34;http://docs.python-requests.org/en/master/&#34;&gt;http://docs.python-requests.org/en/master/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;python &amp;ndash; &lt;a href=&#34;http://pygments.org/&#34;&gt;http://pygments.org/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;goconfig &amp;ndash; &lt;a href=&#34;https://github.com/Unknwon/goconfig/blob/master/README_ZH.md&#34;&gt;https://github.com/Unknwon/goconfig/blob/master/README_ZH.md&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;我爱你可以没有原因，但是我的输入必须要有输出&lt;/p&gt;
+
+&lt;p&gt;sql实现日期降序，时间升序的方法
+SELECT
+type,
+create_date,
+substr(create_date,1,10) as d,
+substr(create_date,12) as t
+FROM
+history_received_message  order by  d desc,t asc&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://bootstrap.pypa.io/ez_setup.py&#34;&gt;https://bootstrap.pypa.io/ez_setup.py&lt;/a&gt;
+&lt;a href=&#34;https://bootstrap.pypa.io/get-pip.py&#34;&gt;https://bootstrap.pypa.io/get-pip.py&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;vim shift+#：快速查找&lt;/p&gt;
+
+&lt;p&gt;新员工给老员工送礼物，送吃的。&lt;/p&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

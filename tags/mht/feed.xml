@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Mht on 百里求一的博客</title>
+        <link>http://kooksee.github.io/tags/mht/</link>
+        <language>zh-CN</language>
+        <author>CoderZh</author>
+        <rights>Copyright (c) 2015, CoderZh; all rights reserved.</rights>
+        <updated>Mon, 01 Jan 0001 00:00:00 UTC</updated>
+        
+        <item>
+            <title>将一个网络链接保存为mht格式的文件</title>
+            <link>http://kooksee.github.io/blog/%E5%B0%86%E4%B8%80%E4%B8%AA%E7%BD%91%E7%BB%9C%E9%93%BE%E6%8E%A5%E4%BF%9D%E5%AD%98%E4%B8%BAmht%E6%A0%BC%E5%BC%8F%E7%9A%84%E6%96%87%E4%BB%B6/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/%E5%B0%86%E4%B8%80%E4%B8%AA%E7%BD%91%E7%BB%9C%E9%93%BE%E6%8E%A5%E4%BF%9D%E5%AD%98%E4%B8%BAmht%E6%A0%BC%E5%BC%8F%E7%9A%84%E6%96%87%E4%BB%B6/</guid>
+            <description>&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import base64
+import email
+import email.message
+import mimetypes
+import os
+import quopri
+import sys
+import urllib2
+from HTMLParser import HTMLParser
+from urlparse import urlparse
+
+class MHTHTMLParser(HTMLParser):
+    def __init__(self):
+        HTMLParser.__init__(self)
+        self.urls = []
+
+    def handle_starttag(self, tag, attrs):
+        if not tag in [&#39;link&#39;,&#39;script&#39;]:
+            return
+        attrs = dict(attrs)
+        if &#39;src&#39; in attrs.keys():
+            a = attrs.get(&#39;src&#39;)
+            if a and a.find(&#39;google&#39;) == -1:
+                self.urls.append(a)
+        elif &#39;stylesheet&#39; in attrs.values():
+            self.urls.append(attrs.get(&#39;href&#39;))
+
+class URL2MHT(object):
+    def __init__(self,url):
+        self.domain = url.split(urlparse(url).path)[0]
+        self.url = url
+
+    def _head(self):
+        a = email.message.Message()
+        a[&amp;quot;MIME-Version&amp;quot;] = &amp;quot;1.0&amp;quot;
+        a[&amp;quot;X-UnMHT-Save-State&amp;quot;] = &amp;quot;Current-State&amp;quot;
+        a.add_header(&amp;quot;Content-Type&amp;quot;,
+                     &amp;quot;multipart/related&amp;quot;,
+                     type=&amp;quot;text/html&amp;quot;,
+                     boundary=&amp;quot;----=_Part_7C84B8F2_5B84C39F.150DBE9AC97&amp;quot;)
+        return a
+
+    def mht(self):
+        content = urllib2.urlopen(self.url).read()
+        pmht = MHTHTMLParser()
+        pmht.feed(content)
+        pmht.close()
+
+        head = self._head()
+        head.attach(self._add(self.url))
+
+        for url in pmht.urls:
+            head.attach(self._add(url))
+        return head
+
+    def _add(self, url):
+        m = email.message.Message()
+        content = None
+        local_url = None
+        try:
+            content = urllib2.urlopen(url)
+            local_url = url
+        except:
+            local_url = self.domain+url
+            content = urllib2.urlopen(local_url)
+        content_type = content.headers.dict.get(&#39;content-type&#39;)
+        content = content.read()
+        if content_type and content_type.startswith(&amp;quot;text/&amp;quot;):
+            m[&amp;quot;Content-Transfer-Encoding&amp;quot;] = &amp;quot;quoted-printable&amp;quot;
+            m.set_payload(quopri.encodestring(content).decode(&amp;quot;ascii&amp;quot;))
+        else:
+            m[&amp;quot;Content-Transfer-Encoding&amp;quot;] = &amp;quot;base64&amp;quot;
+            m.set_payload(base64.b64encode(content).decode(&amp;quot;ascii&amp;quot;))
+        m[&amp;quot;Content-Location&amp;quot;] = local_url
+        m[&amp;quot;Content-Type&amp;quot;] = content_type
+        return m
+
+url = &#39;http://www.cnblogs.com/weixliu/p/3554868.html&#39;    
+print URL2MHT(url).mht()
+
+
+
+# encoding=utf-8
+
+import base64
+import email
+import email.message
+import mimetypes
+import os
+import quopri
+import sys
+import urllib2
+from HTMLParser import HTMLParser
+from urlparse import urlparse
+import chardet
+
+reload(sys)
+sys.setdefaultencoding(&#39;utf-8&#39;)
+
+
+class MHTHTMLParser(HTMLParser):
+
+    def __init__(self):
+        HTMLParser.__init__(self)
+        self.urls = []
+
+    def handle_starttag(self, tag, attrs):
+        if not tag in [&#39;link&#39;]:  # , &#39;script&#39;
+            return
+        attrs = dict(attrs)
+        a = attrs.get(&#39;src&#39;)
+        if a and a.find(&#39;google&#39;) == -1:
+            self.urls.append((a, attrs.get(&#39;type&#39;, &#39;text/javascript&#39;)))
+        elif attrs.get(&#39;rel&#39;) == &#39;stylesheet&#39;:
+            self.urls.append(
+                (attrs.get(&#39;href&#39;), attrs.get(&#39;type&#39;, &#39;text/css&#39;)))
+
+
+class URL2MHT(object):
+
+    def __init__(self, url):
+        uparse = urlparse(url)
+        self.domain = uparse.scheme + &amp;quot;://&amp;quot; + uparse.netloc
+        self.url = url
+        self.header = {
+            &#39;User-Agent&#39;: &amp;quot;Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:39.0) Gecko/20100101 Firefox/39.0&amp;quot;}
+
+    def _head(self):
+        a = email.message.Message()
+        a[&amp;quot;MIME-Version&amp;quot;] = &amp;quot;1.0&amp;quot;
+        a[&amp;quot;X-UnMHT-Save-State&amp;quot;] = &amp;quot;Current-State&amp;quot;
+        a.add_header(&amp;quot;Content-Type&amp;quot;,
+                     &amp;quot;multipart/related&amp;quot;,
+                     type=&amp;quot;text/html&amp;quot;)
+        return a
+
+    def mht(self):
+        content = urllib2.urlopen(
+            urllib2.Request(self.url, None, self.header)).read()
+
+        pmht = MHTHTMLParser()
+        pmht.feed(content)
+        pmht.close()
+
+        head = self._head()
+        head.attach(self._add(self.url, utype=&#39;text/html&#39;))
+
+        for url, utype in pmht.urls:
+            head.attach(self._add(url, utype))
+        return head
+
+    def _add(self, url, utype=None):
+        m = email.message.Message()
+        content = None
+        local_url = None
+        if not urlparse(url).netloc:
+            local_url = self.domain + url
+        else:
+            local_url = url
+
+        ctn = None
+        ecd = None
+        content = urllib2.urlopen(
+            urllib2.Request(local_url, None, self.header)).read()
+
+        if utype and utype.startswith(&amp;quot;text/&amp;quot;):
+            ecd = &amp;quot;quoted-printable&amp;quot;
+            ctn = quopri.encodestring(content)
+        else:
+            ecd = &amp;quot;base64&amp;quot;
+            ctn = base64.b64encode(content)
+
+        m[&amp;quot;Content-Transfer-Encoding&amp;quot;] = ecd
+        m[&amp;quot;Content-Location&amp;quot;] = local_url
+        m[&amp;quot;Content-Type&amp;quot;] = utype
+        m.set_payload(ctn)
+        return m
+
+
+# url = &#39;http://www.cnblogs.com/weixliu/p/3554868.html&#39;
+url = &#39;http://blog.csdn.net/zhaoyl03/article/details/8631645&#39;
+# a = URL2MHT(url).mht().as_string(unixfrom=False)
+# print a
+# import codecs
+# fh = codecs.open(&amp;quot;hello.mht&amp;quot;, mode=&amp;quot;wb&amp;quot;, encoding=&amp;quot;utf-8&amp;quot;)
+# fh.write(a)
+# fh.close()
+
+x = open(&#39;hello.mht&#39;).read()
+print type(x)
+print chardet.detect(x)
+x = x.decode(&#39;utf-8&#39;)
+
+print type(x)
+print chardet.detect(x)
+
+
+
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

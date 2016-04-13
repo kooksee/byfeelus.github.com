@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Sphinx on 百里求一的博客</title>
+        <link>http://kooksee.github.io/tags/sphinx/</link>
+        <language>zh-CN</language>
+        <author>CoderZh</author>
+        <rights>Copyright (c) 2015, CoderZh; all rights reserved.</rights>
+        <updated>Mon, 01 Jan 0001 00:00:00 UTC</updated>
+        
+        <item>
+            <title>Sphinx Makefile</title>
+            <link>http://kooksee.github.io/blog/Sphinx%20Makefile/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/Sphinx%20Makefile/</guid>
+            <description>&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;# Makefile for Sphinx documentation
+#
+
+# You can set these variables from the command line.
+SPHINXOPTS    ?=
+SPHINXBUILD   ?= sphinx-build
+PAPER         ?=
+BUILDDIR      ?= _build
+LANGUAGE      ?=
+
+# Internal variables.
+PAPEROPT_a4     = -D latex_paper_size=a4
+PAPEROPT_letter = -D latex_paper_size=letter
+ALLSPHINXOPTS   = -n -d $(BUILDDIR)/doctrees -D language=$(LANGUAGE) $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) .
+# the i18n builder cannot share the environment and doctrees with the others
+I18NSPHINXOPTS  = $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) .
+
+.PHONY: help clean html dirhtml singlehtml pickle json htmlhelp qthelp devhelp epub latex latexpdf text man changes linkcheck doctest gettext
+
+help:
+    @echo &amp;quot;Please use \`make &amp;lt;target&amp;gt;&#39; where &amp;lt;target&amp;gt; is one of&amp;quot;
+    @echo &amp;quot;  html       to make standalone HTML files&amp;quot;
+    @echo &amp;quot;  dirhtml    to make HTML files named index.html in directories&amp;quot;
+    @echo &amp;quot;  singlehtml to make a single large HTML file&amp;quot;
+    @echo &amp;quot;  pickle     to make pickle files&amp;quot;
+    @echo &amp;quot;  json       to make JSON files&amp;quot;
+    @echo &amp;quot;  htmlhelp   to make HTML files and a HTML help project&amp;quot;
+    @echo &amp;quot;  qthelp     to make HTML files and a qthelp project&amp;quot;
+    @echo &amp;quot;  devhelp    to make HTML files and a Devhelp project&amp;quot;
+    @echo &amp;quot;  epub       to make an epub&amp;quot;
+    @echo &amp;quot;  latex      to make LaTeX files, you can set PAPER=a4 or PAPER=letter&amp;quot;
+    @echo &amp;quot;  latexpdf   to make LaTeX files and run them through pdflatex&amp;quot;
+    @echo &amp;quot;  text       to make text files&amp;quot;
+    @echo &amp;quot;  man        to make manual pages&amp;quot;
+    @echo &amp;quot;  texinfo    to make a Texinfo source file&amp;quot;
+    @echo &amp;quot;  gettext    to make PO message catalogs&amp;quot;
+    @echo &amp;quot;  changes    to make an overview of all changed/added/deprecated items&amp;quot;
+    @echo &amp;quot;  linkcheck  to check all external links for integrity&amp;quot;
+    @echo &amp;quot;  doctest    to run all doctests embedded in the documentation (if enabled)&amp;quot;
+
+clean:
+    -rm -rf $(BUILDDIR)/*
+
+html:
+    $(SPHINXBUILD) -b djangohtml $(ALLSPHINXOPTS) $(BUILDDIR)/html
+    @echo
+    @echo &amp;quot;Build finished. The HTML pages are in $(BUILDDIR)/html.&amp;quot;
+
+dirhtml:
+    $(SPHINXBUILD) -b dirhtml $(ALLSPHINXOPTS) $(BUILDDIR)/dirhtml
+    @echo
+    @echo &amp;quot;Build finished. The HTML pages are in $(BUILDDIR)/dirhtml.&amp;quot;
+
+singlehtml:
+    $(SPHINXBUILD) -b singlehtml $(ALLSPHINXOPTS) $(BUILDDIR)/singlehtml
+    @echo
+    @echo &amp;quot;Build finished. The HTML page is in $(BUILDDIR)/singlehtml.&amp;quot;
+
+pickle:
+    $(SPHINXBUILD) -b pickle $(ALLSPHINXOPTS) $(BUILDDIR)/pickle
+    @echo
+    @echo &amp;quot;Build finished; now you can process the pickle files.&amp;quot;
+
+json:
+    $(SPHINXBUILD) -b json $(ALLSPHINXOPTS) $(BUILDDIR)/json
+    @echo
+    @echo &amp;quot;Build finished; now you can process the JSON files.&amp;quot;
+
+htmlhelp:
+    $(SPHINXBUILD) -b htmlhelp $(ALLSPHINXOPTS) $(BUILDDIR)/htmlhelp
+    @echo
+    @echo &amp;quot;Build finished; now you can run HTML Help Workshop with the&amp;quot; \
+          &amp;quot;.hhp project file in $(BUILDDIR)/htmlhelp.&amp;quot;
+
+qthelp:
+    $(SPHINXBUILD) -b qthelp $(ALLSPHINXOPTS) $(BUILDDIR)/qthelp
+    @echo
+    @echo &amp;quot;Build finished; now you can run &amp;quot;qcollectiongenerator&amp;quot; with the&amp;quot; \
+          &amp;quot;.qhcp project file in $(BUILDDIR)/qthelp, like this:&amp;quot;
+    @echo &amp;quot;# qcollectiongenerator $(BUILDDIR)/qthelp/django.qhcp&amp;quot;
+    @echo &amp;quot;To view the help file:&amp;quot;
+    @echo &amp;quot;# assistant -collectionFile $(BUILDDIR)/qthelp/django.qhc&amp;quot;
+
+devhelp:
+    $(SPHINXBUILD) -b devhelp $(ALLSPHINXOPTS) $(BUILDDIR)/devhelp
+    @echo
+    @echo &amp;quot;Build finished.&amp;quot;
+    @echo &amp;quot;To view the help file:&amp;quot;
+    @echo &amp;quot;# mkdir -p $$HOME/.local/share/devhelp/django&amp;quot;
+    @echo &amp;quot;# ln -s $(BUILDDIR)/devhelp $$HOME/.local/share/devhelp/django&amp;quot;
+    @echo &amp;quot;# devhelp&amp;quot;
+
+epub:
+    $(SPHINXBUILD) -b epub $(ALLSPHINXOPTS) $(BUILDDIR)/epub
+    @echo
+    @echo &amp;quot;Build finished. The epub file is in $(BUILDDIR)/epub.&amp;quot;
+
+latex:
+    $(SPHINXBUILD) -b latex $(ALLSPHINXOPTS) $(BUILDDIR)/latex
+    @echo
+    @echo &amp;quot;Build finished; the LaTeX files are in $(BUILDDIR)/latex.&amp;quot;
+    @echo &amp;quot;Run \`make&#39; in that directory to run these through (pdf)latex&amp;quot; \
+          &amp;quot;(use \`make latexpdf&#39; here to do that automatically).&amp;quot;
+
+latexpdf:
+    $(SPHINXBUILD) -b latex $(ALLSPHINXOPTS) $(BUILDDIR)/latex
+    @echo &amp;quot;Running LaTeX files through pdflatex...&amp;quot;
+    make -C $(BUILDDIR)/latex all-pdf
+    @echo &amp;quot;pdflatex finished; the PDF files are in $(BUILDDIR)/latex.&amp;quot;
+
+text:
+    $(SPHINXBUILD) -b text $(ALLSPHINXOPTS) $(BUILDDIR)/text
+    @echo
+    @echo &amp;quot;Build finished. The text files are in $(BUILDDIR)/text.&amp;quot;
+
+man:
+    $(SPHINXBUILD) -b man $(ALLSPHINXOPTS) $(BUILDDIR)/man
+    @echo
+    @echo &amp;quot;Build finished. The manual pages are in $(BUILDDIR)/man.&amp;quot;
+
+texinfo:
+    $(SPHINXBUILD) -b texinfo $(ALLSPHINXOPTS) $(BUILDDIR)/texinfo
+    @echo
+    @echo &amp;quot;Build finished; the Texinfo files are in $(BUILDDIR)/texinfo.&amp;quot;
+
+gettext:
+    $(SPHINXBUILD) -b gettext $(I18NSPHINXOPTS) $(BUILDDIR)/locale
+    @echo
+    @echo &amp;quot;Build finished. The message catalogs are in $(BUILDDIR)/locale.&amp;quot;
+
+changes:
+    $(SPHINXBUILD) -b changes $(ALLSPHINXOPTS) $(BUILDDIR)/changes
+    @echo
+    @echo &amp;quot;The overview file is in $(BUILDDIR)/changes.&amp;quot;
+
+linkcheck:
+    $(SPHINXBUILD) -b linkcheck $(ALLSPHINXOPTS) $(BUILDDIR)/linkcheck
+    @echo
+    @echo &amp;quot;Link check complete; look for any errors in the above output &amp;quot; \
+          &amp;quot;or in $(BUILDDIR)/linkcheck/output.txt.&amp;quot;
+
+doctest:
+    $(SPHINXBUILD) -b doctest $(ALLSPHINXOPTS) $(BUILDDIR)/doctest
+    @echo &amp;quot;Testing of doctests in the sources finished, look at the &amp;quot; \
+          &amp;quot;results in $(BUILDDIR)/doctest/output.txt.&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

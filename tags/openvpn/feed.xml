@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Openvpn on 百里求一的博客</title>
+        <link>http://kooksee.github.io/tags/openvpn/</link>
+        <language>zh-CN</language>
+        <author>CoderZh</author>
+        <rights>Copyright (c) 2015, CoderZh; all rights reserved.</rights>
+        <updated>Mon, 01 Jan 0001 00:00:00 UTC</updated>
+        
+        <item>
+            <title>ubuntu 搭建 OPENVPN</title>
+            <link>http://kooksee.github.io/blog/ubuntu%20%E6%90%AD%E5%BB%BA%20OPENVPN/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/ubuntu%20%E6%90%AD%E5%BB%BA%20OPENVPN/</guid>
+            <description>&lt;blockquote&gt;
+&lt;p&gt;配置OpenVPN的步骤，大致包括两部分，首先是服务器端的OpenVPN服务，其次是客户端的OpenVPN软件。首先我们在Ubuntu 10.04 TLS上配置OpenVPN服务器端。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;##配置OpenVPN服务器
+首先请使用root账户登录系统，若没有开启root，请使用sudo暂转为root模式：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;sudo -i
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;从软件仓库安装openvpn及其相关软件包：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;apt-get install openvpn udev lzop -y
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;完成安装后，复制证书配置模板信息：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;cp -r /usr/share/doc/openvpn/examples/easy-rsa/ /etc/openvpn/
+cd /etc/openvpn/easy-rsa/2.0/
+source vars
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;先清除已有的证书信息：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;./clean-all
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;创建CA根证书：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#./build-ca
+Generating a 1024 bit RSA private key
+................++++++
+........++++++
+writing new private key to &#39;ca.key&#39;
+-----
+You are about to be asked to enter information that will be incorporated
+into your certificate request.
+What you are about to enter is what is called a Distinguished Name or a DN.
+There are quite a few fields but you can leave some blank
+For some fields there will be a default value,
+If you enter &#39;.&#39;, the field will be left blank.
+-----
+Country Name (2 letter code) [CN]:
+State or Province Name (full name) [GD]:
+Locality Name (eg, city) [SZ]:
+Organization Name (eg, company) []:
+Organizational Unit Name (eg, section) []:soa
+Common Name (eg, your name or your server&#39;s hostname) []:starlight36.com
+Email Address [your-email [at] starlight36.com]:
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;创建服务器端key：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#./build-key-server server
+Generating a 1024 bit RSA private key
+......++++++
+....................++++++
+writing new private key to &#39;server.key&#39;
+-----
+You are about to be asked to enter information that will be incorporated
+into your certificate request.
+What you are about to enter is what is called a Distinguished Name or a DN.
+There are quite a few fields but you can leave some blank
+For some fields there will be a default value,
+If you enter &#39;.&#39;, the field will be left blank.
+-----
+Country Name (2 letter code) [CN]:
+State or Province Name (full name) [LN]:
+Locality Name (eg, city) [DL]:
+Organization Name (eg, company) [starlight36.com]:
+Organizational Unit Name (eg, section) []:starlight36.com
+Common Name (eg, your name or your server&#39;s hostname) []:server
+Email Address [your-email [at] starlight36.com]:
+... ...
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;创建客户端key&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#./build-key client
+Generating a 1024 bit RSA private key
+......++++++
+....................++++++
+writing new private key to &#39;server.key&#39;
+-----
+You are about to be asked to enter information that will be incorporated
+into your certificate request.
+What you are about to enter is what is called a Distinguished Name or a DN.
+There are quite a few fields but you can leave some blank
+For some fields there will be a default value,
+If you enter &#39;.&#39;, the field will be left blank.
+-----
+Country Name (2 letter code) [CN]:
+State or Province Name (full name) [LN]:
+Locality Name (eg, city) [DL]:
+Organization Name (eg, company) [starlight36.com]:
+Organizational Unit Name (eg, section) []:starlight36.com
+Common Name (eg, your name or your server&#39;s hostname) []:client
+Email Address [your-email [at] starlight36.com]:
+... ...
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;过程和创建服务器端Key基本一致，但是需要注意的是，Common Name (eg, your name or your server’s hostname)这一项每个客户端key之间不能重名，和server key的设置也不能重名，否则会导致生成失败。&lt;/p&gt;
+
+&lt;p&gt;生成 Diffie Hellman信息：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;./build-dh
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这时，服务器证书的配置就完成了，我们需要把服务器上刚才生成的ca.crt client.crt client.key三个文件下载下来，客户端连接时需要用到。&lt;/p&gt;
+
+&lt;p&gt;继续配置服务器端OpenVPN配置文件：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#vi /etc/openvpn/server.conf
+local 【服务器IP】
+port 【服务端口】
+proto udp
+dev tun
+ca /etc/openvpn/easy-rsa/2.0/keys/ca.crt
+cert /etc/openvpn/easy-rsa/2.0/keys/server.crt
+key /etc/openvpn/easy-rsa/2.0/keys/server.key
+dh /etc/openvpn/easy-rsa/2.0/keys/dh1024.pem
+ifconfig-pool-persist ipp.txt
+server 10.168.1.0 255.255.255.0
+push &amp;quot;redirect-gateway&amp;quot;
+push &amp;quot;dhcp-option DNS 8.8.8.8&amp;quot;
+push &amp;quot;dhcp-option DNS 8.8.4.4&amp;quot;
+client-to-client
+duplicate-cn
+keepalive 10 60
+comp-lzo
+max-clients 10
+persist-key
+persist-tun
+status openvpn-status.log
+log-append openvpn.log
+verb 3
+mute 20
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;对iptables进行设置，进行nat转发：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;iptables -t nat -A POSTROUTING -s 10.168.0.0/16 -o venet0 -j SNAT --to 【外网出口IP】
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;保存到iptables表中：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; iptables-save &amp;gt; /etc/iptables.rules
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;添加配置，让网卡启动时自动加载规则：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#vi /etc/network/if-up.d/iptables
+#!/bin/sh
+iptables-restore &amp;lt; /etc/iptables.rules
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;为脚本增加执行权限：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;chmod +x /etc/network/if-up.d/iptables
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;增加内核配置信息：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#vi /etc/sysctl.conf
+net.ipv4.ip_forward = 1
+net.ipv4.conf.all.send_redirects = 0
+net.ipv4.conf.default.send_redirects = 0
+net.ipv4.conf.all.accept_redirects = 0
+net.ipv4.conf.default.accept_redirects = 0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;立即生效配置：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;sysctl -p
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;启动VPN服务并重启网络：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;/etc/init.d/openvpn restart
+/etc/init.d/networking restart
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;若启动服务失败，请查看日志/etc/openvpn/openvpn.log。&lt;/p&gt;
+
+&lt;p&gt;对于VPS而言，若出现Cannot allocate TUN/TAP dev dynamically的错误，请联系你的空间商，让其为你开启TUN支持。当然有些VPS空间商是不支持这个的。貌似Godaddy的就不支持。&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;配置OpenVPN客户端（Windows下）
+首先，请先下载Windows下的最新版本的OpenVPN客户端：&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://swupdate.openvpn.org/community/releases/openvpn-2.2.2-install.exe&#34;&gt;http://swupdate.openvpn.org/community/releases/openvpn-2.2.2-install.exe&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;运行并安装，默认选项即可，若安装有困难，请参考这篇文章：&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://vpn5201.com/setup/windows-7/openvpn.php&#34;&gt;http://vpn5201.com/setup/windows-7/openvpn.php&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;将刚才保存到本地的ca.crt client.crt client.key三个文件，丢进OpenVPN安装目录下的config文件夹中，默认安装路径为：C:\Program Files\OpenVPN（x64系统下为C:\Program Files (x86)\OpenVPN）。&lt;/p&gt;
+
+&lt;p&gt;在config文件夹中创建一个连接服务器的配置文件，扩展名为.ovpn：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;client
+dev tun
+proto udp
+remote 【OpenVPN服务器IP】 【服务端口】
+resolv-retry infinite
+nobind
+persist-key
+persist-tun
+ca ca.crt
+cert client.crt
+key client.key
+ns-cert-type server
+redirect-gateway
+keepalive 20 60
+#tls-auth ta.key 1
+comp-lzo
+verb 3
+mute 20
+route-method exe
+route-delay 2
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在开始菜单启动OpenVPN，这时可以在系统托盘中看到图标，右键选择Connect，即可开始连接，不出以外，你可以正常连上了。&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;安卓Android使用OpenVPN
+由于Android也使用Linux内核，所以原则上它也是可以使用OpenVPN的。在Android上使用OpenVPN，请安装OpenVPN-Setting，下载地址请见：&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://code.google.com/p/android-openvpn-settings/downloads/list&#34;&gt;http://code.google.com/p/android-openvpn-settings/downloads/list&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;安装了客户端之后，在sd卡目录下新建一个openvpn，将PC客户端上的证书和配置文件（config文件夹下的东西）拷贝过来，运行OpenVPN Settings即可。&lt;/p&gt;
+
+&lt;p&gt;参考文章：&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://hi.baidu.com/gaolongquan/blog/item/57cad955a23e18deb645ae5a.html&#34;&gt;http://hi.baidu.com/gaolongquan/blog/item/57cad955a23e18deb645ae5a.html&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://www.xiaohui.com/dev/server/20070514-install-openvpn.htm&#34;&gt;http://www.xiaohui.com/dev/server/20070514-install-openvpn.htm&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://vpn5201.com/setup/windows-7/openvpn.php&#34;&gt;http://vpn5201.com/setup/windows-7/openvpn.php&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;转：&lt;a href=&#34;http://starlight36.com/post/ubuntu-openvpn-server-install&#34;&gt;http://starlight36.com/post/ubuntu-openvpn-server-install&lt;/a&gt;&lt;/p&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

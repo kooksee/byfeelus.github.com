@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>任务发布平台 on 百里求一的博客</title>
+        <link>http://kooksee.github.io/tags/%E4%BB%BB%E5%8A%A1%E5%8F%91%E5%B8%83%E5%B9%B3%E5%8F%B0/</link>
+        <language>zh-CN</language>
+        <author>CoderZh</author>
+        <rights>Copyright (c) 2015, CoderZh; all rights reserved.</rights>
+        <updated>Mon, 01 Jan 0001 00:00:00 UTC</updated>
+        
+        <item>
+            <title>基于数据挖掘的智能任务发布系统的设计与实现</title>
+            <link>http://kooksee.github.io/blog/%E5%9F%BA%E4%BA%8E%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98%E7%9A%84%E6%99%BA%E8%83%BD%E4%BB%BB%E5%8A%A1%E5%8F%91%E5%B8%83%E7%B3%BB%E7%BB%9F%E7%9A%84%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/%E5%9F%BA%E4%BA%8E%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98%E7%9A%84%E6%99%BA%E8%83%BD%E4%BB%BB%E5%8A%A1%E5%8F%91%E5%B8%83%E7%B3%BB%E7%BB%9F%E7%9A%84%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0/</guid>
+            <description>&lt;p&gt;技术调研：
+&amp;gt; jieba 分词
+DPark 大数据分析
+TextBlob TextBlob是一个支持Python2和Python3的用于进行文本数据处理的工具包。它提供了简单的API，用于一般自然语言处理（NLP），如：语音识别、名词短语提取、情感分析、翻译等功能。
+web框架 flask 框架
+用twisted作为及时聊天框架，前端用sockjs,ajax,pintuer,bootstrap and jquery-ui  &lt;a href=&#34;http://jqueryui.com/show/&#34;&gt;http://jqueryui.com/show/&lt;/a&gt;
+数据库用mongodb,文档化便于管理
+简单异步用ajax,实时数据用sockjs&lt;/p&gt;
+
+&lt;p&gt;##背景和目的&lt;/p&gt;
+
+&lt;p&gt;互联网盛行的时代最不缺少的就是知识，然而最缺少的也是知识，因为快速有效的找到自己的答案是一个无比困难的问题。于是我们想到搜索引擎，想到百度，想到谷歌。谷歌搜索引擎依靠PageRank算法让其成为世界上查询搜索最靠谱的搜索引擎。我们在58同城上面查询我们需要的信息，可能我们永远也不知道58同城有多少台服务器在工作，后面又有多少技术人员在加班。58同城和百姓网是一个大众化信息，商品发布平台，因为信息繁多，所以很杂乱。如果想要快速找到自己想要的信息，他们已经无法满足现有的需求。所以，对于人们渴切的愿望，网上出现了很多信息发布平台方便人们查询，还有很多任务发布的平台吸引人们去寻找答案。但是无论怎么做，各个企业都是在做一个大众化的平台，结果造成了很多良莠不齐的现象。国外常用的技术类网站有stackoverflow，有github，这些技术性的网站，解决了很公司项目上的问题。但是生活中的很多问题却没法得到解决。之后，不仅仅是能够让用户去发布问题，还能够给用户推荐解决方法。这要归属于自然语言处理的解决方案，同时要有后台大数据的分析才能够收集到用户准确信息。我很喜欢互联网，所以我也很关注互联网，但是关注久了就发现一个很简单的道理，那就是互联网也会像人类文明一样一步步的文明化，正规化，专业化，数据化。而且我发现，现在很多公司开始强调版权问题，强调信誉问题，强调网络文明财产安全问题，这说明互联网已经不单单再像往常一样免费共享了，网民也不能不再像往常一样恣意妄为了。我们知道优酷收费了，爱奇艺收费了，百度收费了，谷歌这个开源的带头人也开始收费了，百度音乐虽资源丰富，但最近也因为版权问题和其他公司合并了，因为无版权的使用就意味着不劳而获，虽然用着方便舒服，但却伤害了原创作者心，故而收费能够鼓励更多的人创造，创新。我喜欢百度知道，知乎，但是他们所做的是一个很大的平台，即使能够学到东西找到答案也是在大家愿意分享的情况下，这仅仅来自于内驱力，远远没有外压力的强大能量，和外诱力的强力吸引。在百度写经验可以通过浏览量赚积分，于是经验上面的文档越来越多。在简书上面写文章，通过打赏金币也可以获得喝一杯咖啡的钱，于是简书上面的好文档也越来越多，这一切都说明了什么呢？说明了大家在分享自己劳动成果的同时更希望获得一下阅读者的鼓励和支持，如果能够支助一二也未尝不是件快乐的事。所以，基于我现在还不太成熟的想法，我想要做一个帮助大家快速准确解决问题的平台，在你解决问题的时候，你的一切辛苦都不会白费，因为每个问题都会附上一杯咖啡的钱。也就是说，这是一个收费的平台，因为收费可以杜绝像百度知道，搜搜那样的大众化平台所遇到的简单的问题，这里的问题大多数都不是依靠百度，搜狗就能查到或者很快查到的。&lt;/p&gt;
+
+&lt;p&gt;谷歌最常用的两门语言是c++和python，后来又开发了golang，c++以其性能著称，而python以其简单快速开发著称，golang兼具两者优势，是当今web开发的又一新雏。随着互联网发展，简单的web已经不能够满足人们的需求，从开始的静态页面到现在的动态页面，从开始的关系型数据库到现在的非关系型数据库和图型数据库，互联网正变得越来越复杂，庞大。从web2.0 到来的那一刻，人民对于性能的需求，对于体验的需求近乎苛刻。于是，语音识别开始出现在人们的视野，百度和gu&lt;/p&gt;
+
+&lt;p&gt;如果要问在二十一世纪发展最快的是什么，那么毫无疑问就是互联网，我们购物于互联网，学习于互联网，沟通于互联网，交易于互联网。在互联网盛行的这个时代，我们的生活，工作和学习已经和互联网密不可分。所以，当今如果哪个行业和互联网脱轨了，那么它也终将会和世界脱轨，那么它也就离灭亡不远了。我喜欢互联网给我带来的各种便利，我热衷互联网给我提供的各种技术，我乐此不疲到google上搜索千奇百怪的事情，我去github上查询各种好玩的项目，我去stackoverflow查找问题的解决方案，我去优酷上搜索好看的视频，我去网易上搜索好听的音乐，无论何时都会有人在网上搜索着自己喜欢的事情，自己想要的答案，所以我们大部分时间都是在茫茫的互联网中去寻找属于自己的那个答案，所以能够快速有效的找到自己的答案，自己的解决方案是一件无比幸福的事情。然而，庞大的互联网涵盖大量的资料，总是让我们无从下手，即使有google，也不一定能够找到自己的解决方案。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    在互联网盛行的这个时代，如果哪个行业和互联网脱轨了，那么它也最终会和世界脱轨，那么它也就离消失不远了。我很喜欢互联网，所以我也很关注互联网，但是关注久了就发现一个很简单的道理，那就是互联网也会像人类文明一样一步步的文明化，正规化，专业化，数据化。而且我发现，现在很多公司开始强调版权问题，强调信誉问题，强调网络文明财产安全问题，这说明互联网已经不单单再像往常一样免费共享了，网民也不能不再像往常一样恣意妄为了。我们知道优酷收费了，爱奇艺收费了，百度收费了，谷歌这个开源的带头人也开始收费了，百度音乐虽资源丰富，但最近也因为版权问题和其他公司合并了，因为无版权的使用就意味着不劳而获，虽然用着方便舒服，但却伤害了原创作者心，故而收费能够鼓励更多的人创造，创新。我喜欢百度知道，知乎，但是他们所做的是一个很大的平台，即使能够学到东西找到答案也是在大家愿意分享的情况下，这仅仅来自于内驱力，远远没有外压力的强大能量，和外诱力的强力吸引。在百度写经验可以通过浏览量赚积分，于是经验上面的文档越来越多。在简书上面写文章，通过打赏金币也可以获得喝一杯咖啡的钱，于是简书上面的好文档也越来越多，这一切都说明了什么呢？说明了大家在分享自己劳动成果的同时更希望获得一下阅读者的鼓励和支持，如果能够支助一二也未尝不是件快乐的事。所以，基于我现在还不太成熟的想法，我想要做一个帮助大家快速准确解决问题的平台，在你解决问题的时候，你的一切辛苦都不会白费，因为每个问题都会附上一杯咖啡的钱。也就是说，这是一个收费的平台，因为收费可以杜绝像百度知道，搜搜那样的大众化平台所遇到的问题，这里的问题大多数都不是依靠百度，搜狗就能查到或者很快查到的。
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;如果要问在二十一世纪发展最快的是什么，那么毫无疑问就是互联网，我们购物于互联网，学习于互联网，沟通于互联网，交易于互联网。在互联网盛行的这个时代，我们的生活，工作和学习已经和互联网密不可分。所以，当今如果哪个行业和互联网脱轨了，那么它也终将会和世界脱轨，那么它也就离灭亡不远了。我喜欢互联网给我带来的各种便利，我热衷互联网给我提供的各种技术，我乐此不疲的google千奇百怪的事情，我去github上面浏览好玩的项目，我去stackoverflow查找问题的解决方案，我去优酷看视频，我去网易听音乐，我收获于互联网，关注于互联网，但是关注久了之后我就发现了一些痛点。stackoverflow是一个纯粹的解决问题的社区，对于问题的回答很快，但是也会耽误不少时间，而且对问题的分类总结并不是很好。百度知道是一个大众化问题平台，里面的问题大多较生活化，技术含量较低。知乎相对于中国来说还是一个很不错的技术类学习社区，里面也涵盖了不少让人耳目一新的东西，但是大家解决问题的积极性并不高，大多数时间是在提出问题，关注好友。我很渴望有一个高质量的能够及时解决大家问题的平台，让天下不再有难以解决的问题。这也是我毕业设计的初衷，我想用现有的技术去打造一个发布任务，发布问题解决问题的平台，让大家都能够免去很多技术问题，生活问题的困扰。&lt;/p&gt;
+
+&lt;p&gt;一个很简单的道理，那就是互联网也会像人类文明一样一步步的文明化，正规化，专业化，数据化。而且我发现，现在很多公司开始强调版权问题，强调信誉问题，强调网络文明财产安全问题，这说明互联网已经不单单再像往常一样免费共享了，网民也不能不再像往常一样恣意妄为了。我们知道优酷收费了，爱奇艺收费了，百度收费了，谷歌这个开源的带头人也开始收费了，百度音乐虽资源丰富，但最近也因为版权问题和其他公司合并了，因为无版权的使用就意味着不劳而获，虽然用着方便舒服，但却伤害了原创作者心，故而收费能够鼓励更多的人创造，创新。我喜欢百度知道，知乎，但是他们所做的是一个很大的平台，即使能够学到东西找到答案也是在大家愿意分享的情况下，这仅仅来自于内驱力，远远没有外压力的强大能量，和外诱力的强力吸引。在百度写经验可以通过浏览量赚积分，于是经验上面的文档越来越多。在简书上面写文章，通过打赏金币也可以获得喝一杯咖啡的钱，于是简书上面的好文档也越来越多，这一切都说明了什么呢？说明了大家在分享自己劳动成果的同时更希望获得一下阅读者的鼓励和支持，如果能够支助一二也未尝不是件快乐的事。所以，基于我现在还不太成熟的想法，我想要做一个帮助大家快速准确解决问题的平台，在你解决问题的时候，你的一切辛苦都不会白费，因为每个问题都会附上一杯咖啡的钱。也就是说，这是一个收费的平台，因为收费可以杜绝像百度知道，搜搜那样的大众化平台所遇到的问题，这里的问题大多数都不是依靠百度，搜狗就能查到或者很快查到的。&lt;/p&gt;
+
+&lt;p&gt;##问题是否解决判定方案
+    乙提出问题，甲来回答；一：甲解决了问题，乙否认；二：甲没解决问题说已解决问题，乙否认；因为乙是提出问题方，也就是出钱方，所以只有当乙否认时才会出现问题。针对上述两种情况，有两种方式解决，一：由平台公证人来公正，就是交给系统客服解决；二：在讨论专区里面讨论，由大家来共同评价讨论出结果。如果最后是某一方的问题，某一方的信誉值降低(暂无降低标准)。讨论区评论方利益分配暂定&lt;/p&gt;
+
+&lt;p&gt;#每一个正确的被接纳的行为都会受到回报，因为这是你应得的。&lt;/p&gt;
+
+&lt;p&gt;python：&lt;/p&gt;
+
+&lt;p&gt;Python 是一种面向对象、解释型计算机程序设计语言，由Guido van Rossum于1989年发明，第一个公开发行版发行于1991年。
+Python是纯粹的自由软件， 源代码和解释器CPython遵循 GPL(GNU General Public License)协议[1]  。
+Python语法简洁清晰，特色之一是强制用空白符(whitespace)作为语句缩进。
+Python具有丰富和强大的库。它常被昵称为胶水语言，能够把用其他语言制作的各种模块（尤其是C/C++）很轻松地联结在一起。常见的一种应用情形是，使用Python快速生成程序的原型（有时甚至是程序的最终界面），然后对其中有特别要求的部分，用更合适的语言改写，比如3D游戏中的图形渲染模块，性能要求特别高，就可以用C/C++重写，而后封装为Python可以调用的扩展类库。需要注意的是在您使用扩展类库时可能需要考虑平台问题，某些可能不提供跨平台的实现。&lt;/p&gt;
+
+&lt;p&gt;AMQP，即Advanced Message Queuing Protocol，高级消息队列协议，是应用层协议的一个开放标准，为面向消息的中间件设计。消息中间件主要用于组件之间的解耦，消息的发送者无需知道消息使用者的存在，反之亦然。
+AMQP的主要特征是面向消息、队列、路由（包括点对点和发布/订阅）、可靠性、安全。
+RabbitMQ是一个开源的AMQP实现，服务器端用Erlang语言编写，支持多种客户端，如：Python、Ruby、.NET、Java、JMS、C、PHP、ActionScript、XMPP、STOMP等，支持AJAX。用于在分布式系统中存储转发消息，在易用性、扩展性、高可用性等方面表现不俗。
+下面将重点介绍RabbitMQ中的一些基础概念，了解了这些概念，是使用好RabbitMQ的基础。
+ConnectionFactory、Connection、Channel&lt;/p&gt;
+
+&lt;p&gt;ConnectionFactory、Connection、Channel都是RabbitMQ对外提供的API中最基本的对象。Connection是RabbitMQ的socket链接，它封装了socket协议相关部分逻辑。ConnectionFactory为Connection的制造工厂。
+Channel是我们与RabbitMQ打交道的最重要的一个接口，我们大部分的业务操作是在Channel这个接口中完成的，包括定义Queue、定义Exchange、绑定Queue与Exchange、发布消息等。&lt;/p&gt;
+
+&lt;p&gt;jieba：
+&amp;ldquo;结巴&amp;rdquo;中文分词：做最好的Python中文分词组件&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;支持三种分词模式：
+    精确模式，试图将句子最精确地切开，适合文本分析；
+    全模式，把句子中所有的可以成词的词语都扫描出来, 速度非常快，但是不能解决歧义；
+    搜索引擎模式，在精确模式的基础上，对长词再次切分，提高召回率，适合用于搜索引擎分词。
+
+支持繁体分词
+
+支持自定义词典
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;flask:&lt;/p&gt;
+
+&lt;p&gt;Flask是一个使用 Python 编写的轻量级 Web 应用框架。其 WSGI 工具箱采用 Werkzeug ，模板引擎则使用 Jinja2 。
+Flask使用 BSD 授权。
+Flask也被称为 “microframework” ，因为它使用简单的核心，用 extension 增加其他功能。Flask没有默认使用的数据库、窗体验证工具。然而，Flask保留了扩增的弹性，可以用Flask-extension加入这些功能：ORM、窗体验证工具、文件上传、各种开放式身份验证技术。&lt;/p&gt;
+
+&lt;p&gt;mongodb:
+ MongoDB 是一个跨平台的，面向文档的数据库，提供高性能，高可用性和可扩展性方便。 MongoDB 工作在收集和文件的概念。
+  数据库是一个物理容器集合。每个数据库都有自己的一套文件系统上的文件。一个单一的MongoDB服务器通常有多个数据库。&lt;/p&gt;
+
+&lt;p&gt;集合&lt;/p&gt;
+
+&lt;p&gt;集合是一组MongoDB的文档。它相当于一个RDBMS表。收集存在于一个单一的数据库。集合不执行模式。集合内的文档可以有不同的领域。通常情况下，一个集合中的所有文件是相同或相关的目的。 www.yiibai.com
+文档&lt;/p&gt;
+
+&lt;p&gt;文档是一组键 - 值对。文件动态模式。动态模式是指，在相同集合中的文档不需要具有相同的字段或结构组的公共字段的集合的文档，可以容纳不同类型的数据。&lt;/p&gt;
+
+&lt;p&gt;postgresql:
+PostgreSQL是以加州大学伯克利分校计算机系开发的 POSTGRES，现在已经更名为PostgreSQL，版本 4.2为基础的对象关系型数据库管理系统（ORDBMS）。PostgreSQL支持大部分 SQL标准并且提供了许多其他现代特性：复杂查询、外键、触发器、视图、事务完整性、MVCC。同样，PostgreSQL 可以用许多方法扩展，比如， 通过增加新的数据类型、函数、操作符、聚集函数、索引。免费使用、修改、和分发 PostgreSQL，不管是私用、商用、还是学术研究使用。
+PostgreSQL 是一个自由的对象-关系数据库服务器(数据库管理系统)，它在灵活的 BSD-风格许可证下发行。它提供了相对其他开放源代码数据库系统(比如 MySQL 和 Firebird)，和专有系统(比如 Oracle、Sybase、IBM 的 DB2 和 Microsoft SQL Server)之外的另一种选择。
+PostgreSQL 不寻常的名字导致一些读者停下来尝试拼读它，特别是那些把SQL拼读为&amp;rdquo;sequel&amp;rdquo;的人。PostgreSQL 开发者把它拼读为 &amp;ldquo;post-gress-Q-L&amp;rdquo;。它也经常被简略念为 &amp;ldquo;postgres&amp;rdquo;。&lt;/p&gt;
+
+&lt;p&gt;pony orm:
+Pony ORM 非常有趣
+Pony 可以将 Python Generators 翻译成 SQL.&lt;/p&gt;
+
+&lt;p&gt;它拥有可视编辑器和模型等其他特性.
+Pony is an object-relational mapper. The most interesting feature of Pony is its ability to write queries to the database using generator expressions. Pony works with entities which are mapped to a SQL database. Using generator syntax for writing queries allows the user to formulate very eloquent queries. It increases the level of abstraction and allows a programmer to concentrate on the business logic of the application. For this purpose Pony analyzes the abstract syntax tree of a generator and translates it to its SQL equivalent.&lt;/p&gt;
+
+&lt;p&gt;docker:
+Docker 是一个开源的应用容器引擎，让开发者可以打包他们的应用以及依赖包到一个可移植的容器中，然后发布到任何流行的 Linux 机器上，也可以实现虚拟化。容器是完全使用沙箱机制，相互之间不会有任何接口（类似 iPhone 的 app）。几乎没有性能开销,可以很容易地在机器和数据中心中运行。最重要的是,他们不依赖于任何语言、框架包括系统。&lt;/p&gt;
+
+&lt;p&gt;Docker 是 PaaS 提供商 dotCloud 开源的一个基于 LXC 的高级容器引擎，源代码托管在 Github 上, 基于go语言并遵从Apache2.0协议开源。
+Docker自2013年以来非常火热，无论是从 github 上的代码活跃度，还是Redhat在RHEL6.5中集成对Docker的支持, 就连 Google 的 Compute Engine 也支持 docker 在其之上运行。
+一款开源软件能否在商业上成功，很大程度上依赖三件事 - 成功的 user case(用例), 活跃的社区和一个好故事。 dotCloud 自家的 PaaS 产品建立在docker之上，长期维护且有大量的用户，社区也十分活跃，接下来我们看看docker的故事。
+    环境管理复杂 - 从各种OS到各种中间件到各种app, 一款产品能够成功作为开发者需要关心的东西太多，且难于管理，这个问题几乎在所有现代IT相关行业都需要面对。
+    云计算时代的到来 - AWS的成功, 引导开发者将应用转移到 cloud 上, 解决了硬件管理的问题，然而中间件相关的问题依然存在 (所以openstack HEAT和 AWS cloudformation 都着力解决这个问题)。开发者思路变化提供了可能性。
+    虚拟化手段的变化 - cloud 时代采用标配硬件来降低成本，采用虚拟化手段来满足用户按需使用的需求以及保证可用性和隔离性。然而无论是KVM还是Xen在 docker 看来,都在浪费资源，因为用户需要的是高效运行环境而非OS, GuestOS既浪费资源又难于管理, 更加轻量级的LXC更加灵活和快速
+    LXC的移动性 - LXC在 linux 2.6 的 kernel 里就已经存在了，但是其设计之初并非为云计算考虑的，缺少标准化的描述手段和容器的可迁移性，决定其构建出的环境难于迁移和标准化管理(相对于KVM之类image和snapshot的概念)。docker 就在这个问题上做出实质性的革新。这是docker最独特的地方。&lt;/p&gt;
+
+&lt;p&gt;面对上述几个问题，docker设想是交付运行环境如同海运，OS如同一个货轮，每一个在OS基础上的软件都如同一个集装箱，用户可以通过标准化手段自由组装运行环境，同时集装箱的内容可以由用户自定义，也可以由专业人员制造。这样，交付一个软件，就是一系列标准化组件的集合的交付，如同乐高积木，用户只需要选择合适的积木组合，并且在最顶端署上自己的名字(最后个标准化组件是用户的app)。这也就是基于docker的PaaS产品的原型。&lt;/p&gt;
+
+&lt;p&gt;在docker的网站上提到了docker的典型场景：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Automating the packaging and deployment of applications
+Creation of lightweight, private PAAS environments
+Automated testing and continuous integration/deployment
+Deploying and scaling web apps, databases and backend services
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;由于其基于LXC的轻量级虚拟化的特点，docker相比KVM之类最明显的特点就是启动快，资源占用小。因此对于构建隔离的标准化的运行环境，轻量级的PaaS(如dokku), 构建自动化测试和持续集成环境，以及一切可以横向扩展的应用(尤其是需要快速启停来应对峰谷的web应用)。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;构建标准化的运行环境，现有的方案大多是在一个baseOS上运行一套puppet/chef，或者一个image文件，其缺点是前者需要base OS许多前提条件，后者几乎不可以修改(因为copy on write 的文件格式在运行时rootfs是read only的)。并且后者文件体积大，环境管理和版本控制本身也是一个问题。
+PaaS环境是不言而喻的，其设计之初和dotcloud的案例都是将其作为PaaS产品的环境基础
+因为其标准化构建方法(buildfile)和良好的REST API，自动测试和持续集成/部署能够很好的集成进来
+因为LXC轻量级的特点，其启动快，而且docker能够只加载每个container变化的部分，这样资源占用小，能够在单机环境下与KVM之类的虚拟化方案相比能够更加快速和占用更少资源
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;twisted:
+Twisted是用Python实现的基于事件驱动的网络引擎框架。Twisted诞生于2000年初，在当时的网络游戏开发者看来，无论他们使用哪种语言，手中都鲜有可兼顾扩展性及跨平台的网络库。Twisted的作者试图在当时现有的环境下开发游戏，这一步走的非常艰难，他们迫切地需要一个可扩展性高、基于事件驱动、跨平台的网络开发框架，为此他们决定自己实现一个，并从那些之前的游戏和网络应用程序的开发者中学习，汲取他们的经验教训。&lt;/p&gt;
+
+&lt;p&gt;Twisted支持许多常见的传输及应用层协议，包括TCP、UDP、SSL/TLS、HTTP、IMAP、SSH、IRC以及FTP。就像Python一样，Twisted也具有“内置电池”（batteries-included）的特点。Twisted对于其支持的所有协议都带有客户端和服务器实现，同时附带有基于命令行的工具，使得配置和部署产品级的Twisted应用变得非常方便。&lt;/p&gt;
+
+&lt;p&gt;外文翻译
+&lt;a href=&#34;http://dockone.io/article/482&#34;&gt;http://dockone.io/article/482&lt;/a&gt;
+&lt;a href=&#34;https://www.nginx.com/blog/building-microservices-using-an-api-gateway/&#34;&gt;https://www.nginx.com/blog/building-microservices-using-an-api-gateway/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;最喜欢的go类库
+go依赖管理－－&lt;a href=&#34;https://gopm.io/&#34;&gt;https://gopm.io/&lt;/a&gt;
+web&amp;ndash;&lt;a href=&#34;https://github.com/zenazn/goji&#34;&gt;https://github.com/zenazn/goji&lt;/a&gt;
+网络请求－－&lt;a href=&#34;https://github.com/mozillazg/request&#34;&gt;https://github.com/mozillazg/request&lt;/a&gt;
+system and process utilities －－ &lt;a href=&#34;https://github.com/shirou/gopsutil&#34;&gt;https://github.com/shirou/gopsutil&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;技术－－产品－－运营
+百度问题：技术驱动遭到了产品运营驱动的市场
+；链接人和服务；李彦宏说，我们信仰技术&lt;/p&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

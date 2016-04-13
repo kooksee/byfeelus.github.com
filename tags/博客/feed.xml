@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>博客 on 百里求一的博客</title>
+        <link>http://kooksee.github.io/tags/%E5%8D%9A%E5%AE%A2/</link>
+        <language>zh-CN</language>
+        <author>CoderZh</author>
+        <rights>Copyright (c) 2015, CoderZh; all rights reserved.</rights>
+        <updated>Mon, 01 Jan 0001 00:00:00 UTC</updated>
+        
+        <item>
+            <title>静态博客系统功能描述</title>
+            <link>http://kooksee.github.io/blog/%E9%9D%99%E6%80%81%E5%8D%9A%E5%AE%A2%E7%B3%BB%E7%BB%9F%E5%8A%9F%E8%83%BD%E6%8F%8F%E8%BF%B0/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/%E9%9D%99%E6%80%81%E5%8D%9A%E5%AE%A2%E7%B3%BB%E7%BB%9F%E5%8A%9F%E8%83%BD%E6%8F%8F%E8%BF%B0/</guid>
+            <description>&lt;ol&gt;
+&lt;li&gt;能够使用markdown博客编写&lt;/li&gt;
+&lt;li&gt;能够对博客进行时间分类，标签分类&lt;/li&gt;
+&lt;li&gt;能够读取一个链接并保存成一个博文&lt;/li&gt;
+&lt;li&gt;能够对上传的mht或者mhtml的压缩格式的html进行显示&lt;/li&gt;
+&lt;li&gt;能够上传图片&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

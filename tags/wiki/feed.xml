@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Wiki on 百里求一的博客</title>
+        <link>http://kooksee.github.io/tags/wiki/</link>
+        <language>zh-CN</language>
+        <author>CoderZh</author>
+        <rights>Copyright (c) 2015, CoderZh; all rights reserved.</rights>
+        <updated>Mon, 01 Jan 0001 00:00:00 UTC</updated>
+        
+        <item>
+            <title>mywiki</title>
+            <link>http://kooksee.github.io/blog/mywiki/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/mywiki/</guid>
+            <description>&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;对冲基金&lt;/strong&gt; &lt;a href=&#34;http://zhidao.baidu.com/link?url=T20eVC1lUMbnrHyOXIKvzrIcBm0BU0bjOrjxVVmDCRNE7Sti2GjvJCPLTVYX4e3bVtG0aTG12Ad9eE_CF9yEiq&#34;&gt;http://zhidao.baidu.com/link?url=T20eVC1lUMbnrHyOXIKvzrIcBm0BU0bjOrjxVVmDCRNE7Sti2GjvJCPLTVYX4e3bVtG0aTG12Ad9eE_CF9yEiq&lt;/a&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;为程序员而生的网站&lt;/strong&gt; &lt;a href=&#34;https://www.topcoder.com/&#34;&gt;https://www.topcoder.com/&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>实习 on 百里求一的博客</title>
+        <link>http://kooksee.github.io/tags/%E5%AE%9E%E4%B9%A0/</link>
+        <language>zh-CN</language>
+        <author>CoderZh</author>
+        <rights>Copyright (c) 2015, CoderZh; all rights reserved.</rights>
+        <updated>Mon, 01 Jan 0001 00:00:00 UTC</updated>
+        
+        <item>
+            <title>实习信息</title>
+            <link>http://kooksee.github.io/blog/%E5%AE%9E%E4%B9%A0%E4%BF%A1%E6%81%AF/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/%E5%AE%9E%E4%B9%A0%E4%BF%A1%E6%81%AF/</guid>
+            <description>&lt;p&gt;中国科学院信息工程研究所
+第四研究室   周磊
+地点：北京市海淀区杏石口路80号益园文创基地C1
+电话：010-82546140-8013
+手机：18244680919&lt;/p&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

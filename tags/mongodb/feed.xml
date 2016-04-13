@@ -1,0 +1,1515 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Mongodb on 百里求一的博客</title>
+        <link>http://kooksee.github.io/tags/mongodb/</link>
+        <language>zh-CN</language>
+        <author>CoderZh</author>
+        <rights>Copyright (c) 2015, CoderZh; all rights reserved.</rights>
+        <updated>Mon, 01 Jan 0001 00:00:00 UTC</updated>
+        
+        <item>
+            <title>docker MongoDB搭建</title>
+            <link>http://kooksee.github.io/blog/docker%20MongoDB%E6%90%AD%E5%BB%BA/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/docker%20MongoDB%E6%90%AD%E5%BB%BA/</guid>
+            <description>&lt;p&gt;##dockerfile&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#
+# MongoDB Dockerfile
+#
+# https://github.com/dockerfile/mongodb
+#
+
+# Pull base image.
+FROM dockerfile/ubuntu
+
+# Install MongoDB.
+RUN \
+  apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10 &amp;amp;&amp;amp; \
+  echo &#39;deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen&#39; &amp;gt; /etc/apt/sources.list.d/mongodb.list &amp;amp;&amp;amp; \
+  apt-get update &amp;amp;&amp;amp; \
+  apt-get install -y mongodb-org &amp;amp;&amp;amp; \
+  rm -rf /var/lib/apt/lists/*
+
+# Define mountable directories.
+VOLUME [&amp;quot;/data/db&amp;quot;]
+
+# Define working directory.
+WORKDIR /data
+
+# Define default command
+CMD [&amp;quot;mongod&amp;quot;]
+
+# Expose ports.
+#   - 27017: process
+#   - 28017: http
+EXPOSE 27017
+EXPOSE 2801
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;#Run mongod&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker run -d -p 27017:27017 --name mongodb dockerfile/mongod
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##Run mongod w/ persistent/shared directory&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker run -d -p 27017:27017 -v &amp;lt;db-dir&amp;gt;:/data/db --name mongodb dockerfile/mongod
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Run mongod w/ HTTP support&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker run -d -p 27017:27017 -p 28017:28017 --name mongodb dockerfile/mongodb mongod --rest --httpinterface
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##Run mongod w/ Smaller default file size&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker run -d -p 27017:27017 --name mongodb dockerfile/mongodb mongod --smallfiles
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;###Run mongo&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker run -it --rm --link mongodb:mongodb dockerfile/mongodb bash -c &#39;mongo --host mongodb&#39;
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>docker mongodb集群搭</title>
+            <link>http://kooksee.github.io/blog/docker%20mongodb%E9%9B%86%E7%BE%A4%E6%90%AD/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/docker%20mongodb%E9%9B%86%E7%BE%A4%E6%90%AD/</guid>
+            <description>&lt;p&gt;MongoDB是一个介于关系数据库和非关系数据库之间的产品，是非关系数据库当中最像关系数据库的。支持类似于面向对象的查询语言，几乎可以实现类似关系数据库单表查询的绝大部分功能，而且还支持对数据建立索引。本文介绍了如何使用Docker搭建MongoDB集群。&lt;/p&gt;
+
+&lt;p&gt;本文我会向大家介绍如何使用Docker部署一个MongoDB集群，具体如下：&lt;/p&gt;
+
+&lt;p&gt;2.6.5版本的MongoDB
+有3个节点的副本集（Replica set）
+身份验证
+持久化数据到本地文件系统
+首先要准备三个运行的Docker服务器，这意味着你要准备一安装了Docker的本地Vagrant Box虚拟机（系统可以使用CoreOS）或者使用AWS或者其它的你喜欢的方式。&lt;/p&gt;
+
+&lt;p&gt;步骤&lt;/p&gt;
+
+&lt;p&gt;Step1：你要拿到3台Docker服务器的IP地址，并且将下面给出的IP地址配置到所有的服务器上面，每一台服务器都要执行如下命令（记得要替换掉IP地址哦）：&lt;/p&gt;
+
+&lt;p&gt;root@node *:/# export node1=10.11.32.174
+root@node *:/# export node2=10.11.33.37
+root@node *:/# export node3=10.11.31.176
+理想情况下你并不需要这么做，这些IP都是可以通过DNS自动配置好的。但是这样会更加简单，毕竟这只是一次安装测试。&lt;/p&gt;
+
+&lt;p&gt;Step2：为每个节点创建密钥文件。在其中某一台服务器上面执行如下的命令，然后把密钥文件复制到其余两个服务器的同样的位置。&lt;/p&gt;
+
+&lt;p&gt;在这个教程中，我将把所有的东西都放在“/home/core”文件夹中。&lt;/p&gt;
+
+&lt;p&gt;root@node *:/# mkdir -p /home/core
+root@node *:/# cd /home/core
+root@node *:/# openssl rand -base64 741 &amp;gt; mongodb-keyfile
+root@node *:/# chmod 600 mongodb-keyfile
+root@node *:/# sudo chown 999 mongodb-keyfile
+这个密钥文件的所有者被设置成id为“999”的用户了，因为在MongoDB的Docker容器中，这个用户需要有操作密钥文件的权限。&lt;/p&gt;
+
+&lt;p&gt;Step3:启动node1（即第一台Docker服务器）的MongoDB容器。它会启动一个没有身份验证机制的容器，所以我们要设置一个用户。&lt;/p&gt;
+
+&lt;p&gt;root@node1:/# docker run &amp;ndash;name mongo \
+-v /home/core/mongo-files/data:/data/db \
+-v /home/core/mongo-files:/opt/keyfile \
+&amp;ndash;hostname=&amp;ldquo;node1.example.com&amp;rdquo; \
+-p 27017:27017 \
+-d mongo:2.6.5 &amp;ndash;smallfiles
+现在创建一个admin用户。我们可以连接到刚刚启动的mongoDB容器，并进入一个交互式的shell环境.&lt;/p&gt;
+
+&lt;p&gt;root@node1:/# docker exec -it mongo /bin/bash
+这时候，我们就进到MongoDB的Docker容器里面了，然后我们要打开一个mongo shell环境：&lt;/p&gt;
+
+&lt;p&gt;root@node1:/# mongo
+上面的命令可以打开mongo shell环境。执行后你会看到这样的输出：&lt;/p&gt;
+
+&lt;p&gt;MongoDB shell version: 2.6.5
+connecting to: test
+Welcome to the MongoDB shell.
+For interactive help, type &amp;ldquo;help&amp;rdquo;.
+For more comprehensive documentation, see&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://docs.mongodb.org/&#34;&gt;http://docs.mongodb.org/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Questions? Try the support group&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://groups.google.com/group/mongodb-user&#34;&gt;http://groups.google.com/group/mongodb-user&lt;/a&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;切换到admin用户：&lt;/p&gt;
+
+&lt;p&gt;use admin
+switched to db admin
+创建一个新的site admin 用户&lt;/p&gt;
+
+&lt;p&gt;db.createUser( {
+ user: &amp;ldquo;siteUserAdmin&amp;rdquo;,
+ pwd: &amp;ldquo;password&amp;rdquo;,
+ roles: [ { role: &amp;ldquo;userAdminAnyDatabase&amp;rdquo;, db: &amp;ldquo;admin&amp;rdquo; } ]
+});
+创建成功的话你会看到如下的成功信息:&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Successfully added user: {
+&amp;ldquo;user&amp;rdquo; : &amp;ldquo;siteUserAdmin&amp;rdquo;,
+&amp;ldquo;roles&amp;rdquo; : [
+     {
+          &amp;ldquo;role&amp;rdquo; : &amp;ldquo;userAdminAnyDatabase&amp;rdquo;,
+          &amp;ldquo;db&amp;rdquo; : &amp;ldquo;admin&amp;rdquo;
+     }
+  ]
+}
+创建一个root用户：&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;db.createUser( {
+ user: &amp;ldquo;siteRootAdmin&amp;rdquo;,
+ pwd: &amp;ldquo;password&amp;rdquo;,
+ roles: [ { role: &amp;ldquo;root&amp;rdquo;, db: &amp;ldquo;admin&amp;rdquo; } ]
+});
+你会看到如下的成功信息：&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Successfully added user: {
+        &amp;ldquo;user&amp;rdquo; : &amp;ldquo;siteRootAdmin&amp;rdquo;,
+              &amp;ldquo;roles&amp;rdquo; : [
+        {
+        &amp;ldquo;role&amp;rdquo; : &amp;ldquo;root&amp;rdquo;,
+              &amp;ldquo;db&amp;rdquo; : &amp;ldquo;admin&amp;rdquo;
+        }
+    ]
+}
+我们已经创建好了我们以后要使用的几个用户，现在我们不会退出交互式shell环境（mongo和Docker容器的环境）。&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;exit
+bye
+root@node1:/# exit
+Step4：停止第一个MongoDB实例：&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;root@node1:/# docker stop mongo
+Step5：这次使用密钥文件启动第一台MongoDB实例（还是在node1上面操作的）。&lt;/p&gt;
+
+&lt;p&gt;root@node1:/# docker rm mongo
+root@node1:/# docker run \
+&amp;ndash;name mongo \
+-v /home/core/mongo-files/data:/data/db \
+-v /home/core/mongo-files:/opt/keyfile \
+&amp;ndash;hostname=&amp;ldquo;node1.example.com&amp;rdquo; \
+&amp;ndash;add-host node1.example.com:${node1} \
+&amp;ndash;add-host node2.example.com:${node2} \
+&amp;ndash;add-host node3.example.com:${node3} \
+-p 27017:27017 -d mongo:2.6.5 \
+&amp;ndash;smallfiles \
+&amp;ndash;keyFile /opt/keyfile/mongodb-keyfile \
+&amp;ndash;replSet &amp;ldquo;rs0&amp;rdquo;
+注意：&lt;/p&gt;
+
+&lt;p&gt;&amp;ndash;keyFile的路径是/opt/keyfile/mongodb-keyfile，这是正确的。这是密钥文件在Docker内部的地址，我们用-v选项将密钥文件映射到容器内部的那个路径上（即：/opt/keyfile/mongodb-keyfile）。
+&amp;ndash;add-host把这些信息添加到Docker容器的/etc/hosts文件中，所以我们可以使用域名而不是IP地址了。在实际的生产环境中这些信息都是DNS，这些参数都可以忽略。
+Step6：连接到副本集上并且安装配置好它。这还是在node1上面进行的。我们要开启另外一个新的交互式shell环境进入mongo容器，同时开启一个mongo shell环境：&lt;/p&gt;
+
+&lt;p&gt;root@node1:/# docker exec -it mongo /bin/bash
+root@node1:/# mongo
+MongoDB shell version: 2.6.5
+&amp;gt;
+切换到admin用户下：&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;use admin
+switched to db admin
+因为我们已经设置了一个密码，所以这次我们不得不做身份验证。我们把密码设置为：password。&lt;/p&gt;
+
+&lt;p&gt;db.auth(&amp;ldquo;siteRootAdmin&amp;rdquo;, &amp;ldquo;password&amp;rdquo;);
+1
+现在我们可以开启副本集：&lt;/p&gt;
+
+&lt;p&gt;rs.initiate()
+{
+     &amp;ldquo;info2&amp;rdquo; : &amp;ldquo;no configuration explicitly specified &amp;ndash; making one&amp;rdquo;,
+     &amp;ldquo;me&amp;rdquo; : &amp;ldquo;node1.example.com:27017&amp;rdquo;,
+     &amp;ldquo;info&amp;rdquo; : &amp;ldquo;Config now saved locally.  Should come online in about a minute.&amp;rdquo;,
+     &amp;ldquo;ok&amp;rdquo; : 1
+}&lt;/p&gt;
+
+&lt;p&gt;Step7：验证已经初始化的副本集的配置：&lt;/p&gt;
+
+&lt;p&gt;rs0:PRIMARY&amp;gt; rs.conf()
+{
+    &amp;ldquo;_id&amp;rdquo; : &amp;ldquo;rs0&amp;rdquo;,
+    &amp;ldquo;version&amp;rdquo; : 1,r
+    &amp;ldquo;members&amp;rdquo; : [
+          {
+              &amp;ldquo;_id&amp;rdquo; : 0,
+              &amp;ldquo;host&amp;rdquo; : &amp;ldquo;node1.example.com:27017&amp;rdquo;
+          }
+    ]
+}&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Step8：在其余的两个节点启动MongoDB。&lt;/p&gt;
+
+&lt;p&gt;在node2上面执行命令：&lt;/p&gt;
+
+&lt;p&gt;root@node2:/# docker run \
+&amp;ndash;name mongo \
+-v /home/core/mongo-files/data:/data/db \
+-v /home/core/mongo-files:/opt/keyfile \
+&amp;ndash;hostname=&amp;ldquo;node2.example.com&amp;rdquo; \
+&amp;ndash;add-host node1.example.com:${node1} \
+&amp;ndash;add-host node2.example.com:${node2} \
+&amp;ndash;add-host node3.example.com:${node3} \
+-p 27017:27017 -d mongo:2.6.5 \
+&amp;ndash;smallfiles \
+&amp;ndash;keyFile /opt/keyfile/mongodb-keyfile \
+&amp;ndash;replSet &amp;ldquo;rs0&amp;rdquo;
+在node3上面执行命令：&lt;/p&gt;
+
+&lt;p&gt;root@node3:/# docker run \
+&amp;ndash;name mongo \
+-v /home/core/mongo-files/data:/data/db \
+-v /home/core/mongo-files:/opt/keyfile \
+&amp;ndash;hostname=&amp;ldquo;node3.example.com&amp;rdquo; \
+&amp;ndash;add-host node1.example.com:${node1} \
+&amp;ndash;add-host node2.example.com:${node2} \
+&amp;ndash;add-host node3.example.com:${node3} \
+-p 27017:27017 -d mongo:2.6.5 \
+&amp;ndash;smallfiles \
+&amp;ndash;keyFile /opt/keyfile/mongodb-keyfile \
+&amp;ndash;replSet &amp;ldquo;rs0&amp;rdquo;
+Step 9：将那两个节点加到副本集上。&lt;/p&gt;
+
+&lt;p&gt;回到node1节点，如果你在这里按了几次回车键（enter）的话，你会看到下面的提示：“rs0:PRIMARY”。这是因为这个节点是副本集“rso”的主节点。&lt;/p&gt;
+
+&lt;p&gt;rs0:PRIMARY&amp;gt; rs.add(&amp;ldquo;node2.example.com&amp;rdquo;)
+rs0:PRIMARY&amp;gt; rs.add(&amp;ldquo;node3.example.com&amp;rdquo;)
+我们可以通过执行下面的命令来验证其它两个节点是否正确的加到这个副本集当中：&lt;/p&gt;
+
+&lt;p&gt;rs0:PRIMARY&amp;gt; rs.status()
+可能会花几分钟的时间来将node1上面的数据同步到其余的两个节点上面。你可以通过查看日志来观察每一个MongoDB的Docker容器里面发生了什么。在任意一个服务器上面执行下面的命令就可以了：&lt;/p&gt;
+
+&lt;p&gt;root@node*:/# docker logs -ft mongo
+结论&lt;/p&gt;
+
+&lt;p&gt;现在你拥有了一个MongoDB集群。你可以自由的在任何时刻添加节点到这个集群上。你甚至可以关闭其中的一个节点，包括主节点，然后观察一个另外一个节点重新变成了主节点。由于这些数据都被写在了你的本机文件系统当中了，所以重启任何一个节点都不是什么大问题。&lt;/p&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>mongodb3 权限认证问题总结</title>
+            <link>http://kooksee.github.io/blog/mongodb3%20%E6%9D%83%E9%99%90%E8%AE%A4%E8%AF%81%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/mongodb3%20%E6%9D%83%E9%99%90%E8%AE%A4%E8%AF%81%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93/</guid>
+            <description>&lt;p&gt;##ubuntu用户安装最新版本mongodb&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt; 1. 添加key
+sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
+
+
+ 2. 写进ubuntu软件源
+echo &amp;quot;deb http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.0 multiverse&amp;quot; | sudo tee /etc/apt/sources.list.d/mongodb-org-3.0.list
+ 3. 更新系统
+ sudo apt-get update
+
+ 4. 安装mongodb
+ sudo apt-get install mongodb-org
+
+ 5. 查看mongodb服务是否开启
+ ps -ef | grep mongod
+
+ 6. 没有开启的话你就自己开启吧
+ sudo service mongod start
+ 查看服务的状态：sudo service mongod status
+ 实在不行的话就用这种方式： sudo mongod -f /etc/mongod.conf
+
+ 7. 创建管理员角色
+ 管理员角色必须在你添加--auth认证参数之前创建，不然之后你就没有权限可操作了。如果你之前已经有了用户，那么就删除用户吧。
+use admin
+db.system.users.remove({}) --&amp;gt; 删除所有用户
+db.system.version.find() --&amp;gt; 查看当前的authSchema(认证模式)，默认的为5是SCRAM-SHA-1模式，当然你可以改为3是MONGODB-CR模式
+
+    更改认证模式：
+    db.system.version.remove({}) --&amp;gt; 删除当前认证模式。
+    db.system.version.insert({ &amp;quot;_id&amp;quot; : &amp;quot;authSchema&amp;quot;, &amp;quot;currentVersion&amp;quot; : 3 }) --&amp;gt; 添加当前的认证模式为3
+
+    然后添加管理员角色吧
+    use admin
+    db.createUser({
+        user: &amp;quot;root&amp;quot;,
+        pwd: &amp;quot;root&amp;quot;,
+        roles: [ { role: &amp;quot;userAdminAnyDatabase&amp;quot;, db:                &amp;quot;admin&amp;quot;} ]})
+
+ 8. 重启服务登录认证
+ sudo pkill mongod --&amp;gt; 杀死服务，很方便。
+ sudo mongod -f /etc/mongod.conf --fork  --auth --&amp;gt; 以认证模式启动服务
+然后ps -ef | grep mongod查看服务是否启动
+
+ 9. 用户登录
+ mongo
+use admin
+show dbs; --&amp;gt; 出错，因为你没有权限
+db.auth(&#39;root&#39;,&#39;root&#39;); --&amp;gt; 登录认证
+show dbs; --&amp;gt; ok
+db.system.users.find() --&amp;gt; 显示用户信息，你可以看看authSchema后面事那种模式
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>mongodb操作</title>
+            <link>http://kooksee.github.io/blog/mongodb%E6%93%8D%E4%BD%9C/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/mongodb%E6%93%8D%E4%BD%9C/</guid>
+            <description>&lt;blockquote&gt;
+&lt;p&gt;如：如果你想创建一个“myTest”的数据库，先运行use myTest命令，之后就做一些操作（如：db.createCollection(&amp;lsquo;user&amp;rsquo;)）,这样就可以创建一个名叫“myTest”的数据库。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;一、数据库常用命令
+1、Help查看命令提示&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;help
+db.help();
+db.yourColl.help();
+db.youColl.find().help();
+rs.help();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;2、切换/创建数据库&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;use yourDB; 当创建一个集合(table)的时候会自动创建当前数据库
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;3、查询所有数据库&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;show dbs;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;4、删除当前使用数据库&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;db.dropDatabase();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;5、从指定主机上克隆数据库&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;db.cloneDatabase(“127.0.0.1”); 将指定机器上的数据库的数据克隆到当前数据库
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;6、从指定的机器上复制指定数据库数据到某个数据库&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;db.copyDatabase(&amp;quot;mydb&amp;quot;, &amp;quot;temp&amp;quot;, &amp;quot;127.0.0.1&amp;quot;);将本机的mydb的数据复制到temp数据库中
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;7、修复当前数据库&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;db.repairDatabase();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;8、查看当前使用的数据库&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;db.getName();
+db; db和getName方法是一样的效果，都可以查询当前使用的数据库
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;9、显示当前db状态&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;db.stats();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;10、当前db版本&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;db.version();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;11、查看当前db的链接机器地址&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;db.getMongo();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;二、Collection聚集集合
+1、创建一个聚集集合（table）&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;db.createCollection(“collName”, {size: 20, capped: 5, max: 100});//创建成功会显示{“ok”:1}
+//判断集合是否为定容量db.collName.isCapped();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;2、得到指定名称的聚集集合（table）&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;db.getCollection(&amp;quot;account&amp;quot;);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;3、得到当前db的所有聚集集合&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;db.getCollectionNames();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;4、显示当前db所有聚集索引的状态&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;db.printCollectionStats();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;三、用户相关
+1、添加一个用户&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;db.addUser(&amp;quot;name&amp;quot;);
+db.addUser(&amp;quot;userName&amp;quot;, &amp;quot;pwd123&amp;quot;, true); 添加用户、设置密码、是否只读
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;2、数据库认证、安全模式&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;db.auth(&amp;quot;userName&amp;quot;, &amp;quot;123123&amp;quot;);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;3、显示当前所有用户&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;show users;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;4、删除用户&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;db.removeUser(&amp;quot;userName&amp;quot;);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;四、聚集集合查询
+1、查询所有记录&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;db.userInfo.find();
+相当于：select* from userInfo;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;默认每页显示20条记录，当显示不下的情况下，可以用it迭代命令查询下一页数据。注意：键入it命令不能带“；”
+但是你可以设置每页显示数据的大小，用DBQuery.shellBatchSize= 50;这样每页就显示50条记录了。
+2、查询去掉后的当前聚集集合中的某列的重复数据&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;db.userInfo.distinct(&amp;quot;name&amp;quot;);
+会过滤掉name中的相同数据
+相当于：select distict name from userInfo;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;3、查询age = 22的记录&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;db.userInfo.find({&amp;quot;age&amp;quot;: 22});
+相当于： select * from userInfo where age = 22;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;4、查询age &amp;gt; 22的记录&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;db.userInfo.find({age: {$gt: 22}});
+相当于：select * from userInfo where age &amp;gt;22;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;5、查询age &amp;lt; 22的记录&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;db.userInfo.find({age: {$lt: 22}});
+相当于：select * from userInfo where age &amp;lt;22;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;6、查询age &amp;gt;= 25的记录&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;db.userInfo.find({age: {$gte: 25}});
+相当于：select * from userInfo where age &amp;gt;= 25;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;7、查询age &amp;lt;= 25的记录&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;db.userInfo.find({age: {$lte: 25}});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;8、查询age &amp;gt;= 23 并且 age &amp;lt;= 26&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;db.userInfo.find({age: {$gte: 23, $lte: 26}});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;9、查询name中包含 mongo的数据&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;db.userInfo.find({name: /mongo/});
+//相当于%%
+select * from userInfo where name like ‘%mongo%&#39;;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;10、查询name中以mongo开头的&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;db.userInfo.find({name: /^mongo/});
+select * from userInfo where name like ‘mongo%&#39;;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;11、查询指定列name、age数据&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;db.userInfo.find({}, {name: 1, age: 1});
+相当于：select name, age from userInfo;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;当然name也可以用true或false,当用ture的情况下河name:1效果一样，如果用false就是排除name，显示name以外的列信息。
+12、查询指定列name、age数据, age &amp;gt; 25&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;db.userInfo.find({age: {$gt: 25}}, {name: 1, age: 1});
+相当于：select name, age from userInfo where age &amp;gt;25;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;13、按照年龄排序&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;升序：db.userInfo.find().sort({age: 1});
+降序：db.userInfo.find().sort({age: -1});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;14、查询name = zhangsan, age = 22的数据&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;db.userInfo.find({name: &#39;zhangsan&#39;, age: 22});
+相当于：select * from userInfo where name = ‘zhangsan&#39; and age = ‘22&#39;;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;15、查询前5条数据&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;db.userInfo.find().limit(5);
+相当于：selecttop 5 * from userInfo;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;16、查询10条以后的数据&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;db.userInfo.find().skip(10);
+相当于：select * from userInfo where id not in (
+selecttop 10 * from userInfo
+);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;17、查询在5-10之间的数据&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;db.userInfo.find().limit(10).skip(5);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;可用于分页，limit是pageSize，skip是第几页*pageSize
+18、or与 查询&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;db.userInfo.find({$or: [{age: 22}, {age: 25}]});
+相当于：select * from userInfo where age = 22 or age = 25;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;19、查询第一条数据&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;db.userInfo.findOne();
+相当于：selecttop 1 * from userInfo;
+db.userInfo.find().limit(1);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;20、查询某个结果集的记录条数&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;db.userInfo.find({age: {$gte: 25}}).count();
+相当于：select count(*) from userInfo where age &amp;gt;= 20;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;21、按照某列进行排序&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;db.userInfo.find({sex: {$exists: true}}).count();
+相当于：select count(sex) from userInfo;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;五、索引
+1、创建索引&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;db.userInfo.ensureIndex({name: 1});
+db.userInfo.ensureIndex({name: 1, ts: -1});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;2、查询当前聚集集合所有索引&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;db.userInfo.getIndexes();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;3、查看总索引记录大小&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;db.userInfo.totalIndexSize();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;4、读取当前集合的所有index信息&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;db.users.reIndex();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;5、删除指定索引&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;db.users.dropIndex(&amp;quot;name_1&amp;quot;);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;6、删除所有索引索引&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;db.users.dropIndexes();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;六、修改、添加、删除集合数据
+1、添加&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;db.users.save({name: ‘zhangsan&#39;, age: 25, sex: true});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;添加的数据的数据列，没有固定，根据添加的数据为准
+2、修改&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;db.users.update({age: 25}, {$set: {name: &#39;changeName&#39;}}, false, true);
+相当于：update users set name = ‘changeName&#39; where age = 25;
+db.users.update({name: &#39;Lisi&#39;}, {$inc: {age: 50}}, false, true);
+相当于：update users set age = age + 50 where name = ‘Lisi&#39;;
+db.users.update({name: &#39;Lisi&#39;}, {$inc: {age: 50}, $set: {name: &#39;hoho&#39;}}, false, true);
+相当于：update users set age = age + 50, name = ‘hoho&#39; where name = ‘Lisi&#39;;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;3、删除&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;db.users.remove({age: 132});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;4、查询修改删除&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;db.users.findAndModify({
+    query: {age: {$gte: 25}},
+    sort: {age: -1},
+    update: {$set: {name: &#39;a2&#39;}, $inc: {age: 2}},
+    remove: true
+});
+db.runCommand({ findandmodify : &amp;quot;users&amp;quot;,
+    query: {age: {$gte: 25}},
+    sort: {age: -1},
+    update: {$set: {name: &#39;a2&#39;}, $inc: {age: 2}},
+    remove: true
+});
+
+update 或 remove 其中一个是必须的参数; 其他参数可选。
+参数    详解     默认值
+query    查询过滤条件    {}
+sort    如果多个文档符合查询过滤条件，将以该参数指定的排列方式选择出排在首位的对象，该对象将被操作    {}
+remove    若为true，被选中对象将在返回前被删除    N/A
+update    一个 修改器对象
+N/A
+new    若为true，将返回修改后的对象而不是原始对象。在删除操作中，该参数被忽略。    false
+fields    参见Retrieving a Subset of Fields (1.5.0+)
+All fields
+upsert    创建新对象若查询结果为空。 示例 (1.5.4+)
+false
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;七、语句块操作
+1、简单Hello World&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;print(&amp;quot;Hello World!&amp;quot;);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这种写法调用了print函数，和直接写入&amp;rdquo;Hello World!&amp;ldquo;的效果是一样的；
+2、将一个对象转换成json&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;tojson(new Object());
+tojson(new Object(&#39;a&#39;));
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;3、循环添加数据&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt; for (var i = 0; i &amp;lt; 30; i++) {
+... db.users.save({name: &amp;quot;u_&amp;quot; + i, age: 22 + i, sex: i % 2});
+... };
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这样就循环添加了30条数据，同样也可以省略括号的写法&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt; for (var i = 0; i &amp;lt; 30; i++) db.users.save({name: &amp;quot;u_&amp;quot; + i, age: 22 + i, sex: i % 2});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;也是可以的，当你用db.users.find()查询的时候，显示多条数据而无法一页显示的情况下，可以用it查看下一页的信息；
+4、find 游标查询&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt;var cursor = db.users.find();
+&amp;gt; while (cursor.hasNext()) {
+    printjson(cursor.next());
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这样就查询所有的users信息，同样可以这样写&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;var cursor = db.users.find();
+while (cursor.hasNext()) { printjson(cursor.next); }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;同样可以省略{}号
+5、forEach迭代循环&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;db.users.find().forEach(printjson);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;forEach中必须传递一个函数来处理每条迭代的数据信息
+6、将find游标当数组处理&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;var cursor = db.users.find();
+cursor[4];
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;取得下标索引为4的那条数据
+既然可以当做数组处理，那么就可以获得它的长度：cursor.length();或者cursor.count();
+那样我们也可以用循环显示数据&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;for (var i = 0, len = c.length(); i &amp;lt; len; i++) printjson(c[i]);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;7、将find游标转换成数组&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt; var arr = db.users.find().toArray();
+&amp;gt; printjson(arr[2]);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;用toArray方法将其转换为数组
+8、定制我们自己的查询结果
+只显示age &amp;lt;= 28的并且只显示age这列数据&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;db.users.find({age: {$lte: 28}}, {age: 1}).forEach(printjson);
+db.users.find({age: {$lte: 28}}, {age: true}).forEach(printjson);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;排除age的列&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;db.users.find({age: {$lte: 28}}, {age: false}).forEach(printjson);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;9、forEach传递函数显示信息&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;db.things.find({x:4}).forEach(function(x) {print(tojson(x));});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;八、其他
+1、查询之前的错误信息&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;db.getPrevError();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;2、清除错误记录&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;db.resetError();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;查看聚集集合基本信息&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;1、查看帮助  db.yourColl.help();
+2、查询当前集合的数据条数  db.yourColl.count();
+3、查看数据空间大小 db.userInfo.dataSize();
+4、得到当前聚集集合所在的db db.userInfo.getDB();
+5、得到当前聚集的状态 db.userInfo.stats();
+6、得到聚集集合总大小 db.userInfo.totalSize();
+7、聚集集合储存空间大小 db.userInfo.storageSize();
+8、Shard版本信息  db.userInfo.getShardVersion()
+9、聚集集合重命名 db.userInfo.renameCollection(&amp;quot;users&amp;quot;); 将userInfo重命名为users
+10、删除当前聚集集合 db.userInfo.drop();
+
+show dbs:显示数据库列表
+show collections：显示当前数据库中的集合（类似关系数据库中的表）
+show users：显示用户
+use &amp;lt;db name&amp;gt;：切换当前数据库，这和MS-SQL里面的意思一样
+db.help()：显示数据库操作命令，里面有很多的命令
+db.foo.help()：显示集合操作命令，同样有很多的命令，foo指的是当前数据库下，一个叫foo的集合，并非真正意义上的命令
+db.foo.find()：对于当前数据库中的foo集合进行数据查找（由于没有条件，会列出所有数据）
+db.foo.find( { a : 1 } )：对于当前数据库中的foo集合进行查找，条件是数据中有一个属性叫a，且a的值为1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;数据导出 mongoexport&lt;/p&gt;
+
+&lt;p&gt;假设库里有一张user 表，里面有2 条记录，我们要将它导出
+&amp;gt; use my_mongodb
+switched to db my_mongodb
+&amp;gt; db.user.find();
+{ &amp;ldquo;_id&amp;rdquo; : ObjectId(&amp;ldquo;4f81a4a1779282ca68fd8a5a&amp;rdquo;), &amp;ldquo;uid&amp;rdquo; : 2, &amp;ldquo;username&amp;rdquo; : &amp;ldquo;Jerry&amp;rdquo;, &amp;ldquo;age&amp;rdquo; : 100 }
+{ &amp;ldquo;_id&amp;rdquo; : ObjectId(&amp;ldquo;4f844d1847d25a9ce5f120c4&amp;rdquo;), &amp;ldquo;uid&amp;rdquo; : 1, &amp;ldquo;username&amp;rdquo; : &amp;ldquo;Tom&amp;rdquo;, &amp;ldquo;age&amp;rdquo; : 25 }
+&amp;gt;
+1 常用导出方法
+[root@localhost bin]# ./mongoexport -d my_mongodb -c user -o user.dat
+connected to: 127.0.0.1
+exported 2 records
+[root@localhost bin]# cat user.dat
+{ &amp;ldquo;_id&amp;rdquo; : { &amp;ldquo;$oid&amp;rdquo; : &amp;ldquo;4f81a4a1779282ca68fd8a5a&amp;rdquo; }, &amp;ldquo;uid&amp;rdquo; : 2, &amp;ldquo;username&amp;rdquo; : &amp;ldquo;Jerry&amp;rdquo;, &amp;ldquo;age&amp;rdquo; : 100 }
+{ &amp;ldquo;_id&amp;rdquo; : { &amp;ldquo;$oid&amp;rdquo; : &amp;ldquo;4f844d1847d25a9ce5f120c4&amp;rdquo; }, &amp;ldquo;uid&amp;rdquo; : 1, &amp;ldquo;username&amp;rdquo; : &amp;ldquo;Tom&amp;rdquo;, &amp;ldquo;age&amp;rdquo; : 25 }
+[root@localhost bin]#
+参数说明:
+ -d 指明使用的库, 本例中为” my_mongodb”
+ -c 指明要导出的表, 本例中为”user”
+ -o 指明要导出的文件名, 本例中为”user.dat”
+从上面可以看到导出的方式使用的是JSON 的样式
+2 导出CSV格式的文件
+[root@localhost bin]# ./mongoexport -d my_mongodb -c user &amp;ndash;csv -f uid,username,age -o
+user_csv.dat
+connected to: 127.0.0.1
+exported 2 records
+[root@localhost bin]# cat user_csv.dat
+uid,username,age
+2,&amp;ldquo;Jerry&amp;rdquo;,100
+1,&amp;ldquo;Tom&amp;rdquo;,25
+[root@localhost bin]#
+参数说明:
+ -csv 指要要导出为csv 格式
+ -f 指明需要导出哪些例
+更详细的用法可以 mongoexport –help 来查看&lt;/p&gt;
+
+&lt;p&gt;数据导入mongoimport&lt;/p&gt;
+
+&lt;p&gt;在上例中我们讨论的是导出工具的使用，那么本节将讨论如何向表中导入数据
+1 导入JSON 数据
+我们先将表user 删除掉，以便演示效果
+&amp;gt; db.user.drop();
+true
+&amp;gt; show collections;
+system.indexes
+&amp;gt;
+然后导入数据
+[root@localhost bin]# ./mongoimport -d my_mongodb -c user user.dat
+connected to: 127.0.0.1
+imported 2 objects
+[root@localhost bin]#
+可以看到导入数据的时候会隐式创建表结构&lt;/p&gt;
+
+&lt;p&gt;2 导入CSV数据
+我们先将表user 删除掉，以便演示效果
+&amp;gt; db.user.drop();
+true
+&amp;gt; show collections;
+system.indexes
+&amp;gt;
+然后导入数据
+[root@localhost bin]# ./mongoimport -d my_mongodb -c user &amp;ndash;type csv &amp;ndash;headerline &amp;ndash;file
+user_csv.dat
+connected to: 127.0.0.1
+imported 3 objects
+[root@localhost bin]#
+参数说明:
+ -type 指明要导入的文件格式
+ -headerline 批明不导入第一行，因为第一行是列名
+ -file 指明要导入的文件路径
+注意:
+CSV 格式良好，主流数据库都支持导出为CSV 的格式，所以这种格式非常利于异构数据迁移&lt;/p&gt;
+
+&lt;p&gt;数据备份mongodump&lt;/p&gt;
+
+&lt;p&gt;可以用mongodump 来做MongoDB 的库或表级别的备份，下面举例说明:
+备份my_mongodb 数据库&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;[root@localhost bin]# ./mongodump -d my_mongodb
+connected to: 127.0.0.1
+DATABASE: my_mongodb to dump/my_mongodb
+my_mongodb.system.indexes to dump/my_mongodb/system.indexes.bson
+1 objects
+my_mongodb.user to dump/my_mongodb/user.bson
+2 objects
+[root@localhost bin]# ll
+总计 67648
+-rwxr-xr-x 1 root root 7508756 2011-04-06 bsondump
+drwxr-xr-x 3 root root 4096 04-10 23:54 dump
+-rwxr-xr-x 1 root root 2978016 2011-04-06 mongo
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;此时会在当前目录下创建一个dump 目录，用于存放备份出来的文件
+也可以指定备份存放的目录，&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;[root@localhost bin]# ./mongodump -d my_mongodb -o my_mongodb_dump
+connected to: 127.0.0.1
+DATABASE: my_mongodb to my_mongodb_dump/my_mongodb
+my_mongodb.system.indexes to
+my_mongodb_dump/my_mongodb/system.indexes.bson
+1 objects
+my_mongodb.user to my_mongodb_dump/my_mongodb/user.bson
+2 objects
+[root@localhost bin]#
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这个例子中将备份的文件存在了当前目录下的my_mongodb_dump 目录下&lt;/p&gt;
+
+&lt;p&gt;数据恢复mongorestore&lt;/p&gt;
+
+&lt;p&gt;由于刚刚已经做了备份，所以我们先将库my_mongodb 删除掉&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt; use my_mongodb
+switched to db my_mongodb
+&amp;gt; db.dropDatabase()
+{ &amp;quot;dropped&amp;quot; : &amp;quot;my_mongodb&amp;quot;, &amp;quot;ok&amp;quot; : 1 }
+&amp;gt; show dbs
+admin (empty)
+local (empty)
+test (empty)
+&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;接下来我们进行数据库恢复&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;[root@localhost bin]# ./mongorestore -d my_mongodb my_mongodb_dump/*
+connected to: 127.0.0.1
+Wed Apr 11 00:03:03 my_mongodb_dump/my_mongodb/user.bson
+Wed Apr 11 00:03:03 going into namespace [my_mongodb.user]
+Wed Apr 11 00:03:03 2 objects found
+Wed Apr 11 00:03:03 my_mongodb_dump/my_mongodb/system.indexes.bson
+Wed Apr 11 00:03:03 going into namespace [my_mongodb.system.indexes]
+Wed Apr 11 00:03:03 { name: &amp;quot;_id_&amp;quot;, ns: &amp;quot;my_mongodb.user&amp;quot;, key: { _id: 1 }, v: 0 }
+Wed Apr 11 00:03:03 1 objects found
+[root@localhost bin]#
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;经验证数据库又回来了，其实要是想恢复库，也大可不必先删除my_mongodb 库，只要指
+明 –drop 参数，就可以在恢复的时候先删除表然后再向表中插入数据&lt;/p&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>搭建基于Docker的MongoDB复制集群环境</title>
+            <link>http://kooksee.github.io/blog/%E6%90%AD%E5%BB%BA%E5%9F%BA%E4%BA%8EDocker%E7%9A%84MongoDB%E5%A4%8D%E5%88%B6%E9%9B%86%E7%BE%A4%E7%8E%AF%E5%A2%83/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/%E6%90%AD%E5%BB%BA%E5%9F%BA%E4%BA%8EDocker%E7%9A%84MongoDB%E5%A4%8D%E5%88%B6%E9%9B%86%E7%BE%A4%E7%8E%AF%E5%A2%83/</guid>
+            <description>&lt;p&gt;ygeR
+TEAM ZWT
+03-73-233357
+12-31-2015
+ABJUK9 XZ5A9A Z95XYV Q6VEKJ ACKW69 WTBH95 8JMFV6 5K9BUW&lt;/p&gt;
+
+&lt;p&gt;一步一步教你搭建基于Docker的MongoDB复制集群环境&lt;/p&gt;
+
+&lt;p&gt;1.安装docker
+2.创建MongoDB的Image
+3.搭建MongoDB的集群&lt;/p&gt;
+
+&lt;p&gt;Docker 是一个开源的应用容器引擎，让开发者可以打包他们的应用以及依赖包到一个可移植的容器中。&lt;/p&gt;
+
+&lt;p&gt;1.Ubuntu14.04安装docker
+参考文档 &lt;a href=&#34;http://docs.docker.com/installation/ubuntulinux/&#34;&gt;http://docs.docker.com/installation/ubuntulinux/&lt;/a&gt;
+参考文档 &lt;a href=&#34;http://docs.docker.com/mac/started/&#34;&gt;http://docs.docker.com/mac/started/&lt;/a&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;linuxidc@linuxidc:~$ wget -qO-https://get.docker.com/ | sh
+linuxidc@linuxidc:~$ sudo usermod -aG docker pc
+linuxidc@linuxidc:~$ sudo reboot
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;如果是其他（更早）版本的Linux参考
+安装Docker使用apt-get命令:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    $ apt-get install docker.
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;启动服务和守护进程&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    $ service docker.io status
+    $ service docker.io start
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;创建软连接：ln -sf /usr/bin/docker.io /usr/local/bin/docker
+    如没有提示错误则说明你已经在Ubuntu14.04上面快速安装Docker成功了。&lt;/p&gt;
+
+&lt;p&gt;卸载Uninstallation&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    $ sudo apt-get purge lxc-docker
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To uninstall the Docker package and dependencies that are no longer needed:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    $ sudo apt-get autoremove --purge lxc-docker
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;2.创建MongoDB的Image&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;linuxidc@linuxidc:~$ docker pull ubuntu:14.04
+linuxidc@linuxidc:~$ sudo docker images
+REPOSITORY          TAG                IMAGE ID            CREATED            VIRTUAL SIZE
+ubuntu              14.04              6d4946999d4f        3 weeks ago        188.3 MB
+linuxidc@linuxidc:~$
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;编写dockerfile&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;linuxidc@linuxidc:~$ vim Dockerfile
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Dockerfile内容如下&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#VERSION 0.1.0
+FROM ubuntu:14.04
+
+#Install some
+RUN apt-get clean
+RUN apt-get update
+RUN apt-get install -y g++
+RUN apt-get install -y openssh-server
+RUN mkdir -p /var/run/sshd
+
+#open port 22
+EXPOSE 22
+#CMD [&amp;quot;/usr/sbin/sshd&amp;quot;, &amp;quot;-D&amp;quot;]
+
+
+RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
+ENV MONGO_MAJOR 3.0
+RUN echo &amp;quot;deb http://repo.mongodb.org/apt/debian wheezy/mongodb-org/$MONGO_MAJOR main&amp;quot; &amp;gt; /etc/apt/sources.list.d/mongodb-org.list
+# Install MongoDB
+RUN apt-get update
+RUN sudo apt-get install -y mongodb-org=3.0.4 mongodb-org-server=3.0.4 mongodb-org-shell=3.0.4 mongodb-org-mongos=3.0.4 mongodb-org-tools=3.0.4
+
+# Create the MongoDB data directory
+RUN mkdir -p /data/db
+
+#open port 27017
+EXPOSE 27017
+ENTRYPOINT [&amp;quot;usr/bin/mongod&amp;quot;]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;写好了Dockerfile 就可以生成带有mongodb的image ：后面是flag .表示当前路径的Dockerfile&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;linuxidc@linuxidc:~$ sudo docker build -t pc/mongos:master .
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;再次查看一下docker image&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;linuxidc@linuxidc:~$ sudo docker images
+REPOSITORY          TAG                IMAGE ID            CREATED            VIRTUAL SIZE
+pc/mongod          master              6fcc1b62e091        54 minutes ago      542 MB
+ubuntu              14.04              6d4946999d4f        4 weeks ago        188.3 MB
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;3.搭建MongoDB的集群
+下面我们就启动3个基于mongod：master的container&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;linuxidc@linuxidc:~$ sudo docker run --name rs_server1 -p 21117:27017 -d pc/mongod:master --noprealloc --smallfiles --replSet rs1
+操作成功之后返回的就是容器的id
+6306bf3057f8ebca79d7bd130ba35e260da7177925a85a1c9a3d5d21c551e0aa
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;后面两个容器同理&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;linuxidc@linuxidc:~$ sudo docker run --name rs_server2 -p 22117:27017 -d pc/mongod:master --noprealloc --smallfiles --replSet rs1
+b60c977313e1b6143c0346e1c6138c3ad4831818f6349fc98181fa76edbd2eff
+linuxidc@linuxidc:~$ sudo docker run --name rs_server3 -p 23117:27017 -d pc/mongod:master --noprealloc --smallfiles --replSet rs1
+cebebc142a1bfed7162a06441ad841f4173c3f71c97f3dded8d5c3833ea9fa78
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;选择一个容器执行一下ifconfig 查看ip 一般都是同网段中递增的&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;linuxidc@linuxidc:~$ sudo docker exec 6306bf3057f8ebca79d7bd130ba35e260da7177925a85a1c9a3d5d21c551e0aa ifconfig
+eth0      Link encap:Ethernet  HWaddr 02:42:ac:11:00:01
+          inet addr:172.17.0.1  Bcast:0.0.0.0  Mask:255.255.0.0
+          inet6 addr: fe80::42:acff:fe11:1/64 Scope:Link
+          UP BROADCAST RUNNING  MTU:1500  Metric:1
+          RX packets:26 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:10 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0
+          RX bytes:2124 (2.1 KB)  TX bytes:828 (828.0 B)
+
+lo        Link encap:Local Loopback
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          inet6 addr: ::1/128 Scope:Host
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0
+          RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;可以想象 3个容器的ip应该是172.17.0.1 172.17.0.2 172.17.0.3&lt;/p&gt;
+
+&lt;p&gt;查看运行的容器&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;linuxidc@linuxidc:~$ sudo docker ps -a
+CONTAINER ID        IMAGE              COMMAND                CREATED              STATUS              PORTS                              NAMES
+cebebc142a1b        pc/mongod:master    &amp;quot;usr/bin/mongod --no  About a minute ago  Up About a minute  22/tcp, 0.0.0.0:23117-&amp;gt;27017/tcp  rs_server3         
+b60c977313e1        pc/mongod:master    &amp;quot;usr/bin/mongod --no  About a minute ago  Up About a minute  22/tcp, 0.0.0.0:22117-&amp;gt;27017/tcp  rs_server2         
+6306bf3057f8        pc/mongod:master    &amp;quot;usr/bin/mongod --no  About a minute ago  Up About a minute  22/tcp, 0.0.0.0:21117-&amp;gt;27017/tcp  rs_server1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;从上述信息可以看出本机的21117 22117 23117  映射到docker的容器的端口上去了&lt;/p&gt;
+
+&lt;p&gt;使用本机mongo客户端连接到21117&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;linuxidc@linuxidc:~$ mongo --port 21117
+MongoDB shell version: 3.0.4
+connecting to: 127.0.0.1:21117/test
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;开始配置 复制集的成员信息&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt; myconf = {&amp;quot;_id&amp;quot;:&amp;quot;rs1&amp;quot;,&amp;quot;members&amp;quot;:[
+... {&amp;quot;_id&amp;quot;:0,&amp;quot;host&amp;quot;:&amp;quot;172.17.0.1:27017&amp;quot;},
+... {&amp;quot;_id&amp;quot;:1,&amp;quot;host&amp;quot;:&amp;quot;172.17.0.2:27017&amp;quot;},
+... {&amp;quot;_id&amp;quot;:2,&amp;quot;host&amp;quot;:&amp;quot;172.17.0.3:27017&amp;quot;}
+... ]
+... }
+{
+    &amp;quot;_id&amp;quot; : &amp;quot;rs1&amp;quot;,
+    &amp;quot;members&amp;quot; : [
+        {
+            &amp;quot;_id&amp;quot; : 0,
+            &amp;quot;host&amp;quot; : &amp;quot;172.17.0.1:27017&amp;quot;
+        },
+        {
+            &amp;quot;_id&amp;quot; : 1,
+            &amp;quot;host&amp;quot; : &amp;quot;172.17.0.2:27017&amp;quot;
+        },
+        {
+            &amp;quot;_id&amp;quot; : 2,
+            &amp;quot;host&amp;quot; : &amp;quot;172.17.0.3:27017&amp;quot;
+        }
+    ]
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;初始化同步复制集群&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt; rs.initiate(myconf)
+{ &amp;quot;ok&amp;quot; : 1 }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;查看当前复制集的节点信息&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;rs1:OTHER&amp;gt; rs.isMaster()
+{
+    &amp;quot;setName&amp;quot; : &amp;quot;rs1&amp;quot;,
+    &amp;quot;setVersion&amp;quot; : 1,
+    &amp;quot;ismaster&amp;quot; : true,
+    &amp;quot;secondary&amp;quot; : false,
+    &amp;quot;hosts&amp;quot; : [
+        &amp;quot;172.17.0.1:27017&amp;quot;,
+        &amp;quot;172.17.0.2:27017&amp;quot;,
+        &amp;quot;172.17.0.3:27017&amp;quot;
+    ],
+    &amp;quot;primary&amp;quot; : &amp;quot;172.17.0.1:27017&amp;quot;,
+    &amp;quot;me&amp;quot; : &amp;quot;172.17.0.1:27017&amp;quot;,
+    &amp;quot;electionId&amp;quot; : ObjectId(&amp;quot;55a5cc505f7c25c88ad58e77&amp;quot;),
+    &amp;quot;maxBsonObjectSize&amp;quot; : 16777216,
+    &amp;quot;maxMessageSizeBytes&amp;quot; : 48000000,
+    &amp;quot;maxWriteBatchSize&amp;quot; : 1000,
+    &amp;quot;localTime&amp;quot; : ISODate(&amp;quot;2015-07-15T02:58:30.831Z&amp;quot;),
+    &amp;quot;maxWireVersion&amp;quot; : 3,
+    &amp;quot;minWireVersion&amp;quot; : 0,
+    &amp;quot;ok&amp;quot; : 1
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;可以看出连接到的容器ip是172.17.0.1
+也可以看见谁是主节点&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;rs1:PRIMARY&amp;gt; rs.status()
+{
+    &amp;quot;set&amp;quot; : &amp;quot;rs1&amp;quot;,
+    &amp;quot;date&amp;quot; : ISODate(&amp;quot;2015-07-15T02:58:44.390Z&amp;quot;),
+    &amp;quot;myState&amp;quot; : 1,
+    &amp;quot;members&amp;quot; : [
+        {
+            &amp;quot;_id&amp;quot; : 0,
+            &amp;quot;name&amp;quot; : &amp;quot;172.17.0.1:27017&amp;quot;,
+            &amp;quot;health&amp;quot; : 1,
+            &amp;quot;state&amp;quot; : 1,
+            &amp;quot;stateStr&amp;quot; : &amp;quot;PRIMARY&amp;quot;,
+            &amp;quot;uptime&amp;quot; : 540,
+            &amp;quot;optime&amp;quot; : Timestamp(1436929097, 1),
+            &amp;quot;optimeDate&amp;quot; : ISODate(&amp;quot;2015-07-15T02:58:17Z&amp;quot;),
+            &amp;quot;electionTime&amp;quot; : Timestamp(1436929104, 1),
+            &amp;quot;electionDate&amp;quot; : ISODate(&amp;quot;2015-07-15T02:58:24Z&amp;quot;),
+            &amp;quot;configVersion&amp;quot; : 1,
+            &amp;quot;self&amp;quot; : true
+        },
+        {
+            &amp;quot;_id&amp;quot; : 1,
+            &amp;quot;name&amp;quot; : &amp;quot;172.17.0.2:27017&amp;quot;,
+            &amp;quot;health&amp;quot; : 1,
+            &amp;quot;state&amp;quot; : 2,
+            &amp;quot;stateStr&amp;quot; : &amp;quot;SECONDARY&amp;quot;,
+            &amp;quot;uptime&amp;quot; : 57,
+            &amp;quot;optime&amp;quot; : Timestamp(1436929097, 1),
+            &amp;quot;optimeDate&amp;quot; : ISODate(&amp;quot;2015-07-15T02:58:17Z&amp;quot;),
+            &amp;quot;lastHeartbeat&amp;quot; : ISODate(&amp;quot;2015-07-15T02:58:44.133Z&amp;quot;),
+            &amp;quot;lastHeartbeatRecv&amp;quot; : ISODate(&amp;quot;2015-07-15T02:58:44.133Z&amp;quot;),
+            &amp;quot;pingMs&amp;quot; : 0,
+            &amp;quot;configVersion&amp;quot; : 1
+        },
+        {
+            &amp;quot;_id&amp;quot; : 2,
+            &amp;quot;name&amp;quot; : &amp;quot;172.17.0.3:27017&amp;quot;,
+            &amp;quot;health&amp;quot; : 1,
+            &amp;quot;state&amp;quot; : 2,
+            &amp;quot;stateStr&amp;quot; : &amp;quot;SECONDARY&amp;quot;,
+            &amp;quot;uptime&amp;quot; : 57,
+            &amp;quot;optime&amp;quot; : Timestamp(1436929097, 1),
+            &amp;quot;optimeDate&amp;quot; : ISODate(&amp;quot;2015-07-15T02:58:17Z&amp;quot;),
+            &amp;quot;lastHeartbeat&amp;quot; : ISODate(&amp;quot;2015-07-15T02:58:43.169Z&amp;quot;),
+            &amp;quot;lastHeartbeatRecv&amp;quot; : ISODate(&amp;quot;2015-07-15T02:58:44.134Z&amp;quot;),
+            &amp;quot;pingMs&amp;quot; : 0,
+            &amp;quot;lastHeartbeatMessage&amp;quot; : &amp;quot;could not find member to sync from&amp;quot;,
+            &amp;quot;configVersion&amp;quot; : 1
+        }
+    ],
+    &amp;quot;ok&amp;quot; : 1
+}
+rs1:PRIMARY&amp;gt; rs.conf()
+{
+    &amp;quot;_id&amp;quot; : &amp;quot;rs1&amp;quot;,
+    &amp;quot;version&amp;quot; : 1,
+    &amp;quot;members&amp;quot; : [
+        {
+            &amp;quot;_id&amp;quot; : 0,
+            &amp;quot;host&amp;quot; : &amp;quot;172.17.0.1:27017&amp;quot;,
+            &amp;quot;arbiterOnly&amp;quot; : false,
+            &amp;quot;buildIndexes&amp;quot; : true,
+            &amp;quot;hidden&amp;quot; : false,
+            &amp;quot;priority&amp;quot; : 1,
+            &amp;quot;tags&amp;quot; : {
+
+            },
+            &amp;quot;slaveDelay&amp;quot; : 0,
+            &amp;quot;votes&amp;quot; : 1
+        },
+        {
+            &amp;quot;_id&amp;quot; : 1,
+            &amp;quot;host&amp;quot; : &amp;quot;172.17.0.2:27017&amp;quot;,
+            &amp;quot;arbiterOnly&amp;quot; : false,
+            &amp;quot;buildIndexes&amp;quot; : true,
+            &amp;quot;hidden&amp;quot; : false,
+            &amp;quot;priority&amp;quot; : 1,
+            &amp;quot;tags&amp;quot; : {
+
+            },
+            &amp;quot;slaveDelay&amp;quot; : 0,
+            &amp;quot;votes&amp;quot; : 1
+        },
+        {
+            &amp;quot;_id&amp;quot; : 2,
+            &amp;quot;host&amp;quot; : &amp;quot;172.17.0.3:27017&amp;quot;,
+            &amp;quot;arbiterOnly&amp;quot; : false,
+            &amp;quot;buildIndexes&amp;quot; : true,
+            &amp;quot;hidden&amp;quot; : false,
+            &amp;quot;priority&amp;quot; : 1,
+            &amp;quot;tags&amp;quot; : {
+
+            },
+            &amp;quot;slaveDelay&amp;quot; : 0,
+            &amp;quot;votes&amp;quot; : 1
+        }
+    ],
+    &amp;quot;settings&amp;quot; : {
+        &amp;quot;chainingAllowed&amp;quot; : true,
+        &amp;quot;heartbeatTimeoutSecs&amp;quot; : 10,
+        &amp;quot;getLastErrorModes&amp;quot; : {
+
+        },
+        &amp;quot;getLastErrorDefaults&amp;quot; : {
+            &amp;quot;w&amp;quot; : 1,
+            &amp;quot;wtimeout&amp;quot; : 0
+        }
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;另外开一个终端 连接到第二个容器&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;linuxidc@linuxidc:~$ mongo --port 22117
+MongoDB shell version: 3.0.4
+
+rs1:SECONDARY&amp;gt; rs.isMaster()
+{
+    &amp;quot;setName&amp;quot; : &amp;quot;rs1&amp;quot;,
+    &amp;quot;setVersion&amp;quot; : 1,
+    &amp;quot;ismaster&amp;quot; : false,
+    &amp;quot;secondary&amp;quot; : true,
+    &amp;quot;hosts&amp;quot; : [
+        &amp;quot;172.17.0.1:27017&amp;quot;,
+        &amp;quot;172.17.0.2:27017&amp;quot;,
+        &amp;quot;172.17.0.3:27017&amp;quot;
+    ],
+    &amp;quot;primary&amp;quot; : &amp;quot;172.17.0.1:27017&amp;quot;,
+    &amp;quot;me&amp;quot; : &amp;quot;172.17.0.2:27017&amp;quot;,
+    &amp;quot;maxBsonObjectSize&amp;quot; : 16777216,
+    &amp;quot;maxMessageSizeBytes&amp;quot; : 48000000,
+    &amp;quot;maxWriteBatchSize&amp;quot; : 1000,
+    &amp;quot;localTime&amp;quot; : ISODate(&amp;quot;2015-07-15T02:59:27.121Z&amp;quot;),
+    &amp;quot;maxWireVersion&amp;quot; : 3,
+    &amp;quot;minWireVersion&amp;quot; : 0,
+    &amp;quot;ok&amp;quot; : 1
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;可以看到主节点的信息 和上个容器的信息一致&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;rs1:SECONDARY&amp;gt; rs.status()
+{
+    &amp;quot;set&amp;quot; : &amp;quot;rs1&amp;quot;,
+    &amp;quot;date&amp;quot; : ISODate(&amp;quot;2015-07-15T03:14:10.512Z&amp;quot;),
+    &amp;quot;myState&amp;quot; : 2,
+    &amp;quot;members&amp;quot; : [
+        {
+            &amp;quot;_id&amp;quot; : 0,
+            &amp;quot;name&amp;quot; : &amp;quot;172.17.0.1:27017&amp;quot;,
+            &amp;quot;health&amp;quot; : 1,
+            &amp;quot;state&amp;quot; : 1,
+            &amp;quot;stateStr&amp;quot; : &amp;quot;PRIMARY&amp;quot;,
+            &amp;quot;uptime&amp;quot; : 981,
+            &amp;quot;optime&amp;quot; : Timestamp(1436929097, 1),
+            &amp;quot;optimeDate&amp;quot; : ISODate(&amp;quot;2015-07-15T02:58:17Z&amp;quot;),
+            &amp;quot;lastHeartbeat&amp;quot; : ISODate(&amp;quot;2015-07-15T03:14:10.478Z&amp;quot;),
+            &amp;quot;lastHeartbeatRecv&amp;quot; : ISODate(&amp;quot;2015-07-15T03:14:10.478Z&amp;quot;),
+            &amp;quot;pingMs&amp;quot; : 0,
+            &amp;quot;electionTime&amp;quot; : Timestamp(1436929104, 1),
+            &amp;quot;electionDate&amp;quot; : ISODate(&amp;quot;2015-07-15T02:58:24Z&amp;quot;),
+            &amp;quot;configVersion&amp;quot; : 1
+        },
+        {
+            &amp;quot;_id&amp;quot; : 1,
+            &amp;quot;name&amp;quot; : &amp;quot;172.17.0.2:27017&amp;quot;,
+            &amp;quot;health&amp;quot; : 1,
+            &amp;quot;state&amp;quot; : 2,
+            &amp;quot;stateStr&amp;quot; : &amp;quot;SECONDARY&amp;quot;,
+            &amp;quot;uptime&amp;quot; : 1452,
+            &amp;quot;optime&amp;quot; : Timestamp(1436929097, 1),
+            &amp;quot;optimeDate&amp;quot; : ISODate(&amp;quot;2015-07-15T02:58:17Z&amp;quot;),
+            &amp;quot;infoMessage&amp;quot; : &amp;quot;could not find member to sync from&amp;quot;,
+            &amp;quot;configVersion&amp;quot; : 1,
+            &amp;quot;self&amp;quot; : true
+        },
+        {
+            &amp;quot;_id&amp;quot; : 2,
+            &amp;quot;name&amp;quot; : &amp;quot;172.17.0.3:27017&amp;quot;,
+            &amp;quot;health&amp;quot; : 1,
+            &amp;quot;state&amp;quot; : 2,
+            &amp;quot;stateStr&amp;quot; : &amp;quot;SECONDARY&amp;quot;,
+            &amp;quot;uptime&amp;quot; : 981,
+            &amp;quot;optime&amp;quot; : Timestamp(1436929097, 1),
+            &amp;quot;optimeDate&amp;quot; : ISODate(&amp;quot;2015-07-15T02:58:17Z&amp;quot;),
+            &amp;quot;lastHeartbeat&amp;quot; : ISODate(&amp;quot;2015-07-15T03:14:09.523Z&amp;quot;),
+            &amp;quot;lastHeartbeatRecv&amp;quot; : ISODate(&amp;quot;2015-07-15T03:14:09.523Z&amp;quot;),
+            &amp;quot;pingMs&amp;quot; : 0,
+            &amp;quot;configVersion&amp;quot; : 1
+        }
+    ],
+    &amp;quot;ok&amp;quot; : 1
+}
+
+linuxidc@linuxidc:~$ mongo --port 23117
+MongoDB shell version: 3.0.4
+connecting to: 127.0.0.1:23117/test
+rs1:SECONDARY&amp;gt; rs.status()
+{
+    &amp;quot;set&amp;quot; : &amp;quot;rs1&amp;quot;,
+    &amp;quot;date&amp;quot; : ISODate(&amp;quot;2015-07-15T03:13:25.167Z&amp;quot;),
+    &amp;quot;myState&amp;quot; : 2,
+    &amp;quot;members&amp;quot; : [
+        {
+            &amp;quot;_id&amp;quot; : 0,
+            &amp;quot;name&amp;quot; : &amp;quot;172.17.0.1:27017&amp;quot;,
+            &amp;quot;health&amp;quot; : 1,
+            &amp;quot;state&amp;quot; : 1,
+            &amp;quot;stateStr&amp;quot; : &amp;quot;PRIMARY&amp;quot;,
+            &amp;quot;uptime&amp;quot; : 936,
+            &amp;quot;optime&amp;quot; : Timestamp(1436929097, 1),
+            &amp;quot;optimeDate&amp;quot; : ISODate(&amp;quot;2015-07-15T02:58:17Z&amp;quot;),
+            &amp;quot;lastHeartbeat&amp;quot; : ISODate(&amp;quot;2015-07-15T03:13:24.479Z&amp;quot;),
+            &amp;quot;lastHeartbeatRecv&amp;quot; : ISODate(&amp;quot;2015-07-15T03:13:23.531Z&amp;quot;),
+            &amp;quot;pingMs&amp;quot; : 0,
+            &amp;quot;electionTime&amp;quot; : Timestamp(1436929104, 1),
+            &amp;quot;electionDate&amp;quot; : ISODate(&amp;quot;2015-07-15T02:58:24Z&amp;quot;),
+            &amp;quot;configVersion&amp;quot; : 1
+        },
+        {
+            &amp;quot;_id&amp;quot; : 1,
+            &amp;quot;name&amp;quot; : &amp;quot;172.17.0.2:27017&amp;quot;,
+            &amp;quot;health&amp;quot; : 1,
+            &amp;quot;state&amp;quot; : 2,
+            &amp;quot;stateStr&amp;quot; : &amp;quot;SECONDARY&amp;quot;,
+            &amp;quot;uptime&amp;quot; : 936,
+            &amp;quot;optime&amp;quot; : Timestamp(1436929097, 1),
+            &amp;quot;optimeDate&amp;quot; : ISODate(&amp;quot;2015-07-15T02:58:17Z&amp;quot;),
+            &amp;quot;lastHeartbeat&amp;quot; : ISODate(&amp;quot;2015-07-15T03:13:23.507Z&amp;quot;),
+            &amp;quot;lastHeartbeatRecv&amp;quot; : ISODate(&amp;quot;2015-07-15T03:13:23.506Z&amp;quot;),
+            &amp;quot;pingMs&amp;quot; : 0,
+            &amp;quot;configVersion&amp;quot; : 1
+        },
+        {
+            &amp;quot;_id&amp;quot; : 2,
+            &amp;quot;name&amp;quot; : &amp;quot;172.17.0.3:27017&amp;quot;,
+            &amp;quot;health&amp;quot; : 1,
+            &amp;quot;state&amp;quot; : 2,
+            &amp;quot;stateStr&amp;quot; : &amp;quot;SECONDARY&amp;quot;,
+            &amp;quot;uptime&amp;quot; : 1392,
+            &amp;quot;optime&amp;quot; : Timestamp(1436929097, 1),
+            &amp;quot;optimeDate&amp;quot; : ISODate(&amp;quot;2015-07-15T02:58:17Z&amp;quot;),
+            &amp;quot;configVersion&amp;quot; : 1,
+            &amp;quot;self&amp;quot; : true
+        }
+    ],
+    &amp;quot;ok&amp;quot; : 1
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;如果在从节点此时查看数据库会出错 ，信息显示不是主节点&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;rs1:SECONDARY&amp;gt; show dbs;
+××××××××××××××××××××××××××××××××××××
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;设置从节点可以读&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;rs1:SECONDARY&amp;gt; db.getMongo().setSlaveOk();
+rs1:SECONDARY&amp;gt; show dbs;
+local  1.031GB
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;打开先前与主节点的终端  插入点数据&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;rs1:PRIMARY&amp;gt; show dbs;
+local  1.031GB
+
+rs1:PRIMARY&amp;gt; use tt;
+switched to db tt
+rs1:PRIMARY&amp;gt; db.user.insert({&amp;quot;name&amp;quot;:&amp;quot;mongodb is greate!!!!&amp;quot;})
+WriteResult({ &amp;quot;nInserted&amp;quot; : 1 })
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;打开与备份节点的终端&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;rs1:SECONDARY&amp;gt; show dbs;
+local  1.031GB
+tt    0.031GB
+rs1:SECONDARY&amp;gt; use tt
+switched to db tt
+rs1:SECONDARY&amp;gt; show collections;
+system.indexes
+user
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;多了个数据库 ，还多了条文档&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;rs1:SECONDARY&amp;gt; db.user.find()
+{ &amp;quot;_id&amp;quot; : ObjectId(&amp;quot;55a5d1390d49c20962937b52&amp;quot;), &amp;quot;name&amp;quot; : &amp;quot;mongodb is greate!!!!&amp;quot; }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://www.linuxidc.com/Linux/2015-07/119596.htm&#34;&gt;MongoDB常用操作命令整理 &lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://www.linuxidc.com/Linux/2015-03/114414.htm&#34;&gt;MongoDB 3.0 正式版发布下载 &lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://www.linuxidc.com/Linux/2012-02/53834.htm&#34;&gt;CentOS编译安装MongoDB&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://www.linuxidc.com/Linux/2012-02/53833.htm&#34;&gt;CentOS 编译安装 MongoDB与mongoDB的php扩展&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://www.linuxidc.com/Linux/2012-08/68196.htm&#34;&gt;CentOS 6 使用 yum 安装MongoDB及服务器端配置&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://www.linuxidc.com/Linux/2013-05/84227.htm&#34;&gt;Ubuntu 13.04下安装MongoDB2.4.3&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://www.linuxidc.com/Linux/2013-07/87105.htm&#34;&gt;MongoDB入门必读(概念与实战并重)&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://www.linuxidc.com/Linux/2014-08/105364.htm&#34;&gt;Ubunu 14.04下MongoDB的安装指南&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://www.linuxidc.com/Linux/2012-07/66735.htm&#34;&gt;《MongoDB 权威指南》(MongoDB: The Definitive Guide)英文文字版[PDF]&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://www.linuxidc.com/Linux/2014-10/107826.htm&#34;&gt;Nagios监控MongoDB分片集群服务实战&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://www.linuxidc.com/Linux/2014-11/108900.htm&#34;&gt;基于CentOS 6.5操作系统搭建MongoDB服务&lt;/a&gt;
+&lt;a href=&#34;http://www.linuxidc.com/Linux/2015-07/120008.htm&#34;&gt;本文永久更新链接地址&lt;/a&gt;&lt;/p&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Wtf on 百里求一的博客</title>
+        <link>http://kooksee.github.io/tags/wtf/</link>
+        <language>zh-CN</language>
+        <author>CoderZh</author>
+        <rights>Copyright (c) 2015, CoderZh; all rights reserved.</rights>
+        <updated>Mon, 01 Jan 0001 00:00:00 UTC</updated>
+        
+        <item>
+            <title>python表单校验摘录</title>
+            <link>http://kooksee.github.io/blog/python%E8%A1%A8%E5%8D%95%E6%A0%A1%E9%AA%8C%E6%91%98%E5%BD%95/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/python%E8%A1%A8%E5%8D%95%E6%A0%A1%E9%AA%8C%E6%91%98%E5%BD%95/</guid>
+            <description>&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# encoding=utf-8
+from app.models import Student
+from flask import g
+
+import re
+from flask.ext.wtf import Form
+from wtforms import StringField, RadioField, PasswordField, TextAreaField, BooleanField, DateField, ValidationError, \
+    IntegerField
+from wtforms.validators import DataRequired, Length, Regexp, Email, EqualTo
+from wtforms.widgets import ListWidget, HTMLString
+
+
+class BSListWidget(ListWidget):
+    def __call__(self, field, **kwargs):
+        kwargs.setdefault(&#39;id&#39;, field.id)
+        html = &amp;quot;&amp;quot;
+        for subfield in field:
+            html += u&#39;&amp;lt;label class=&amp;quot;radio-inline&amp;quot;&amp;gt; %s%s &amp;lt;/label&amp;gt;&#39; % (subfield(), subfield.label.text)
+        return HTMLString(html)
+
+
+class Fields(object):
+    notnull = u&#39;该项输入不能为空&#39;
+
+    def get_len_str(min=None, max=None):
+        if min and not max:
+            return u&amp;quot;该项输入的最小长度必须是%d&amp;quot; % min
+        elif max and not min:
+            return u&amp;quot;该项输入的最大长度必须是%d&amp;quot; % max
+        else:
+            return u&#39;该输入的长度必须大于%d,小于%d&#39; % (min, max)
+
+    username = StringField(label=u&#39;请输入您的用户名&#39;,
+                           validators=[DataRequired(message=notnull),
+                                       Length(min=0, max=15, message=get_len_str(0, 16)),
+                                       ])
+
+    password = PasswordField(label=u&#39;请输入密码&#39;, description=u&#39;请输入密码&#39;,
+                             validators=[DataRequired(message=notnull),
+                                         Length(min=0, max=60, message=get_len_str(min=0, max=61)),
+                                         ])
+    confirm_password = PasswordField(label=u&#39;请确认密码&#39;,
+                                     description=u&#39;请确认密码&#39;,
+
+                                     validators=[DataRequired(message=notnull),
+                                                 Length(min=5, max=60, message=get_len_str(min=4, max=61)),
+                                                 EqualTo(u&#39;confirm_password&#39;, message=u&#39;两次输入的密码不一致&#39;), ]
+                                     )
+    student_amount = StringField(label=u&#39;请输入您指导的学生数量&#39;,
+                                 validators=[Regexp(re.compile(r&amp;quot;\d&amp;quot;))])
+
+    is_active = RadioField(label=u&#39;是否激活账户&#39;,
+                           coerce=int,
+                           choices=[(0, u&#39;否&#39;), (1, u&#39;是&#39;)],
+                           default=0,
+                           widget=BSListWidget())
+
+    notice = TextAreaField(label=u&#39;请填写对学生的通知&#39;)
+
+    attachment = StringField(label=u&#39;添加附加&#39;,
+                             validators=[Length(min=0, max=32, message=get_len_str(min=0, max=33))], )
+
+    is_comment_teacher = RadioField(label=u&#39;是否有评价功能&#39;,
+                                    coerce=int,
+                                    choices=[(0, u&#39;否&#39;), (1, u&#39;是&#39;)],
+                                    default=0,
+                                    widget=BSListWidget())
+
+    student_name = StringField(label=u&#39;请输入您的姓名&#39;,
+                               description=&#39;&#39;,
+                               validators=[DataRequired(message=notnull),
+                                           Length(min=0, max=15, message=get_len_str(0, 16)),
+                                           ])
+
+    sex = RadioField(label=u&#39;您的性别&#39;,
+                     coerce=int,
+                     choices=[(0, u&#39;男&#39;), (1, u&#39;女&#39;)],
+                     default=0,
+                     widget=BSListWidget())
+
+    user_type = RadioField(label=u&#39;您是&#39;,
+                           coerce=str,
+                           choices=[(u&#39;student&#39;, u&#39;学生&#39;), (u&#39;teacher&#39;, u&#39;老师&#39;), (u&#39;admin&#39;, u&#39;管理员&#39;)],
+                           default=u&#39;student&#39;,
+                           widget=BSListWidget())
+
+    mark = StringField(label=u&#39;您的分数&#39;,
+                       default=0,
+                       validators=[DataRequired(message=notnull),
+                                   Length(min=0, max=100, message=get_len_str(0, 101)),
+                                   ])
+    comment = TextAreaField(label=u&#39;请填写您对学生的评语&#39;,
+                            validators=[
+                                Length(min=0, max=128, message=get_len_str(0, 129)),
+                            ])
+
+    title = StringField(label=u&#39;请填写毕业设计的题目&#39;,
+                        validators=[
+                            Length(min=0, max=128, message=get_len_str(0, 129)),
+                        ])
+    description = TextAreaField(label=u&#39;请填写毕业设计的描述&#39;)
+
+    task_start_date = DateField(label=u&#39;开始时间&#39;)
+    task_end_date = DateField(label=u&#39;结束时间&#39;)
+
+    comment_start_date = DateField(label=u&#39;开始时间&#39;)
+    comment_end_date = DateField(label=u&#39;结束时间&#39;)
+
+
+class LoginForm(Form):
+    username = Fields.username
+    password = Fields.password
+
+    user_type = Fields.user_type
+
+    remember_me = BooleanField(label=u&#39;记住我&#39;, default=u&#39;y&#39;)
+
+    errors = {}
+
+
+    def validate_fields(self):
+        status = True
+        status = status and self.username.validate(self)
+        status = status and self.username.validate(self)
+        self.password.validate()
+
+        # def validate(self):
+        self._fields
+        self.validate_on_submit()
+        return self.username.validate(self)
+
+        # def validate_username(self, field):
+        # user = Student.get_user(field.data)
+        # if not user:
+        # print &#39;not user&#39;
+        # self.errors[&#39;username&#39;] = u&#39;用户名不存在&#39;
+        # raise ValidationError(message=u&#39;该用户名已被注册&#39;)
+        # else:
+        # print &#39;user&#39;
+        # return True
+
+        #
+        # def validate_password(self,field):
+        # if g.user:
+        # if field.data != g.user.username:
+        # field.errors.append(message=u&#39;用户密码不正确&#39;)
+        # return False
+        #
+        # def validate_user_type(self, field):
+        # print field.data
+        #
+        # def validate_remember_me(self,field):
+        # if field.data:
+        # print field.data
+
+
+class StuInfo(Form):
+    username = Fields.username
+    student_name = Fields.student_name
+    sex = Fields.sex
+    attachment = Fields.attachment
+    mark = Fields.mark
+    comment = Fields.comment
+
+
+class BaseForm(object):
+    def __init__(self, form):
+        self.username = Field(label=u&#39;用户名&#39;, type=&#39;text&#39;, validators={&#39;min_length&#39;: 5})
+
+        for field_name, data in form.items():
+            getattr(self, field_name).data = data
+
+    def validate(self):
+        status = True
+        for field_name in self.__dict__:
+            status = status and getattr(self, field_name).validate()
+        return status
+
+
+class Field(object):
+    def __init__(self, label=None, type=&#39;text&#39;, validators={}, description=None, data=&#39;&#39;):
+        self.data = data
+        self.label = label
+        self.type = type
+        self.validators = validators
+        self.description = description
+
+    def validate(self):
+        status = True
+        for method_name, param in self.validators.items():
+            print method_name, param
+            status = status and getattr(self, method_name)(param)
+        return status
+
+    def is_null(self, status):
+        if status:
+            return True
+        if not self.data:
+            return False
+        if hasattr(self.data, &#39;replace&#39;) and len(self.data.replace(&#39; &#39;, &#39;&#39;)) &amp;gt; 0:
+            return False
+        if len(self.data) == 0:
+            return False
+        return True
+
+    def min_length(self, min=-1):
+        if not self.is_null(False) and len(self.data) &amp;lt; min:
+            return False
+        return True
+
+    def max_length(self, max):
+        if not self.is_null(False) and len(self.data) &amp;gt; max:
+            return False
+        return True
+
+    def min(self, min):
+        try:
+            if int(self.data) &amp;lt; min:
+                return False
+            return True
+        except Exception, e:
+            print e
+            return False
+
+    def max(self, max):
+        try:
+            if int(self.data) &amp;gt; max:
+                return False
+            return True
+        except Exception, e:
+            print e
+            return False
+
+    def equal_to(self, data):
+        if self.data != data:
+            return False
+        return True
+
+    def select_from(self, *args):
+        if self.data not in args:
+            return False
+        return True
+
+
+if __name__ == &#39;__main__&#39;:
+    b = BaseForm({&#39;username&#39;: &#39;o&#39;})
+    print b.validate()
+    print &#39;ok&#39;
+
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

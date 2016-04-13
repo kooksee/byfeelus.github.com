@@ -1,0 +1,1728 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Python模块 on 百里求一的博客</title>
+        <link>http://kooksee.github.io/tags/python%E6%A8%A1%E5%9D%97/</link>
+        <language>zh-CN</language>
+        <author>CoderZh</author>
+        <rights>Copyright (c) 2015, CoderZh; all rights reserved.</rights>
+        <updated>Mon, 01 Jan 0001 00:00:00 UTC</updated>
+        
+        <item>
+            <title>python shutil模块</title>
+            <link>http://kooksee.github.io/blog/python%20shutil%E6%A8%A1%E5%9D%97/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/python%20shutil%E6%A8%A1%E5%9D%97/</guid>
+            <description>&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# encoding=utf-8
+
+# /home/bergus/tongbu/360共享/编程语言
+# /home/bergus/桌面
+#     /home/bergus/test/hh
+
+import os
+import shutil
+
+
+# 把文件src_file移动到目录dest_file
+def move(src_file, dest_file):
+    for src in src_file:
+        for dest in dest_file:
+            try:
+                shutil.move(src, dest)
+            except Exception, e:
+                print e
+
+
+# 得到关键字的路径
+def get_keyworld_paths(key_word, path):
+    dest_dirs = []
+    if os.path.exists(path):
+        for f in os.listdir(path):
+            # print f
+            if key_word in f.lower():
+                dest_dirs.append(os.path.join(path, f).replace(&#39;\\&#39;, &#39;/&#39;))
+        return dest_dirs
+
+
+def my_move():
+    src_dir = &#39;/home/bergus/桌面&#39;
+    dest_dir = &#39;/home/bergus/tongbu/360共享/编程语言&#39;
+    key_word = [&#39;python&#39;, &#39;flask&#39;, &#39;sqlalchemy&#39;]
+
+    for key in key_word:
+        try:
+            a1 = get_keyworld_paths(key, src_dir)
+            a2 = get_keyworld_paths(key, dest_dir)
+            move(a1, a2)
+            print &amp;quot;移动完成&amp;quot;
+        except Exception, e:
+            print e
+
+if __name__ == &#39;__main__&#39;:
+    my_move()
+
+
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>python模块之itertools模</title>
+            <link>http://kooksee.github.io/blog/python%E6%A8%A1%E5%9D%97%E4%B9%8Bitertools%E6%A8%A1/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/python%E6%A8%A1%E5%9D%97%E4%B9%8Bitertools%E6%A8%A1/</guid>
+            <description>&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;
+迭代器         参数         结果                                                例子
+count()     start, [step]   start, start+step, start+2*step, ...                count(10) --&amp;gt; 10 11 12 13 14 ...
+cycle()     p               p0, p1, ... plast, p0, p1, ...                      cycle(&#39;ABCD&#39;) --&amp;gt; A B C D A B C D ...
+repeat()    elem [,n]       elem, elem, elem, ... endlessly or up to n times    repeat(10, 3) --&amp;gt; 10 10 10
+
+处理输入序列迭代器
+
+迭代器          参数            结果                                        例子
+chain()     p, q, ...           p0, p1, ... plast, q0, q1, ...              chain(&#39;ABC&#39;, &#39;DEF&#39;) --&amp;gt; A B C D E F
+compress()  data, selectors     (d[0] if s[0]), (d[1] if s[1]), ...         compress(&#39;ABCDEF&#39;, [1,0,1,0,1,1]) --&amp;gt; A C E F
+dropwhile() pred, seq           seq[n], seq[n+1], starting when pred fails  dropwhile(lambda x: x&amp;lt;5, [1,4,6,4,1]) --&amp;gt; 6 4 1
+groupby()   iterable[, keyfunc] sub-iterators grouped by value of keyfunc(v)
+ifilter()   pred, seq           elements of seq where pred(elem) is True    ifilter(lambda x: x%2, range(10)) --&amp;gt; 1 3 5 7 9
+ifilterfalse()  pred, seq       elements of seq where pred(elem) is False   ifilterfalse(lambda x: x%2, range(10)) --&amp;gt; 0 2 4
+islice()    seq, [start,] stop [, step] elements from seq[start:stop:step]  islice(&#39;ABCDEFG&#39;, 2, None) --&amp;gt; C D E F G
+imap()      func, p, q, ...     func(p0, q0), func(p1, q1), ...             imap(pow, (2,3,10), (5,2,3)) --&amp;gt; 32 9 1000
+starmap()   func, seq           func(*seq[0]), func(*seq[1]), ...           starmap(pow, [(2,5), (3,2), (10,3)]) --&amp;gt; 32 9 1000
+tee()       it, n               it1, it2 , ... itn splits one iterator into n
+takewhile() pred, seq           seq[0], seq[1], until pred fails            takewhile(lambda x: x&amp;lt;5, [1,4,6,4,1]) --&amp;gt; 1 4
+izip()      p, q, ...           (p[0], q[0]), (p[1], q[1]), ...             izip(&#39;ABCD&#39;, &#39;xy&#39;) --&amp;gt; Ax By
+izip_longest()  p, q, ...       (p[0], q[0]), (p[1], q[1]), ...             izip_longest(&#39;ABCD&#39;, &#39;xy&#39;, fillvalue=&#39;-&#39;) --&amp;gt; Ax By C- D-
+
+组合生成器
+
+迭代器          参数                        结果
+product()       p, q, ... [repeat=1]        cartesian product, equivalent to a nested for-loop
+permutations()  p[, r]                      r-length tuples, all possible orderings, no repeated elements
+combinations()  p, r                        r-length tuples, in sorted order, no repeated elements
+combinations_with_replacement() p, r        r-length tuples, in sorted order, with repeated elements
+product(&#39;ABCD&#39;, repeat=2)                   AA AB AC AD BA BB BC BD CA CB CC CD DA DB DC DD
+permutations(&#39;ABCD&#39;, 2)                     AB AC AD BA BC BD CA CB CD DA DB DC
+combinations(&#39;ABCD&#39;, 2)                     AB AC AD BC BD CD
+combinations_with_replacement(&#39;ABCD&#39;, 2)    AA AB AC AD BB BC BD CC CD DD
+
+第一部分
+itertools.count(start=0, step=1)
+
+创建一个迭代器，生成从n开始的连续整数，如果忽略n，则从0开始计算（注意：此迭代器不支持长整数）
+
+如果超出了sys.maxint，计数器将溢出并继续从-sys.maxint-1开始计算。
+
+定义
+
+def count(start=0, step=1):
+    # count(10) --&amp;gt; 10 11 12 13 14 ...
+    # count(2.5, 0.5) -&amp;gt; 2.5 3.0 3.5 ...
+    n = start
+    while True:
+        yield n
+        n += step
+
+等同于(start + step * i for i in count())
+
+使用
+
+from itertools import *
+
+for i in izip(count(1), [&#39;a&#39;, &#39;b&#39;, &#39;c&#39;]):
+    print i
+
+(1, &#39;a&#39;)
+(2, &#39;b&#39;)
+(3, &#39;c&#39;)
+
+itertools.cycle(iterable)
+
+创建一个迭代器，对iterable中的元素反复执行循环操作，内部会生成iterable中的元素的一个副本，此副本用于返回循环中的重复项。
+
+定义
+
+def cycle(iterable):
+    # cycle(&#39;ABCD&#39;) --&amp;gt; A B C D A B C D A B C D ...
+    saved = []
+    for element in iterable:
+        yield element
+        saved.append(element)
+    while saved:
+        for element in saved:
+            yield element
+
+使用
+
+from itertools import *
+
+i = 0
+for item in cycle([&#39;a&#39;, &#39;b&#39;, &#39;c&#39;]):
+    i += 1
+    if i == 10:
+        break
+    print (i, item)
+
+(1, &#39;a&#39;)
+(2, &#39;b&#39;)
+(3, &#39;c&#39;)
+(4, &#39;a&#39;)
+(5, &#39;b&#39;)
+(6, &#39;c&#39;)
+(7, &#39;a&#39;)
+(8, &#39;b&#39;)
+(9, &#39;c&#39;)
+
+itertools.repeat(object[, times])
+
+创建一个迭代器，重复生成object，times（如果已提供）指定重复计数，如果未提供times，将无止尽返回该对象。
+
+定义
+
+def repeat(object, times=None):
+    # repeat(10, 3) --&amp;gt; 10 10 10
+    if times is None:
+        while True:
+            yield object
+    else:
+        for i in xrange(times):
+            yield object
+
+使用
+
+from itertools import *
+
+for i in repeat(&#39;over-and-over&#39;, 5):
+    print i
+
+over-and-over
+over-and-over
+over-and-over
+over-and-over
+over-and-over
+
+第二部分
+itertools.chain(*iterables)
+
+将多个迭代器作为参数, 但只返回单个迭代器, 它产生所有参数迭代器的内容, 就好像他们是来自于一个单一的序列.
+
+def chain(*iterables):
+    # chain(&#39;ABC&#39;, &#39;DEF&#39;) --&amp;gt; A B C D E F
+    for it in iterables:
+        for element in it:
+            yield element
+
+使用
+
+from itertools import *
+
+for i in chain([1, 2, 3], [&#39;a&#39;, &#39;b&#39;, &#39;c&#39;]):
+    print i
+1
+2
+3
+a
+b
+c
+
+
+from itertools import chain, imap
+def flatmap(f, items):
+    return chain.from_iterable(imap(f, items))
+&amp;gt;&amp;gt;&amp;gt; list(flatmap(os.listdir, dirs))
+&amp;gt;&amp;gt;&amp;gt; [&#39;settings.py&#39;, &#39;wsgi.py&#39;, &#39;templates&#39;, &#39;app.py&#39;,
+     &#39;templates&#39;, &#39;index.html, &#39;config.json&#39;]
+
+itertools.compress(data, selectors)
+
+提供一个选择列表，对原始数据进行筛选
+
+def compress(data, selectors):
+    # compress(&#39;ABCDEF&#39;, [1,0,1,0,1,1]) --&amp;gt; A C E F
+    return (d for d, s in izip(data, selectors) if s)
+
+itertools.dropwhile(predicate, iterable)
+
+创建一个迭代器，只要函数predicate(item)为True，就丢弃iterable中的项，如果predicate返回False，就会生成iterable中的项和所有后续项。
+
+即：在条件为false之后的第一次, 返回迭代器中剩下来的项.
+
+def dropwhile(predicate, iterable):
+    # dropwhile(lambda x: x&amp;lt;5, [1,4,6,4,1]) --&amp;gt; 6 4 1
+    iterable = iter(iterable)
+    for x in iterable:
+        if not predicate(x):
+            yield x
+            break
+    for x in iterable:
+        yield x
+
+使用
+
+from itertools import *
+
+def should_drop(x):
+    print &#39;Testing:&#39;, x
+    return (x&amp;lt;1)
+
+for i in dropwhile(should_drop, [ -1, 0, 1, 2, 3, 4, 1, -2 ]):
+    print &#39;Yielding:&#39;, i
+
+Testing: -1
+Testing: 0
+Testing: 1
+Yielding: 1
+Yielding: 2
+Yielding: 3
+Yielding: 4
+Yielding: 1
+Yielding: -2
+
+itertools.groupby(iterable[, key])
+
+返回一个产生按照key进行分组后的值集合的迭代器.
+
+如果iterable在多次连续迭代中生成了同一项，则会定义一个组，如果将此函数应用一个分类列表，那么分组将定义该列表中的所有唯一项，key（如果已提供）是一个函数，应用于每一项，如果此函数存在返回值，该值将用于后续项而不是该项本身进行比较，此函数返回的迭代器生成元素(key, group)，其中key是分组的键值，group是迭代器，生成组成该组的所有项。
+
+即：按照keyfunc函数对序列每个元素执行后的结果分组(每个分组是一个迭代器), 返回这些分组的迭代器
+
+等价于
+
+class groupby(object):
+    # [k for k, g in groupby(&#39;AAAABBBCCDAABBB&#39;)] --&amp;gt; A B C D A B
+    # [list(g) for k, g in groupby(&#39;AAAABBBCCD&#39;)] --&amp;gt; AAAA BBB CC D
+    def __init__(self, iterable, key=None):
+        if key is None:
+            key = lambda x: x
+        self.keyfunc = key
+        self.it = iter(iterable)
+        self.tgtkey = self.currkey = self.currvalue = object()
+    def __iter__(self):
+        return self
+    def next(self):
+        while self.currkey == self.tgtkey:
+            self.currvalue = next(self.it)    # Exit on StopIteration
+            self.currkey = self.keyfunc(self.currvalue)
+        self.tgtkey = self.currkey
+        return (self.currkey, self._grouper(self.tgtkey))
+    def _grouper(self, tgtkey):
+        while self.currkey == tgtkey:
+            yield self.currvalue
+            self.currvalue = next(self.it)    # Exit on StopIteration
+            self.currkey = self.keyfunc(self.currvalue)
+
+应用
+
+from itertools import groupby
+qs = [{&#39;date&#39; : 1},{&#39;date&#39; : 2}]
+[(name, list(group)) for name, group in itertools.groupby(qs, lambda p:p[&#39;date&#39;])]
+
+Out[77]: [(1, [{&#39;date&#39;: 1}]), (2, [{&#39;date&#39;: 2}])]
+
+
+&amp;gt;&amp;gt;&amp;gt; from itertools import *
+&amp;gt;&amp;gt;&amp;gt; a = [&#39;aa&#39;, &#39;ab&#39;, &#39;abc&#39;, &#39;bcd&#39;, &#39;abcde&#39;]
+&amp;gt;&amp;gt;&amp;gt; for i, k in groupby(a, len):
+...     print i, list(k)
+...
+2 [&#39;aa&#39;, &#39;ab&#39;]
+3 [&#39;abc&#39;, &#39;bcd&#39;]
+5 [&#39;abcde&#39;]
+
+另一个例子
+
+from itertools import *
+from operator import itemgetter
+
+d = dict(a=1, b=2, c=1, d=2, e=1, f=2, g=3)
+di = sorted(d.iteritems(), key=itemgetter(1))
+for k, g in groupby(di, key=itemgetter(1)):
+    print k, map(itemgetter(0), g)
+
+
+1 [&#39;a&#39;, &#39;c&#39;, &#39;e&#39;]
+2 [&#39;b&#39;, &#39;d&#39;, &#39;f&#39;]
+3 [&#39;g&#39;]
+
+itertools.ifilter(predicate, iterable)
+
+返回的是迭代器类似于针对列表的内置函数 filter() , 它只包括当测试函数返回true时的项. 它不同于 dropwhile()
+
+创建一个迭代器，仅生成iterable中predicate(item)为True的项，如果predicate为None，将返回iterable中所有计算为True的项
+
+对函数func执行返回真的元素的迭代器
+
+def ifilter(predicate, iterable):
+    # ifilter(lambda x: x%2, range(10)) --&amp;gt; 1 3 5 7 9
+    if predicate is None:
+        predicate = bool
+    for x in iterable:
+        if predicate(x):
+            yield x
+
+使用
+
+from itertools import *
+
+def check_item(x):
+    print &#39;Testing:&#39;, x
+    return (x&amp;lt;1)
+
+for i in ifilter(check_item, [ -1, 0, 1, 2, 3, 4, 1, -2 ]):
+    print &#39;Yielding:&#39;, i
+
+Testing: -1
+Yielding: -1
+Testing: 0
+Yielding: 0
+Testing: 1
+Testing: 2
+Testing: 3
+Testing: 4
+Testing: 1
+Testing: -2
+Yielding: -2
+
+itertools.ifilterfalse(predicate, iterable)
+
+和ifilter(函数相反 ， 返回一个包含那些测试函数返回false的项的迭代器)
+
+创建一个迭代器，仅生成iterable中predicate(item)为False的项，如果predicate为None，则返回iterable中所有计算为False的项 对函数func执行返回假的元素的迭代器
+
+def ifilterfalse(predicate, iterable):
+    # ifilterfalse(lambda x: x%2, range(10)) --&amp;gt; 0 2 4 6 8
+    if predicate is None:
+        predicate = bool
+    for x in iterable:
+        if not predicate(x):
+            yield x
+
+使用
+
+from itertools import *
+
+def check_item(x):
+    print &#39;Testing:&#39;, x
+    return (x&amp;lt;1)
+
+for i in ifilterfalse(check_item, [ -1, 0, 1, 2, 3, 4, 1, -2 ]):
+    print &#39;Yielding:&#39;, i
+
+Testing: -1
+Testing: 0
+Testing: 1
+Yielding: 1
+Testing: 2
+Yielding: 2
+Testing: 3
+Yielding: 3
+Testing: 4
+Yielding: 4
+Testing: 1
+Yielding: 1
+Testing: -2
+
+itertools.islice(iterable, stop)
+
+itertools.islice(iterable, start, stop[, step])
+
+返回的迭代器是返回了输入迭代器根据索引来选取的项
+
+创建一个迭代器，生成项的方式类似于切片返回值： iterable[start : stop : step]，将跳过前start个项，迭代在stop所指定的位置停止，step指定用于跳过项的步幅。 与切片不同，负值不会用于任何start，stop和step， 如果省略了start，迭代将从0开始，如果省略了step，步幅将采用1.
+
+返回序列seq的从start开始到stop结束的步长为step的元素的迭代器
+
+def islice(iterable, *args):
+    # islice(&#39;ABCDEFG&#39;, 2) --&amp;gt; A B
+    # islice(&#39;ABCDEFG&#39;, 2, 4) --&amp;gt; C D
+    # islice(&#39;ABCDEFG&#39;, 2, None) --&amp;gt; C D E F G
+    # islice(&#39;ABCDEFG&#39;, 0, None, 2) --&amp;gt; A C E G
+    s = slice(*args)
+    it = iter(xrange(s.start or 0, s.stop or sys.maxint, s.step or 1))
+    nexti = next(it)
+    for i, element in enumerate(iterable):
+        if i == nexti:
+            yield element
+            nexti = next(it)
+
+使用
+
+from itertools import *
+
+print &#39;Stop at 5:&#39;
+for i in islice(count(), 5):
+    print i
+
+print &#39;Start at 5, Stop at 10:&#39;
+for i in islice(count(), 5, 10):
+    print i
+
+print &#39;By tens to 100:&#39;
+for i in islice(count(), 0, 100, 10):
+    print i
+
+Stop at 5:
+0
+1
+2
+3
+4
+Start at 5, Stop at 10:
+5
+6
+7
+8
+9
+By tens to 100:
+0
+10
+20
+30
+40
+50
+60
+70
+80
+90
+
+itertools.imap(function, *iterables)
+
+创建一个迭代器，生成项function(i1, i2, ..., iN)，其中i1，i2...iN分别来自迭代器iter1，iter2 ... iterN，如果function为None，则返回(i1, i2, ..., iN)形式的元组，只要提供的一个迭代器不再生成值，迭代就会停止。
+
+即：返回一个迭代器, 它是调用了一个其值在输入迭代器上的函数, 返回结果. 它类似于内置函数 map() , 只是前者在任意输入迭代器结束后就停止(而不是插入None值来补全所有的输入).
+
+返回序列每个元素被func执行后返回值的序列的迭代器
+
+def imap(function, *iterables):
+    # imap(pow, (2,3,10), (5,2,3)) --&amp;gt; 32 9 1000
+    iterables = map(iter, iterables)
+    while True:
+        args = [next(it) for it in iterables]
+        if function is None:
+            yield tuple(args)
+        else:
+            yield function(*args)
+
+使用
+
+from itertools import *
+
+print &#39;Doubles:&#39;
+for i in imap(lambda x:2*x, xrange(5)):
+    print i
+
+print &#39;Multiples:&#39;
+for i in imap(lambda x,y:(x, y, x*y), xrange(5), xrange(5,10)):
+    print &#39;%d * %d = %d&#39; % i
+
+Doubles:
+0
+2
+4
+6
+8
+Multiples:
+0 * 5 = 0
+1 * 6 = 6
+2 * 7 = 14
+3 * 8 = 24
+4 * 9 = 36
+
+itertools.starmap(function, iterable)
+
+创建一个迭代器，生成值func(*item),其中item来自iterable，只有当iterable生成的项适用于这种调用函数的方式时，此函数才有效。
+
+对序列seq的每个元素作为func的参数列表执行, 返回执行结果的迭代器
+
+def starmap(function, iterable):
+    # starmap(pow, [(2,5), (3,2), (10,3)]) --&amp;gt; 32 9 1000
+    for args in iterable:
+        yield function(*args)
+
+使用
+
+from itertools import *
+
+values = [(0, 5), (1, 6), (2, 7), (3, 8), (4, 9)]
+for i in starmap(lambda x,y:(x, y, x*y), values):
+    print &#39;%d * %d = %d&#39; % i
+
+0 * 5 = 0
+1 * 6 = 6
+2 * 7 = 14
+3 * 8 = 24
+4 * 9 = 36
+
+itertools.tee(iterable[, n=2])
+
+返回一些基于单个原始输入的独立迭代器(默认为2). 它和Unix上的tee工具有点语义相似, 也就是说它们都重复读取输入设备中的值并将值写入到一个命名文件和标准输出中
+
+从iterable创建n个独立的迭代器，创建的迭代器以n元组的形式返回，n的默认值为2，此函数适用于任何可迭代的对象，但是，为了克隆原始迭代器，生成的项会被缓存，并在所有新创建的迭代器中使用，一定要注意，不要在调用tee()之后使用原始迭代器iterable，否则缓存机制可能无法正确工作。
+
+把一个迭代器分为n个迭代器, 返回一个元组.默认是两个
+
+def tee(iterable, n=2):
+    it = iter(iterable)
+    deques = [collections.deque() for i in range(n)]
+    def gen(mydeque):
+        while True:
+            if not mydeque:             # when the local deque is empty
+                newval = next(it)       # fetch a new value and
+                for d in deques:        # load it to all the deques
+                    d.append(newval)
+            yield mydeque.popleft()
+    return tuple(gen(d) for d in deques)
+
+使用
+
+from itertools import *
+
+r = islice(count(), 5)
+i1, i2 = tee(r)
+
+for i in i1:
+    print &#39;i1:&#39;, i
+for i in i2:
+    print &#39;i2:&#39;, i
+
+i1: 0
+i1: 1
+i1: 2
+i1: 3
+i1: 4
+i2: 0
+i2: 1
+i2: 2
+i2: 3
+i2: 4
+
+itertools.takewhile(predicate, iterable)
+
+和dropwhile相反
+
+创建一个迭代器，生成iterable中predicate(item)为True的项，只要predicate计算为False，迭代就会立即停止。
+
+即：从序列的头开始, 直到执行函数func失败.
+
+def takewhile(predicate, iterable):
+    # takewhile(lambda x: x&amp;lt;5, [1,4,6,4,1]) --&amp;gt; 1 4
+    for x in iterable:
+        if predicate(x):
+            yield x
+        else:
+            break
+
+使用
+
+from itertools import *
+
+def should_take(x):
+    print &#39;Testing:&#39;, x
+    return (x&amp;lt;2)
+
+for i in takewhile(should_take, [ -1, 0, 1, 2, 3, 4, 1, -2 ]):
+    print &#39;Yielding:&#39;, i
+
+Testing: -1
+Yielding: -1
+Testing: 0
+Yielding: 0
+Testing: 1
+Yielding: 1
+Testing: 2
+
+itertools.izip(*iterables)
+
+返回一个合并了多个迭代器为一个元组的迭代器. 它类似于内置函数zip(), 只是它返回的是一个迭代器而不是一个列表
+
+创建一个迭代器，生成元组(i1, i2, ... iN)，其中i1，i2 ... iN 分别来自迭代器iter1，iter2 ... iterN，只要提供的某个迭代器不再生成值，迭代就会停止，此函数生成的值与内置的zip()函数相同。
+
+izip(iter1, iter2, ... iterN):
+返回:(it1[0],it2 [0], it3[0], ..), (it1[1], it2[1], it3[1], ..)...
+
+def izip(*iterables):
+    # izip(&#39;ABCD&#39;, &#39;xy&#39;) --&amp;gt; Ax By
+    iterators = map(iter, iterables)
+    while iterators:
+        yield tuple(map(next, iterators))
+
+使用
+
+from itertools import *
+
+for i in izip([1, 2, 3], [&#39;a&#39;, &#39;b&#39;, &#39;c&#39;]):
+    print i
+(1, &#39;a&#39;)
+(2, &#39;b&#39;)
+(3, &#39;c&#39;)
+
+itertools.izip_longest(*iterables[, fillvalue])
+
+与izip()相同，但是迭代过程会持续到所有输入迭代变量iter1,iter2等都耗尽为止，如果没有使用fillvalue关键字参数指定不同的值，则使用None来填充已经使用的迭代变量的值。
+
+class ZipExhausted(Exception):
+    pass
+
+def izip_longest(*args, **kwds):
+    # izip_longest(&#39;ABCD&#39;, &#39;xy&#39;, fillvalue=&#39;-&#39;) --&amp;gt; Ax By C- D-
+    fillvalue = kwds.get(&#39;fillvalue&#39;)
+    counter = [len(args) - 1]
+    def sentinel():
+        if not counter[0]:
+            raise ZipExhausted
+        counter[0] -= 1
+        yield fillvalue
+    fillers = repeat(fillvalue)
+    iterators = [chain(it, sentinel(), fillers) for it in args]
+    try:
+        while iterators:
+            yield tuple(map(next, iterators))
+    except ZipExhausted:
+        pass
+
+第三部分
+itertools.product(*iterables[, repeat])
+
+笛卡尔积
+
+创建一个迭代器，生成表示item1，item2等中的项目的笛卡尔积的元组，repeat是一个关键字参数，指定重复生成序列的次数。
+
+def product(*args, **kwds):
+    # product(&#39;ABCD&#39;, &#39;xy&#39;) --&amp;gt; Ax Ay Bx By Cx Cy Dx Dy
+    # product(range(2), repeat=3) --&amp;gt; 000 001 010 011 100 101 110 111
+    pools = map(tuple, args) * kwds.get(&#39;repeat&#39;, 1)
+    result = [[]]
+    for pool in pools:
+        result = [x+[y] for x in result for y in pool]
+    for prod in result:
+        yield tuple(prod)
+
+例子
+
+import itertools
+a = (1, 2, 3)
+b = (&#39;A&#39;, &#39;B&#39;, &#39;C&#39;)
+c = itertools.product(a,b)
+for elem in c:
+    print elem
+
+(1, &#39;A&#39;)
+(1, &#39;B&#39;)
+(1, &#39;C&#39;)
+(2, &#39;A&#39;)
+(2, &#39;B&#39;)
+(2, &#39;C&#39;)
+(3, &#39;A&#39;)
+(3, &#39;B&#39;)
+(3, &#39;C&#39;)
+
+itertools.permutations(iterable[, r])
+
+排列
+
+创建一个迭代器，返回iterable中所有长度为r的项目序列，如果省略了r，那么序列的长度与iterable中的项目数量相同： 返回p中任意取r个元素做排列的元组的迭代器
+
+def permutations(iterable, r=None):
+    # permutations(&#39;ABCD&#39;, 2) --&amp;gt; AB AC AD BA BC BD CA CB CD DA DB DC
+    # permutations(range(3)) --&amp;gt; 012 021 102 120 201 210
+    pool = tuple(iterable)
+    n = len(pool)
+    r = n if r is None else r
+    if r &amp;gt; n:
+        return
+    indices = range(n)
+    cycles = range(n, n-r, -1)
+    yield tuple(pool[i] for i in indices[:r])
+    while n:
+        for i in reversed(range(r)):
+            cycles[i] -= 1
+            if cycles[i] == 0:
+                indices[i:] = indices[i+1:] + indices[i:i+1]
+                cycles[i] = n - i
+            else:
+                j = cycles[i]
+                indices[i], indices[-j] = indices[-j], indices[i]
+                yield tuple(pool[i] for i in indices[:r])
+                break
+        else:
+            return
+也可以用product实现
+
+def permutations(iterable, r=None):
+    pool = tuple(iterable)
+    n = len(pool)
+    r = n if r is None else r
+    for indices in product(range(n), repeat=r):
+        if len(set(indices)) == r:
+            yield tuple(pool[i] for i in indices)
+
+itertools.combinations(iterable, r)
+
+创建一个迭代器，返回iterable中所有长度为r的子序列，返回的子序列中的项按输入iterable中的顺序排序 (不带重复)
+
+def combinations(iterable, r):
+    # combinations(&#39;ABCD&#39;, 2) --&amp;gt; AB AC AD BC BD CD
+    # combinations(range(4), 3) --&amp;gt; 012 013 023 123
+    pool = tuple(iterable)
+    n = len(pool)
+    if r &amp;gt; n:
+        return
+    indices = range(r)
+    yield tuple(pool[i] for i in indices)
+    while True:
+        for i in reversed(range(r)):
+            if indices[i] != i + n - r:
+                break
+        else:
+            return
+        indices[i] += 1
+        for j in range(i+1, r):
+            indices[j] = indices[j-1] + 1
+        yield tuple(pool[i] for i in indices)
+
+#或者
+def combinations(iterable, r):
+    pool = tuple(iterable)
+    n = len(pool)
+    for indices in permutations(range(n), r):
+        if sorted(indices) == list(indices):
+            yield tuple(pool[i] for i in indices)
+
+itertools.combinations_with_replacement(iterable, r)
+
+创建一个迭代器，返回iterable中所有长度为r的子序列，返回的子序列中的项按输入iterable中的顺序排序 (带重复)
+
+def combinations_with_replacement(iterable, r):
+    # combinations_with_replacement(&#39;ABC&#39;, 2) --&amp;gt; AA AB AC BB BC CC
+    pool = tuple(iterable)
+    n = len(pool)
+    if not n and r:
+        return
+    indices = [0] * r
+    yield tuple(pool[i] for i in indices)
+    while True:
+        for i in reversed(range(r)):
+            if indices[i] != n - 1:
+                break
+        else:
+            return
+        indices[i:] = [indices[i] + 1] * (r - i)
+        yield tuple(pool[i] for i in indices)
+或者
+def combinations_with_replacement(iterable, r):
+    pool = tuple(iterable)
+    n = len(pool)
+    for indices in product(range(n), repeat=r):
+        if sorted(indices) == list(indices):
+            yield tuple(pool[i] for i in indices)
+
+第四部分
+扩展
+
+使用现有扩展功能
+
+def take(n, iterable):
+    &amp;quot;Return first n items of the iterable as a list&amp;quot;
+    return list(islice(iterable, n))
+
+def tabulate(function, start=0):
+    &amp;quot;Return function(0), function(1), ...&amp;quot;
+    return imap(function, count(start))
+
+def consume(iterator, n):
+    &amp;quot;Advance the iterator n-steps ahead. If n is none, consume entirely.&amp;quot;
+    # Use functions that consume iterators at C speed.
+    if n is None:
+        # feed the entire iterator into a zero-length deque
+        collections.deque(iterator, maxlen=0)
+    else:
+        # advance to the empty slice starting at position n
+        next(islice(iterator, n, n), None)
+
+def nth(iterable, n, default=None):
+    &amp;quot;Returns the nth item or a default value&amp;quot;
+    return next(islice(iterable, n, None), default)
+
+def quantify(iterable, pred=bool):
+    &amp;quot;Count how many times the predicate is true&amp;quot;
+    return sum(imap(pred, iterable))
+
+def padnone(iterable):
+    &amp;quot;&amp;quot;&amp;quot;Returns the sequence elements and then returns None indefinitely.
+
+    Useful for emulating the behavior of the built-in map() function.
+    &amp;quot;&amp;quot;&amp;quot;
+    return chain(iterable, repeat(None))
+
+def ncycles(iterable, n):
+    &amp;quot;Returns the sequence elements n times&amp;quot;
+    return chain.from_iterable(repeat(tuple(iterable), n))
+
+def dotproduct(vec1, vec2):
+    return sum(imap(operator.mul, vec1, vec2))
+
+def flatten(listOfLists):
+    &amp;quot;Flatten one level of nesting&amp;quot;
+    return chain.from_iterable(listOfLists)
+
+def repeatfunc(func, times=None, *args):
+    &amp;quot;&amp;quot;&amp;quot;Repeat calls to func with specified arguments.
+
+    Example:  repeatfunc(random.random)
+    &amp;quot;&amp;quot;&amp;quot;
+    if times is None:
+        return starmap(func, repeat(args))
+    return starmap(func, repeat(args, times))
+
+def pairwise(iterable):
+    &amp;quot;s -&amp;gt; (s0,s1), (s1,s2), (s2, s3), ...&amp;quot;
+    a, b = tee(iterable)
+    next(b, None)
+    return izip(a, b)
+
+def grouper(iterable, n, fillvalue=None):
+    &amp;quot;Collect data into fixed-length chunks or blocks&amp;quot;
+    # grouper(&#39;ABCDEFG&#39;, 3, &#39;x&#39;) --&amp;gt; ABC DEF Gxx
+    args = [iter(iterable)] * n
+    return izip_longest(fillvalue=fillvalue, *args)
+
+def roundrobin(*iterables):
+    &amp;quot;roundrobin(&#39;ABC&#39;, &#39;D&#39;, &#39;EF&#39;) --&amp;gt; A D E B F C&amp;quot;
+    # Recipe credited to George Sakkis
+    pending = len(iterables)
+    nexts = cycle(iter(it).next for it in iterables)
+    while pending:
+        try:
+            for next in nexts:
+                yield next()
+        except StopIteration:
+            pending -= 1
+            nexts = cycle(islice(nexts, pending))
+
+def powerset(iterable):
+    &amp;quot;powerset([1,2,3]) --&amp;gt; () (1,) (2,) (3,) (1,2) (1,3) (2,3) (1,2,3)&amp;quot;
+    s = list(iterable)
+    return chain.from_iterable(combinations(s, r) for r in range(len(s)+1))
+
+def unique_everseen(iterable, key=None):
+    &amp;quot;List unique elements, preserving order. Remember all elements ever seen.&amp;quot;
+    # unique_everseen(&#39;AAAABBBCCDAABBB&#39;) --&amp;gt; A B C D
+    # unique_everseen(&#39;ABBCcAD&#39;, str.lower) --&amp;gt; A B C D
+    seen = set()
+    seen_add = seen.add
+    if key is None:
+        for element in ifilterfalse(seen.__contains__, iterable):
+            seen_add(element)
+            yield element
+    else:
+        for element in iterable:
+            k = key(element)
+            if k not in seen:
+                seen_add(k)
+                yield element
+
+def unique_justseen(iterable, key=None):
+    &amp;quot;List unique elements, preserving order. Remember only the element just seen.&amp;quot;
+    # unique_justseen(&#39;AAAABBBCCDAABBB&#39;) --&amp;gt; A B C D A B
+    # unique_justseen(&#39;ABBCcAD&#39;, str.lower) --&amp;gt; A B C A D
+    return imap(next, imap(itemgetter(1), groupby(iterable, key)))
+
+def iter_except(func, exception, first=None):
+    &amp;quot;&amp;quot;&amp;quot; Call a function repeatedly until an exception is raised.
+
+    Converts a call-until-exception interface to an iterator interface.
+    Like __builtin__.iter(func, sentinel) but uses an exception instead
+    of a sentinel to end the loop.
+
+    Examples:
+        bsddbiter = iter_except(db.next, bsddb.error, db.first)
+        heapiter = iter_except(functools.partial(heappop, h), IndexError)
+        dictiter = iter_except(d.popitem, KeyError)
+        dequeiter = iter_except(d.popleft, IndexError)
+        queueiter = iter_except(q.get_nowait, Queue.Empty)
+        setiter = iter_except(s.pop, KeyError)
+
+    &amp;quot;&amp;quot;&amp;quot;
+    try:
+        if first is not None:
+            yield first()
+        while 1:
+            yield func()
+    except exception:
+        pass
+
+def random_product(*args, **kwds):
+    &amp;quot;Random selection from itertools.product(*args, **kwds)&amp;quot;
+    pools = map(tuple, args) * kwds.get(&#39;repeat&#39;, 1)
+    return tuple(random.choice(pool) for pool in pools)
+
+def random_permutation(iterable, r=None):
+    &amp;quot;Random selection from itertools.permutations(iterable, r)&amp;quot;
+    pool = tuple(iterable)
+    r = len(pool) if r is None else r
+    return tuple(random.sample(pool, r))
+
+def random_combination(iterable, r):
+    &amp;quot;Random selection from itertools.combinations(iterable, r)&amp;quot;
+    pool = tuple(iterable)
+    n = len(pool)
+    indices = sorted(random.sample(xrange(n), r))
+    return tuple(pool[i] for i in indices)
+
+def random_combination_with_replacement(iterable, r):
+    &amp;quot;Random selection from itertools.combinations_with_replacement(iterable, r)&amp;quot;
+    pool = tuple(iterable)
+    n = len(pool)
+    indices = sorted(random.randrange(n) for i in xrange(r))
+    return tuple(pool[i] for i in indices)
+
+def tee_lookahead(t, i):
+    &amp;quot;&amp;quot;&amp;quot;Inspect the i-th upcomping value from a tee object
+    while leaving the tee object at its current position.
+
+    Raise an IndexError if the underlying iterator doesn&#39;t
+    have enough values.
+
+    &amp;quot;&amp;quot;&amp;quot;
+    for value in islice(t.__copy__(), i, None):
+        return value
+    raise IndexError(i)
+
+自定义扩展
+
+将序列按大小切分,更好的性能
+
+from itertools import chain, islice
+def chunks(iterable, size, format=iter):
+    it = iter(iterable)
+    while True:
+        yield format(chain((it.next(),), islice(it, size - 1)))
+
+&amp;gt;&amp;gt;&amp;gt; l = [&amp;quot;a&amp;quot;, &amp;quot;b&amp;quot;, &amp;quot;c&amp;quot;, &amp;quot;d&amp;quot;, &amp;quot;e&amp;quot;, &amp;quot;f&amp;quot;, &amp;quot;g&amp;quot;]
+&amp;gt;&amp;gt;&amp;gt; for chunk in chunks(l, 3, tuple):...
+        print chunk...
+(&amp;quot;a&amp;quot;, &amp;quot;b&amp;quot;, &amp;quot;c&amp;quot;)
+(&amp;quot;d&amp;quot;, &amp;quot;e&amp;quot;, &amp;quot;f&amp;quot;)
+(&amp;quot;g&amp;quot;,)
+
+补充
+
+迭代工具，你最好的朋友
+
+迭代工具模块包含了操做指定的函数用于操作迭代器。想复制一个迭代器出来？链接两个迭代器？以one liner（这里的one-liner只需一行代码能搞定的任务)用内嵌的列表组合一组值？不使用list创建Map/Zip？···，你要做的就是 import itertools，举个例子吧：
+
+四匹马赛跑到达终点排名的所有可能性：
+
+&amp;gt;&amp;gt;&amp;gt; horses = [1, 2, 3, 4]
+&amp;gt;&amp;gt;&amp;gt; races = itertools.permutations(horses)
+&amp;gt;&amp;gt;&amp;gt; print(races)
+&amp;lt;itertools.permutations object at 0xb754f1dc]]&amp;gt;
+&amp;gt;&amp;gt;&amp;gt; print(list(itertools.permutations(horses)))
+[(1, 2, 3, 4),
+ (1, 2, 4, 3),
+ (1, 3, 2, 4),
+ (1, 3, 4, 2),
+ (1, 4, 2, 3),
+ (1, 4, 3, 2),
+ (2, 1, 3, 4),
+ (2, 1, 4, 3),
+ (2, 3, 1, 4),
+ (2, 3, 4, 1),
+ (2, 4, 1, 3),
+ (2, 4, 3, 1),
+ (3, 1, 2, 4),
+ (3, 1, 4, 2),
+ (3, 2, 1, 4),
+ (3, 2, 4, 1),
+ (3, 4, 1, 2),
+ (3, 4, 2, 1),
+ (4, 1, 2, 3),
+ (4, 1, 3, 2),
+ (4, 2, 1, 3),
+ (4, 2, 3, 1),
+ (4, 3, 1, 2),
+ (4, 3, 2, 1)]
+
+理解迭代的内部机制： 迭代(iteration）就是对可迭代对象（iterables，实现了__iter__()方法）和迭代器（iterators，实现了__next__()方法）的一个操作过程。可迭代对象是任何可返回一个迭代器的对象，迭代器是应用在迭代对象中迭代的对象，换一种方式说的话就是：iterable对象的__iter__()方法可以返回iterator对象，iterator通过调用next()方法获取其中的每一个值(译者注)，读者可以结合Java API中的 Iterable接口和Iterator接口进行类比。
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>python笔记之Cmd模块</title>
+            <link>http://kooksee.github.io/blog/python%E7%AC%94%E8%AE%B0%E4%B9%8BCmd%E6%A8%A1%E5%9D%97/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/python%E7%AC%94%E8%AE%B0%E4%B9%8BCmd%E6%A8%A1%E5%9D%97/</guid>
+            <description>&lt;p&gt;[TOC]&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Cmd类型提供了一个创建命令行解析器的框架,默认情况下，它使用readline来进行交互式操作、命令行编辑和命令完成.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;pre&gt;&lt;code&gt;    使用cmd创建的命令行解释器循环读取输入的所有行并且解析它们，然后发送命令给一个合适的命令处理器。输入行为解析成两个部分：命令和参数。如果用户输入cmd param，它解释成命令cmd和参数param，然后使用param作为参数调用do_cmd方法。如果do_cmd命令处理器返回真，那么程序会干净的退出，否则会继续等待下一个命令的输入。
+    简单的来说，可以继承Cmd来创建命令行界面，然后对所有想处理的命令command执行do_command方法。这个方法会接受命令行的其余部分作为自己的唯一参数。比如，如果在命令行中输入：
+    say hello
+    do_say方法会连同作为唯一参数的字符串&amp;quot;hello&amp;quot;一起调用。
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##Cmd一些常用的方法
+        cmdloop()：类似与Tkinter的mainloop，运行Cmd解析器；
+        onecmd(str)：读取输入，并进行处理，通常不需要重载该函数，而是使用更加具体的do&lt;em&gt;command来执行特定的命名；
+        emptyline()：当输入空行时调用该
+        default(line)：当无法识别输入的command时调用该方法；
+        completedefault(text,line,begidx,endidx):如果不存在针对的complete&lt;/em&gt;*()方法，那么会调用该函数
+        precmd(line)：命令line解析之前被调用该方法；
+        postcmd(stop，line)：命令line解析之后被调用该方法；
+        preloop()：cmdloop()运行之前调用该方法；
+        postloop()：cmdloop()退出之后调用该方法；&lt;/p&gt;
+
+&lt;p&gt;###例子&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import cmd
+import string, sys
+class CLI(cmd.Cmd):
+	def __init__(self):
+		cmd.Cmd.__init__(self)
+		self.prompt = &#39;&amp;gt; &#39;
+	def do_hello(self, arg):
+		print &amp;quot;hello again&amp;quot;, arg, &amp;quot;!&amp;quot;
+	def help_hello(self):
+		print &amp;quot;syntax: hello [message]&amp;quot;,
+		print &amp;quot;-- prints a hello message&amp;quot;
+	def do_quit(self, arg):
+		sys.exit(1)
+	def help_quit(self):
+		print &amp;quot;syntax: quit&amp;quot;,
+		print &amp;quot;-- terminates the application&amp;quot;
+
+	# shortcuts
+	do_q = do_quit
+
+# try it out
+cli = CLI()
+cli.cmdloop()
+
+&amp;gt;&amp;gt;&amp;gt; help
+Documented commands (type help &amp;lt;topic&amp;gt;):
+========================================
+hello
+quit
+Undocumented commands:
+======================
+help
+q
+&amp;gt;&amp;gt;&amp;gt; hello world
+hello again world !
+&amp;gt;&amp;gt;&amp;gt; q
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;###打印目录文件或目录的例子&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import cmd
+import os
+import sys
+
+classCLI(cmd.Cmd):
+    def __init__(self):
+        cmd.Cmd.__init__(self)
+        self.prompt = &amp;quot;&amp;gt; &amp;quot;    # define command prompt
+
+    def do_dir(self, arg):
+        if not arg:
+            self.help_dir()
+        elif os.path.exists(arg):
+            print&amp;quot;\n&amp;quot;.join(os.listdir(arg))
+        else:
+            print &amp;quot;No such pathexists.&amp;quot;
+
+    def help_dir(self):
+        print &amp;quot;syntax: dir path -- displaya list of files and directories&amp;quot;
+
+    def do_quit(self, arg):
+        return True
+
+    def help_quit(self):
+        print &amp;quot;syntax: quit -- terminatesthe application&amp;quot;
+
+    # define the shortcuts
+    do_q = do_quit
+
+if __name__ ==&amp;quot;__main__&amp;quot;:
+    cli = CLI()
+    cli.cmdloop()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;     上面的代码中self.prompt用于修改命令行的提示符。
+说明：在cmd.Cmd派生类中，以do_*开头为命令，以help_*开头的为帮助，成员函数的__doc__可以用作为帮助说明。
+
+     可以使用self.intro = “Welcomemessage”来输出欢迎信息。
+当打印帮助的时候，使用doc_header、misc_header、undoc_header可以用于格式化输出。
+
+     通过按下TAB可以实现自动完成，多个选项的情况下按下2个TAB键可以实现列出所有选项，自动完成的方法添加前缀complete_。
+defcomplete_dir(self, text, line, begidx, endidx):
+    if not text:
+        completions = [&amp;quot;aaa&amp;quot;,&amp;quot;bbb&amp;quot;, &amp;quot;ccc&amp;quot;]
+    else:
+        completions = [&amp;quot;ddd&amp;quot;,&amp;quot;eee&amp;quot;,]
+    #print completions
+    return completions
+
+注意：自动补全只在Linux下有效。
+
+    在cmd中几种可以重载的方法，可以用于显示动作或者改变基类的行为。一般而言由于preloop()和postloop()的存在，不需要也没有必要重载cmdloop()方法。每次迭代cmdloop()和onecmd()来分发命令给处理器时，实际输入行为使用parseline()来解析，创建一个元组包含命令和参数。如果改行为空会调用emptyline()方法。默认实现运行以前的命令，如果改行包含一个命令，首先调用precmd()，然后查找调用处理器的方法，不管有没有找到命令都会调用postcmd（）。
+
+    为了补充标准命令处理，cmd包含两个特殊命令的前缀，问号（？）相当于内置的帮助命令，感叹号（！）会映射到do_shell()，以运行其它的命令，感叹号需要有do_shell方法才会启用，需要自行添加。
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;def do_shell(self, arg):
+    &amp;quot;run a shell commad&amp;quot;
+    print &amp;quot;&amp;gt;&amp;quot;, arg
+    sub_cmd = subprocess.Popen(arg,shell=True, stdout=subprocess.PIPE)
+    print sub_cmd.communicate()[0]
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>python笔记之ZipFile模块</title>
+            <link>http://kooksee.github.io/blog/python%E7%AC%94%E8%AE%B0%E4%B9%8BZipFile%E6%A8%A1%E5%9D%97/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/python%E7%AC%94%E8%AE%B0%E4%B9%8BZipFile%E6%A8%A1%E5%9D%97/</guid>
+            <description>&lt;blockquote&gt;
+&lt;p&gt;zipfile模块用来做zip格式编码的压缩和解压缩的，zipfile里有两个非常重要的class, 分别是ZipFile和ZipInfo, 在绝大多数的情况下，我们只需要使用这两个class就可以了。ZipFile是主要的类，用来创建和读取zip文件而ZipInfo是存储的zip文件的每个文件的信息的。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;pre&gt;&lt;code&gt;比如要读取一个Python zipfile 模块，这里假设filename是一个文件的路径:
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import zipfile  
+z = zipfile.ZipFile(filename, &#39;r&#39;)  
+for i in z.infolist():  
+	print i.file_size, i.header_offset
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;    这里使用了z.infolist(), 它返回的就是压缩包内所有文件的信息，就是一个ZipInfo的列表。一个ZipInfo对象中包含了压缩包内一个文件的信息，其中比较常用的是 filename, file_size, header_offset, 分别为文件名，文件大小，文件数据在压缩包中的偏移。其实之前的z.namelist()就是读取的ZipInfo中的filename，组成一个 list返回的。
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;#从压缩包里解压缩出一个文件的方法是使用ZipFile的read方法
+import zipfile  
+z = zipfile.ZipFile(filename, &#39;r&#39;)  
+print z.read(z.namelist()[0])
+#这样就读取出z.namelist()中的第一个文件，并且输出到屏幕，当然也可以把它存储到文件。
+
+#下面是创建zip压缩包的方法，与读取的方法其实很类似的：
+import zipfile, os  
+z = zipfile.ZipFile(filename, &#39;w&#39;)
+# 注意这里的第二个参数是w，这里的filename是压缩包的名字
+
+#假设要把一个叫testdir中的文件全部添加到压缩包里（这里只添加一级子目录中的文件）
+if os.path.isdir(testdir):  
+     for d in os.listdir(testdir):  
+         z.write(testdir+os.sep+d)  
+         # close() 是必须调用的！  
+         z.close()
+#面的代码非常的简单。想想还有一个问题，如果我把一个test/111.txt 添加到压缩包里之后我希望在包里它放到test22/111.txt怎么办呢？
+#其实这个就是Python ZipFile模块的write方法中第二个参数的作用了。只需要这样调用：
+z.write(&amp;quot;test/111.txt&amp;quot;, &amp;quot;test22/111.txt&amp;quot;)  
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>python笔记之bisect模块</title>
+            <link>http://kooksee.github.io/blog/python%E7%AC%94%E8%AE%B0%E4%B9%8Bbisect%E6%A8%A1%E5%9D%97/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/python%E7%AC%94%E8%AE%B0%E4%B9%8Bbisect%E6%A8%A1%E5%9D%97/</guid>
+            <description>&lt;blockquote&gt;
+&lt;p&gt;当你决定使用二分搜索时，这个模块会给你带来很大的帮助。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;###例子&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import bisect
+L = [1,3,3,6,8,12,15]
+x = 3
+
+#在L中查找x，x存在时返回x左侧的位置，x不存在返回应该插入的位置..这是3存在于列表中，返回左侧位置１
+x_insert_point = bisect.bisect_left(L,x)
+print x_insert_point #1
+
+#在L中查找x，x存在时返回x右侧的位置，x不存在返回应该插入的位置..这是3存在于列表中，返回右侧位置３
+x_insert_point = bisect.bisect_right(L,x)
+print x_insert_point #3
+
+#将x插入到列表L中，x存在时插入在左侧
+x_insort_left = bisect.insort_left(L,x)
+print L #[1,3,3,3,6,8,12,15]
+
+#将x插入到列表L中，x存在时插入在右侧
+x_insort_rigth = bisect.insort_right(L,x)
+print L #[1, 3, 3, 3, 3, 6, 8, 12, 15]
+
+#实际使用中bisect.insort_left与 bisect.insort_right　差别不大，作用基本相同
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>python笔记之hashlib模块</title>
+            <link>http://kooksee.github.io/blog/%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/</guid>
+            <description>&lt;blockquote&gt;
+&lt;p&gt;涉及加密服务：14. Cryptographic Services其中 hashlib是涉及安全散列和消息摘要，提供多个不同的加密算法借口，如SHA1、SHA224、SHA256、SHA384、SHA512、MD5等。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;##快速入门&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import hashlib
+m = hashlib.md5()   #创建hash对象，md5:(message-Digest Algorithm 5)消息摘要算法,得出一个128位的密文
+print m             #&amp;lt;md5 HASH object @ 000000000254ADF0&amp;gt;
+m.update(&#39;BeginMan&#39;)#更新哈希对象以字符串参数
+print m.digest()    #返回摘要，作为二进制数据字符串值
+print m.hexdigest() #返回十六进制数字字符串    0b28251e684dfbd9102f8b6f0281c0c5
+print m.digest_size #16
+print m.block_size  #64
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;###使用new()创建指定加密模式的hash对象&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;new(name, string=&#39;&#39;)
+     &amp;quot;&amp;quot;&amp;quot;
+     Return a new hashing object using the named algorithm;
+     optionally initialized with a string.
+     &amp;quot;&amp;quot;&amp;quot;
+h = hashlib.new(&#39;md5&#39;)
+print h     #&amp;lt;md5 HASH object @ 000000000260BDB0&amp;gt;
+h2 = hashlib.new(&#39;ripemd160&#39;,&#39;what&#39;)
+print h2    #&amp;lt;ripemd160 HASH object @ 000000000271B9F0&amp;gt;
+h.update(&#39;beginman&#39;)
+print h.hexdigest() #666fc5baa93a7fb207c5bfff03b67732
+#等效
+s = hashlib.md5()
+s.update(&#39;beginman&#39;)
+print s.hexdigest() #666fc5baa93a7fb207c5bfff03b67732
+print h2.hexdigest()    #9c1185a5c5e9fc54612808977ee8f548b2258d31
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##常用属性&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;print hashlib.algorithms    #(&#39;md5&#39;, &#39;sha1&#39;, &#39;sha224&#39;, &#39;sha256&#39;, &#39;sha384&#39;, &#39;sha512&#39;)    列出所有加密算法
+print h.digest_size         #16 产生的散列的字节大小。
+print h.block_size          #64 The internal block size of the hash algorithm in bytes.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##常用方法&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;hash.update(arg)
+更新哈希对象以字符串参数,如果同一个hash对象重复调用该方法，则m.update(a); m.update(b) is equivalent to m.update(a+b).
+
+hash.digest()
+返回摘要，作为二进制数据字符串值,
+
+hash.hexdigest()
+返回摘要，作为十六进制数据字符串值,
+
+hash.copy()
+复制
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##应用实例
+        注册、登录、文件上传、相册加密&amp;hellip;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import datetime
+KEY_VALUE = &#39;/BeginMan/&#39;
+now = datetime.datetime.now()
+m = hashlib.md5()
+str = &#39;%s%s&#39; %(KEY_VALUE,now.strftime(&amp;quot;%Y%m%d&amp;quot;))
+m.update(str)
+value = m.hexdigest()
+print value #8db42d3e90b41105ed061b8347a7c850
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>python笔记之itertools模块</title>
+            <link>http://kooksee.github.io/blog/python%E7%AC%94%E8%AE%B0%E4%B9%8Bitertools%E6%A8%A1%E5%9D%97/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/python%E7%AC%94%E8%AE%B0%E4%B9%8Bitertools%E6%A8%A1%E5%9D%97/</guid>
+            <description>&lt;blockquote&gt;
+&lt;p&gt;itertools模块包含创建有效迭代器的函数，可以用各种方式对数据进行循环操作，此模块中的所有函数返回的迭代器都可以与for循环语句以及其他包含迭代器（如生成器和生成器表达式）的函数联合使用。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;##chain(iter1, iter2, &amp;hellip;, iterN)
+        给出一组迭代器(iter1, iter2, &amp;hellip;, iterN)，此函数创建一个新迭代器来将所有的迭代器链接起来，返回的迭代器从iter1开始生成项，知道iter1被用完，然后从iter2生成项，这一过程会持续到iterN中所有的项都被用完。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;from itertools import chain
+test = chain(&#39;AB&#39;, &#39;CDE&#39;, &#39;F&#39;)
+for el in test:
+  print el
+A
+B
+C
+D
+E
+F
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;###chain.from_iterable(iterables)
+        一个备用链构造函数，其中的iterables是一个迭代变量，生成迭代序列，此操作的结果与以下生成器代码片段生成的结果相同&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;&amp;gt;&amp;gt;&amp;gt; def f(iterables):
+  for x in iterables:
+    for y in x:
+      yield y
+
+&amp;gt;&amp;gt;&amp;gt; test = f(&#39;ABCDEF&#39;)
+&amp;gt;&amp;gt;&amp;gt; test.next()
+&#39;A&#39;
+
+&amp;gt;&amp;gt;&amp;gt; from itertools import chain
+&amp;gt;&amp;gt;&amp;gt; test = chain.from_iterable(&#39;ABCDEF&#39;)
+&amp;gt;&amp;gt;&amp;gt; test.next()
+&#39;A&#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##combinations(iterable, r)
+        创建一个迭代器，返回iterable中所有长度为r的子序列，返回的子序列中的项按输入iterable中的顺序排序&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;&amp;gt;&amp;gt;&amp;gt; from itertools import combinations
+&amp;gt;&amp;gt;&amp;gt; test = combinations([1,2,3,4], 2)
+&amp;gt;&amp;gt;&amp;gt; for el in test:
+  print el
+
+(1, 2)
+(1, 3)
+(1, 4)
+(2, 3)
+(2, 4)
+(3, 4)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##count([n])
+        创建一个迭代器，生成从n开始的连续整数，如果忽略n，则从0开始计算（注意：此迭代器不支持长整数），如果超出了sys.maxint，计数器将溢出并继续从-sys.maxint-1开始计算。&lt;/p&gt;
+
+&lt;p&gt;##cycle(iterable)
+        创建一个迭代器，对iterable中的元素反复执行循环操作，内部会生成iterable中的元素的一个副本，此副本用于返回循环中的重复项。&lt;/p&gt;
+
+&lt;p&gt;##dropwhile(predicate, iterable)
+        创建一个迭代器，只要函数predicate(item)为True，就丢弃iterable中的项，如果predicate返回False，就会生成iterable中的项和所有后续项。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;def dropwhile(predicate, iterable):
+  # dropwhile(lambda x: x&amp;lt;5, [1,4,6,4,1]) --&amp;gt; 6 4 1
+  iterable = iter(iterable)
+  for x in iterable:
+    if not predicate(x):
+      yield x
+      break
+  for x in iterable:
+    yield x
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##groupby(iterable [,key])
+        创建一个迭代器，对iterable生成的连续项进行分组，在分组过程中会查找重复项。如果iterable在多次连续迭代中生成了同一项，则会定义一个组，如果将此函数应用一个分类列表，那么分组将定义该列表中的所有唯一项，key（如果已提供）是一个函数，应用于每一项，如果此函数存在返回值，该值将用于后续项而不是该项本身进行比较，此函数返回的迭代器生成元素(key, group)，其中key是分组的键值，group是迭代器，生成组成该组的所有项。&lt;/p&gt;
+
+&lt;p&gt;##ifilter(predicate, iterable)
+        创建一个迭代器，仅生成iterable中predicate(item)为True的项，如果predicate为None，将返回iterable中所有计算为True的项。
+    ifilter(lambda x: x%2, range(10)) &amp;ndash;&amp;gt; 1 3 5 7 9&lt;/p&gt;
+
+&lt;p&gt;##ifilterfalse(predicate, iterable)
+        创建一个迭代器，仅生成iterable中predicate(item)为False的项，如果predicate为None，则返回iterable中所有计算为False的项。
+    ifilterfalse(lambda x: x%2, range(10)) &amp;ndash;&amp;gt; 0 2 4 6 8&lt;/p&gt;
+
+&lt;p&gt;##imap(function, iter1, iter2, iter3, &amp;hellip;, iterN)
+        创建一个迭代器，生成项function(i1, i2, &amp;hellip;, iN)，其中i1，i2&amp;hellip;iN分别来自迭代器iter1，iter2 &amp;hellip; iterN，如果function为None，则返回(i1, i2, &amp;hellip;, iN)形式的元组，只要提供的一个迭代器不再生成值，迭代就会停止。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;&amp;gt;&amp;gt;&amp;gt; from itertools import *
+&amp;gt;&amp;gt;&amp;gt; d = imap(pow, (2,3,10), (5,2,3))
+&amp;gt;&amp;gt;&amp;gt; for i in d: print i
+
+32
+9
+1000
+
+####
+&amp;gt;&amp;gt;&amp;gt; d = imap(pow, (2,3,10), (5,2))
+&amp;gt;&amp;gt;&amp;gt; for i in d: print i
+
+32
+9
+
+####
+&amp;gt;&amp;gt;&amp;gt; d = imap(None, (2,3,10), (5,2))
+&amp;gt;&amp;gt;&amp;gt; for i in d : print i
+
+(2, 5)
+(3, 2)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##islice(iterable, [start, ] stop [, step])
+        创建一个迭代器，生成项的方式类似于切片返回值： iterable[start : stop : step]，将跳过前start个项，迭代在stop所指定的位置停止，step指定用于跳过项的步幅。与切片不同，负值不会用于任何start，stop和step，如果省略了start，迭代将从0开始，如果省略了step，步幅将采用1.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-pythyon&#34;&gt;def islice(iterable, *args):
+   # islice(&#39;ABCDEFG&#39;, 2) --&amp;gt; A B
+   # islice(&#39;ABCDEFG&#39;, 2, 4) --&amp;gt; C D
+   # islice(&#39;ABCDEFG&#39;, 2, None) --&amp;gt; C D E F G
+   # islice(&#39;ABCDEFG&#39;, 0, None, 2) --&amp;gt; A C E G
+   s = slice(*args)
+   it = iter(xrange(s.start or 0, s.stop or sys.maxint, s.step or 1))
+   nexti = next(it)
+   for i, element in enumerate(iterable):
+     if i == nexti:
+       yield element
+       nexti = next(it)
+
+#If start is None, then iteration starts at zero. If step is None, then the step defaults to one.
+#Changed in version 2.5: accept None values for default start and step.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##izip(iter1, iter2, &amp;hellip; iterN)
+        创建一个迭代器，生成元组(i1, i2, &amp;hellip; iN)，其中i1，i2 &amp;hellip; iN 分别来自迭代器iter1，iter2 &amp;hellip; iterN，只要提供的某个迭代器不再生成值，迭代就会停止，此函数生成的值与内置的zip()函数相同。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;def izip(*iterables):
+   # izip(&#39;ABCD&#39;, &#39;xy&#39;) --&amp;gt; Ax By
+   iterables = map(iter, iterables)
+   while iterables:
+     yield tuple(map(next, iterables))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##izip_longest(iter1, iter2, &amp;hellip; iterN, [fillvalue=None])
+        与izip()相同，但是迭代过程会持续到所有输入迭代变量iter1,iter2等都耗尽为止，如果没有使用fillvalue关键字参数指定不同的值，则使用None来填充已经使用的迭代变量的值。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;def izip_longest(*args, **kwds):
+   # izip_longest(&#39;ABCD&#39;, &#39;xy&#39;, fillvalue=&#39;-&#39;) --&amp;gt; Ax By C- D-
+   fillvalue = kwds.get(&#39;fillvalue&#39;)
+   def sentinel(counter = ([fillvalue]*(len(args)-1)).pop):
+     yield counter()     # yields the fillvalue, or raises IndexError
+   fillers = repeat(fillvalue)
+   iters = [chain(it, sentinel(), fillers) for it in args]
+   try:
+     for tup in izip(*iters):
+       yield tup
+   except IndexError:
+     pass
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##permutations(iterable [,r])
+        创建一个迭代器，返回iterable中所有长度为r的项目序列，如果省略了r，那么序列的长度与iterable中的项目数量相同&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;def permutations(iterable, r=None):
+   # permutations(&#39;ABCD&#39;, 2) --&amp;gt; AB AC AD BA BC BD CA CB CD DA DB DC
+   # permutations(range(3)) --&amp;gt; 012 021 102 120 201 210
+   pool = tuple(iterable)
+   n = len(pool)
+   r = n if r is None else r
+   if r &amp;gt; n:
+     return
+   indices = range(n)
+   cycles = range(n, n-r, -1)
+   yield tuple(pool[i] for i in indices[:r])
+   while n:
+     for i in reversed(range(r)):
+       cycles[i] -= 1
+       if cycles[i] == 0:
+         indices[i:] = indices[i+1:] + indices[i:i+1]
+         cycles[i] = n - i
+       else:
+         j = cycles[i]
+         indices[i], indices[-j] = indices[-j], indices[i]
+         yield tuple(pool[i] for i in indices[:r])
+         break
+     else:
+       return
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##product(iter1, iter2, &amp;hellip; iterN, [repeat=1])
+        创建一个迭代器，生成表示item1，item2等中的项目的笛卡尔积的元组，repeat是一个关键字参数，指定重复生成序列的次数。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;def product(*args, **kwds):
+   # product(&#39;ABCD&#39;, &#39;xy&#39;) --&amp;gt; Ax Ay Bx By Cx Cy Dx Dy
+   # product(range(2), repeat=3) --&amp;gt; 000 001 010 011 100 101 110 111
+   pools = map(tuple, args) * kwds.get(&#39;repeat&#39;, 1)
+   result = [[]]
+   for pool in pools:
+     result = [x+[y] for x in result for y in pool]
+   for prod in result:
+     yield tuple(prod)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##repeat(object [,times])
+        创建一个迭代器，重复生成object，times（如果已提供）指定重复计数，如果未提供times，将无止尽返回该对象。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;def repeat(object, times=None):
+   # repeat(10, 3) --&amp;gt; 10 10 10
+   if times is None:
+     while True:
+       yield object
+   else:
+     for i in xrange(times):
+       yield object
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##starmap(func [, iterable])
+        创建一个迭代器，生成值func(*item),其中item来自iterable，只有当iterable生成的项适用于这种调用函数的方式时，此函数才有效。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;def starmap(function, iterable):
+   # starmap(pow, [(2,5), (3,2), (10,3)]) --&amp;gt; 32 9 1000
+   for args in iterable:
+     yield function(*args)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##takewhile(predicate [, iterable])
+        创建一个迭代器，生成iterable中predicate(item)为True的项，只要predicate计算为False，迭代就会立即停止。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;def takewhile(predicate, iterable):
+   # takewhile(lambda x: x&amp;lt;5, [1,4,6,4,1]) --&amp;gt; 1 4
+   for x in iterable:
+     if predicate(x):
+       yield x
+     else:
+       break
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##tee(iterable [, n])
+        从iterable创建n个独立的迭代器，创建的迭代器以n元组的形式返回，n的默认值为2，此函数适用于任何可迭代的对象，但是，为了克隆原始迭代器，生成的项会被缓存，并在所有新创建的迭代器中使用，一定要注意，不要在调用tee()之后使用原始迭代器iterable，否则缓存机制可能无法正确工作。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;def tee(iterable, n=2):
+  it = iter(iterable)
+  deques = [collections.deque() for i in range(n)]
+  def gen(mydeque):
+    while True:
+      if not mydeque:       # when the local deque is empty
+        newval = next(it)    # fetch a new value and
+        for d in deques:    # load it to all the deques
+          d.append(newval)
+      yield mydeque.popleft()
+  return tuple(gen(d) for d in deques)
+
+#Once tee() has made a split, the original iterable should not be used anywhere else; otherwise,
+#the iterable could get advanced without the tee objects being informed.
+#This itertool may require significant auxiliary storage (depending on how much temporary data needs to be stored).
+#In general, if one iterator uses most or all of the data before another iterator starts, it is faster to use list() instead of tee().
+
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>python笔记之subprocess模块</title>
+            <link>http://kooksee.github.io/blog/python%E7%AC%94%E8%AE%B0%E4%B9%8Bsubprocess%E6%A8%A1%E5%9D%97/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/python%E7%AC%94%E8%AE%B0%E4%B9%8Bsubprocess%E6%A8%A1%E5%9D%97/</guid>
+            <description>
+
+&lt;p&gt;[TOC]&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;从Python 2.4开始，Python引入subprocess模块来管理子进程，以取代一些旧模块的方法：如 os.system、os.spawn*、os.popen*、popen2.*、commands.*不但可以调用外部的命令作为子进程，而且可以连接到子进程的input/output/error管道，获取相关的返回信息&lt;/p&gt;
+
+&lt;p&gt;subprocess的目的就是启动一个新的进程并且与之通信。subprocess模块中只定义了一个类: Popen。可以使用Popen来创建进程，并与进程进行复杂的交互。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;##subprocess.Popen&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class subprocess.Popen(
+   args,
+   bufsize=0,
+   executable=None,
+   stdin=None,
+   stdout=None,
+   stderr=None,
+   preexec_fn=None,
+   close_fds=False,
+   shell=False,
+   cwd=None,
+   env=None,
+   universal_newlines=False,
+   startupinfo=None,
+   creationflags=0
+ )
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;    args：字符串或者列表，用于指定进程的可执行文件及其参数，如果是序列类型，第一个元素通常是可执行文件的路径。我们也可以显式的使用executeable参数来指定可执行文件的路径。
+
+    bufsize：0 无缓冲；1 行缓冲；其他正值 缓冲区大小；负值 采用默认系统缓冲（一般为全缓冲）
+    executable：args字符串或列表第一项表示程序名
+
+    stdin,stdout,stderr: None 没有任何重定向，继承父进程；可以是PIPE，文件描述符或文件对象；stderr：还可以设置为STDOUT
+
+    preexec_fn：钩子函数，在fork和exec之间执行（unix）
+    close_fds：unix下执行新进程前是否关闭0/1/2之外的文件
+    windows下继承或者不继承父进程的文件描述符
+
+    shell：true unix下相当于在args前面添加了&amp;quot;/bin/sh -c&amp;quot;,windows下相当于添加了&amp;quot;cmd /c&amp;quot;；程序将通过shell来执行
+
+    cwd：设置工作目录
+    env：设置环境变量，参数env是字典类型，用于指定子进程的环境变量。如果env = None，子进程的环境变量将从父进程中继承
+
+    universal_newlines：各种换行符统一处理成&#39;\n&#39;
+    startupinfo：windows下传递给CreateProcess的结构体
+    creationflags：windows下传给CREATE_NEW_CONSOLE创建自己的控制台窗口
+    subprocess.Popen([&amp;quot;gedit&amp;quot;,&amp;quot;abc.txt&amp;quot;])
+    subprocess.Popen(&amp;quot;gedit abc.txt&amp;quot;)
+    这两个之中，后者将不会工作。因为如果是一个字符串的话，必须是程序的路径才可以。(考虑unix的api函数 exec，接受的是字符串列表)
+    但是下面的可以工作
+        subprocess.Popen(&amp;quot;gedit abc.txt&amp;quot;, shell=True)
+    这是因为它相当于
+        subprocess.Popen([&amp;quot;/bin/sh&amp;quot;, &amp;quot;-c&amp;quot;, &amp;quot;gedit abc.txt&amp;quot;])
+    都成了sh的参数，就无所谓了
+
+   在Windows下，下面的却又是可以工作的
+   subprocess.Popen([&amp;quot;notepad.exe&amp;quot;, &amp;quot;abc.txt&amp;quot;])
+   subprocess.Popen(&amp;quot;notepad.exe abc.txt&amp;quot;)
+   这是由于windows下的api函数CreateProcess接受的是一个字符串。即使是列表形式的参数，也需要先合并成字符串再传递给api函数。
+   类似上面
+    subprocess.Popen(&amp;quot;notepad.exe abc.txt&amp;quot; shell=True)
+    subprocess.Popen(&amp;quot;cmd.exe /C &amp;quot;+&amp;quot;notepad.exe abc.txt&amp;quot; shell=True)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##call()
+         call() 执行程序，并等待它完成&lt;/p&gt;
+
+&lt;h2 id=&#34;check-call:39ed53c15fd98d97e6540d8f7aaa12fa&#34;&gt;check_call()&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;     check_call() 调用前面的call，如果返回值非零，则抛出异常
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;check-output:39ed53c15fd98d97e6540d8f7aaa12fa&#34;&gt;check_output()&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;     check_output() 执行程序，并返回其标准输出
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##poll()
+        检查子进程是否已经结束，设置并返回returncode属性&lt;/p&gt;
+
+&lt;p&gt;##wait()
+        等待子进程结束，设置并返回returncode属性
+##communicate()
+        communicate(input=None)参数是标准输入，返回标准输出和标准错误
+        与子进程进行交互。向stdin发送数据，或从stdout和stderr中读取数据。可选参数input指定发送到子进程的参数。Communicate()返回一个元组：(stdoutdata, stderrdata)。注意：如果希望通过进程的stdin向其发送数据，在创建Popen对象的时候，参数stdin必须被设置为PIPE。同样，如果希望从stdout和stderr获取数据，必须将stdout和stderr设置为PIPE。
+##send_signal()
+        send_signal(signal)向子进程发送信号
+##terminate()
+        停止(stop)子进程。在windows平台下，该方法将调用Windows API TerminateProcess（）来结束子进程。unix对应的SIGTERM信号
+##kill()
+        杀死子进程(unix对应的SIGKILL信号)，windows同上&lt;/p&gt;
+
+&lt;p&gt;##pid
+        获取子进程的进程ID。
+##returncode
+        获取进程的返回值。如果进程还没有结束，返回None，成功为0
+##subprocess.PIPE
+        　在创建Popen对象时，subprocess.PIPE可以初始化stdin, stdout或stderr参数。表示与子进程通信的标准流。
+##subprocess.STDOUT
+        创建Popen对象时，用于初始化stderr参数，表示将错误通过标准输出流输出。&lt;/p&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

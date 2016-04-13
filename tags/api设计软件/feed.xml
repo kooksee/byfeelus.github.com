@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Api设计软件 on 百里求一的博客</title>
+        <link>http://kooksee.github.io/tags/api%E8%AE%BE%E8%AE%A1%E8%BD%AF%E4%BB%B6/</link>
+        <language>zh-CN</language>
+        <author>CoderZh</author>
+        <rights>Copyright (c) 2015, CoderZh; all rights reserved.</rights>
+        <updated>Mon, 01 Jan 0001 00:00:00 UTC</updated>
+        
+        <item>
+            <title>API BluePrint</title>
+            <link>http://kooksee.github.io/blog/API%20BluePrint/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/API%20BluePrint/</guid>
+            <description>
+
+&lt;h2 id=&#34;语法规范:8c28c4a64c18fe5a5d079ebc23d5493e&#34;&gt;语法规范&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;首先, 可以查看官方提供的&lt;a href=&#34;https://github.com/apiaryio/api-blueprint/tree/master/examples&#34;&gt;例子&lt;/a&gt; . 一共也就 10 多个, 想深究的童鞋可以看一下。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;然后是很大概率用不太到的&lt;a href=&#34;https://github.com/apiaryio/api-blueprint/blob/master/API%20Blueprint%20Specification.md&#34;&gt;语法规范&lt;/a&gt;。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;https://github.com/apiaryio/mson&#34;&gt;MSON&lt;/a&gt;语法规范，基本用不太到。&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;配套工具:8c28c4a64c18fe5a5d079ebc23d5493e&#34;&gt;配套工具&lt;/h2&gt;
+
+&lt;h3 id=&#34;编辑器插件:8c28c4a64c18fe5a5d079ebc23d5493e&#34;&gt;编辑器插件&lt;/h3&gt;
+
+&lt;p&gt;对于不熟悉语法的童鞋，建议安装预览插件，相当于即时检查。从👇选一个顺手的吧！
+* &lt;a href=&#34;https://github.com/apiaryio/api-blueprint-sublime-plugin&#34;&gt;sublime&lt;/a&gt; 
+* &lt;a href=&#34;https://atom.io/packages/language-api-blueprint&#34;&gt;atom-language&lt;/a&gt; 
+* &lt;a href=&#34;https://atom.io/packages/api-blueprint-preview&#34;&gt;atom-preview&lt;/a&gt; 
+* &lt;a href=&#34;https://github.com/kylef/apiblueprint.vim&#34;&gt;vim&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;mock-服务:8c28c4a64c18fe5a5d079ebc23d5493e&#34;&gt;Mock 服务&lt;/h3&gt;
+
+&lt;p&gt;这个是用来根据大家撰写的api.md来生成对应假数据的，理论上大家不需要安装，想体验一把的可以试试。
+* &lt;a href=&#34;https://github.com/localmed/api-mock&#34;&gt;api-mock&lt;/a&gt;
+* &lt;a href=&#34;https://github.com/Aconex/drakov&#34;&gt;drakov&lt;/a&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;npm install -g api-mock
+api-mock api.md --port 3000
+
+npm install -g drakov
+drakov -f api.md -p 3000
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;静态-html-生成:8c28c4a64c18fe5a5d079ebc23d5493e&#34;&gt;静态 HTML 生成&lt;/h3&gt;
+
+&lt;p&gt;写了一堆 markdown 文档，到了该出成果的时候了。使用&lt;a href=&#34;https://github.com/danielgtaylor/aglio&#34;&gt;aglio&lt;/a&gt;来生成我们需要的html页面吧。&lt;/p&gt;
+
+&lt;p&gt;安装与使用都非常简单，首先要确保本地装有 node 环境。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;npm install -g aglio
+
+aglio -i api.md -o api.html
+
+此时你可以选择打开api.html预览。但这个命令更多是给服务端生成页面用的。不太常用。
+
+可以直接：
+aglio -i api.md -s
+然后通过 http://127.0.0.1:3000就可以预览所生成的文件啦，这个这个页面在修改文档时是可以同步刷新的😄
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;生成html文件时可能会报错，blueprint有点类似于yaml语法，需要严格遵循语法定义（主要是空格的数量及换行约定）。错误会包含行号，请注意排查。😢，这么重要的东西，是不是应该放到顶部？&lt;/p&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

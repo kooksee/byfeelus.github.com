@@ -1,0 +1,2095 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>爬虫 on 百里求一的博客</title>
+        <link>http://kooksee.github.io/tags/%E7%88%AC%E8%99%AB/</link>
+        <language>zh-CN</language>
+        <author>CoderZh</author>
+        <rights>Copyright (c) 2015, CoderZh; all rights reserved.</rights>
+        <updated>Mon, 01 Jan 0001 00:00:00 UTC</updated>
+        
+        <item>
+            <title>python Cmd实例之网络爬虫应用</title>
+            <link>http://kooksee.github.io/blog/python%20Cmd%E5%AE%9E%E4%BE%8B%E4%B9%8B%E7%BD%91%E7%BB%9C%E7%88%AC%E8%99%AB%E5%BA%94%E7%94%A8/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/python%20Cmd%E5%AE%9E%E4%BE%8B%E4%B9%8B%E7%BD%91%E7%BB%9C%E7%88%AC%E8%99%AB%E5%BA%94%E7%94%A8/</guid>
+            <description>&lt;blockquote&gt;
+&lt;p&gt;废话少说，直接上代码&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# encoding=utf-8
+import os
+import multiprocessing
+from cmd import Cmd
+import commands
+from mycrawler.dbUtil import DbUtil
+import signal
+
+
+# 下载监控
+def run_download_watch():
+    os.system(&amp;quot;gnome-terminal -x bash -c &#39;python ./download_process.py&#39; &amp;quot;)
+
+
+# 下载文件
+def run_download():
+    os.system(&amp;quot;gnome-terminal -x bash -c &#39;python ./download.py&#39; &amp;quot;)
+
+
+# 爬虫
+def run_spider(arg):
+    for i in range(len(arg)):
+        os.system(&amp;quot;gnome-terminal -x bash -c &#39;scrapy crawl %s&#39;&amp;quot; % arg[i])
+
+
+class CLI(Cmd):
+
+    def __init__(self):
+        Cmd.__init__(self)
+        # 设置命令提示符
+        self.prompt = &amp;quot;&amp;gt;&amp;gt;&amp;gt; &amp;quot;
+        self.intro = &#39;&#39;&#39;
+        欢迎进入爬虫控制台
+        输入0:查看帮助&#39;&#39;&#39;
+        self.doc_header = &#39;&#39;
+        self.undoc_header = &#39;&#39;
+        self.nohelp = &amp;quot;*** 命令%s没有帮助文档&amp;quot;
+
+    def do_download(self, arg):
+        &#39;&#39;&#39;    下载文件&#39;&#39;&#39;
+
+        p2 = multiprocessing.Process(target=run_download)
+        p2.start()
+
+    def do_0(self, arg):
+        self.do_help(1)
+
+    def do_help(self, arg):
+
+        def ddoc(ss, arg):
+            try:
+                doc = getattr(ss, &#39;do_&#39; + arg).__doc__
+                if doc:
+                    print arg + &amp;quot;:&amp;quot;
+                    print doc
+                    return
+            except AttributeError:
+                ss.stdout.write(&amp;quot;%s\n&amp;quot; % str(ss.nohelp % (arg,)))
+
+        cmds_doc = []
+        for name in self.get_names():
+            if name[:3] == &#39;do_&#39;:
+                cmds_doc.append(name[3:])
+
+        print self.doc_header
+        for c in cmds_doc:
+            ddoc(self, c)
+
+    # 添加新的爬虫连接
+    def do_add(self, args):
+        &amp;quot;&amp;quot;&amp;quot;    新增链接(厂商网址)到数据库中
+    输入格式为:add name abb;start_urls www.baidu.com www.baidu.com www.baidu.com
+    add是添加命令，后面的是参数。start_urls后面可以跟随多条数据，空格分开&amp;quot;&amp;quot;&amp;quot;
+
+        if not args:
+            print &amp;quot;输入内容为空，请查看帮助：help add&amp;quot;
+            return
+
+        print args
+        data = dict([(bb.split(&#39; &#39;)[0], len(bb.split(&#39; &#39;)[1:]) == 1 and bb.split(
+            &#39; &#39;)[1] or bb.split(&#39; &#39;)[1:]) for bb in args.split(&#39;;&#39;)])
+        print data
+        DbUtil().conn().collection(&#39;url_items&#39;).insert(data)
+
+    # 列出所有的爬虫
+    def do_list_spider(self, args):
+        &#39;&#39;&#39;     列出所有的爬虫&#39;&#39;&#39;
+
+        print commands.getoutput(&amp;quot;scrapy list&amp;quot;)
+
+    # 运行一个爬虫
+    def do_run_spider(self, arg):
+        &#39;&#39;&#39;     运行一个爬虫，例如run_spider abb&#39;&#39;&#39;
+
+        p3 = multiprocessing.Process(
+            target=run_spider, args=(arg,))
+        p3.start()
+        # os.system(&#39;scrapy crawl &#39; + arg)
+
+    def do_run(self, args):
+        &#39;&#39;&#39;    运行所有的程序&#39;&#39;&#39;
+
+        # 运行爬虫
+        self.do_run_all_spiders(1)
+
+        # 运行下载
+        p2 = multiprocessing.Process(target=run_download)
+        p2.start()
+
+        # 运行下载监控
+        p3 = multiprocessing.Process(target=run_download_watch)
+        p3.start()
+
+    # 运行所有的爬虫
+    def do_run_all_spiders(self, arg):
+        &#39;&#39;&#39;    运行所有的爬虫&#39;&#39;&#39;
+
+        s = cmd(&#39;scrapy list&#39;).value().split(&#39;\n&#39;)
+        if not s:
+            print &amp;quot;没有爬虫，请检验代码是否正确&amp;quot;
+            return
+
+        p = multiprocessing.Process(
+            target=run_spider, args=(s,))
+        p.start()
+        # os.system(&#39;./run_spider.sh &#39; + spider)
+
+    def do_q(self, arg):
+        &#39;&#39;&#39;    退出系统&#39;&#39;&#39;
+        return True
+
+    # emptyline
+    def emptyline(self):
+        os.system(&#39;clear&#39;)
+        print &#39;回车清屏，help帮助,tab补全&#39;
+
+    # 当无法识别输入的command时调用该方法
+    def default(self, line):
+        print &#39;输入的命令&#39; + repr(line) + &#39;错误，请输入help查看命令帮助&#39;
+
+    # 退出之后调用该方法
+    def postloop(self):
+        print &#39;谢谢使用&#39;
+
+    def completedefault(self, *ignored):
+        return [&#39;add&#39;, &#39;run_spider&#39;, &#39;run_all_spiders&#39;, &#39;list_spider&#39;]
+
+if __name__ == &amp;quot;__main__&amp;quot;:
+    cli = CLI()
+    cli.cmdloop()
+
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>python笔记之提取网页中的超链接</title>
+            <link>http://kooksee.github.io/blog/python%E7%AC%94%E8%AE%B0%E4%B9%8B%E6%8F%90%E5%8F%96%E7%BD%91%E9%A1%B5%E4%B8%AD%E7%9A%84%E8%B6%85%E9%93%BE%E6%8E%A5/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/python%E7%AC%94%E8%AE%B0%E4%B9%8B%E6%8F%90%E5%8F%96%E7%BD%91%E9%A1%B5%E4%B8%AD%E7%9A%84%E8%B6%85%E9%93%BE%E6%8E%A5/</guid>
+            <description>&lt;blockquote&gt;
+&lt;p&gt;对于提取网页中的超链接，先把网页内容读取出来，然后用beautifulsoup来解析是比较方便的。但是我发现一个问题，如果直接提取a标签的href，就会包含javascript:xxx和#xxx之类的，所以要对这些进行特殊处理。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;#!/usr/bin/env python
+#coding: utf-8
+from bs4 import BeautifulSoup
+import urllib
+import urllib2
+import sys
+reload(sys)
+sys.setdefaultencoding(&amp;quot;utf-8&amp;quot;)
+
+# 要分析的网页url
+url = &#39;http://www.ruanyifeng.com/blog/2015/05/co.html&#39;
+
+def findAllLink(url):
+    &#39;&#39;&#39;
+    提取网页中的超链接
+    &#39;&#39;&#39;
+    # 获取协议，域名
+    proto, rest = urllib.splittype(url)
+    domain = urllib.splithost(rest)[0]
+
+    # 读取网页内容
+    html = urllib2.urlopen(url).read()
+
+    # 提取超链接
+    a = BeautifulSoup(html).findAll(&#39;a&#39;)
+
+    # 过滤
+    alist = [i.attrs[&#39;href&#39;] for i in a if i.attrs[&#39;href&#39;][0] != &#39;j&#39;]
+    # 将形如#comment-text的锚点补全成http://www.ruanyifeng.com/blog/2015/05/co.html,将形如/feed.html补全为http://www.ruanyifeng.com/feed.html
+    alist = map(lambda i: proto + &#39;://&#39; + domain + i if i[0] == &#39;/&#39; else url + i if i[0] == &#39;#&#39; else i, alist)
+    return alist
+
+if __name__ == &#39;__main__&#39;:
+    for i in findAllLink(url):
+        print i
+
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>大众点评爬虫</title>
+            <link>http://kooksee.github.io/blog/%E5%A4%A7%E4%BC%97%E7%82%B9%E8%AF%84%E7%88%AC%E8%99%AB/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/%E5%A4%A7%E4%BC%97%E7%82%B9%E8%AF%84%E7%88%AC%E8%99%AB/</guid>
+            <description>&lt;p&gt;&lt;a href=&#34;http://stackoverflow.com/questions/23937933/could-not-run-curl-config-errno-2-no-such-file-or-directory-when-installing&#34;&gt;http://stackoverflow.com/questions/23937933/could-not-run-curl-config-errno-2-no-such-file-or-directory-when-installing&lt;/a&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;
+# encoding=utf-8
+
+import urllib2
+from bs4 import BeautifulSoup
+
+# 请求头部信息
+header = {&#39;User-Agent&#39;:&#39;Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)&#39;}
+# {&amp;quot;User-Agent&amp;quot;: &amp;quot;Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:39.0) Gecko/20100101 Firefox/39.0&amp;quot;}
+
+#测试brand_name
+brand_name=[&amp;quot;星巴克&amp;quot;,&amp;quot;麦当劳&amp;quot;,&amp;quot;肯德基&amp;quot;,&amp;quot;小南国&amp;quot;,&amp;quot;真功夫&amp;quot;,&amp;quot;汉拿山&amp;quot;,&amp;quot;新辣道&amp;quot;,&amp;quot;新疆火宴山&amp;quot;,&amp;quot;味千拉面&amp;quot;]
+
+# 大众点评查询brand_name的基本链接
+base_url=&amp;quot;http://www.dianping.com/search/keyword/{}/0_{}&amp;quot;.format
+
+#得到城市对应的编号，如：(上海,1)
+def _get_city_code(city):
+    pass
+
+#得到查询shop_info的正确连接
+def _get_url(city,brand_name):
+    return base_url(_get_city_code(city),brand_name)
+
+def get_shop_info(city,brand_name):
+    res = urllib2.urlopen(urllib2.Request(_get_url(city,brand_name), None, header), timeout=10)
+
+base_page_url=&amp;quot;http://www.dianping.com/search/keyword/{}/0_{}/p{}&amp;quot;.format
+
+# 得到所有分页的连接，并返回请求分页连接的请求句柄
+def get_page_res(city,search_word,base_page_url):
+    _city_code = _get_city_code(city)
+    try:
+        for i in xrange(1,1000):
+            yield (search_word,urllib2.urlopen(urllib2.Request(base_page_url(_city_code,search_word,i), None, header), timeout=10))
+    except:
+        return
+
+def get_all_urls():
+    for search_word,res in get_page_res:
+        if not page_url:
+            continue
+
+        brand_shop_urls = BeautifulSoup(res.read()).findAll(&amp;quot;a&amp;quot;, attrs={&amp;quot;data-hippo-type&amp;quot;: &amp;quot;shop&amp;quot;})
+        for brand_shop_url in brand_shop_urls:
+            if search_word in brand_shop_url.get_text():
+                yield &amp;quot;http://www.dianping.com&amp;quot;+brand_shop_url.attrs.get(&amp;quot;href&amp;quot;)
+
+
+
+def get_url():
+    test_url=&amp;quot;http://www.dianping.com/search/keyword/1/0_星巴克/p100&amp;quot;
+    res = urllib2.urlopen(test_url)
+    soup = BeautifulSoup(res.read())
+    soup = soup.findAll(&amp;quot;a&amp;quot;, attrs={&amp;quot;data-hippo-type&amp;quot;: &amp;quot;shop&amp;quot;})
+
+    print soup
+# print get_url()
+test_url=&amp;quot;https://www.baidu.com/index.php?tn=monline_3_dg&amp;quot;
+res = urllib2.urlopen(urllib2.Request(test_url, None, header))
+print res.geturl()
+# print res.read()
+soup = BeautifulSoup(res.read())
+soup = soup.find_all(&amp;quot;a&amp;quot;)[4]
+print soup.attrs.get(&amp;quot;href&amp;quot;)
+print soup.get_text()
+# print res.headers
+# print res.header
+
+
+
+# encoding=utf-8
+#大众点评基本地址：http://www.dianping.com/search/keyword/1/0_%s
+
+# encoding=utf-8
+
+import urllib2
+import beautifulsoup4
+
+#测试brand_name
+brand_name=[&amp;quot;星巴克&amp;quot;,&amp;quot;麦当劳&amp;quot;,&amp;quot;肯德基&amp;quot;,&amp;quot;小南国&amp;quot;,&amp;quot;真功夫&amp;quot;,&amp;quot;汉拿山&amp;quot;,&amp;quot;新辣道&amp;quot;,&amp;quot;新疆火宴山&amp;quot;,&amp;quot;味千拉面&amp;quot;]
+
+#http://www.dianping.com/search/keyword/248/0_%E9%BA%A6%E5%BD%93%E5%8A%B3
+
+
+#qq地图的key
+key=I3OBZ-MBSRQ-WBJ5P-G5VZS-QGAIF-Y7B27
+geo:{lng:121.579327,lat:31.25604736}
+
+&amp;quot;http://apis.map.qq.com/ws/geocoder/v1/?location=39.984154,116.307490&amp;amp;key=I3OBZ-MBSRQ-WBJ5P-G5VZS-QGAIF-Y7B27&amp;amp;get_poi=0&amp;quot;.format(lat,lng)
+
+
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;1,上海
+2,北京
+3,杭州
+4,广州
+5,南京
+6,苏州
+7,深圳
+8,成都
+9,重庆
+10,天津
+11,宁波
+12,扬州
+13,无锡
+14,福州
+15,厦门
+16,武汉
+17,西安
+18,沈阳
+19,大连
+20,其它城市
+21,青岛
+22,济南
+23,海口
+24,石家庄
+25,唐山
+26,秦皇岛
+27,邯郸
+28,邢台
+29,保定
+30,张家口
+31,承德
+32,沧州
+33,廊坊
+34,衡水
+35,太原
+36,大同
+37,阳泉
+38,长治
+39,晋城
+40,朔州
+41,晋中
+42,运城
+43,忻州
+44,临汾
+45,吕梁
+46,呼和浩特
+47,包头
+48,乌海
+49,赤峰
+50,通辽
+51,鄂尔多斯
+52,呼伦贝尔
+53,兴安盟
+54,锡林郭勒
+55,乌兰察布
+56,巴彦淖尔
+57,阿拉善
+58,鞍山
+59,抚顺
+60,本溪
+61,丹东
+62,锦州
+63,营口
+64,阜新
+65,辽阳
+66,盘锦
+67,铁岭
+68,朝阳
+69,葫芦岛
+70,长春
+71,吉林
+72,四平
+73,辽源
+74,通化
+75,白山
+76,松原
+77,白城
+78,延边
+79,哈尔滨
+80,齐齐哈尔
+81,鸡西
+82,鹤岗
+83,双鸭山
+84,大庆
+85,伊春
+86,佳木斯
+87,七台河
+88,牡丹江
+89,黑河
+90,绥化
+91,大兴安岭
+92,徐州
+93,常州
+94,南通
+95,连云港
+96,淮安
+97,盐城
+98,镇江
+99,泰州
+100,宿迁
+101,温州
+102,嘉兴
+103,湖州
+104,绍兴
+105,金华
+106,衢州
+107,舟山
+108,台州
+109,丽水
+110,合肥
+111,芜湖
+112,蚌埠
+113,淮南
+114,马鞍山
+115,淮北
+116,铜陵
+117,安庆
+118,黄山
+119,滁州
+120,阜阳
+121,宿州
+122,巢湖
+123,六安
+124,亳州
+125,池州
+126,宣城
+127,莆田
+128,三明
+129,泉州
+130,漳州
+131,南平
+132,龙岩
+133,宁德
+134,南昌
+135,景德镇
+136,萍乡
+137,九江
+138,新余
+139,鹰潭
+140,赣州
+141,吉安
+142,宜春
+143,抚州
+144,上饶
+145,淄博
+146,枣庄
+147,东营
+148,烟台
+149,潍坊
+150,济宁
+151,泰安
+152,威海
+153,日照
+154,莱芜
+155,临沂
+156,德州
+157,聊城
+158,滨州
+159,菏泽
+160,郑州
+161,开封
+162,洛阳
+163,平顶山
+164,安阳
+165,鹤壁
+166,新乡
+167,焦作
+168,濮阳
+169,许昌
+170,漯河
+171,三门峡
+172,南阳
+173,商丘
+174,信阳
+175,周口
+176,驻马店
+177,黄石
+178,十堰
+179,宜昌
+180,襄阳
+181,鄂州
+182,荆门
+183,孝感
+184,荆州
+185,黄冈
+186,咸宁
+187,随州
+188,恩施
+189,仙桃
+190,潜江
+191,天门
+192,株洲
+193,湘潭
+194,衡阳
+195,邵阳
+196,岳阳
+197,常德
+198,张家界
+199,益阳
+200,郴州
+201,永州
+202,怀化
+203,娄底
+204,湘西
+205,韶关
+206,珠海
+207,汕头
+208,佛山
+209,江门
+210,湛江
+211,茂名
+212,肇庆
+213,惠州
+214,梅州
+215,汕尾
+216,河源
+217,阳江
+218,清远
+219,东莞
+220,中山
+221,潮州
+222,揭阳
+223,云浮
+224,南宁
+225,柳州
+226,桂林
+227,梧州
+228,北海
+229,防城港
+230,钦州
+231,贵港
+232,玉林
+233,百色
+234,贺州
+235,河池
+238,自贡
+239,攀枝花
+240,泸州
+241,德阳
+242,绵阳
+243,广元
+244,遂宁
+245,内江
+246,乐山
+247,南充
+248,眉山
+249,宜宾
+250,广安
+251,达州
+252,雅安
+253,巴中
+254,资阳
+255,阿坝
+256,甘孜州
+257,凉山
+258,贵阳
+259,六盘水
+260,遵义
+261,安顺
+262,铜仁地区
+263,黔西南
+264,毕节地区
+265,黔东南
+266,黔南
+267,昆明
+268,曲靖
+269,玉溪
+270,保山
+271,昭通
+272,楚雄州
+273,红河
+274,文山州
+275,普洱
+276,西双版纳
+277,大理州
+278,德宏
+279,丽江
+280,怒江
+281,迪庆
+282,临沧
+283,拉萨
+284,昌都地区
+285,山南
+286,日喀则地区
+287,那曲
+288,阿里
+289,林芝地区
+290,铜川
+291,宝鸡
+292,咸阳
+293,渭南
+294,延安
+295,汉中
+296,榆林
+297,安康
+298,商洛
+299,兰州
+300,嘉峪关
+301,金昌
+302,白银
+303,天水
+304,武威
+305,张掖
+306,平凉
+307,酒泉
+308,庆阳
+309,定西
+310,陇南
+311,临夏州
+312,甘南
+313,西宁
+314,海东
+315,海北
+316,黄南
+318,果洛
+319,玉树
+320,海西
+321,银川
+322,石嘴山
+323,吴忠
+324,固原
+325,乌鲁木齐
+326,克拉玛依
+327,吐鲁番地区
+328,哈密地区
+329,昌吉州
+330,博尔塔拉
+331,巴音郭楞
+332,阿克苏地区
+333,克孜勒苏
+334,喀什地区
+335,和田地区
+336,伊犁
+337,塔城地区
+338,阿勒泰地区
+339,石河子
+340,台湾
+341,香港
+342,澳门
+343,国外其他
+344,长沙
+345,三亚
+346,北屯
+351,中卫
+353,格尔木市
+354,奎屯市
+355,库尔勒市
+358,儋州
+359,潢川县
+361,延吉市
+362,珲春市
+363,梅河口市
+367,锡林浩特市
+368,乌兰浩特市
+382,西昌市
+383,康定县
+385,义乌
+389,阿拉尔
+390,白沙
+391,保亭
+392,昌江
+393,澄迈县
+394,崇左
+395,定安县
+396,东方
+397,济源
+398,来宾
+399,乐东
+400,临高县
+401,陵水
+402,琼海
+403,琼中
+404,神农架林区
+405,图木舒克
+406,屯昌县
+407,万宁
+408,文昌
+409,五家渠
+410,五指山
+411,海南州
+416,昆山
+417,常熟
+418,张家港
+419,吴江
+420,太仓
+421,慈溪
+422,奉化
+423,余姚
+424,仪征市
+426,高邮市
+427,江阴
+428,宜兴
+429,瓦房店市
+430,普兰店市
+431,庄河市
+432,长海县
+433,福清
+434,密云县
+435,延庆县
+439,辛集市
+440,藁城市
+441,晋州市
+442,新乐市
+443,鹿泉市
+444,井陉县
+445,正定县
+446,栾城县
+447,行唐县
+448,灵寿县
+449,高邑县
+450,深泽县
+451,赞皇县
+452,无极县
+453,平山县
+454,元氏县
+455,赵县
+456,宣化县
+457,张北县
+458,康保县
+459,沽源县
+460,尚义县
+461,蔚县
+462,阳原县
+463,怀安县
+464,万全县
+465,怀来县
+466,涿鹿县
+467,赤城县
+468,崇礼县
+469,承德县
+470,兴隆县
+471,平泉县
+472,滦平县
+473,隆化县
+474,丰宁满族自治县
+475,宽城满族自治县
+476,围场满族蒙古族自治县
+477,昌黎县
+478,抚宁县
+479,卢龙县
+480,青龙满族自治县
+481,遵化市
+482,迁安市
+483,滦县
+484,滦南县
+485,乐亭县
+486,迁西县
+487,玉田县
+489,霸州市
+490,三河市
+491,固安县
+492,永清县
+493,香河县
+494,大城县
+495,文安县
+496,大厂回族自治县
+497,定州市
+498,涿州市
+499,安国市
+500,高碑店市
+501,满城县
+502,清苑县
+503,易县
+504,徐水县
+505,涞源县
+506,定兴县
+507,顺平县
+508,唐县
+509,望都县
+510,涞水县
+511,高阳县
+512,安新县
+513,雄县
+514,曲阳县
+515,阜平县
+516,博野县
+517,蠡县
+518,冀州市
+519,深州市
+520,枣强县
+521,武邑县
+522,武强县
+523,饶阳县
+524,安平县
+525,故城县
+526,景县
+527,阜城县
+528,泊头市
+529,任丘市
+530,黄骅市
+531,河间市
+532,沧县
+533,青县
+534,东光县
+535,海兴县
+536,盐山县
+537,肃宁县
+538,南皮县
+539,吴桥县
+540,献县
+541,孟村回族自治县
+542,南宫市
+543,沙河市
+544,邢台县
+545,临城县
+546,内丘县
+547,柏乡县
+548,隆尧县
+549,任县
+550,南和县
+551,宁晋县
+552,巨鹿县
+553,新河县
+554,广宗县
+555,平乡县
+556,威县
+557,清河县
+558,临西县
+559,武安市
+560,邯郸县
+561,临漳县
+562,成安县
+563,大名县
+564,涉县
+565,磁县
+566,肥乡县
+567,永年县
+568,邱县
+569,鸡泽县
+570,广平县
+571,馆陶县
+572,魏县
+573,曲周县
+574,古交市
+575,清徐县
+576,阳曲县
+577,娄烦县
+578,山阴县
+579,应县
+580,右玉县
+581,怀仁县
+582,阳高县
+583,天镇县
+584,广灵县
+585,灵丘县
+586,浑源县
+587,左云县
+588,大同县
+589,平定县
+590,盂县
+591,潞城市
+592,长治县
+593,襄垣县
+594,屯留县
+595,平顺县
+596,黎城县
+597,壶关县
+598,长子县
+599,武乡县
+600,沁县
+601,沁源县
+602,高平市
+603,泽州县
+604,沁水县
+605,阳城县
+606,陵川县
+607,原平市
+608,定襄县
+609,五台县
+610,代县
+611,繁峙县
+612,宁武县
+613,静乐县
+614,神池县
+615,五寨县
+616,岢岚县
+617,河曲县
+618,保德县
+619,偏关县
+620,介休市
+621,榆社县
+622,左权县
+623,和顺县
+624,昔阳县
+625,寿阳县
+626,太谷县
+627,祁县
+628,平遥县
+629,灵石县
+630,侯马市
+631,霍州市
+632,曲沃县
+633,翼城县
+634,襄汾县
+635,洪洞县
+636,古县
+637,安泽县
+638,浮山县
+639,吉县
+640,乡宁县
+641,蒲县
+642,大宁县
+643,永和县
+644,隰县
+645,汾西县
+646,孝义市
+647,汾阳市
+648,文水县
+649,中阳县
+650,兴县
+651,临县
+652,方山县
+653,柳林县
+654,岚县
+655,交口县
+656,交城县
+657,石楼县
+658,托克托县
+659,武川县
+660,和林格尔县
+661,清水河县
+662,固阳县
+663,宁城县
+664,林西县
+665,霍林郭勒市
+666,开鲁县
+667,满洲里市
+668,扎兰屯市
+669,牙克石市
+670,根河市
+671,额尔古纳市
+672,丰镇市
+673,卓资县
+674,化德县
+675,商都县
+676,兴和县
+677,凉城县
+678,五原县
+679,磴口县
+680,阿尔山市
+681,突泉县
+682,二连浩特市
+683,多伦县
+684,新民市
+685,辽中县
+686,康平县
+687,法库县
+688,北票市
+689,凌源市
+690,朝阳县
+691,建平县
+692,喀喇沁左翼蒙古族自治县
+693,彰武县
+694,阜新蒙古族自治县
+695,调兵山市
+696,开原市
+697,铁岭县
+698,西丰县
+699,昌图县
+700,抚顺县
+701,新宾满族自治县
+702,清原满族自治县
+703,本溪满族自治县
+704,桓仁满族自治县
+705,灯塔市
+706,辽阳县
+707,海城市
+708,台安县
+709,岫岩满族自治县
+710,凤城市
+711,东港市
+712,宽甸满族自治县
+713,大石桥市
+714,盖州市
+715,大洼县
+716,盘山县
+717,凌海市
+718,北宁市
+719,黑山县
+720,义县
+721,兴城市
+722,绥中县
+723,建昌县
+724,德惠市
+725,九台市
+726,榆树市
+727,农安县
+728,大安市
+729,洮南市
+730,镇赉县
+731,通榆县
+732,扶余县
+733,长岭县
+734,乾安县
+735,前郭尔罗斯蒙古族自治县
+736,磐石市
+737,蛟河市
+738,桦甸市
+739,舒兰市
+740,永吉县
+741,双辽市
+742,公主岭市
+743,梨树县
+744,伊通满族自治县
+745,东丰县
+746,东辽县
+747,集安市
+748,通化县
+749,辉南县
+750,柳河县
+751,临江市
+753,抚松县
+754,靖宇县
+755,长白朝鲜族自治县
+756,图们市
+757,敦化市
+758,龙井市
+759,和龙市
+760,汪清县
+761,安图县
+768,宾县
+769,巴彦县
+773,勃利县
+774,讷河市
+775,龙江县
+776,依安县
+777,泰来县
+778,甘南县
+779,富裕县
+780,克山县
+781,克东县
+782,拜泉县
+783,北安市
+784,五大连池市
+785,嫩江县
+786,逊克县
+787,孙吴县
+788,肇州县
+789,肇源县
+790,林甸县
+791,杜尔伯特蒙古族自治县
+792,萝北县
+793,绥滨县
+794,铁力市
+795,嘉荫县
+796,同江市
+797,富锦市
+798,桦南县
+799,桦川县
+800,汤原县
+801,抚远县
+802,集贤县
+803,友谊县
+804,宝清县
+805,饶河县
+806,虎林市
+807,密山市
+808,鸡东县
+809,穆棱市
+810,绥芬河市
+811,海林市
+812,宁安市
+813,东宁县
+814,林口县
+815,安达市
+816,肇东市
+817,海伦市
+818,望奎县
+819,兰西县
+820,青冈县
+821,庆安县
+822,明水县
+823,绥棱县
+824,呼玛县
+825,塔河县
+826,漠河县
+828,邳州市
+829,新沂市
+831,睢宁县
+832,沛县
+833,丰县
+834,赣榆县
+835,灌云县
+836,东海县
+837,灌南县
+838,沭阳县
+839,泗阳县
+840,泗洪县
+841,金湖县
+842,盱眙县
+843,洪泽县
+844,涟水县
+845,东台市
+846,大丰市
+847,射阳县
+848,阜宁县
+849,滨海县
+850,响水县
+851,建湖县
+852,宝应县
+853,靖江
+854,泰兴市
+856,兴化市
+857,海门市
+858,启东市
+860,如皋市
+862,海安县
+863,扬中市
+864,丹阳市
+865,句容市
+866,金坛市
+867,溧阳
+868,临安
+869,富阳
+870,建德市
+871,桐庐县
+872,淳安县
+873,长兴县
+874,德清县
+875,安吉县
+876,平湖市
+877,海宁市
+878,桐乡市
+879,嘉善县
+880,海盐县
+881,岱山县
+882,嵊泗县
+883,诸暨
+884,上虞区
+885,嵊州市
+886,柯桥区
+888,江山市
+889,常山县
+890,开化县
+891,龙游县
+892,兰溪市
+893,永康
+894,东阳
+895,武义县
+896,浦江县
+897,磐安县
+898,临海市
+899,温岭市
+900,三门县
+901,天台县
+902,仙居县
+903,玉环县
+904,瑞安
+905,乐清
+908,平阳
+911,苍南
+912,龙泉市
+913,缙云县
+914,青田县
+915,云和县
+916,遂昌县
+917,松阳县
+918,庆元县
+919,景宁畲族自治县
+920,长丰县
+921,肥东县
+922,肥西县
+923,砀山县
+924,萧县
+925,灵璧县
+926,泗县
+927,濉溪县
+928,涡阳县
+929,蒙城县
+930,利辛县
+931,界首市
+932,临泉县
+933,太和县
+934,阜南县
+935,颍上县
+936,怀远县
+937,五河县
+938,固镇县
+939,凤台县
+940,明光市
+941,天长市
+942,来安县
+943,全椒县
+944,定远县
+945,凤阳县
+946,当涂县
+947,芜湖县
+948,繁昌县
+949,南陵县
+950,铜陵县
+951,桐城市
+952,怀宁县
+953,枞阳县
+954,潜山县
+955,太湖县
+956,宿松县
+957,望江县
+958,岳西县
+959,歙县
+960,休宁县
+961,黟县
+962,祁门县
+963,寿县
+964,霍邱县
+965,舒城县
+966,金寨县
+967,霍山县
+968,庐江县
+969,无为县
+970,含山县
+971,和县
+972,东至县
+973,石台县
+974,青阳县
+975,宁国市
+976,郎溪县
+977,广德县
+978,泾县
+979,旌德县
+980,绩溪县
+981,长乐
+983,连江县
+984,罗源县
+986,永泰县
+987,平潭县
+988,邵武市
+989,武夷山
+990,建瓯市
+991,建阳市
+992,顺昌县
+993,浦城县
+994,光泽县
+995,松溪县
+996,政和县
+998,永安市
+999,明溪县
+1000,清流县
+1001,宁化县
+1002,大田县
+1003,尤溪县
+1004,沙县
+1005,将乐县
+1006,泰宁县
+1007,建宁县
+1008,石狮
+1009,晋江
+1010,南安市
+1011,惠安县
+1012,安溪县
+1013,永春县
+1014,德化县
+1015,龙海
+1017,漳浦县
+1024,漳平市
+1025,长汀县
+1026,永定县
+1027,上杭县
+1028,武平县
+1029,连城县
+1030,福安市
+1031,福鼎
+1032,寿宁县
+1033,霞浦县
+1034,柘荣县
+1035,屏南县
+1036,古田县
+1037,周宁县
+1040,安义县
+1042,瑞昌市
+1043,九江县
+1044,武宁县
+1045,修水县
+1046,永修县
+1047,德安县
+1048,星子县
+1049,都昌县
+1050,湖口县
+1051,彭泽县
+1052,乐平市
+1053,浮梁县
+1054,贵溪市
+1055,余江县
+1056,分宜县
+1057,莲花县
+1058,上栗县
+1059,芦溪县
+1060,瑞金市
+1061,南康市
+1062,赣县
+1063,信丰县
+1064,大余县
+1065,上犹县
+1066,崇义县
+1067,安远县
+1068,龙南县
+1069,定南县
+1070,全南县
+1071,宁都县
+1072,于都县
+1073,兴国县
+1074,会昌县
+1075,寻乌县
+1076,石城县
+1077,德兴市
+1078,上饶县
+1079,广丰县
+1080,玉山县
+1081,铅山县
+1082,横峰县
+1083,弋阳县
+1084,余干县
+1085,鄱阳县
+1086,万年县
+1087,婺源县
+1088,南城县
+1089,黎川县
+1090,南丰县
+1091,崇仁县
+1092,乐安县
+1093,宜黄县
+1094,金溪县
+1095,资溪县
+1096,东乡县
+1097,广昌县
+1098,丰城市
+1099,樟树市
+1100,高安市
+1101,奉新县
+1102,万载县
+1103,上高县
+1104,宜丰县
+1105,靖安县
+1106,铜鼓县
+1107,井冈山市
+1108,吉安县
+1109,吉水县
+1110,峡江县
+1111,新干县
+1112,永丰县
+1113,泰和县
+1114,遂川县
+1115,万安县
+1116,安福县
+1117,永新县
+1118,章丘
+1119,平阴县
+1120,济阳县
+1121,商河县
+1122,临清市
+1123,阳谷县
+1124,莘县
+1125,茌平县
+1126,东阿县
+1127,冠县
+1128,高唐县
+1129,乐陵市
+1130,禹城市
+1131,陵县
+1132,平原县
+1133,夏津县
+1134,武城县
+1135,齐河县
+1136,临邑县
+1137,宁津县
+1138,庆云县
+1139,垦利县
+1140,利津县
+1141,广饶县
+1142,桓台县
+1143,高青县
+1144,沂源县
+1145,安丘市
+1146,昌邑市
+1147,高密市
+1148,青州市
+1149,诸城市
+1150,寿光市
+1151,临朐县
+1152,昌乐县
+1153,栖霞市
+1154,海阳市
+1155,龙口市
+1156,莱阳市
+1157,莱州市
+1158,蓬莱市
+1159,招远市
+1160,长岛县
+1161,荣成
+1162,乳山市
+1163,文登
+1169,五莲县
+1170,莒县
+1171,郯城县
+1172,苍山县
+1173,莒南县
+1174,沂水县
+1175,蒙阴县
+1176,平邑县
+1177,费县
+1178,沂南县
+1179,临沭县
+1180,滕州市
+1181,曲阜市
+1182,兖州市
+1183,邹城市
+1184,微山县
+1185,鱼台县
+1186,金乡县
+1187,嘉祥县
+1188,汶上县
+1189,泗水县
+1190,梁山县
+1191,新泰市
+1192,肥城市
+1193,宁阳县
+1194,东平县
+1195,惠民县
+1196,阳信县
+1197,无棣县
+1198,沾化县
+1199,博兴县
+1200,邹平县
+1201,曹县
+1202,定陶县
+1203,成武县
+1204,单县
+1205,巨野县
+1206,郓城县
+1207,鄄城县
+1208,东明县
+1209,新郑市
+1210,登封市
+1211,新密市
+1212,巩义市
+1213,荥阳市
+1214,中牟县
+1215,义马市
+1216,灵宝市
+1217,渑池县
+1218,陕县
+1219,卢氏县
+1220,偃师市
+1221,孟津县
+1222,新安县
+1223,栾川县
+1224,嵩县
+1225,汝阳县
+1226,宜阳县
+1227,洛宁县
+1228,伊川县
+1229,孟州市
+1230,沁阳市
+1231,修武县
+1232,博爱县
+1233,武陟县
+1234,温县
+1235,卫辉市
+1236,辉县市
+1237,新乡县
+1238,获嘉县
+1239,原阳县
+1240,延津县
+1241,封丘县
+1242,长垣县
+1243,浚县
+1244,淇县
+1245,林州市
+1246,安阳县
+1247,汤阴县
+1248,滑县
+1249,内黄县
+1250,清丰县
+1251,南乐县
+1252,范县
+1253,台前县
+1254,濮阳县
+1255,杞县
+1256,通许县
+1257,尉氏县
+1258,开封县
+1259,兰考县
+1260,永城市
+1261,虞城县
+1262,民权县
+1263,宁陵县
+1264,睢县
+1265,夏邑县
+1266,柘城县
+1267,禹州市
+1268,长葛市
+1269,许昌县
+1270,鄢陵县
+1271,襄城县
+1272,舞阳县
+1273,临颍县
+1274,舞钢市
+1275,汝州市
+1276,宝丰县
+1277,叶县
+1278,鲁山县
+1279,郏县
+1280,邓州市
+1281,南召县
+1282,方城县
+1283,西峡县
+1284,镇平县
+1285,内乡县
+1286,淅川县
+1287,社旗县
+1289,新野县
+1290,桐柏县
+1291,息县
+1292,淮滨县
+1293,光山县
+1294,固始县
+1295,商城县
+1296,罗山县
+1297,新县
+1298,项城市
+1299,扶沟县
+1300,西华县
+1301,商水县
+1302,太康县
+1303,鹿邑县
+1304,郸城县
+1305,淮阳县
+1306,沈丘县
+1307,确山县
+1308,泌阳县
+1309,遂平县
+1310,西平县
+1311,上蔡县
+1312,汝南县
+1313,平舆县
+1314,新蔡县
+1315,正阳县
+1316,丹江口市
+1317,郧县
+1318,竹山县
+1319,房县
+1320,郧西县
+1321,竹溪县
+1322,老河口市
+1323,枣阳市
+1324,宜城市
+1325,南漳县
+1326,谷城县
+1327,保康县
+1328,钟祥市
+1329,沙洋县
+1330,京山县
+1331,应城市
+1332,安陆市
+1333,汉川市
+1334,孝昌县
+1335,大悟县
+1336,云梦县
+1337,麻城市
+1338,武穴市
+1339,红安县
+1340,罗田县
+1341,英山县
+1342,浠水县
+1343,蕲春县
+1344,黄梅县
+1345,团风县
+1346,大冶市
+1347,阳新县
+1348,赤壁市
+1349,嘉鱼县
+1350,通城县
+1351,崇阳县
+1352,通山县
+1353,石首市
+1354,洪湖市
+1355,松滋市
+1356,江陵县
+1357,公安县
+1358,监利县
+1359,枝江市
+1360,宜都市
+1361,当阳市
+1362,远安县
+1363,兴山县
+1364,秭归县
+1365,长阳土家族自治县
+1366,五峰土家族自治县
+1367,广水市
+1368,恩施市
+1369,利川市
+1370,建始县
+1371,巴东县
+1372,宣恩县
+1373,咸丰县
+1374,来凤县
+1375,鹤峰县
+1376,浏阳
+1379,宁乡县
+1380,慈利县
+1381,桑植县
+1382,津市市
+1383,安乡县
+1384,汉寿县
+1385,澧县
+1386,临澧县
+1387,桃源县
+1388,石门县
+1389,沅江市
+1390,南县
+1391,桃江县
+1392,安化县
+1393,汨罗市
+1394,临湘市
+1395,岳阳县
+1396,华容县
+1397,湘阴县
+1398,平江县
+1399,醴陵市
+1400,株洲县
+1401,攸县
+1402,茶陵县
+1403,炎陵县
+1404,湘乡市
+1405,韶山市
+1406,湘潭县
+1407,常宁市
+1408,耒阳市
+1409,衡阳县
+1410,衡南县
+1411,衡山县
+1412,衡东县
+1413,祁东县
+1414,资兴市
+1415,桂阳县
+1416,永兴县
+1417,宜章县
+1418,嘉禾县
+1419,临武县
+1420,汝城县
+1421,桂东县
+1422,安仁县
+1423,东安县
+1424,道县
+1425,宁远县
+1426,江永县
+1427,蓝山县
+1428,新田县
+1429,双牌县
+1430,祁阳县
+1431,江华瑶族自治县
+1432,武冈市
+1433,邵东县
+1434,邵阳县
+1435,新邵县
+1436,隆回县
+1437,洞口县
+1438,绥宁县
+1439,新宁县
+1440,城步苗族自治县
+1441,洪江市
+1442,沅陵县
+1443,辰溪县
+1444,溆浦县
+1445,中方县
+1446,会同县
+1447,麻阳苗族自治县
+1448,新晃侗族自治县
+1449,芷江侗族自治县
+1450,靖州苗族侗族自治县
+1451,通道侗族自治县
+1452,冷水江市
+1453,涟源市
+1454,双峰县
+1455,新化县
+1456,吉首市
+1457,泸溪县
+1458,凤凰县
+1459,花垣县
+1460,保靖县
+1461,古丈县
+1462,永顺县
+1463,龙山县
+1464,英德市
+1465,连州市
+1466,佛冈县
+1467,阳山县
+1469,连山壮族瑶族自治县
+1470,连南瑶族自治县
+1471,乐昌市
+1472,南雄市
+1473,始兴县
+1474,仁化县
+1475,翁源县
+1476,新丰县
+1477,乳源瑶族自治县
+1478,紫金县
+1479,龙川县
+1480,连平县
+1481,和平县
+1482,东源县
+1483,兴宁市
+1484,梅县
+1485,大埔县
+1486,丰顺县
+1487,五华县
+1488,平远县
+1489,蕉岭县
+1491,饶平县
+1492,南澳县
+1493,普宁市
+1495,揭西县
+1496,惠来县
+1497,陆丰市
+1498,海丰县
+1499,陆河县
+1500,博罗县
+1501,惠东县
+1502,龙门县
+1503,恩平市
+1504,台山市
+1505,开平市
+1506,鹤山市
+1507,高要市
+1508,四会市
+1509,广宁县
+1510,怀集县
+1511,封开县
+1512,德庆县
+1513,罗定市
+1514,云安县
+1515,新兴县
+1516,郁南县
+1517,阳春市
+1518,阳西县
+1519,阳东县
+1520,化州市
+1521,信宜市
+1522,高州市
+1523,电白县
+1524,吴川市
+1525,廉江市
+1526,雷州市
+1527,遂溪县
+1528,徐闻县
+1529,武鸣县
+1530,横县
+1531,宾阳县
+1532,上林县
+1533,隆安县
+1534,马山县
+1535,阳朔县
+1537,灵川县
+1538,全州县
+1539,兴安县
+1540,永福县
+1541,灌阳县
+1542,资源县
+1543,平乐县
+1544,荔浦县
+1545,龙胜各族自治县
+1546,恭城瑶族自治县
+1547,柳江县&lt;/p&gt;
+</description>
+        </item>
+        
+        <item>
+            <title>爬虫网站分析</title>
+            <link>http://kooksee.github.io/blog/%E7%88%AC%E8%99%AB%E7%BD%91%E7%AB%99%E5%88%86%E6%9E%90/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
+            <author>CoderZh</author>
+            <guid>http://kooksee.github.io/blog/%E7%88%AC%E8%99%AB%E7%BD%91%E7%AB%99%E5%88%86%E6%9E%90/</guid>
+            <description>&lt;p&gt;分类的难处在于网站的多样性，所谓多样性包括：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;认证机制多样性
+网站登录流程复杂，信息量大，页面跳转次数较多，有时伴随验证码填写(很常见)&lt;/li&gt;
+&lt;li&gt;信息查找多样性
+有些网站不是你很容易就能差找到结果，比如
+&lt;a href=&#34;http://www.ad.siemens.com.cn/service/search/Default.aspx?kw=%u56FA%u4EF6&amp;amp;searchType=8&amp;amp;filter=1&amp;amp;ov=%u56FA%u4EF6&amp;amp;sort=&amp;amp;order=desc&amp;amp;searchInR=0&amp;amp;pageIndex=1&amp;amp;dc_types=5&#34;&gt;Siemens&lt;/a&gt;，你需要用关键字搜索才能过滤掉无用信息，得到想要结果。而，有些网站根本就没有下载的地方，你需要用他们的网站内站搜索才能搜索得到&lt;/li&gt;
+&lt;li&gt;网站结构多样性
+过去的网站大多是静态的，而现在却很难再找到了。动态性网站不直接在源码上显示内容，而是动态生成的，只有运行到了那一步，网站才会生成显示。这样就造成了阅读网站源码的困难。还有就是现在的网站有些采用的是异步加载模式，你根本找不到链接地址在哪，必须做出点击，选中等动作后它才会给你显示链接地址。如果有些网站采用的是websocket模式，那就更加困难了。&lt;/li&gt;
+&lt;li&gt;目标链接的标识不一
+我们查找下载链接大都通过链接的标识，比如特定标签(table,a,button)，id号，class属性，name属性，type类型等。这些东西每个网站基本都是不一样的，所以这才是造成爬虫难以分类的根本原因&lt;/li&gt;
+&lt;li&gt;网站反爬虫机制
+有些网站不想让你爬，因为爬虫会给网站的服务器增加负担。他们采用ip间隔锁定的方式，如果一个ip在一段时间内访问次数操作某个值，则禁止该ip访问。还有通过流量监控，如果该ip在某时间内下载数据大小操作某限定值，则禁止该ip&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;工控厂家９个，其中Panasonic,Abb有其他备选链接，GE则为备选网站
+相机和显示器有６个厂家
+交换机和路由器有17厂家，其中有９家备选&lt;/p&gt;
+
+&lt;p&gt;如果强制要分类，可以粗略的划分为三类&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&#34;http://drivers.softpedia.com/get/FIRMWARE&#34;&gt;http://drivers.softpedia.com/get/FIRMWARE&lt;/a&gt;
+这个网站是一个固件厂商搜索综合网站，有大多数的固件厂商
+比如:&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;SamSung：&lt;a href=&#34;http://drivers.softpedia.com/get/FIRMWARE/Samsung/&#34;&gt;http://drivers.softpedia.com/get/FIRMWARE/Samsung/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Cisco：&lt;a href=&#34;http://drivers.softpedia.com/get/FIRMWARE/Cisco/&#34;&gt;http://drivers.softpedia.com/get/FIRMWARE/Cisco/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://drivers.softpedia.com/get/Router-Switch-Access-Point/Linksys/&#34;&gt;http://drivers.softpedia.com/get/Router-Switch-Access-Point/Linksys/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Nikon：&lt;a href=&#34;http://drivers.softpedia.com/get/FIRMWARE/Nikon/&#34;&gt;http://drivers.softpedia.com/get/FIRMWARE/Nikon/&lt;/a&gt;
+&lt;a href=&#34;http://drivers.softpedia.com/get/FIRMWARE/Panasonic/&#34;&gt;http://drivers.softpedia.com/get/FIRMWARE/Panasonic/&lt;/a&gt;  （备选）&lt;/p&gt;
+
+&lt;p&gt;Philips：&lt;a href=&#34;http://drivers.softpedia.com/get/FIRMWARE/Philips/&#34;&gt;http://drivers.softpedia.com/get/FIRMWARE/Philips/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Sony：&lt;a href=&#34;http://drivers.softpedia.com/get/FIRMWARE/Sony/&#34;&gt;http://drivers.softpedia.com/get/FIRMWARE/Sony/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Hitachi：&lt;a href=&#34;http://drivers.softpedia.com/get/FIRMWARE/Hitachi/&#34;&gt;http://drivers.softpedia.com/get/FIRMWARE/Hitachi/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Toshiba：&lt;a href=&#34;http://drivers.softpedia.com/get/FIRMWARE/Toshiba/&#34;&gt;http://drivers.softpedia.com/get/FIRMWARE/Toshiba/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://drivers.softpedia.com/get/Router-Switch-Access-Point/Buffalo/&#34;&gt;http://drivers.softpedia.com/get/Router-Switch-Access-Point/Buffalo/&lt;/a&gt;  （备选）&lt;/p&gt;
+
+&lt;p&gt;NetGear：&lt;a href=&#34;http://drivers.softpedia.com/get/Router-Switch-Access-Point/NETGEAR/&#34;&gt;http://drivers.softpedia.com/get/Router-Switch-Access-Point/NETGEAR/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;ASUS：&lt;a href=&#34;http://drivers.softpedia.com/get/Router-Switch-Access-Point/ASUS/&#34;&gt;http://drivers.softpedia.com/get/Router-Switch-Access-Point/ASUS/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://drivers.softpedia.com/get/FIRMWARE/D-Link/&#34;&gt;http://drivers.softpedia.com/get/FIRMWARE/D-Link/&lt;/a&gt; （备选）&lt;/p&gt;
+
+&lt;p&gt;Tenda：&lt;a href=&#34;http://drivers.softpedia.com/get/FIRMWARE/Tenda/&#34;&gt;http://drivers.softpedia.com/get/FIRMWARE/Tenda/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;２. ftp性质的网站
+ D-Link：&lt;a href=&#34;ftp://ftp2.dlink.com/PRODUCTS/&#34;&gt;ftp://ftp2.dlink.com/PRODUCTS/&lt;/a&gt;
+ Draytek：&lt;a href=&#34;ftp://ftp.draytek.com/&#34;&gt;ftp://ftp.draytek.com/&lt;/a&gt;
+本来我以为&lt;a href=&#34;http://www.hikvisioneurope.com/portal/index.php?dir=Product%20Firmware/&#34;&gt;Hikvision&lt;/a&gt;可以划分到ftp里面，但我发现他们除了结构相识外，其他方面并不相同。就像我们所想那样，获取页面所有链接，那么ftp只有两种链接，那就是进入下一页和返回上一页，但是Hikvision并不是，它还有其他的链接。加上其他链接的话，就不容易判断返回上一页的链接的具体是哪一个，当然这只是我初步判断。&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;其他类
+其他类的都是无法归类的，上面原因我已经说明。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Industrial Control Firm：&lt;/p&gt;
+
+&lt;p&gt;1、Siemens：
+&lt;a href=&#34;http://www.ad.siemens.com.cn/service/search/Default.aspx?kw=%u56FA%u4EF6&amp;amp;searchType=8&#34;&gt;http://www.ad.siemens.com.cn/service/search/Default.aspx?kw=%u56FA%u4EF6&amp;amp;searchType=8&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://www.ad.siemens.com.cn/service/search/Default.aspx?kw=%u56FA%u4EF6&amp;amp;searchType=8&amp;amp;filter=1&amp;amp;ov=%u56FA%u4EF6&amp;amp;sort=&amp;amp;order=desc&amp;amp;searchInR=0&amp;amp;pageIndex=1&amp;amp;dc_types=5&#34;&gt;http://www.ad.siemens.com.cn/service/search/Default.aspx?kw=%u56FA%u4EF6&amp;amp;searchType=8&amp;amp;filter=1&amp;amp;ov=%u56FA%u4EF6&amp;amp;sort=&amp;amp;order=desc&amp;amp;searchInR=0&amp;amp;pageIndex=1&amp;amp;dc_types=5&lt;/a&gt;
+&amp;ndash;&amp;gt;个数：16*&lt;sup&gt;9&lt;/sup&gt;&amp;frasl;&lt;sub&gt;2&lt;/sub&gt;*8＝576，时间：2005(1)-2015(2),其中2010-2009居多&lt;/p&gt;
+
+&lt;p&gt;2、Schneider：&lt;a href=&#34;http://www.schneider-electric.com/download/ww/en/results/3541958-SoftwareFirmware/1555893-Firmware--Released/0/0/?showAsIframe=false&#34;&gt;http://www.schneider-electric.com/download/ww/en/results/3541958-SoftwareFirmware/1555893-Firmware--Released/0/0/?showAsIframe=false&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://www.schneider-electric.com/download/ww/en/results/3541958-SoftwareFirmware/1555902-Firmware--Updates/0/0/?showAsIgeframe=false&#34;&gt;http://www.schneider-electric.com/download/ww/en/results/3541958-SoftwareFirmware/1555902-Firmware--Updates/0/0/?showAsIgeframe=false&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;3、Panasonic：&lt;a href=&#34;http://av.jpn.support.panasonic.com/support/global/cs/dsc/download/index.html&#34;&gt;http://av.jpn.support.panasonic.com/support/global/cs/dsc/download/index.html&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://av.jpn.support.panasonic.com/support/global/cs/dsc/download/fts/index2.html&#34;&gt;http://av.jpn.support.panasonic.com/support/global/cs/dsc/download/fts/index2.html&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://security.panasonic.com/pss/security/library/products.html&#34;&gt;http://security.panasonic.com/pss/security/library/products.html&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://eww.pass.panasonic.co.jp/p2ui/guest/TopLogin.do?lang=en&amp;amp;category=pav&#34;&gt;http://eww.pass.panasonic.co.jp/p2ui/guest/TopLogin.do?lang=en&amp;amp;category=pav&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://drivers.softpedia.com/get/FIRMWARE/Panasonic/&#34;&gt;http://drivers.softpedia.com/get/FIRMWARE/Panasonic/&lt;/a&gt;    （备选）&lt;/p&gt;
+
+&lt;p&gt;4、Philips：&lt;a href=&#34;http://drivers.softpedia.com/get/FIRMWARE/Philips/&#34;&gt;http://drivers.softpedia.com/get/FIRMWARE/Philips/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;5、Sony：&lt;a href=&#34;http://drivers.softpedia.com/get/FIRMWARE/Sony/&#34;&gt;http://drivers.softpedia.com/get/FIRMWARE/Sony/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;6、Hitachi：&lt;a href=&#34;http://drivers.softpedia.com/get/FIRMWARE/Hitachi/&#34;&gt;http://drivers.softpedia.com/get/FIRMWARE/Hitachi/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;7、Toshiba：&lt;a href=&#34;http://drivers.softpedia.com/get/FIRMWARE/Toshiba/&#34;&gt;http://drivers.softpedia.com/get/FIRMWARE/Toshiba/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;8、Vipa：&lt;a href=&#34;http://www.vipa.com/en/service-support/downloads/firmware&#34;&gt;http://www.vipa.com/en/service-support/downloads/firmware&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;9、GEGE：&lt;a href=&#34;http://support.ge-ip.com/support/index?page=dwchannel&amp;amp;actl=FIRMWARE_UPGRADES_TYPES&amp;amp;cat=FIRMWARE_UPGRADES_TYPES&#34;&gt;http://support.ge-ip.com/support/index?page=dwchannel&amp;amp;actl=FIRMWARE_UPGRADES_TYPES&amp;amp;cat=FIRMWARE_UPGRADES_TYPES&lt;/a&gt;   （候选）&lt;/p&gt;
+
+&lt;p&gt;9、Abb：&lt;a href=&#34;http://www.abb.com/AbbLibrary/DownloadCenter/default.aspx?showresultstab=true&amp;amp;CategoryID=9AAC113401&amp;amp;DocumentKind=Manual&amp;amp;Documentlanguage=zh&amp;amp;DisplayLanguage=en#&amp;amp;&amp;amp;/wEXAQUDa2V5BYMBM8KwOUFBQzE3NzAzM8KxwrHCsVNvZnR3YXJlwrHCsVTCscKxNMKxwrEyOcKxQ07CscKxMsKxVMKxMMKxwrEwwrExwrEyMMKxMjDCsTHCscKxwrHCscKxOUFBQzExMzQwMcKxwrHCscKxMTHCscKxwrHCsTY5wrHCsTDCsUNOwrHCsTDOpX9J/EqnUTqL2rEWuuGehDTfGg==&#34;&gt;http://www.abb.com/AbbLibrary/DownloadCenter/default.aspx?showresultstab=true&amp;amp;CategoryID=9AAC113401&amp;amp;DocumentKind=Manual&amp;amp;Documentlanguage=zh&amp;amp;DisplayLanguage=en#&amp;amp;&amp;amp;/wEXAQUDa2V5BYMBM8KwOUFBQzE3NzAzM8KxwrHCsVNvZnR3YXJlwrHCsVTCscKxNMKxwrEyOcKxQ07CscKxMsKxVMKxMMKxwrEwwrExwrEyMMKxMjDCsTHCscKxwrHCscKxOUFBQzExMzQwMcKxwrHCscKxMTHCscKxwrHCsTY5wrHCsTDCsUNOwrHCsTDOpX9J/EqnUTqL2rEWuuGehDTfGg==&lt;/a&gt; （未过滤）&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://www.abb.com/AbbLibrary/DownloadCenter/default.aspx?showresultstab=true&amp;amp;CategoryID=9AAC113401&amp;amp;DocumentKind=Manual&amp;amp;Documentlanguage=zh&amp;amp;DisplayLanguage=en#&amp;amp;&amp;amp;/wEXAQUDa2V5BYsBM8KwOUFBQzE3NzAzM8KxZmlybXdhcmXCscKxU29mdHdhcmXCscKxVMKxwrEwwrHCsTI5wrFDTsKxwrEywrFUwrEwwrHCsTDCsTHCsTIwwrE1MMKxMcKxwrHCscKxwrE5QUFDMTEzNDAxwrHCscKxwrExMcKxwrHCscKxMjnCscKxMMKxQ07CscKxMAX8ggjBM/5RY4c4bnuh6N7Q73DS&#34;&gt;http://www.abb.com/AbbLibrary/DownloadCenter/default.aspx?showresultstab=true&amp;amp;CategoryID=9AAC113401&amp;amp;DocumentKind=Manual&amp;amp;Documentlanguage=zh&amp;amp;DisplayLanguage=en#&amp;amp;&amp;amp;/wEXAQUDa2V5BYsBM8KwOUFBQzE3NzAzM8KxZmlybXdhcmXCscKxU29mdHdhcmXCscKxVMKxwrEwwrHCsTI5wrFDTsKxwrEywrFUwrEwwrHCsTDCsTHCsTIwwrE1MMKxMcKxwrHCscKxwrE5QUFDMTEzNDAxwrHCscKxwrExMcKxwrHCscKxMjnCscKxMMKxQ07CscKxMAX8ggjBM/5RY4c4bnuh6N7Q73DS&lt;/a&gt; （过滤&amp;ndash;firmware）&lt;/p&gt;
+
+&lt;p&gt;（备选）&lt;/p&gt;
+
+&lt;p&gt;Camera/Display Firm：&lt;/p&gt;
+
+&lt;p&gt;1、Foscam：&lt;a href=&#34;http://www.foscam.com/index.php/Home/index/reg.html&#34;&gt;http://www.foscam.com/index.php/Home/index/reg.html&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://www.foscam.com/download-center/firmware-downloads.html&#34;&gt;http://www.foscam.com/download-center/firmware-downloads.html&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;2、Hikvision：&lt;a href=&#34;http://www.hikvisioneurope.com/portal/index.php?dir=Product%20Firmware/&#34;&gt;http://www.hikvisioneurope.com/portal/index.php?dir=Product%20Firmware/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;3、Cannon：&lt;a href=&#34;http://www.usa.canon.com/cusa/professional/standard_display/support_pro/pro_firmware-updates?cm_sp=CSO+PROSS-_-Service+%26+Support-_-Firmware+Updates&#34;&gt;http://www.usa.canon.com/cusa/professional/standard_display/support_pro/pro_firmware-updates?cm_sp=CSO+PROSS-_-Service+%26+Support-_-Firmware+Updates&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;4、Nikon：&lt;a href=&#34;http://drivers.softpedia.com/get/FIRMWARE/Nikon/&#34;&gt;http://drivers.softpedia.com/get/FIRMWARE/Nikon/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;5、LG：&lt;a href=&#34;http://www.lg.com/cn/support/software-manuals#&#34;&gt;http://www.lg.com/cn/support/software-manuals#&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;6、SamSung：&lt;a href=&#34;http://drivers.softpedia.com/get/FIRMWARE/Samsung/&#34;&gt;http://drivers.softpedia.com/get/FIRMWARE/Samsung/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Switch/Router Firm：&lt;/p&gt;
+
+&lt;p&gt;1、Cisco：&lt;a href=&#34;http://drivers.softpedia.com/get/FIRMWARE/Cisco/&#34;&gt;http://drivers.softpedia.com/get/FIRMWARE/Cisco/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://drivers.softpedia.com/get/Router-Switch-Access-Point/Linksys/&#34;&gt;http://drivers.softpedia.com/get/Router-Switch-Access-Point/Linksys/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;2、Huawei：（待添加）&lt;/p&gt;
+
+&lt;p&gt;2、TP-Link：&lt;a href=&#34;http://service.tp-link.com.cn/list_download_software_1_0.html&#34;&gt;http://service.tp-link.com.cn/list_download_software_1_0.html&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;3、D-Link：&lt;a href=&#34;ftp://ftp2.dlink.com/PRODUCTS/&#34;&gt;ftp://ftp2.dlink.com/PRODUCTS/&lt;/a&gt; （首选）&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://drivers.softpedia.com/get/FIRMWARE/D-Link/&#34;&gt;http://drivers.softpedia.com/get/FIRMWARE/D-Link/&lt;/a&gt;   （备选）&lt;/p&gt;
+
+&lt;p&gt;4、Tenda：&lt;a href=&#34;http://drivers.softpedia.com/get/FIRMWARE/Tenda/&#34;&gt;http://drivers.softpedia.com/get/FIRMWARE/Tenda/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;5、NetCore：&lt;a href=&#34;http://www.netcoretec.com/software.html&#34;&gt;http://www.netcoretec.com/software.html&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;6、Buffalo：&lt;a href=&#34;http://cn.buffalo-asia.com/support/downloads/previous_product_downloads_link/&#34;&gt;http://cn.buffalo-asia.com/support/downloads/previous_product_downloads_link/&lt;/a&gt; （首选）&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://drivers.softpedia.com/get/Router-Switch-Access-Point/Buffalo/&#34;&gt;http://drivers.softpedia.com/get/Router-Switch-Access-Point/Buffalo/&lt;/a&gt;    （备选）&lt;/p&gt;
+
+&lt;p&gt;7、NetGear：&lt;a href=&#34;http://drivers.softpedia.com/get/Router-Switch-Access-Point/NETGEAR/&#34;&gt;http://drivers.softpedia.com/get/Router-Switch-Access-Point/NETGEAR/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;8、ASUS：&lt;a href=&#34;http://drivers.softpedia.com/get/Router-Switch-Access-Point/ASUS/&#34;&gt;http://drivers.softpedia.com/get/Router-Switch-Access-Point/ASUS/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;9、Ruijie：&lt;a href=&#34;http://www.ruijie.com.cn/fw/rj/&#34;&gt;http://www.ruijie.com.cn/fw/rj/&lt;/a&gt;    （候选）&lt;/p&gt;
+
+&lt;p&gt;10、MerCury：&lt;a href=&#34;http://www.mercurycom.com.cn/Download/list&#34;&gt;http://www.mercurycom.com.cn/Download/list&lt;/a&gt;   （候选）&lt;/p&gt;
+
+&lt;p&gt;11、FAST：&lt;a href=&#34;http://www.fastcom.com.cn/Download/list&#34;&gt;http://www.fastcom.com.cn/Download/list&lt;/a&gt; （候选）&lt;/p&gt;
+
+&lt;p&gt;12、Wayos：&lt;a href=&#34;http://www.wayos.com/download/firmware/&#34;&gt;http://www.wayos.com/download/firmware/&lt;/a&gt;    （候选）&lt;/p&gt;
+
+&lt;p&gt;13、PhiComm：&lt;a href=&#34;http://www.phicomm.com/cn/support_personal_download_center.html?keyword=&amp;amp;type=3%2C5&#34;&gt;http://www.phicomm.com/cn/support_personal_download_center.html?keyword=&amp;amp;type=3%2C5&lt;/a&gt;  （候选）&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://www.phicomm.com/cn/support_family_download_center.html?product_type=&amp;amp;keyword=&amp;amp;type=3%2C5&#34;&gt;http://www.phicomm.com/cn/support_family_download_center.html?product_type=&amp;amp;keyword=&amp;amp;type=3%2C5&lt;/a&gt; （候选）&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://www.phicomm.com/cn/support_ent_ConfigAdSoft_download.html?product_type=&amp;amp;product_name=&amp;amp;keyword=&amp;amp;type=3%2C5&#34;&gt;http://www.phicomm.com/cn/support_ent_ConfigAdSoft_download.html?product_type=&amp;amp;product_name=&amp;amp;keyword=&amp;amp;type=3%2C5&lt;/a&gt;    （候选）&lt;/p&gt;
+
+&lt;p&gt;14、Draytek：&lt;a href=&#34;ftp://ftp.draytek.com/&#34;&gt;ftp://ftp.draytek.com/&lt;/a&gt;   （候选）&lt;/p&gt;
+
+&lt;p&gt;15、Xiaomi：&lt;a href=&#34;http://www.miui.com/thread-1776173-1-1.html&#34;&gt;http://www.miui.com/thread-1776173-1-1.html&lt;/a&gt;   （候选）&lt;/p&gt;
+
+&lt;p&gt;16、360：&lt;a href=&#34;http://luyou.360.cn/download_center.html?from=nav&#34;&gt;http://luyou.360.cn/download_center.html?from=nav&lt;/a&gt;    （候选）&lt;/p&gt;
+
+&lt;p&gt;17、Lenovo：&lt;a href=&#34;http://www.newbandeng.com/forum-95-1.html&#34;&gt;http://www.newbandeng.com/forum-95-1.html&lt;/a&gt; （候选）&lt;/p&gt;
+
+&lt;p&gt;Other：&lt;/p&gt;
+
+&lt;p&gt;1、NodeMcu：&lt;a href=&#34;http://bbs.nodemcu.com/&#34;&gt;http://bbs.nodemcu.com/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;2、FujiFilm：&lt;a href=&#34;http://www.fujifilm.com/support/digital_cameras/software/&#34;&gt;http://www.fujifilm.com/support/digital_cameras/software/&lt;/a&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;Industrial Control Firm：&lt;/p&gt;
+
+&lt;p&gt;1、Siemens：
+&lt;a href=&#34;http://www.ad.siemens.com.cn/service/search/Default.aspx?kw=%u56FA%u4EF6&amp;amp;searchType=8&#34;&gt;http://www.ad.siemens.com.cn/service/search/Default.aspx?kw=%u56FA%u4EF6&amp;amp;searchType=8&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://www.ad.siemens.com.cn/service/search/Default.aspx?kw=%u56FA%u4EF6&amp;amp;searchType=8&amp;amp;filter=1&amp;amp;ov=%u56FA%u4EF6&amp;amp;sort=&amp;amp;order=desc&amp;amp;searchInR=0&amp;amp;pageIndex=1&amp;amp;dc_types=5&#34;&gt;http://www.ad.siemens.com.cn/service/search/Default.aspx?kw=%u56FA%u4EF6&amp;amp;searchType=8&amp;amp;filter=1&amp;amp;ov=%u56FA%u4EF6&amp;amp;sort=&amp;amp;order=desc&amp;amp;searchInR=0&amp;amp;pageIndex=1&amp;amp;dc_types=5&lt;/a&gt;
+&amp;ndash;&amp;gt;个数：16*9/2＝72，时间：2005(1)-2015(2),其中2010-2009居多&lt;/p&gt;
+
+&lt;p&gt;oooooooooooooookkkkkkkkkkkkkkkkkkkkkkk&lt;/p&gt;
+
+&lt;p&gt;2、Schneider：&lt;a href=&#34;http://www.schneider-electric.com/download/ww/en/results/3541958-SoftwareFirmware/1555893-Firmware--Released/0/0/?showAsIframe=false&#34;&gt;http://www.schneider-electric.com/download/ww/en/results/3541958-SoftwareFirmware/1555893-Firmware--Released/0/0/?showAsIframe=false&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://www.schneider-electric.com/download/ww/en/results/3541958-SoftwareFirmware/1555902-Firmware--Updates/0/0/?showAsIframe=false&#34;&gt;http://www.schneider-electric.com/download/ww/en/results/3541958-SoftwareFirmware/1555902-Firmware--Updates/0/0/?showAsIframe=false&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;oooooooooookkkkkkkkkkkk&lt;/p&gt;
+
+&lt;p&gt;3、Panasonic：&lt;a href=&#34;http://av.jpn.support.panasonic.com/support/global/cs/dsc/download/index.html&#34;&gt;http://av.jpn.support.panasonic.com/support/global/cs/dsc/download/index.html&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://av.jpn.support.panasonic.com/support/global/cs/dsc/download/fts/index2.html&#34;&gt;http://av.jpn.support.panasonic.com/support/global/cs/dsc/download/fts/index2.html&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://security.panasonic.com/pss/security/library/products.html&#34;&gt;http://security.panasonic.com/pss/security/library/products.html&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://eww.pass.panasonic.co.jp/p2ui/guest/TopLogin.do?lang=en&amp;amp;category=pav(false&#34;&gt;http://eww.pass.panasonic.co.jp/p2ui/guest/TopLogin.do?lang=en&amp;amp;category=pav(false&lt;/a&gt;)&lt;/p&gt;
+
+&lt;p&gt;8、Vipa：&lt;a href=&#34;http://www.vipa.com/en/service-support/downloads/firmware&#34;&gt;http://www.vipa.com/en/service-support/downloads/firmware&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;9、GE：&lt;a href=&#34;http://support.ge-ip.com/support/index?page=dwchannel&amp;amp;actl=FIRMWARE_UPGRADES_TYPES&amp;amp;cat=FIRMWARE_UPGRADES_TYPES&#34;&gt;http://support.ge-ip.com/support/index?page=dwchannel&amp;amp;actl=FIRMWARE_UPGRADES_TYPES&amp;amp;cat=FIRMWARE_UPGRADES_TYPES&lt;/a&gt; （候选）&lt;/p&gt;
+
+&lt;p&gt;9、Abb：&lt;a href=&#34;http://www.abb.com/AbbLibrary/DownloadCenter/default.aspx?showresultstab=true&amp;amp;CategoryID=9AAC113401&amp;amp;DocumentKind=Manual&amp;amp;Documentlanguage=zh&amp;amp;DisplayLanguage=en#&amp;amp;&amp;amp;/wEXAQUDa2V5BYMBM8KwOUFBQzE3NzAzM8KxwrHCsVNvZnR3YXJlwrHCsVTCscKxNMKxwrEyOcKxQ07CscKxMsKxVMKxMMKxwrEwwrExwrEyMMKxMjDCsTHCscKxwrHCscKxOUFBQzExMzQwMcKxwrHCscKxMTHCscKxwrHCsTY5wrHCsTDCsUNOwrHCsTDOpX9J/EqnUTqL2rEWuuGehDTfGg==&#34;&gt;http://www.abb.com/AbbLibrary/DownloadCenter/default.aspx?showresultstab=true&amp;amp;CategoryID=9AAC113401&amp;amp;DocumentKind=Manual&amp;amp;Documentlanguage=zh&amp;amp;DisplayLanguage=en#&amp;amp;&amp;amp;/wEXAQUDa2V5BYMBM8KwOUFBQzE3NzAzM8KxwrHCsVNvZnR3YXJlwrHCsVTCscKxNMKxwrEyOcKxQ07CscKxMsKxVMKxMMKxwrEwwrExwrEyMMKxMjDCsTHCscKxwrHCscKxOUFBQzExMzQwMcKxwrHCscKxMTHCscKxwrHCsTY5wrHCsTDCsUNOwrHCsTDOpX9J/EqnUTqL2rEWuuGehDTfGg==&lt;/a&gt; （未过滤）&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://www.abb.com/AbbLibrary/DownloadCenter/default.aspx?showresultstab=true&amp;amp;CategoryID=9AAC113401&amp;amp;DocumentKind=Manual&amp;amp;Documentlanguage=zh&amp;amp;DisplayLanguage=en#&amp;amp;&amp;amp;/wEXAQUDa2V5BYsBM8KwOUFBQzE3NzAzM8KxZmlybXdhcmXCscKxU29mdHdhcmXCscKxVMKxwrEwwrHCsTI5wrFDTsKxwrEywrFUwrEwwrHCsTDCsTHCsTIwwrE1MMKxMcKxwrHCscKxwrE5QUFDMTEzNDAxwrHCscKxwrExMcKxwrHCscKxMjnCscKxMMKxQ07CscKxMAX8ggjBM/5RY4c4bnuh6N7Q73DS&#34;&gt;http://www.abb.com/AbbLibrary/DownloadCenter/default.aspx?showresultstab=true&amp;amp;CategoryID=9AAC113401&amp;amp;DocumentKind=Manual&amp;amp;Documentlanguage=zh&amp;amp;DisplayLanguage=en#&amp;amp;&amp;amp;/wEXAQUDa2V5BYsBM8KwOUFBQzE3NzAzM8KxZmlybXdhcmXCscKxU29mdHdhcmXCscKxVMKxwrEwwrHCsTI5wrFDTsKxwrEywrFUwrEwwrHCsTDCsTHCsTIwwrE1MMKxMcKxwrHCscKxwrE5QUFDMTEzNDAxwrHCscKxwrExMcKxwrHCscKxMjnCscKxMMKxQ07CscKxMAX8ggjBM/5RY4c4bnuh6N7Q73DS&lt;/a&gt; （过滤&amp;ndash;firmware）&lt;/p&gt;
+
+&lt;p&gt;（备选）&lt;/p&gt;
+
+&lt;p&gt;Camera/Display Firm：&lt;/p&gt;
+
+&lt;p&gt;1、Foscam：&lt;a href=&#34;http://www.foscam.com/index.php/Home/index/reg.html&#34;&gt;http://www.foscam.com/index.php/Home/index/reg.html&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://www.foscam.com/download-center/firmware-downloads.html&#34;&gt;http://www.foscam.com/download-center/firmware-downloads.html&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;2、Hikvision：&lt;a href=&#34;http://www.hikvisioneurope.com/portal/index.php?dir=Product%20Firmware/&#34;&gt;http://www.hikvisioneurope.com/portal/index.php?dir=Product%20Firmware/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;3、Cannon：&lt;a href=&#34;http://www.usa.canon.com/cusa/professional/standard_display/support_pro/pro_firmware-updates?cm_sp=CSO+PROSS-_-Service+%26+Support-_-Firmware+Updates&#34;&gt;http://www.usa.canon.com/cusa/professional/standard_display/support_pro/pro_firmware-updates?cm_sp=CSO+PROSS-_-Service+%26+Support-_-Firmware+Updates&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;5、LG：&lt;a href=&#34;http://www.lg.com/cn/support/software-manuals#&#34;&gt;http://www.lg.com/cn/support/software-manuals#&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Switch/Router Firm：&lt;/p&gt;
+
+&lt;p&gt;2、Huawei：（待添加）&lt;/p&gt;
+
+&lt;p&gt;2、TP-Link：&lt;a href=&#34;http://service.tp-link.com.cn/list_download_software_1_0.html&#34;&gt;http://service.tp-link.com.cn/list_download_software_1_0.html&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;3、D-Link：&lt;a href=&#34;ftp://ftp2.dlink.com/PRODUCTS/&#34;&gt;ftp://ftp2.dlink.com/PRODUCTS/&lt;/a&gt; （首选）&lt;/p&gt;
+
+&lt;p&gt;5、NetCore：&lt;a href=&#34;http://www.netcoretec.com/software.html&#34;&gt;http://www.netcoretec.com/software.html&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;6、Buffalo：&lt;a href=&#34;http://cn.buffalo-asia.com/support/downloads/previous_product_downloads_link/&#34;&gt;http://cn.buffalo-asia.com/support/downloads/previous_product_downloads_link/&lt;/a&gt; （首选）&lt;/p&gt;
+
+&lt;p&gt;9、Ruijie：&lt;a href=&#34;http://www.ruijie.com.cn/fw/rj/&#34;&gt;http://www.ruijie.com.cn/fw/rj/&lt;/a&gt;    （候选）&lt;/p&gt;
+
+&lt;p&gt;10、MerCury：&lt;a href=&#34;http://www.mercurycom.com.cn/Download/list&#34;&gt;http://www.mercurycom.com.cn/Download/list&lt;/a&gt;   （候选）&lt;/p&gt;
+
+&lt;p&gt;11、FAST：&lt;a href=&#34;http://www.fastcom.com.cn/Download/list&#34;&gt;http://www.fastcom.com.cn/Download/list&lt;/a&gt; （候选）&lt;/p&gt;
+
+&lt;p&gt;12、Wayos：&lt;a href=&#34;http://www.wayos.com/download/firmware/&#34;&gt;http://www.wayos.com/download/firmware/&lt;/a&gt;    （候选）&lt;/p&gt;
+
+&lt;p&gt;13、PhiComm：&lt;a href=&#34;http://www.phicomm.com/cn/support_personal_download_center.html?keyword=&amp;amp;type=3%2C5&#34;&gt;http://www.phicomm.com/cn/support_personal_download_center.html?keyword=&amp;amp;type=3%2C5&lt;/a&gt;  （候选）&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://www.phicomm.com/cn/support_family_download_center.html?product_type=&amp;amp;keyword=&amp;amp;type=3%2C5&#34;&gt;http://www.phicomm.com/cn/support_family_download_center.html?product_type=&amp;amp;keyword=&amp;amp;type=3%2C5&lt;/a&gt; （候选）&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://www.phicomm.com/cn/support_ent_ConfigAdSoft_download.html?product_type=&amp;amp;product_name=&amp;amp;keyword=&amp;amp;type=3%2C5&#34;&gt;http://www.phicomm.com/cn/support_ent_ConfigAdSoft_download.html?product_type=&amp;amp;product_name=&amp;amp;keyword=&amp;amp;type=3%2C5&lt;/a&gt;    （候选）&lt;/p&gt;
+
+&lt;p&gt;14、Draytek：&lt;a href=&#34;ftp://ftp.draytek.com/&#34;&gt;ftp://ftp.draytek.com/&lt;/a&gt;   （候选）&lt;/p&gt;
+
+&lt;p&gt;15、Xiaomi：&lt;a href=&#34;http://www.miui.com/thread-1776173-1-1.html&#34;&gt;http://www.miui.com/thread-1776173-1-1.html&lt;/a&gt;   （候选）&lt;/p&gt;
+
+&lt;p&gt;16、360：&lt;a href=&#34;http://luyou.360.cn/download_center.html?from=nav&#34;&gt;http://luyou.360.cn/download_center.html?from=nav&lt;/a&gt;    （候选）&lt;/p&gt;
+
+&lt;p&gt;17、Lenovo：&lt;a href=&#34;http://www.newbandeng.com/forum-95-1.html&#34;&gt;http://www.newbandeng.com/forum-95-1.html&lt;/a&gt; （候选）&lt;/p&gt;
+
+&lt;p&gt;Other：&lt;/p&gt;
+
+&lt;p&gt;1、NodeMcu：&lt;a href=&#34;http://bbs.nodemcu.com/&#34;&gt;http://bbs.nodemcu.com/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;2、FujiFilm：&lt;a href=&#34;http://www.fujifilm.com/support/digital_cameras/software/&#34;&gt;http://www.fujifilm.com/support/digital_cameras/software/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;6、SamSung：&lt;a href=&#34;http://drivers.softpedia.com/get/FIRMWARE/Samsung/&#34;&gt;http://drivers.softpedia.com/get/FIRMWARE/Samsung/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;1、Cisco：&lt;a href=&#34;http://drivers.softpedia.com/get/FIRMWARE/Cisco/&#34;&gt;http://drivers.softpedia.com/get/FIRMWARE/Cisco/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://drivers.softpedia.com/get/Router-Switch-Access-Point/Linksys/&#34;&gt;http://drivers.softpedia.com/get/Router-Switch-Access-Point/Linksys/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;4、Nikon：&lt;a href=&#34;http://drivers.softpedia.com/get/FIRMWARE/Nikon/&#34;&gt;http://drivers.softpedia.com/get/FIRMWARE/Nikon/&lt;/a&gt;
+３，&lt;a href=&#34;http://drivers.softpedia.com/get/FIRMWARE/Panasonic/&#34;&gt;http://drivers.softpedia.com/get/FIRMWARE/Panasonic/&lt;/a&gt;  （备选）&lt;/p&gt;
+
+&lt;p&gt;4、Philips：&lt;a href=&#34;http://drivers.softpedia.com/get/FIRMWARE/Philips/&#34;&gt;http://drivers.softpedia.com/get/FIRMWARE/Philips/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;5、Sony：&lt;a href=&#34;http://drivers.softpedia.com/get/FIRMWARE/Sony/&#34;&gt;http://drivers.softpedia.com/get/FIRMWARE/Sony/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;6、Hitachi：&lt;a href=&#34;http://drivers.softpedia.com/get/FIRMWARE/Hitachi/&#34;&gt;http://drivers.softpedia.com/get/FIRMWARE/Hitachi/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;7、Toshiba：&lt;a href=&#34;http://drivers.softpedia.com/get/FIRMWARE/Toshiba/&#34;&gt;http://drivers.softpedia.com/get/FIRMWARE/Toshiba/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;６，&lt;a href=&#34;http://drivers.softpedia.com/get/Router-Switch-Access-Point/Buffalo/&#34;&gt;http://drivers.softpedia.com/get/Router-Switch-Access-Point/Buffalo/&lt;/a&gt;  （备选）&lt;/p&gt;
+
+&lt;p&gt;7、NetGear：&lt;a href=&#34;http://drivers.softpedia.com/get/Router-Switch-Access-Point/NETGEAR/&#34;&gt;http://drivers.softpedia.com/get/Router-Switch-Access-Point/NETGEAR/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;8、ASUS：&lt;a href=&#34;http://drivers.softpedia.com/get/Router-Switch-Access-Point/ASUS/&#34;&gt;http://drivers.softpedia.com/get/Router-Switch-Access-Point/ASUS/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;３，&lt;a href=&#34;http://drivers.softpedia.com/get/FIRMWARE/D-Link/&#34;&gt;http://drivers.softpedia.com/get/FIRMWARE/D-Link/&lt;/a&gt; （备选）&lt;/p&gt;
+
+&lt;p&gt;4、Tenda：&lt;a href=&#34;http://drivers.softpedia.com/get/FIRMWARE/Tenda/&#34;&gt;http://drivers.softpedia.com/get/FIRMWARE/Tenda/&lt;/a&gt;&lt;/p&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>
